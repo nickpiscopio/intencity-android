@@ -1,5 +1,13 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- Demo -->
+    <dimen name="pager_margin">3dp</dimen>
+
+    <!-- Sign In -->
+    <dimen name="logo_margin">32dp</dimen>
+
+    <dimen name="layout_margin">16dp</dimen>
+    <dimen name="rounded_corner_radius">3dp</dimen>
+    <dimen name="element_margin">14dp</dimen>
+    <dimen name="related_item_margin">5dp</dimen>
 </resources>
