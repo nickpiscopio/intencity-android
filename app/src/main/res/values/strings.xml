@@ -5,4 +5,8 @@
     <string name="terms_checkbox">I agree to the @Terms of Use@.</string>
     <string name="sign_in">SIGN IN</string>
     <string name="try_intencity">Try Intencity</string>
+
+    <!-- Login Strings -->
+    <string name="login_error_title">Error logging in</string>
+    <string name="login_error_message">Please check your email and password, and try again.</string>
 </resources>

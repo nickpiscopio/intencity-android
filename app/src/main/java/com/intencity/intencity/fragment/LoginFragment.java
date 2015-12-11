@@ -8,24 +8,40 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.dialog.CustomDialog;
+import com.intencity.intencity.listener.DialogListener;
+import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.activity.MainActivity;
 
-public class LoginFragment extends android.support.v4.app.Fragment
+public class LoginFragment extends android.support.v4.app.Fragment implements ServiceListener,
+                                                                              DialogListener
 {
+    private EditText email;
+    private EditText password;
+
+    private Context context;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_demo_sign_in, container, false);
+
+        email = (EditText) view.findViewById(R.id.edit_text_email);
+        password = (EditText) view.findViewById(R.id.edit_text_password);
 
         Button signIn = (Button) view.findViewById(R.id.btn_sign_in);
         TextView tryIntencity = (TextView) view.findViewById(R.id.btn_try_intencity);
 
         signIn.setOnClickListener(signInListener);
         tryIntencity.setOnClickListener(tryIntencityListener);
+
+        context = getContext();
 
         return view;
     }
@@ -35,7 +51,7 @@ public class LoginFragment extends android.support.v4.app.Fragment
         @Override
         public void onClick(View v)
         {
-            loadIntencity();
+            checkCredentials();
         }
     };
 
@@ -48,10 +64,16 @@ public class LoginFragment extends android.support.v4.app.Fragment
         }
     };
 
+    private void checkCredentials()
+    {
+        new ServiceTask(this).execute(Constant.SERVICE_VALIDATE_USER_CREDENTIALS,
+                                      Constant.getValidateUserCredentialsServiceParameters(
+                                              email.getText().toString(),
+                                              password.getText().toString()));
+    }
+
     private void loadIntencity()
     {
-        Context context = getContext();
-
         SharedPreferences prefs = context.getSharedPreferences(Constant.SHARED_PREFERENCES,
                                                                Context.MODE_PRIVATE);
 
@@ -65,4 +87,36 @@ public class LoginFragment extends android.support.v4.app.Fragment
         startActivity(intent);
         getActivity().finish();
     }
+
+    private void showErrorMessage()
+    {
+        new CustomDialog(context, this, context.getString(R.string.login_error_title), context.getString(R.string.login_error_message), false);
+    }
+
+    @Override
+    public void onRetrievalSuccessful(String response)
+    {
+        String[] credentialsResponse = response.replaceAll("\"|\n","").split(Constant.RESPONSE_DELIMITER);
+
+        if (credentialsResponse[0].equals(Constant.LOG_IN_VALID))
+        {
+            loadIntencity();
+        }
+        else
+        {
+            showErrorMessage();
+        }
+    }
+
+    @Override
+    public void onRetrievalFailed()
+    {
+        showErrorMessage();
+    }
+
+    @Override
+    public void onPositiveButtonPressed() { }
+
+    @Override
+    public void onNegativeButtonPressed() { }
 }
