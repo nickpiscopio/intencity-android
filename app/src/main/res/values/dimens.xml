@@ -3,6 +3,8 @@
     <!-- Demo -->
     <dimen name="pager_margin">3dp</dimen>
 
+    <dimen name="cursor">2dp</dimen>
+
     <!-- Sign In -->
     <dimen name="logo_margin">32dp</dimen>
 

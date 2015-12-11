@@ -12,12 +12,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.activity.MainActivity;
 import com.intencity.intencity.dialog.CustomDialog;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.activity.MainActivity;
+
+import java.util.Date;
 
 public class LoginFragment extends android.support.v4.app.Fragment implements ServiceListener,
                                                                               DialogListener
@@ -60,7 +62,9 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         @Override
         public void onClick(View v)
         {
-            loadIntencity();
+            new ServiceTask(LoginFragment.this).execute(Constant.SERVICE_TRIAL_ACCOUNT,
+                                                        Constant.getTrialAccountParameters(
+                                                                new Date().getTime()));
         }
     };
 
@@ -98,7 +102,8 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     {
         String[] credentialsResponse = response.replaceAll("\"|\n","").split(Constant.RESPONSE_DELIMITER);
 
-        if (credentialsResponse[0].equals(Constant.LOG_IN_VALID))
+        if (credentialsResponse[0].equals(Constant.LOG_IN_VALID) ||
+            credentialsResponse[0].equals(Constant.ACCOUNT_CREATED))
         {
             loadIntencity();
         }

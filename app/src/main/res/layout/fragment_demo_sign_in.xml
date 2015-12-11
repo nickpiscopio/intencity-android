@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/layout_margin"
-    android:gravity="center_horizontal"
+    android:gravity="center"
     android:orientation="vertical"
     android:background="@color/page_background">
 
@@ -20,6 +20,9 @@
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:background="@drawable/text_field_full"
+        android:textColor="@color/secondary_dark"
+        android:textColorHint="@color/secondary_light"
+        android:textCursorDrawable="@drawable/cursor"
         android:padding="@dimen/element_margin"/>
 
     <EditText
@@ -29,15 +32,19 @@
         android:hint="@string/password"
         android:inputType="textPassword"
         android:background="@drawable/text_field_full"
+        android:textColor="@color/secondary_dark"
+        android:textColorHint="@color/secondary_light"
+        android:textCursorDrawable="@drawable/cursor"
         android:layout_marginTop="@dimen/related_item_margin"
         android:padding="@dimen/element_margin"/>
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/terms_checkbox"
-        android:textColor="@color/secondary_dark"/>
+    <!-- Commenting out for now until I decide what I want to do with Intencity login. -->
+    <!--<CheckBox-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="start"-->
+        <!--android:text="@string/terms_checkbox"-->
+        <!--android:textColor="@color/secondary_dark"/>-->
 
     <Button
         android:id="@+id/btn_sign_in"

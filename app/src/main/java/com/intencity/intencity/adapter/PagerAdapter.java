@@ -39,7 +39,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter
 
             return demoSliderFragment;
         }
-
     }
 
     @Override
