@@ -10,12 +10,13 @@ public class Constant
     public static final String TAG = "Intencity";
 
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
-    public static final String DEMO_FINISHED = "com.intencity.intencity.demo.finished";
+    public static final String USER_ID = "com.intencity.intencity.user.id";
+    public static final String USER_ACCOUNT_TYPE = "com.intencity.intencity.user.account.type";
 
     // Service Endpoint
     private static final String ENDPOINT = "http://www.intencityapp.com/";
     //TODO: Change this when creating release build.
-    private static final String SERVICE_FOLDER = ENDPOINT + "dev/services/";
+    private static final String SERVICE_FOLDER = ENDPOINT + "dev/services/mobile/";
 
     // Services
     public static final String SERVICE_VALIDATE_USER_CREDENTIALS = SERVICE_FOLDER + "user_credentials.php";
@@ -30,10 +31,9 @@ public class Constant
     private static final String PARAMETER_LAST_NAME = "last_name=";
     private static final String PARAMETER_ACCOUNT_TYPE = "account_type=";
 
-    // Service Responses
-    public static final String RESPONSE_DELIMITER = ",";
-    public static final String LOG_IN_VALID = "Valid credentials";
-    public static final String ACCOUNT_CREATED = "Account created";
+    // Service JSON Tags
+    public static final String JSON_ID = "ID";
+    public static final String JSON_ACCOUNT_TYPE = "AccountType";
 
     public static final String ACCOUNT_TYPE_ADMIN = "A";
     public static final String ACCOUNT_TYPE_BETA = "B";

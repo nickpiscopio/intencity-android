@@ -19,6 +19,9 @@ import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 
 /**
@@ -81,13 +84,20 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
                                               password.getText().toString()));
     }
 
-    private void loadIntencity()
+    /**
+     * Saves the login information for Intencity.
+     *
+     * @param id            The id of the user.
+     * @param accountType   The user's account type.
+     */
+    private void loadIntencity(int id, String accountType)
     {
         SharedPreferences prefs = context.getSharedPreferences(Constant.SHARED_PREFERENCES,
                                                                Context.MODE_PRIVATE);
 
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(Constant.DEMO_FINISHED, true);
+        editor.putInt(Constant.USER_ID, id);
+        editor.putString(Constant.USER_ACCOUNT_TYPE, accountType);
         editor.apply();
 
         Intent intent = new Intent(context, MainActivity.class);
@@ -103,18 +113,19 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     }
 
     @Override
-    public void onRetrievalSuccessful(String response)
+    public void onRetrievalSuccessful(JSONObject response)
     {
-        String[] credentialsResponse = response.replaceAll("\"|\n","").split(Constant.RESPONSE_DELIMITER);
-
-        if (credentialsResponse[0].equals(Constant.LOG_IN_VALID) ||
-            credentialsResponse[0].equals(Constant.ACCOUNT_CREATED))
+        try
         {
-            loadIntencity();
+            String id = response.getString(Constant.JSON_ID);
+            String accountType = response.getString(Constant.JSON_ACCOUNT_TYPE);
+
+            loadIntencity(Integer.parseInt(id), accountType);
         }
-        else
+        catch (JSONException e)
         {
             showErrorMessage();
+            e.printStackTrace();
         }
     }
 

@@ -1,5 +1,7 @@
 package com.intencity.intencity.listener;
 
+import org.json.JSONObject;
+
 /**
  * A listener for an API call.
  *
@@ -7,6 +9,6 @@ package com.intencity.intencity.listener;
  */
 public interface ServiceListener
 {
-    void onRetrievalSuccessful(String response);
+    void onRetrievalSuccessful(JSONObject response);
     void onRetrievalFailed();
 }

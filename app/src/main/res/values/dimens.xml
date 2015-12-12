@@ -2,7 +2,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <!-- Demo -->
     <dimen name="pager_margin">3dp</dimen>
-
     <dimen name="cursor">2dp</dimen>
 
     <!-- Sign In -->
@@ -12,4 +11,8 @@
     <dimen name="rounded_corner_radius">3dp</dimen>
     <dimen name="element_margin">14dp</dimen>
     <dimen name="related_item_margin">5dp</dimen>
+
+    <dimen name="divider_height">1dp</dimen>
+
+    <dimen name="card_title_size">16sp</dimen>
 </resources>

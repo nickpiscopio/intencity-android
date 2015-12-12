@@ -14,4 +14,8 @@
     <string name="title_rankings">Rankings</string>
     <string name="title_fitness_guru">Fitness Guru</string>
     <string name="title_menu">Menu</string>
+
+    <string name="title_routine">SELECT TODAY\'S ROUTINE</string>
+
+    <string name="start">START</string>
 </resources>

@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         SharedPreferences prefs = this.getSharedPreferences(Constant.SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        if (!prefs.getBoolean(Constant.DEMO_FINISHED, false))
+        if (prefs.getInt(Constant.USER_ID, 0) == 0)
         {
             showDemo();
         }

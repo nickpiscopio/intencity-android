@@ -6,6 +6,9 @@ import android.util.Log;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.util.Constant;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,11 +21,11 @@ import java.net.URL;
  *
  * Created by Nick Piscopio on 12/10/15.
  */
-public class ServiceTask extends AsyncTask<String, Void, String>
+public class ServiceTask extends AsyncTask<String, Void, JSONObject>
 {
     private ServiceListener serviceListener;
 
-    private boolean success;
+    private boolean success = true;
 
     public ServiceTask(ServiceListener serviceListener)
     {
@@ -30,7 +33,7 @@ public class ServiceTask extends AsyncTask<String, Void, String>
     }
 
     @Override
-    protected String doInBackground(String... params)
+    protected JSONObject doInBackground(String... params)
     {
         HttpURLConnection connection;
         OutputStreamWriter request = null;
@@ -38,6 +41,8 @@ public class ServiceTask extends AsyncTask<String, Void, String>
         URL url = null;
         String response = null;
         String parameters = params[1];
+
+        JSONObject jsonResponse = null;
 
         try
         {
@@ -51,22 +56,27 @@ public class ServiceTask extends AsyncTask<String, Void, String>
             request.write(parameters);
             request.flush();
             request.close();
-            String line = "";
+
             InputStreamReader isr = new InputStreamReader(connection.getInputStream());
             BufferedReader reader = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            while ((line = reader.readLine()) != null)
-            {
-                sb.append(line + "\n");
-            }
 
             // Response from server after login process will be stored in response variable.
-            response = sb.toString();
+            response = reader.readLine();
+
+            //Parse the String to JSONObject
+            try
+            {
+                jsonResponse = new JSONObject(response);
+            }
+            catch(JSONException e)
+            {
+                Log.e(Constant.TAG, "Error parsing data " + e.toString());
+
+                success = false;
+            }
 
             isr.close();
             reader.close();
-
-            success = true;
 
         }
         catch(IOException e)
@@ -76,11 +86,11 @@ public class ServiceTask extends AsyncTask<String, Void, String>
             success = false;
         }
 
-        return response;
+        return jsonResponse;
     }
 
     @Override
-    protected void onPostExecute(String result)
+    protected void onPostExecute(JSONObject result)
     {
         if (success)
         {
