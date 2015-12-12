@@ -23,13 +23,17 @@ import com.intencity.intencity.util.Constant;
  */
 public class MainActivity extends AppCompatActivity
 {
+    private final int TAB_RANKING = 0;
+    private final int TAB_FITNESS_GURU = 1;
+    private final int TAB_MENU = 2;
+
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
-            android.R.drawable.btn_star,
-            android.R.drawable.btn_star,
-            android.R.drawable.btn_star
+            R.drawable.tab_icon_ranking,
+            R.drawable.tab_icon_fitness_guru,
+            R.drawable.tab_icon_menu
     };
 
     @Override
@@ -70,9 +74,11 @@ public class MainActivity extends AppCompatActivity
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         setupViewPager(viewPager);
+        viewPager.setCurrentItem(TAB_FITNESS_GURU);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
         setupTabIcons();
     }
 
@@ -80,63 +86,18 @@ public class MainActivity extends AppCompatActivity
     {
         if (tabLayout != null)
         {
-            tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-            tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-            tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+            tabLayout.getTabAt(TAB_RANKING).setIcon(tabIcons[TAB_RANKING]);
+            tabLayout.getTabAt(TAB_FITNESS_GURU).setIcon(tabIcons[TAB_FITNESS_GURU]);
+            tabLayout.getTabAt(TAB_MENU).setIcon(tabIcons[TAB_MENU]);
         }
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new RankingFragment(), getString(R.string.title_rankings));
-        adapter.addFrag(new FitnessGuruFragment(), getString(R.string.title_fitness_guru));
-        adapter.addFrag(new MenuFragment(), getString(R.string.title_menu));
-        viewPager.setAdapter(adapter);
-    }
-
-    // Might need later.
-//    private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener()
-//    {
-//        @Override
-//        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
-//
-//        @Override
-//        public void onPageSelected(int position)
-//        {
-//            switch (position)
-//            {
-//                case 0:
-//
-//                    break;
-//                case 1:
-//
-//                    break;
-//                case 2:
-//
-//                    break;
-//                case 3:
-//                default:
-//                    break;
-//            }
-//        }
-//
-//        @Override
-//        public void onPageScrollStateChanged(int state) { }
-//    };
-
-    @Override
-    public void onBackPressed()
+    private void setupViewPager(ViewPager viewPager)
     {
-        if (viewPager.getCurrentItem() == 0)
-        {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed();
-        }
-        else
-        {
-            // Otherwise, select the previous step.
-            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-        }
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new RankingFragment(), "");
+        adapter.addFrag(new FitnessGuruFragment(), "");
+        adapter.addFrag(new MenuFragment(), "");
+        viewPager.setAdapter(adapter);
     }
 }
