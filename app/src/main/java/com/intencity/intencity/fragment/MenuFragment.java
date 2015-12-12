@@ -7,6 +7,11 @@ import android.view.ViewGroup;
 
 import com.intencity.intencity.R;
 
+/**
+ * The MenuFragment for Intencity.
+ *
+ * Created by Nick Piscopio on 12/12/15.
+ */
 public class MenuFragment extends android.support.v4.app.Fragment
 {
     @Override

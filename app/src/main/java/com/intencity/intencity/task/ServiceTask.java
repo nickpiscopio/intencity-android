@@ -14,7 +14,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by nickpiscopio on 12/10/15.
+ * The AsynTask for service calls.
+ *
+ * Created by Nick Piscopio on 12/10/15.
  */
 public class ServiceTask extends AsyncTask<String, Void, String>
 {

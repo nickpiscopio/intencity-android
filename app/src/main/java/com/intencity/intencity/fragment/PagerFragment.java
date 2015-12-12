@@ -7,19 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.activity.DemoActivity;
 
 /**
  * Fragment class for the PagerFragment.
  *
- * Created by Nick Piscopio on 5/8/15.
+ * Created by Nick Piscopio on 12/9/15.
  */
 public class PagerFragment extends Fragment
 {
     public static String FRAGMENT_PAGE = "fragment_page";
-
-    private static final int DESCRIPTION_PAGE = 0;
-    private static final int INSPIRATION_PAGE = 1;
-    private static final int SHARE_PAGE = 2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -28,15 +25,15 @@ public class PagerFragment extends Fragment
         int page = getArguments().getInt(FRAGMENT_PAGE);
         switch (page)
         {
-            case INSPIRATION_PAGE:
+            case DemoActivity.INSPIRATION_PAGE:
                 pageId = R.layout.fragment_demo_inspire;
                 break;
 
-            case SHARE_PAGE:
+            case DemoActivity.SHARE_PAGE:
                 pageId = R.layout.fragment_demo_share;
                 break;
 
-            case DESCRIPTION_PAGE:
+            case DemoActivity.DESCRIPTION_PAGE:
             default:
                 pageId = R.layout.fragment_demo_about;
                 break;

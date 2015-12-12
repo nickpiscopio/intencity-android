@@ -9,4 +9,9 @@
     <!-- Login Strings -->
     <string name="login_error_title">Error logging in</string>
     <string name="login_error_message">Please check your email and password, and try again.</string>
+
+    <!-- Intencity Strings-->
+    <string name="title_rankings">Rankings</string>
+    <string name="title_fitness_guru">Fitness Guru</string>
+    <string name="title_menu">Menu</string>
 </resources>

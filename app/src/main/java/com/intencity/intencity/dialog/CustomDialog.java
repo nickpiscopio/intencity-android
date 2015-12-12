@@ -7,7 +7,9 @@ import android.content.DialogInterface;
 import com.intencity.intencity.listener.DialogListener;
 
 /**
- * Created by nickpiscopio on 12/10/15.
+ * This class creates a dialog to show to the user.
+ *
+ * Created by Nick Piscoipio on 12/10/15.
  */
 public class CustomDialog
 {

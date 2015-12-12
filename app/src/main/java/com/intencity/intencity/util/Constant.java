@@ -1,7 +1,9 @@
 package com.intencity.intencity.util;
 
 /**
- * Created by nickpiscopio on 12/9/15.
+ * A class to hold the Constants for Intencity.
+ *
+ * Created by Nick Piscopio on 12/9/15.
  */
 public class Constant
 {

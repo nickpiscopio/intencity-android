@@ -1,7 +1,9 @@
 package com.intencity.intencity.listener;
 
 /**
- * Created by nickpiscopio on 12/10/15.
+ * A listener for the positive and negative buttons of a dialog.
+ *
+ * Created by Nick Piscopio on 12/10/15.
  */
 public interface DialogListener
 {

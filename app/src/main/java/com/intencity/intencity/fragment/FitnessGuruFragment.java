@@ -7,6 +7,11 @@ import android.view.ViewGroup;
 
 import com.intencity.intencity.R;
 
+/**
+ * The Fitness Guru Fragment for Intencity.
+ *
+ * Created by Nick Piscopio on 12/12/15.
+ */
 public class FitnessGuruFragment extends android.support.v4.app.Fragment
 {
     @Override

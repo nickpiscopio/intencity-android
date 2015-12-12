@@ -8,16 +8,21 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.adapter.PagerAdapter;
+import com.intencity.intencity.adapter.ViewPagerAdapter;
+import com.intencity.intencity.fragment.LoginFragment;
+import com.intencity.intencity.fragment.PagerFragment;
 
 /**
- * Screens to demo the application before the user commits to Catalyst.
+ * Screens to demo the application before the user logs into Intencity.
  *
- * Created by Nick Piscopio on 5/8/15.
+ * Created by Nick Piscopio on 12/9/15.
  */
 public class DemoActivity extends FragmentActivity
 {
-    public static final int CLASS_ID = 1;
+    // TODO: RENAME THESE LATER.
+    public static final int DESCRIPTION_PAGE = 0;
+    public static final int INSPIRATION_PAGE = 1;
+    public static final int SHARE_PAGE = 2;
 
     private static final int PAGER_SELECTED_RESOURCE = R.mipmap.pager_selected;
     private static final int PAGER_UNSELECTED_RESOURCE = R.mipmap.pager_unselected;
@@ -38,8 +43,14 @@ public class DemoActivity extends FragmentActivity
         setContentView(R.layout.activity_demo);
 
         // Instantiate a ViewPager and a PagerAdapter.
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(getNewPagerFragment(DESCRIPTION_PAGE), "");
+        adapter.addFrag(getNewPagerFragment(INSPIRATION_PAGE), "");
+        adapter.addFrag(getNewPagerFragment(SHARE_PAGE), "");
+        adapter.addFrag(new LoginFragment(), "");
+
         mPager = (ViewPager)findViewById(R.id.pager);
-        mPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), CLASS_ID));
+        mPager.setAdapter(adapter);
         mPager.addOnPageChangeListener(pageChangeListener);
 
         pager0 = (ImageView)findViewById(R.id.pager_0);
@@ -49,6 +60,17 @@ public class DemoActivity extends FragmentActivity
 
         next = (ImageButton)findViewById(R.id.button_next);
         next.setOnClickListener(nextListener);
+    }
+
+    private PagerFragment getNewPagerFragment(int position)
+    {
+        Bundle bundle = new Bundle();
+        bundle.putInt(PagerFragment.FRAGMENT_PAGE, position);
+
+        PagerFragment sliderFragment = new PagerFragment();
+        sliderFragment.setArguments(bundle);
+
+        return sliderFragment;
     }
 
     @Override

@@ -21,6 +21,11 @@ import com.intencity.intencity.util.Constant;
 
 import java.util.Date;
 
+/**
+ * The Login Fragment for Intencity.
+ *
+ * Created by Nick Piscopio on 12/9/15.
+ */
 public class LoginFragment extends android.support.v4.app.Fragment implements ServiceListener,
                                                                               DialogListener
 {
