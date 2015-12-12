@@ -6,8 +6,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.intencity.intencity.activity.DemoActivity;
+import com.intencity.intencity.fragment.FitnessGuruFragment;
 import com.intencity.intencity.fragment.LoginFragment;
+import com.intencity.intencity.fragment.MenuFragment;
 import com.intencity.intencity.fragment.PagerFragment;
+import com.intencity.intencity.fragment.RankingFragment;
 
 /**
  * A simple pager adapter that represents pages for the demo.
@@ -45,12 +48,27 @@ public class PagerAdapter extends FragmentStatePagerAdapter
             }
             else
             {
-                return getPagerFragment(position);
+                Bundle bundle = new Bundle();
+                bundle.putInt(PagerFragment.FRAGMENT_PAGE, position);
+
+                PagerFragment sliderFragment = new PagerFragment();
+                sliderFragment.setArguments(bundle);
+
+                return sliderFragment;
             }
         }
         else
         {
-            return getPagerFragment(position);
+            switch (position)
+            {
+                case 0:
+                    return new RankingFragment();
+                case 2:
+                    return new MenuFragment();
+                case 1:
+                default:
+                    return new FitnessGuruFragment();
+            }
         }
     }
 
@@ -65,17 +83,5 @@ public class PagerAdapter extends FragmentStatePagerAdapter
         {
             return NUM_PAGES_INTENCITY;
         }
-    }
-
-    private PagerFragment getPagerFragment(int position)
-    {
-        Bundle bundle = new Bundle();
-        bundle.putInt(PagerFragment.FRAGMENT_PAGE, position);
-        bundle.putInt(PagerFragment.CLASS_ID, calledFrom);
-
-        PagerFragment sliderFragment = new PagerFragment();
-        sliderFragment.setArguments(bundle);
-
-        return sliderFragment;
     }
 }
