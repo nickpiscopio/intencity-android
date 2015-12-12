@@ -84,29 +84,30 @@ public class DemoActivity extends FragmentActivity
                     pager1.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager2.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager3.setImageResource(PAGER_UNSELECTED_RESOURCE);
-                    next.setVisibility(View.VISIBLE);
                     break;
                 case 1:
                     pager0.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager1.setImageResource(PAGER_SELECTED_RESOURCE);
                     pager2.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager3.setImageResource(PAGER_UNSELECTED_RESOURCE);
-                    next.setVisibility(View.VISIBLE);
                     break;
                 case 2:
-                    pager0.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager1.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager2.setImageResource(PAGER_SELECTED_RESOURCE);
                     pager3.setImageResource(PAGER_UNSELECTED_RESOURCE);
+                    pager0.setVisibility(View.VISIBLE);
+                    pager1.setVisibility(View.VISIBLE);
+                    pager2.setVisibility(View.VISIBLE);
+                    pager3.setVisibility(View.VISIBLE);
                     next.setVisibility(View.VISIBLE);
                     break;
                 case 3:
                     // TODO: Fix this. The pager 3 cannot be seen.
-                    pager0.setImageResource(PAGER_UNSELECTED_RESOURCE);
-                    pager1.setImageResource(PAGER_UNSELECTED_RESOURCE);
-                    pager2.setImageResource(PAGER_UNSELECTED_RESOURCE);
-                    pager3.setImageResource(PAGER_SELECTED_RESOURCE);
-                    next.setVisibility(View.INVISIBLE);
+                    pager0.setVisibility(View.GONE);
+                    pager1.setVisibility(View.GONE);
+                    pager2.setVisibility(View.GONE);
+                    pager3.setVisibility(View.GONE);
+                    next.setVisibility(View.GONE);
                     break;
                 default:
                     break;

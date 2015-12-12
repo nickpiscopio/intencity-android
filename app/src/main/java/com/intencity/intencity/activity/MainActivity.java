@@ -18,11 +18,7 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
 
         SharedPreferences prefs = this.getSharedPreferences(Constant.SHARED_PREFERENCES, Context.MODE_PRIVATE);
-
-        boolean isDemoFinished = prefs.getBoolean(Constant.DEMO_FINISHED, false);
-
-
-        if (!isDemoFinished)
+        if (!prefs.getBoolean(Constant.DEMO_FINISHED, false))
         {
             showDemo();
         }

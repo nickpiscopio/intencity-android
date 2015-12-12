@@ -1,66 +1,78 @@
-<LinearLayout
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/layout_margin"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:background="@color/page_background">
+    android:layout_height="wrap_content"
+    android:background="@color/page_background"
+    android:fillViewport="true">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/intencity_sign_in_logo"
-        android:padding="@dimen/logo_margin"/>
-
-    <EditText
-        android:id="@+id/edit_text_email"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        android:background="@drawable/text_field_full"
-        android:textColor="@color/secondary_dark"
-        android:textColorHint="@color/secondary_light"
-        android:textCursorDrawable="@drawable/cursor"
-        android:padding="@dimen/element_margin"/>
+        android:padding="@dimen/layout_margin"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edit_text_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:background="@drawable/text_field_full"
-        android:textColor="@color/secondary_dark"
-        android:textColorHint="@color/secondary_light"
-        android:textCursorDrawable="@drawable/cursor"
-        android:layout_marginTop="@dimen/related_item_margin"
-        android:padding="@dimen/element_margin"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/intencity_sign_in_logo"
+            android:paddingTop="@dimen/layout_margin"
+            android:paddingRight="@dimen/logo_margin"
+            android:paddingBottom="@dimen/logo_margin"
+            android:paddingLeft="@dimen/logo_margin"/>
 
-    <!-- Commenting out for now until I decide what I want to do with Intencity login. -->
-    <!--<CheckBox-->
+        <EditText
+            android:id="@+id/edit_text_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/text_field_full"
+            android:textColor="@color/secondary_dark"
+            android:textColorHint="@color/secondary_light"
+            android:textCursorDrawable="@drawable/cursor"
+            android:padding="@dimen/element_margin"/>
+
+        <EditText
+            android:id="@+id/edit_text_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:background="@drawable/text_field_full"
+            android:textColor="@color/secondary_dark"
+            android:textColorHint="@color/secondary_light"
+            android:textCursorDrawable="@drawable/cursor"
+            android:layout_marginTop="@dimen/related_item_margin"
+            android:padding="@dimen/element_margin"/>
+
+        <!-- Commenting out for now until I decide what I want to do with Intencity login. -->
+        <!--<CheckBox-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="start"-->
         <!--android:text="@string/terms_checkbox"-->
         <!--android:textColor="@color/secondary_dark"/>-->
 
-    <Button
-        android:id="@+id/btn_sign_in"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/sign_in"
-        android:background="@drawable/button_full"
-        android:textColor="@color/page_background"
-        android:layout_marginTop="@dimen/layout_margin"
-        android:layout_marginBottom="@dimen/layout_margin"
-        android:padding="@dimen/element_margin"/>
+        <Button
+            android:id="@+id/btn_sign_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_in"
+            android:background="@drawable/button_full"
+            android:textColor="@color/page_background"
+            android:layout_marginTop="@dimen/layout_margin"
+            android:layout_marginBottom="@dimen/layout_margin"
+            android:padding="@dimen/element_margin"/>
 
-    <TextView
-        android:id="@+id/btn_try_intencity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/try_intencity"
-        android:textColor="@color/primary"/>
-</LinearLayout>
+        <TextView
+            android:id="@+id/btn_try_intencity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/try_intencity"
+            android:textColor="@color/primary"/>
+    </LinearLayout>
+
+</ScrollView>
+
