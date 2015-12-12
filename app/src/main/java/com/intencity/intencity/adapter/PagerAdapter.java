@@ -5,8 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.intencity.intencity.activity.DemoActivity;
 import com.intencity.intencity.fragment.LoginFragment;
-import com.intencity.intencity.fragment.DemoPagerFragment;
+import com.intencity.intencity.fragment.PagerFragment;
 
 /**
  * A simple pager adapter that represents pages for the demo.
@@ -15,35 +16,66 @@ import com.intencity.intencity.fragment.DemoPagerFragment;
  */
 public class PagerAdapter extends FragmentStatePagerAdapter
 {
-    public static final int NUM_PAGES = 4;
+    public static final int NUM_PAGES_DEMO = 4;
+    public static final int NUM_PAGES_INTENCITY = 3;
 
-    public PagerAdapter(FragmentManager fm)
+    private int calledFrom;
+
+    /**
+     * Constructor for the Pager Adapter.
+     *
+     * @param fm        An instance of the fragment manager.
+     * @param classId   The class ID that created this adapter.
+     */
+    public PagerAdapter(FragmentManager fm, int classId)
     {
         super(fm);
+
+        this.calledFrom = classId;
     }
 
     @Override
     public Fragment getItem(int position)
     {
-        if (position == NUM_PAGES - 1)
+        if (calledFrom == DemoActivity.CLASS_ID)
         {
-            return new LoginFragment();
+            if (position == NUM_PAGES_DEMO - 1)
+            {
+                return new LoginFragment();
+            }
+            else
+            {
+                return getPagerFragment(position);
+            }
         }
         else
         {
-            Bundle bundle = new Bundle();
-            bundle.putInt(DemoPagerFragment.DEMO_PAGE, position);
-
-            DemoPagerFragment demoSliderFragment = new DemoPagerFragment();
-            demoSliderFragment.setArguments(bundle);
-
-            return demoSliderFragment;
+            return getPagerFragment(position);
         }
     }
 
     @Override
     public int getCount()
     {
-        return NUM_PAGES;
+        if (calledFrom == DemoActivity.CLASS_ID)
+        {
+            return NUM_PAGES_DEMO;
+        }
+        else
+        {
+            return NUM_PAGES_INTENCITY;
+        }
+    }
+
+    private PagerFragment getPagerFragment(int position)
+    {
+        Bundle bundle = new Bundle();
+        bundle.putInt(PagerFragment.FRAGMENT_PAGE, position);
+        bundle.putInt(PagerFragment.CLASS_ID, calledFrom);
+
+        PagerFragment sliderFragment = new PagerFragment();
+        sliderFragment.setArguments(bundle);
+
+        return sliderFragment;
     }
 }

@@ -32,7 +32,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_demo_sign_in, container, false);
+        View view = inflater.inflate(R.layout.fragment_demo_login, container, false);
 
         email = (EditText) view.findViewById(R.id.edit_text_email);
         password = (EditText) view.findViewById(R.id.edit_text_password);

@@ -17,12 +17,12 @@ import com.intencity.intencity.adapter.PagerAdapter;
  */
 public class DemoActivity extends FragmentActivity
 {
+    public static final int CLASS_ID = 1;
+
     private static final int PAGER_SELECTED_RESOURCE = R.mipmap.pager_selected;
     private static final int PAGER_UNSELECTED_RESOURCE = R.mipmap.pager_unselected;
 
     private ViewPager mPager;
-
-    private PagerAdapter mPagerAdapter;
 
     private ImageView pager0;
     private ImageView pager1;
@@ -39,9 +39,7 @@ public class DemoActivity extends FragmentActivity
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager)findViewById(R.id.pager);
-        mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-
+        mPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), CLASS_ID));
         mPager.addOnPageChangeListener(pageChangeListener);
 
         pager0 = (ImageView)findViewById(R.id.pager_0);
