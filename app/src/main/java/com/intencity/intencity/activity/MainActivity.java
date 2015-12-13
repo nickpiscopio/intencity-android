@@ -1,8 +1,6 @@
 package com.intencity.intencity.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -15,6 +13,7 @@ import com.intencity.intencity.fragment.FitnessGuruFragment;
 import com.intencity.intencity.fragment.MenuFragment;
 import com.intencity.intencity.fragment.RankingFragment;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.SecurePreferences;
 
 /**
  * This is the main activity for Intencity.
@@ -42,8 +41,10 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences prefs = this.getSharedPreferences(Constant.SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        if (prefs.getInt(Constant.USER_ID, 0) == 0)
+        String nullString = "";
+
+        SecurePreferences prefs = new SecurePreferences(getApplicationContext());
+        if (prefs.getString(Constant.USER_ACCOUNT_EMAIL, nullString).equals(nullString))
         {
             showDemo();
         }

@@ -7,4 +7,8 @@
     <color name="secondary_dark">#414042</color>
 
     <color name="page_background">#F6F6FF</color>
+
+    <color name="shadow">#CECECE</color>
+    <color name="card_button_select">#F3F3F3</color>
+
 </resources>

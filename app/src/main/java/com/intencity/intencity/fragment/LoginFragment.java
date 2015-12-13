@@ -2,8 +2,8 @@ package com.intencity.intencity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,7 @@ import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.SecurePreferences;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,16 +88,14 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     /**
      * Saves the login information for Intencity.
      *
-     * @param id            The id of the user.
-     * @param accountType   The user's account type.
+     * @param email         The email of the user.
+     * @param accountType   The account type of the user.
      */
-    private void loadIntencity(int id, String accountType)
+    private void loadIntencity(String email, String accountType)
     {
-        SharedPreferences prefs = context.getSharedPreferences(Constant.SHARED_PREFERENCES,
-                                                               Context.MODE_PRIVATE);
-
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(Constant.USER_ID, id);
+        SecurePreferences securePreferences = new SecurePreferences(context);
+        SecurePreferences.Editor editor = securePreferences.edit();
+        editor.putString(Constant.USER_ACCOUNT_EMAIL, email);
         editor.putString(Constant.USER_ACCOUNT_TYPE, accountType);
         editor.apply();
 
@@ -113,19 +112,21 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     }
 
     @Override
-    public void onRetrievalSuccessful(JSONObject response)
+    public void onRetrievalSuccessful(String response)
     {
         try
         {
-            String id = response.getString(Constant.JSON_ID);
-            String accountType = response.getString(Constant.JSON_ACCOUNT_TYPE);
+            JSONObject json = new JSONObject(response);
 
-            loadIntencity(Integer.parseInt(id), accountType);
+            String email = json.getString(Constant.JSON_EMAIL);
+            String accountType = json.getString(Constant.JSON_ACCOUNT_TYPE);
+
+            loadIntencity(email, accountType);
         }
         catch (JSONException e)
         {
             showErrorMessage();
-            e.printStackTrace();
+            Log.e(Constant.TAG, "Error parsing login data " + e.toString());
         }
     }
 

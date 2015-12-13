@@ -6,7 +6,6 @@ import android.util.Log;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.util.Constant;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -21,7 +20,7 @@ import java.net.URL;
  *
  * Created by Nick Piscopio on 12/10/15.
  */
-public class ServiceTask extends AsyncTask<String, Void, JSONObject>
+public class ServiceTask extends AsyncTask<String, Void, String>
 {
     private ServiceListener serviceListener;
 
@@ -33,7 +32,7 @@ public class ServiceTask extends AsyncTask<String, Void, JSONObject>
     }
 
     @Override
-    protected JSONObject doInBackground(String... params)
+    protected String doInBackground(String... params)
     {
         HttpURLConnection connection;
         OutputStreamWriter request = null;
@@ -63,18 +62,6 @@ public class ServiceTask extends AsyncTask<String, Void, JSONObject>
             // Response from server after login process will be stored in response variable.
             response = reader.readLine();
 
-            //Parse the String to JSONObject
-            try
-            {
-                jsonResponse = new JSONObject(response);
-            }
-            catch(JSONException e)
-            {
-                Log.e(Constant.TAG, "Error parsing data " + e.toString());
-
-                success = false;
-            }
-
             isr.close();
             reader.close();
 
@@ -86,11 +73,11 @@ public class ServiceTask extends AsyncTask<String, Void, JSONObject>
             success = false;
         }
 
-        return jsonResponse;
+        return response;
     }
 
     @Override
-    protected void onPostExecute(JSONObject result)
+    protected void onPostExecute(String result)
     {
         if (success)
         {

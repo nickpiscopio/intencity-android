@@ -15,7 +15,7 @@
     <string name="title_fitness_guru">Fitness Guru</string>
     <string name="title_menu">Menu</string>
 
-    <string name="title_routine">SELECT TODAY\'S ROUTINE</string>
+    <string name="title_routine">Select today\'s routine</string>
 
     <string name="start">START</string>
 </resources>

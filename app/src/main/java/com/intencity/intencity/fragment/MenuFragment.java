@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.intencity.intencity.R;
 
 /**
- * The MenuFragment for Intencity.
+ * The Menu Fragment for Intencity.
  *
  * Created by Nick Piscopio on 12/12/15.
  */

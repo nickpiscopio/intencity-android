@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<View
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_height"
-        android:background="@color/secondary_light"/>
-
-</RelativeLayout>
+    android:layout_height="@dimen/divider_height"
+    android:background="@color/shadow"/>
