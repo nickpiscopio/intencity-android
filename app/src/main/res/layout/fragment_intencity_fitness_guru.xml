@@ -2,7 +2,9 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:scrollbars="vertical">
 
     <LinearLayout
         android:id="@+id/layout_fitness_guru"
@@ -10,9 +12,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="@dimen/layout_margin"
-        android:background="@color/page_background">
-
-    </LinearLayout>
+        android:background="@color/page_background" />
 
 </ScrollView>
-

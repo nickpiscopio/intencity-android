@@ -17,5 +17,7 @@
 
     <string name="title_routine">Select today\'s routine</string>
 
+    <!-- Buttons -->
     <string name="start">START</string>
+    <string name="next_exercise">NEXT EXERCISE</string>
 </resources>

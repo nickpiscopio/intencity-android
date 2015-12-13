@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.FragmentHandler;
 import com.intencity.intencity.util.SecurePreferences;
 
 import org.json.JSONArray;
@@ -129,7 +129,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         public void onClick(View v)
         {
             String string = displayMuscleGroups.get(spinner.getSelectedItemPosition());
-            Toast.makeText(getActivity(), "Selected: " + string, Toast.LENGTH_SHORT).show();
+
+            new FragmentHandler().pushFragment(RoutineFragment.this, R.id.layout_fitness_guru, new CardFragmentNextExercise(), true);
         }
     };
 }
