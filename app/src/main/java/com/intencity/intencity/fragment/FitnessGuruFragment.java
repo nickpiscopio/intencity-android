@@ -21,7 +21,7 @@ public class FitnessGuruFragment extends android.support.v4.app.Fragment impleme
     {
         View view = inflater.inflate(R.layout.fragment_intencity_fitness_guru, container, false);
 
-        new FragmentHandler().pushFragment(this, R.id.layout_fitness_guru, new RoutineFragment(), false);
+        new FragmentHandler().pushFragment(this, R.id.layout_fitness_guru, new CardRoutineFragment(), null, false);
 
         return view;
     }

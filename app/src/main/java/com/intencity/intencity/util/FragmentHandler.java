@@ -1,5 +1,6 @@
 package com.intencity.intencity.util;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public class FragmentHandler
 {
-    public void pushFragment(Fragment fragment, int parent, Fragment fragmentToAdd, boolean replace)
+    public void pushFragment(Fragment fragment, int parent, Fragment fragmentToAdd, Bundle bundle, boolean replace)
     {
         FragmentManager fragmentManager = fragment.getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -28,8 +29,12 @@ public class FragmentHandler
             transaction.remove(last);
         }
 
-        transaction.add(parent, fragmentToAdd);
+        if (bundle != null)
+        {
+            fragmentToAdd.setArguments(bundle);
+        }
 
+        transaction.add(parent, fragmentToAdd);
         transaction.commit();
     }
 }

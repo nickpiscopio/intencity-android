@@ -15,6 +15,10 @@ public class Constant
     public static final String USER_ACCOUNT_EMAIL = "com.intencity.intencity.user.email";
     public static final String USER_ACCOUNT_TYPE = "com.intencity.intencity.user.account.type";
 
+    // Bundles
+    public static final String BUNDLE_EXERCISE = "com.intencity.intencity.exercise";
+    public static final String BUNDLE_EXERCISE_LIST = "com.intencity.intencity.exercise.list";
+
     // Service Endpoint
     private static final String ENDPOINT = "http://www.intencityapp.com/";
     //TODO: Change this when creating release build.
@@ -37,6 +41,7 @@ public class Constant
 
     // Stored Procedure Names
     public static final String STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS = "getAllDisplayMuscleGroups";
+    public static final String STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY = "getExercisesForToday";
 
     // Service JSON Tags
     public static final String JSON_ACCOUNT_TYPE = "AccountType";
@@ -49,8 +54,9 @@ public class Constant
     public static final String ACCOUNT_TYPE_TRIAL = "T";
 
     // Column Names
-    public static final String COLUMN_DISPLAY_NAME = "DisplayName";
     public static final String COLUMN_CURRENT_MUSCLE_GROUP = "currentMuscleGroup";
+    public static final String COLUMN_DISPLAY_NAME = "DisplayName";
+    public static final String COLUMN_EXERCISE_NAME = "ExerciseName";
 
     public static String getValidateUserCredentialsServiceParameters(String email, String password)
     {
