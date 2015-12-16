@@ -56,7 +56,7 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
 
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
-        new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+        new ServiceTask(spinnerServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.getStoredProcedure(
                                               Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS,
                                               email));
@@ -64,7 +64,12 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
         return view;
     }
 
-    public ServiceListener routineServiceListener = new ServiceListener()
+    /**
+     * The service listener for populating the spinner with routine names.
+     *
+     * The routine name that gets set is the recommended routine name.
+     */
+    public ServiceListener spinnerServiceListener = new ServiceListener()
     {
         @Override
         public void onRetrievalSuccessful(String response)
@@ -109,6 +114,27 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
         public void onRetrievalFailed() { }
     };
 
+    /**
+     * The service listener for setting the routine.
+     */
+    public ServiceListener routineServiceListener = new ServiceListener()
+    {
+        @Override
+        public void onRetrievalSuccessful(String response)
+        {
+            new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                                             Constant.getStoredProcedure(
+                                                                     Constant.STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY,
+                                                                     email));
+        }
+
+        @Override
+        public void onRetrievalFailed() { }
+    };
+
+    /**
+     * The service listener for getting the exercise list.
+     */
     public ServiceListener exerciseServiceListener = new ServiceListener()
     {
         @Override
@@ -158,9 +184,6 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
 
         spinner.setAdapter(adapter);
         spinner.setSelection(recommended);
-//
-//        // Spinner click listener
-//        spinner.setOnItemSelectedListener(startClickListener);
     }
 
     /**
@@ -171,12 +194,13 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
         @Override
         public void onClick(View v)
         {
-            String string = displayMuscleGroups.get(spinner.getSelectedItemPosition());
+            String routineNumber = String.valueOf(spinner.getSelectedItemPosition() + 1);
 
-            new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                             Constant.getStoredProcedure(
-                                                                     Constant.STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY,
-                                                                     email));
+            String storedProcedureParatmeters = Constant.getStoredProcedure(
+                    Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routineNumber);
+
+            new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                                            storedProcedureParatmeters);
         }
     };
 }

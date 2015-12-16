@@ -31,6 +31,7 @@ public class Constant
 
     // Parameters
     private static final String PARAMETER_AMPERSAND = "&";
+    private static final String PARAMETER_DELIMETER = ",";
     private static final String PARAMETER_EMAIL = "email=";
     private static final String PARAMETER_PASSWORD = "password=";
     private static final String PARAMETER_DATA = "d=";
@@ -42,6 +43,7 @@ public class Constant
     // Stored Procedure Names
     public static final String STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS = "getAllDisplayMuscleGroups";
     public static final String STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY = "getExercisesForToday";
+    public static final String STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP = "setCurrentMuscleGroup";
 
     // Service JSON Tags
     public static final String JSON_ACCOUNT_TYPE = "AccountType";
@@ -71,8 +73,17 @@ public class Constant
                PARAMETER_ACCOUNT_TYPE + ACCOUNT_TYPE_TRIAL;
     }
 
-    public static String getStoredProcedure(String data, String variable)
+    public static String getStoredProcedure(String data, String... variables)
     {
-        return PARAMETER_DATA + data + PARAMETER_AMPERSAND + PARAMETER_VARIABLE + variable;
+        String storedProcedureParameters = PARAMETER_DATA + data + PARAMETER_AMPERSAND + PARAMETER_VARIABLE;
+
+        int length = variables.length;
+
+        for (int i = 0; i < length; i++)
+        {
+            storedProcedureParameters += ((i > 0) ? PARAMETER_DELIMETER : "") + variables[i];
+        }
+
+        return storedProcedureParameters;
     }
 }
