@@ -16,8 +16,11 @@ public class Constant
     public static final String USER_ACCOUNT_TYPE = "com.intencity.intencity.user.account.type";
 
     // Bundles
-    public static final String BUNDLE_EXERCISE = "com.intencity.intencity.exercise";
-    public static final String BUNDLE_EXERCISE_LIST = "com.intencity.intencity.exercise.list";
+    public static final String BUNDLE_SET_NUMBER = "com.intencity.intencity.bundle.set.number";
+    public static final String BUNDLE_EXERCISE = "com.intencity.intencity.bundle.exercise";
+    public static final String BUNDLE_EXERCISE_LIST = "com.intencity.intencity.bundle.exercise.list";
+
+    public static final String TAG_SET = "TAG_SET";
 
     // Service Endpoint
     private static final String ENDPOINT = "http://www.intencityapp.com/";

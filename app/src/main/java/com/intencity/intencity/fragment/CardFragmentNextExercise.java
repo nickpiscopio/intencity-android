@@ -2,6 +2,7 @@ package com.intencity.intencity.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,8 @@ public class CardFragmentNextExercise extends Fragment
 
     private String nextExercise;
 
+    private FragmentHandler fragmentHandler;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -52,6 +55,8 @@ public class CardFragmentNextExercise extends Fragment
         TextView exerciseTitle = (TextView) view.findViewById(R.id.exercise);
         exerciseTitle.setText(nextExercise);
 
+        fragmentHandler = new FragmentHandler();
+
         return view;
     }
 
@@ -62,11 +67,16 @@ public class CardFragmentNextExercise extends Fragment
         {
             exercises.remove(FIRST_INDEX);
 
-            new FragmentHandler().pushFragment(CardFragmentNextExercise.this, R.id.layout_fitness_guru, new CardFragmentExercise(), getBundle(nextExercise), true);
+            FragmentManager manager = getFragmentManager();
+
+            fragmentHandler.pushFragment(manager, R.id.layout_fitness_guru,
+                                         new CardFragmentExercise(), getBundle(nextExercise), "", true);
 
             if (exercises.size() > 0)
             {
-                new FragmentHandler().pushFragment(CardFragmentNextExercise.this, R.id.layout_fitness_guru, new CardFragmentNextExercise(), getBundle(exercises), false);
+                fragmentHandler.pushFragment(manager, R.id.layout_fitness_guru,
+                                             new CardFragmentNextExercise(), getBundle(exercises),
+                                             "", false);
             }
 
         }

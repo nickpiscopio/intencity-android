@@ -5,10 +5,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.FragmentHandler;
 
 /**
  * The Fragment for the exercise.
@@ -34,6 +36,15 @@ public class CardFragmentExercise extends Fragment
                 exerciseTitle.setText(exercise);
             }
         }
+
+        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.parent_layout_sets);
+
+        int id = R.id.parent_layout_sets + 1;
+
+        linearLayout.setId(id);
+
+        new FragmentHandler().pushFragment(getFragmentManager(), linearLayout.getId(),
+                                           new ExerciseSetFragment(), null, Constant.TAG_SET, false);
 
         return view;
     }

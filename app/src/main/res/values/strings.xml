@@ -15,7 +15,15 @@
     <string name="title_fitness_guru">Fitness Guru</string>
     <string name="title_menu">Menu</string>
 
-    <string name="title_routine">Select today\'s routine</string>
+    <!-- Routine Strings -->
+    <string name="title_routine">What routine would you like to do?</string>
+
+    <!-- Exercise Strings -->
+    <string name="title_weight">WEIGHT</string>
+    <string name="title_reps">REPS</string>
+    <string name="title_time">TIME</string>
+    <string name="title_intensity">INTENSITY</string>
+    <string name="note_hint">This exercise was...</string>
 
     <!-- Buttons -->
     <string name="start">START</string>
