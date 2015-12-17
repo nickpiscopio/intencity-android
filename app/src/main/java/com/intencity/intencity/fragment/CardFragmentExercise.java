@@ -66,7 +66,7 @@ public class CardFragmentExercise extends Fragment
 
         manager = getFragmentManager();
 
-        fragmentHandler = new FragmentHandler();
+        fragmentHandler = FragmentHandler.getInstance();
 
         exerciseStatsLayout = (LinearLayout) view.findViewById(R.id.layout_exercise_stats);
         exerciseStatsLayout.setId(Util.getRandomId());
@@ -88,15 +88,18 @@ public class CardFragmentExercise extends Fragment
 
             if (exercises.size() > 0)
             {
-                fragmentHandler.pushFragment(manager, R.id.layout_fitness_guru,
-                                             new CardFragmentExercise(), bundle, false);
+                fragmentHandler.pushFragment(manager, R.id.layout_fitness_log,
+                                             new CardFragmentExercise(), false, bundle, false);
             }
         }
     };
 
+    /**
+     * Add the exercice stats fragment to the card.
+     */
     private void addExerciseStats()
     {
         fragmentHandler.pushFragment(manager, exerciseStatsLayout.getId(),
-                                     new CardFragmentExerciseStat(), null, false);
+                                     new CardFragmentExerciseStat(), true, null, false);
     }
 }

@@ -34,7 +34,7 @@ public class CardFragmentExerciseStat extends Fragment
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BUNDLE_ID, id);
 
-        new FragmentHandler().pushFragment(getFragmentManager(), id, new ExerciseSetFragment(),
+        FragmentHandler.getInstance().pushFragment(getFragmentManager(), id, new ExerciseSetFragment(), true,
                                            bundle, false);
 
         return view;

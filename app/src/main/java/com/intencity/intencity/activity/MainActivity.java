@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ViewPagerAdapter;
-import com.intencity.intencity.fragment.FitnessGuruFragment;
+import com.intencity.intencity.fragment.FitnessLogFragment;
 import com.intencity.intencity.fragment.MenuFragment;
 import com.intencity.intencity.fragment.RankingFragment;
 import com.intencity.intencity.util.Constant;
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity
     {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new RankingFragment(), "");
-        adapter.addFrag(new FitnessGuruFragment(), "");
+        adapter.addFrag(new FitnessLogFragment(), "");
         adapter.addFrag(new MenuFragment(), "");
         viewPager.setAdapter(adapter);
     }

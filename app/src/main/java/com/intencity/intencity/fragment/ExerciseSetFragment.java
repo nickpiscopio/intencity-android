@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -28,6 +29,7 @@ public class ExerciseSetFragment extends Fragment
     private final int ID_INTENSITY = R.id.spinner_intensity;
     private final float ALPHA_TRANSPARENT = 0.25f;
     private final float ALPHA_OPAQUE = 1f;
+    private boolean isEnabled;
 
     private FragmentHandler fragmentHandler;
 
@@ -54,6 +56,11 @@ public class ExerciseSetFragment extends Fragment
         EditText duration = (EditText) view.findViewById(ID_DURATION);
         Spinner intensity = (Spinner) view.findViewById(ID_INTENSITY);
 
+        // Add the intensity values to the spinner
+        Integer[] intensityValues = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner, intensityValues);
+        intensity.setAdapter(adapter);
+
         weight.setOnFocusChangeListener(clickListener);
         duration.setOnFocusChangeListener(clickListener);
         intensity.setOnItemSelectedListener(itemClickListener);
@@ -66,15 +73,22 @@ public class ExerciseSetFragment extends Fragment
             layoutId = bundle.getInt(Constant.BUNDLE_ID);
         }
 
-        fragmentHandler = new FragmentHandler();
+        fragmentHandler = FragmentHandler.getInstance();
 
         manager = getFragmentManager();
+
+        isEnabled = false;
 
         return view;
     }
 
+    /**
+     * Add a set view to the card.
+     */
     private void addSet()
     {
+        isEnabled = true;
+
         layout.setAlpha(ALPHA_OPAQUE);
 
         setNumber++;
@@ -85,8 +99,8 @@ public class ExerciseSetFragment extends Fragment
         bundle.putInt(Constant.BUNDLE_SET_NUMBER, setNumber);
         bundle.putInt(Constant.BUNDLE_ID, layoutId);
 
-        new FragmentHandler().pushFragment(getFragmentManager(), layoutId,
-                                           new ExerciseSetFragment(), bundle, false);
+        FragmentHandler.getInstance().pushFragment(getFragmentManager(), layoutId,
+                                                   new ExerciseSetFragment(), true, bundle, false);
     }
 
     private View.OnFocusChangeListener clickListener = new View.OnFocusChangeListener()
@@ -104,7 +118,10 @@ public class ExerciseSetFragment extends Fragment
                         break;
                 }
 
-                addSet();
+                if (!isEnabled)
+                {
+                    addSet();
+                }
             }
         }
     };
@@ -114,13 +131,19 @@ public class ExerciseSetFragment extends Fragment
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
         {
-            addSet();
+//            if (!isEnabled)
+//            {
+//                addSet();
+//            }
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent)
         {
-            addSet();
+            if (!isEnabled)
+            {
+                addSet();
+            }
         }
     };
 }
