@@ -27,16 +27,15 @@ public class CardFragmentExerciseStat extends Fragment
 
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.parent_layout_sets);
 
-        int tag = Util.getRandomId();
+        int id = Util.getRandomId();
 
-        linearLayout.setId(tag);
+        linearLayout.setId(id);
 
         Bundle bundle = new Bundle();
-        bundle.putInt(Constant.BUNDLE_ID, linearLayout.getId());
+        bundle.putInt(Constant.BUNDLE_ID, id);
 
-        new FragmentHandler().pushFragment(getFragmentManager(), tag,
-                                     new ExerciseSetFragment(), null, false);
-
+        new FragmentHandler().pushFragment(getFragmentManager(), id, new ExerciseSetFragment(),
+                                           bundle, false);
 
         return view;
     }

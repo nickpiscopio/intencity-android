@@ -7,8 +7,6 @@ import java.util.Random;
  */
 public class Util
 {
-    private static final String ALLOWED_CHARACTERS = "0123456789";
-
     public static int getRandomId()
     {
         return new Random().nextInt(1000 + 1);

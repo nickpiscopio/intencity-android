@@ -77,16 +77,16 @@ public class ExerciseSetFragment extends Fragment
     {
         layout.setAlpha(ALPHA_OPAQUE);
 
-        set.setText(String.valueOf(setNumber));
-
         setNumber++;
+
+        set.setText(String.valueOf(setNumber));
 
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BUNDLE_SET_NUMBER, setNumber);
         bundle.putInt(Constant.BUNDLE_ID, layoutId);
 
-        new FragmentHandler().pushFragment(getFragmentManager(), layoutId, new ExerciseSetFragment(),
-                                           bundle, false);
+        new FragmentHandler().pushFragment(getFragmentManager(), layoutId,
+                                           new ExerciseSetFragment(), bundle, false);
     }
 
     private View.OnFocusChangeListener clickListener = new View.OnFocusChangeListener()
