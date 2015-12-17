@@ -165,8 +165,9 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
 
             Bundle bundle = new Bundle();
             bundle.putStringArrayList(Constant.BUNDLE_EXERCISE_LIST, exercises);
+
             new FragmentHandler().pushFragment(getFragmentManager(), R.id.layout_fitness_guru,
-                                               new CardFragmentNextExercise(), bundle, "", true);
+                                               new CardFragmentExercise(), bundle, true);
         }
 
         @Override

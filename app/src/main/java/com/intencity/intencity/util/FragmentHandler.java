@@ -25,7 +25,7 @@ public class FragmentHandler
      * @param bundle            The information to send to the next fragment.
      * @param replace           Boolean on whether to replace the previous fragment.
      */
-    public void pushFragment(FragmentManager manager, int parent, Fragment fragmentToAdd, Bundle bundle, String tag, boolean replace)
+    public void pushFragment(FragmentManager manager, int parent, Fragment fragmentToAdd, Bundle bundle, boolean replace)
     {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.setCustomAnimations(R.anim.anim_slide_in_up, R.anim.anim_slide_out_up);
@@ -34,19 +34,9 @@ public class FragmentHandler
         {
             List<Fragment> fragments = manager.getFragments();
 
-            int fragmentsSize = fragments.size() - 1;
+            Fragment last = fragments.get(fragments.size() - 1);
 
-            for (int i = fragmentsSize; i > 0 ; i--)
-            {
-                if (!fragments.get(i).getTag().equals(Constant.TAG_SET))
-                {
-                    Fragment last = fragments.get(i);
-
-                    transaction.remove(last);
-
-                    break;
-                }
-            }
+            transaction.remove(last);
         }
 
         if (bundle != null)
@@ -54,7 +44,7 @@ public class FragmentHandler
             fragmentToAdd.setArguments(bundle);
         }
 
-        transaction.add(parent, fragmentToAdd, tag);
+        transaction.add(parent, fragmentToAdd);
         transaction.commit();
     }
 }

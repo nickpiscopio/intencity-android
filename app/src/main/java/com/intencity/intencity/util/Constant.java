@@ -19,6 +19,7 @@ public class Constant
     public static final String BUNDLE_SET_NUMBER = "com.intencity.intencity.bundle.set.number";
     public static final String BUNDLE_EXERCISE = "com.intencity.intencity.bundle.exercise";
     public static final String BUNDLE_EXERCISE_LIST = "com.intencity.intencity.bundle.exercise.list";
+    public static final String BUNDLE_ID = "com.intencity.intencity.bundle.id";
 
     public static final String TAG_SET = "TAG_SET";
 

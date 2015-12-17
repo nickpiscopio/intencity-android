@@ -39,6 +39,8 @@ public class ExerciseSetFragment extends Fragment
 
     private int setNumber = 1;
 
+    private int layoutId;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -61,6 +63,7 @@ public class ExerciseSetFragment extends Fragment
         if (bundle != null)
         {
             setNumber = bundle.getInt(Constant.BUNDLE_SET_NUMBER);
+            layoutId = bundle.getInt(Constant.BUNDLE_ID);
         }
 
         fragmentHandler = new FragmentHandler();
@@ -74,15 +77,16 @@ public class ExerciseSetFragment extends Fragment
     {
         layout.setAlpha(ALPHA_OPAQUE);
 
-        int id = R.id.parent_layout_sets + setNumber;
-
         set.setText(String.valueOf(setNumber));
 
-        Bundle bundle = new Bundle();
-        bundle.putInt(Constant.BUNDLE_SET_NUMBER, ++setNumber);
+        setNumber++;
 
-        new FragmentHandler().pushFragment(getFragmentManager(), id, new ExerciseSetFragment(),
-                                           bundle, Constant.TAG_SET, false);
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constant.BUNDLE_SET_NUMBER, setNumber);
+        bundle.putInt(Constant.BUNDLE_ID, layoutId);
+
+        new FragmentHandler().pushFragment(getFragmentManager(), layoutId, new ExerciseSetFragment(),
+                                           bundle, false);
     }
 
     private View.OnFocusChangeListener clickListener = new View.OnFocusChangeListener()
