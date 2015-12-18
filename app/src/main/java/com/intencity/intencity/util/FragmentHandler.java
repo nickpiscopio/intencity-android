@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.fragment.CardFragmentExercise;
+import com.intencity.intencity.fragment.CardFragmentExerciseStat;
 import com.intencity.intencity.listener.FragmentListener;
 
 import java.util.List;
@@ -76,7 +78,11 @@ public class FragmentHandler
         transaction.add(parent, fragmentToAdd);
         transaction.commit();
 
-        fragmentListener.onFragmentAdded();
+        if (fragmentToAdd instanceof CardFragmentExercise ||
+            fragmentToAdd instanceof CardFragmentExerciseStat)
+        {
+            fragmentListener.onFragmentAdded();
+        }
     }
 
     /**

@@ -1,13 +1,10 @@
 package com.intencity.intencity.fragment;
 
 import android.animation.ObjectAnimator;
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -62,24 +59,9 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     @Override
     public void onFragmentAdded()
     {
-        Activity activity = getActivity();
-
-        View view = activity.getCurrentFocus();
-        if (view != null)
-        {
-            view.clearFocus();
-        }
-
         int scrollDuration = getResources().getInteger(android.R.integer.config_longAnimTime);
-
-        // Get the keyboard so we can check when it is visible.
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-
-        if (!imm.isAcceptingText())
-        {
-            // Scroll to the bottom of the scrollview.
-            ObjectAnimator.ofInt(scrollView, PROPERTY, fitnessLogLayout.getHeight()).setDuration(scrollDuration).start();
-        }
+        
+        // Scroll to the bottom of the scrollview.
+        ObjectAnimator.ofInt(scrollView, PROPERTY, fitnessLogLayout.getHeight()).setDuration(scrollDuration).start();
     }
 }
