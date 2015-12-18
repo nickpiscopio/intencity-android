@@ -7,14 +7,35 @@ package com.intencity.intencity.model;
  */
 public class User
 {
+    private int id;
+    private int earnedPoints;
+
     private String firstName;
     private String lastName;
-
-    private int earnedPoints;
 
     /**
      * Getters and setters for the User model.
      */
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+
+    public int getEarnedPoints()
+    {
+        return earnedPoints;
+    }
+
+    public void setEarnedPoints(int earnedPoints)
+    {
+        this.earnedPoints = earnedPoints;
+    }
+
     public String getFirstName()
     {
         return firstName;
@@ -33,15 +54,5 @@ public class User
     public void setLastName(String lastName)
     {
         this.lastName = lastName;
-    }
-
-    public int getEarnedPoints()
-    {
-        return earnedPoints;
-    }
-
-    public void setEarnedPoints(int earnedPoints)
-    {
-        this.earnedPoints = earnedPoints;
     }
 }

@@ -34,8 +34,9 @@ public class Constant
     public static final String SERVICE_STORED_PROCEDURE = SERVICE_FOLDER + "stored_procedure.php";
 
     // Parameters
+    public static final String LIKE_OPERATOR = "%";
     private static final String PARAMETER_AMPERSAND = "&";
-    private static final String PARAMETER_DELIMETER = ",";
+    private static final String PARAMETER_DELIMITER = ",";
     private static final String PARAMETER_EMAIL = "email=";
     private static final String PARAMETER_PASSWORD = "password=";
     private static final String PARAMETER_DATA = "d=";
@@ -49,10 +50,13 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY = "getExercisesForToday";
     public static final String STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP = "setCurrentMuscleGroup";
     public static final String STORED_PROCEDURE_GET_FOLLOWING = "getFollowing";
+    public static final String STORED_PROCEDURE_SEARCH_USERS = "searchUsers";
+    public static final String STORED_PROCEDURE_FOLLOW_USER = "followUser";
 
     // Service JSON Tags
     public static final String JSON_ACCOUNT_TYPE = "AccountType";
     public static final String JSON_EMAIL = "Email";
+    public static final String JSON_ID = "ID";
     public static final String JSON_FIRST_NAME = "FirstName";
     public static final String JSON_LAST_NAME = "LastName";
     public static final String JSON_EARNED_POINTS = "EarnedPoints";
@@ -65,9 +69,15 @@ public class Constant
     public static final String ACCOUNT_TYPE_TRIAL = "T";
 
     // Column Names
+    // The current muscle group a user is recommended to do.
     public static final String COLUMN_CURRENT_MUSCLE_GROUP = "currentMuscleGroup";
+    // The id from the following table if a user is following that user from a search.
+    public static final String COLUMN_FOLLOWING_ID = "FollowingId";
     public static final String COLUMN_DISPLAY_NAME = "DisplayName";
     public static final String COLUMN_EXERCISE_NAME = "ExerciseName";
+
+    public static final String SPACE_REGEX = "\\s";
+    public static final String REGEX_EMAIL = "[a-zA-Z0-9]+([\\-\\.\\{\\}\\^\\+*_~]*[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([\\.\\-]*[a-zA-Z0-9]+)*[\\.][a-zA-Z]{2}[A-Za-z]*";
 
     public static String getValidateUserCredentialsServiceParameters(String email, String password)
     {
@@ -90,7 +100,7 @@ public class Constant
 
         for (int i = 0; i < length; i++)
         {
-            storedProcedureParameters += ((i > 0) ? PARAMETER_DELIMETER : "") + variables[i];
+            storedProcedureParameters += ((i > 0) ? PARAMETER_DELIMITER : "") + variables[i];
         }
 
         return storedProcedureParameters;

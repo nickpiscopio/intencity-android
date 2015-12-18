@@ -79,7 +79,7 @@ public class ServiceTask extends AsyncTask<String, Void, String>
     @Override
     protected void onPostExecute(String result)
     {
-        if (success)
+        if (success && result.length() > 0)
         {
             serviceListener.onRetrievalSuccessful(result);
         }

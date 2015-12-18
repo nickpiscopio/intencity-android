@@ -15,8 +15,9 @@
         android:text="1"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:paddingLeft="@dimen/layout_margin"
         android:orientation="vertical">
 
@@ -26,6 +27,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/layout_margin_half"
             android:textSize="@dimen/card_title_size"
+            android:textColor="@color/secondary_dark"
             android:text="Nick Piscopio"/>
 
         <LinearLayout
@@ -39,15 +41,31 @@
                 android:layout_height="wrap_content"
                 android:text="500"
                 android:textStyle="bold"
+                android:textColor="@color/secondary_dark"
                 android:textSize="@dimen/card_title_size"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/layout_margin_quarter"
+                android:textColor="@color/secondary_dark"
                 android:text="@string/points"/>
 
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/layout_margin"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/button_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_add"/>
 
     </LinearLayout>
 
