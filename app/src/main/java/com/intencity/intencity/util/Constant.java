@@ -48,10 +48,15 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS = "getAllDisplayMuscleGroups";
     public static final String STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY = "getExercisesForToday";
     public static final String STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP = "setCurrentMuscleGroup";
+    public static final String STORED_PROCEDURE_GET_FOLLOWING = "getFollowing";
 
     // Service JSON Tags
     public static final String JSON_ACCOUNT_TYPE = "AccountType";
     public static final String JSON_EMAIL = "Email";
+    public static final String JSON_FIRST_NAME = "FirstName";
+    public static final String JSON_LAST_NAME = "LastName";
+    public static final String JSON_EARNED_POINTS = "EarnedPoints";
+    public static final String JSON_PROFILE_PICTURE_URL = "Url";
 
     // Column Values
     public static final String ACCOUNT_TYPE_ADMIN = "A";

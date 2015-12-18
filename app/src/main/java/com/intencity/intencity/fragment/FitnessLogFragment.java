@@ -60,7 +60,7 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     public void onFragmentAdded()
     {
         int scrollDuration = getResources().getInteger(android.R.integer.config_longAnimTime);
-        
+
         // Scroll to the bottom of the scrollview.
         ObjectAnimator.ofInt(scrollView, PROPERTY, fitnessLogLayout.getHeight()).setDuration(scrollDuration).start();
     }

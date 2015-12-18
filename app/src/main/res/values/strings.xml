@@ -15,6 +15,9 @@
     <string name="title_fitness_guru">Fitness Guru</string>
     <string name="title_menu">Menu</string>
 
+    <!-- Ranking Strings -->
+    <string name="points">POINTS</string>
+
     <!-- Routine Strings -->
     <string name="title_routine">What routine would you like to do?</string>
 
