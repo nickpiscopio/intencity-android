@@ -14,6 +14,7 @@
     <string name="title_rankings">Rankings</string>
     <string name="title_fitness_guru">Fitness Guru</string>
     <string name="title_menu">Menu</string>
+    <string name="menu_search">Search</string>
 
     <!-- Ranking Strings -->
     <string name="points">POINTS</string>

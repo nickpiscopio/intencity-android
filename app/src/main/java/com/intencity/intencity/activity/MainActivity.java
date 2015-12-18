@@ -6,6 +6,9 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ViewPagerAdapter;
@@ -83,6 +86,9 @@ public class MainActivity extends AppCompatActivity
         setupTabIcons();
     }
 
+    /**
+     * Creates the tab icons for the layout.
+     */
     private void setupTabIcons()
     {
         if (tabLayout != null)
@@ -93,6 +99,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Sets up the view pager.
+     *
+     * @param viewPager     The view pager to add the adapter to.
+     */
     private void setupViewPager(ViewPager viewPager)
     {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -100,5 +111,28 @@ public class MainActivity extends AppCompatActivity
         adapter.addFrag(new FitnessLogFragment(), "");
         adapter.addFrag(new MenuFragment(), "");
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.search:
+                Intent intent = new Intent(this, SearchActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
