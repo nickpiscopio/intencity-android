@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RankingListAdapter;
-import com.intencity.intencity.doa.UserDao;
+import com.intencity.intencity.helper.doa.UserDao;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.User;
 import com.intencity.intencity.task.ServiceTask;

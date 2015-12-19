@@ -22,6 +22,7 @@
 
     <!-- Routine Strings -->
     <string name="title_routine">What routine would you like to do?</string>
+    <string name="routine_continue">Continue where I left off</string>
 
     <!-- Exercise Strings -->
     <string name="title_weight">WEIGHT</string>

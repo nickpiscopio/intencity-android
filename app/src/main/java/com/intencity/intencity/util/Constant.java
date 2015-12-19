@@ -21,8 +21,9 @@ public class Constant
 
     // Bundles
     public static final String BUNDLE_SET_NUMBER = "com.intencity.intencity.bundle.set.number";
-    public static final String BUNDLE_EXERCISE = "com.intencity.intencity.bundle.exercise";
     public static final String BUNDLE_EXERCISE_LIST = "com.intencity.intencity.bundle.exercise.list";
+    public static final String BUNDLE_EXERCISE_LIST_INDEX = "com.intencity.intencity.bundle.exercise.list.index";
+    public static final String BUNDLE_EXERCISE_AUTOFILL_FROM = "com.intencity.intencity.bundle.exercise.auto.fill";
     public static final String BUNDLE_ID = "com.intencity.intencity.bundle.id";
 
     public static final String TAG_SET = "TAG_SET";
@@ -68,6 +69,10 @@ public class Constant
     public static final String COLUMN_CURRENT_MUSCLE_GROUP = "currentMuscleGroup";
     public static final String COLUMN_DISPLAY_NAME = "DisplayName";
     public static final String COLUMN_EXERCISE_NAME = "ExerciseName";
+    public static final String COLUMN_EXERCISE_WEIGHT = "ExerciseWeight";
+    public static final String COLUMN_EXERCISE_REPS = "ExerciseReps";
+    public static final String COLUMN_EXERCISE_DURATION = "ExerciseDuration";
+    public static final String COLUMN_EXERCISE_DIFFICULTY = "ExerciseDifficulty";
     public static final String COLUMN_ACCOUNT_TYPE = "AccountType";
     public static final String COLUMN_EMAIL = "Email";
     public static final String COLUMN_ID = "ID";

@@ -12,6 +12,7 @@ import android.widget.Spinner;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.FragmentHandler;
@@ -40,6 +41,9 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
 
     private String email;
 
+    private ArrayList<Exercise> previousExercises;
+    private int index;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -56,10 +60,18 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
 
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
+        Bundle bundle = getArguments();
+
+        if (bundle != null)
+        {
+            previousExercises = bundle.getParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST);
+            index = bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX);
+        }
+
         new ServiceTask(spinnerServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                      Constant.getStoredProcedure(
-                                              Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS,
-                                              email));
+                                                        Constant.getStoredProcedure(
+                                                                Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS,
+                                                                email));
 
         return view;
     }
@@ -102,6 +114,13 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
                     }
                 }
 
+                // Add the previous exercise to the list.
+                if (previousExercises != null && previousExercises.size() > 0)
+                {
+                    displayMuscleGroups.add(getString(R.string.routine_continue));
+                    recommendedRoutine = displayMuscleGroups.size() - 1;
+                }
+
                 populateMuscleGroupSpinner(recommendedRoutine);
             }
             catch (JSONException e)
@@ -140,7 +159,7 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            ArrayList<String> exercises = new ArrayList<>();
+            ArrayList<Exercise> exercises = new ArrayList<>();
 
             try
             {
@@ -152,7 +171,24 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
                 {
                     JSONObject object = array.getJSONObject(i);
 
-                    String exercise = object.getString(Constant.COLUMN_EXERCISE_NAME);
+                    String name = object.getString(Constant.COLUMN_EXERCISE_NAME);
+                    String weight = object.getString(Constant.COLUMN_EXERCISE_WEIGHT);
+                    String reps = object.getString(Constant.COLUMN_EXERCISE_REPS);
+                    String duration = object.getString(Constant.COLUMN_EXERCISE_DURATION);
+                    String difficulty = object.getString(Constant.COLUMN_EXERCISE_DIFFICULTY);
+
+                    Exercise exercise = new Exercise();
+                    exercise.setName(name);
+                    exercise.setWeight(weight.equalsIgnoreCase(Constant.RETURN_NULL) ?
+                                               Constant.CODE_FAILED :
+                                               Integer.valueOf(weight));
+                    exercise.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ?
+                                             Constant.CODE_FAILED :
+                                             Integer.valueOf(reps));
+                    exercise.setDuration(duration);
+                    exercise.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ?
+                                                   Constant.CODE_FAILED :
+                                                   Integer.valueOf(difficulty));
 
                     // Add all the exercises from the database to the array list.
                     exercises.add(exercise);
@@ -163,18 +199,25 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
                 e.printStackTrace();
             }
 
-            Bundle bundle = new Bundle();
-            bundle.putStringArrayList(Constant.BUNDLE_EXERCISE_LIST, exercises);
-
-            FragmentHandler.getInstance().pushFragment(getFragmentManager(),
-                                                       R.id.layout_fitness_log,
-                                                       new CardFragmentExercise(), false, bundle,
-                                                       true);
+            pushCardFragmentExercise(exercises, 0, false);
         }
 
         @Override
         public void onRetrievalFailed() { }
     };
+
+    private void pushCardFragmentExercise(ArrayList<Exercise> exercises, int index, boolean autoFill)
+    {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, exercises);
+        bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, index);
+        bundle.putInt(Constant.BUNDLE_EXERCISE_AUTOFILL_FROM, 0);
+
+        FragmentHandler.getInstance().pushFragment(getFragmentManager(),
+                                                   R.id.layout_fitness_log,
+                                                   new CardFragmentExercise(), false, bundle,
+                                                   true);
+    }
 
     /**
      * Populates the muscle spinner.
@@ -197,13 +240,23 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
         @Override
         public void onClick(View v)
         {
-            String routineNumber = String.valueOf(spinner.getSelectedItemPosition() + 1);
+            int spinnerPosition = spinner.getSelectedItemPosition();
 
-            String storedProcedureParatmeters = Constant.getStoredProcedure(
-                    Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routineNumber);
+            // If the user selects to continue from the last routine he or she chose.
+            if (spinner.getItemAtPosition(spinnerPosition)
+                       .equals(getString(R.string.routine_continue)))
+            {
+                pushCardFragmentExercise(previousExercises, index, true);
+            }
+            else
+            {
+                String routine = String.valueOf(spinnerPosition + 1);
+                String storedProcedureParameters = Constant.getStoredProcedure(
+                        Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);
 
-            new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                            storedProcedureParatmeters);
+                new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                                                storedProcedureParameters);
+            }
         }
     };
 }

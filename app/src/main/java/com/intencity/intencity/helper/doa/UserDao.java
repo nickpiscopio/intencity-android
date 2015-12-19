@@ -1,4 +1,4 @@
-package com.intencity.intencity.doa;
+package com.intencity.intencity.helper.doa;
 
 import android.util.Log;
 
