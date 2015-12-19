@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_version">1.1</string>
     <string name="app_name">Intencity</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -32,4 +33,18 @@
     <!-- Buttons -->
     <string name="start">START</string>
     <string name="next_exercise">NEXT EXERCISE</string>
+
+    <!-- Menu Strings-->
+    <string name="title_about">About</string>
+
+    <!-- About -->
+    <string name="title_mission">MISSION</string>
+    <string name="title_founders">FOUNDERS</string>
+    <string name="title_contributors">CONTRIBUTIONS</string>
+    <string name="title_version">VERSION</string>
+
+    <string name="mission">We strive to deliver the greatest platform that will influence, motivate, and connect people, which will help them achieve their fitness goals.</string>
+    <string name="founders">Nick Piscopio\nChris Piscopio</string>
+    <string name="contributors">Lisa Troncelliti\nHalen Dang\nChad Reynolds\nRandy Dang\nChristina Dang\nLaura D\'Alfonso\nKha Dang\nPhiladelphia University</string>
+
 </resources>

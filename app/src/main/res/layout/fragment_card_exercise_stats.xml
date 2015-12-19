@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:text="@string/title_weight"
                 android:gravity="center"
-                android:textSize="@dimen/card_title2_size"
+                android:textSize="@dimen/card_title3_size"
                 android:textColor="@color/secondary_dark"/>
 
             <TextView
@@ -41,7 +41,7 @@
                 android:layout_weight="1"
                 android:text="@string/title_reps"
                 android:gravity="center"
-                android:textSize="@dimen/card_title2_size"
+                android:textSize="@dimen/card_title3_size"
                 android:textColor="@color/secondary_dark"/>
 
             <TextView
@@ -50,7 +50,7 @@
                 android:layout_weight="1"
                 android:text="@string/title_intensity"
                 android:gravity="center"
-                android:textSize="@dimen/card_title2_size"
+                android:textSize="@dimen/card_title3_size"
                 android:textColor="@color/secondary_dark"/>
 
         </LinearLayout>

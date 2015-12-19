@@ -6,8 +6,6 @@ import android.util.Log;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.util.Constant;
 
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,11 +35,9 @@ public class ServiceTask extends AsyncTask<String, Void, String>
         HttpURLConnection connection;
         OutputStreamWriter request = null;
 
-        URL url = null;
+        URL url;
         String response = null;
         String parameters = params[1];
-
-        JSONObject jsonResponse = null;
 
         try
         {
