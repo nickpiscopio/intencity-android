@@ -33,10 +33,19 @@ public class UserDao
                 JSONObject object = array.getJSONObject(i);
 
                 User user = new User();
-                user.setId(Integer.valueOf(object.getString(Constant.JSON_ID)));
-                user.setEarnedPoints(Integer.valueOf(object.getString(Constant.JSON_EARNED_POINTS)));
-                user.setFirstName(object.getString(Constant.JSON_FIRST_NAME));
-                user.setLastName(object.getString(Constant.JSON_LAST_NAME));
+
+                // Only try to get the FollowingId if the service is searching for it.
+                if (object.has(Constant.COLUMN_FOLLOWING_ID))
+                {
+                    String followingId = object.getString(Constant.COLUMN_FOLLOWING_ID);
+                    user.setFollowingId(followingId.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
+                                                Integer.valueOf(followingId));
+                }
+
+                user.setId(Integer.valueOf(object.getString(Constant.COLUMN_ID)));
+                user.setEarnedPoints(Integer.valueOf(object.getString(Constant.COLUMN_EARNED_POINTS)));
+                user.setFirstName(object.getString(Constant.COLUMN_FIRST_NAME));
+                user.setLastName(object.getString(Constant.COLUMN_LAST_NAME));
 
                 users.add(user);
             }

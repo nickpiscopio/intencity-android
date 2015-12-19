@@ -28,10 +28,6 @@ public class RankingListAdapter extends ArrayAdapter<User>
 
     private Context context;
 
-    private ServiceListener serviceListener;
-
-    private int id;
-
     /**
      * The constructor.
      *
@@ -39,15 +35,13 @@ public class RankingListAdapter extends ArrayAdapter<User>
      * @param resId     The layout resource id for the list item.
      * @param users     The list of users to populate the list.
      */
-    public RankingListAdapter(Context context, int resId, ArrayList<User> users, ServiceListener serviceListener)
+    public RankingListAdapter(Context context, int resId, ArrayList<User> users)
     {
         super(context, resId, users);
 
         this.context = context;
 
         this.objects = users;
-
-        this.serviceListener = serviceListener;
     }
 
     public View getView(int position, View convertView, ViewGroup parent)
@@ -60,38 +54,61 @@ public class RankingListAdapter extends ArrayAdapter<User>
             view = inflater.inflate(R.layout.list_item_ranking, null);
         }
 
-        ImageButton add = (ImageButton) view.findViewById(R.id.button_add);
-        add.setOnClickListener(addClickListener);
-
         User user = objects.get(position);
 
-        if (user != null)
-        {
-            TextView rank = (TextView) view.findViewById(R.id.text_view_rank);
-            TextView name = (TextView) view.findViewById(R.id.text_view_name);
-            TextView points = (TextView) view.findViewById(R.id.text_view_points);
+        TextView rank = (TextView) view.findViewById(R.id.text_view_rank);
+        TextView name = (TextView) view.findViewById(R.id.text_view_name);
+        TextView points = (TextView) view.findViewById(R.id.text_view_points);
 
-            id = user.getId();
-            rank.setText(String.valueOf(position + 1));
-            name.setText(user.getFirstName() + " " + user.getLastName());
-            points.setText(String.valueOf(user.getEarnedPoints()));
+        rank.setText(String.valueOf(position + 1));
+        name.setText(user.getFirstName() + " " + user.getLastName());
+        points.setText(String.valueOf(user.getEarnedPoints()));
+        final int id = user.getId();
+
+        final ImageButton addButton = (ImageButton) view.findViewById(R.id.button_add);
+
+        // Needed to add the click listener in getView because the id was
+        // getting overwritten by the last id in the list.
+        addButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                SecurePreferences securePreferences = new SecurePreferences(context);
+
+                String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+
+                // Needed to add the service listener in the parameter because the ImageButton was
+                // getting overwritten by the last ImageButton in the list.
+                new ServiceTask(new ServiceListener()
+                {
+                    @Override
+                    public void onRetrievalSuccessful(String response)
+                    {
+                        // Remove the ability to add a user since said user was just added to follow.
+                        addButton.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onRetrievalFailed() { }
+                }).execute(Constant.SERVICE_STORED_PROCEDURE,
+                           Constant.getStoredProcedure(Constant.STORED_PROCEDURE_FOLLOW_USER, email,
+                                                       String.valueOf(id)));
+            }
+        });
+
+        // CODE_FAILED should get returned if the user isn't connected to the
+        // person that was returned from the search term.
+        if (user.getFollowingId() == Constant.CODE_FAILED)
+        {
+            addButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            // Remove the ability to add a user if he or she is already connected to the user.
+            addButton.setVisibility(View.GONE);
         }
 
         return view;
     }
-
-    private View.OnClickListener addClickListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v)
-        {
-            SecurePreferences securePreferences = new SecurePreferences(context);
-
-            String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
-
-            new ServiceTask(serviceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                            Constant.getStoredProcedure(Constant.STORED_PROCEDURE_FOLLOW_USER,
-                                                                                        email, String.valueOf(id)));
-        }
-    };
 }

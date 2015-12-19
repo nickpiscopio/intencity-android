@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +17,7 @@ import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.User;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.SecurePreferences;
 
 import java.util.ArrayList;
 
@@ -70,6 +70,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     @Override
     public boolean onQueryTextSubmit(String query)
     {
+        SecurePreferences securePreferences = new SecurePreferences(context);
+
+        String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+
         // Get all the users from the database with the search query minus the spaces.
         // Need to add % before and after the search term, so we can get back the proper
         // values from the database.
@@ -78,7 +82,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         new ServiceTask(searchUsersServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                             Constant.getStoredProcedure(
                                                                     Constant.STORED_PROCEDURE_SEARCH_USERS,
-                                                                    searchTerm));
+                                                                    email, searchTerm));
         return false;
     }
 
@@ -124,7 +128,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         RankingListAdapter arrayAdapter = new RankingListAdapter(
                 context,
                 R.layout.list_item_ranking,
-                users, addUserServiceListener);
+                users);
 
         listView.setAdapter(arrayAdapter);
     }
@@ -141,22 +145,5 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         }
 
         @Override public void onRetrievalFailed() { }
-    };
-
-    /**
-     * Service listener for adding a user.
-     */
-    ServiceListener addUserServiceListener = new ServiceListener()
-    {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-            Log.i("AddService", "Finished");
-        }
-
-        @Override public void onRetrievalFailed()
-        {
-            Log.i("AddService", "Failed");
-        }
     };
 }

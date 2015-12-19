@@ -8,6 +8,7 @@ package com.intencity.intencity.model;
 public class User
 {
     private int id;
+    private int followingId;
     private int earnedPoints;
 
     private String firstName;
@@ -24,6 +25,16 @@ public class User
     public void setId(int id)
     {
         this.id = id;
+    }
+
+    public int getFollowingId()
+    {
+        return followingId;
+    }
+
+    public void setFollowingId(int followingId)
+    {
+        this.followingId = followingId;
     }
 
     public int getEarnedPoints()

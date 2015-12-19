@@ -9,6 +9,10 @@ public class Constant
 {
     public static final String TAG = "Intencity";
 
+    public static final int CODE_FAILED = -1;
+
+    public static final String RETURN_NULL = "null";
+
     // Currently not used
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences
@@ -53,15 +57,6 @@ public class Constant
     public static final String STORED_PROCEDURE_SEARCH_USERS = "searchUsers";
     public static final String STORED_PROCEDURE_FOLLOW_USER = "followUser";
 
-    // Service JSON Tags
-    public static final String JSON_ACCOUNT_TYPE = "AccountType";
-    public static final String JSON_EMAIL = "Email";
-    public static final String JSON_ID = "ID";
-    public static final String JSON_FIRST_NAME = "FirstName";
-    public static final String JSON_LAST_NAME = "LastName";
-    public static final String JSON_EARNED_POINTS = "EarnedPoints";
-    public static final String JSON_PROFILE_PICTURE_URL = "Url";
-
     // Column Values
     public static final String ACCOUNT_TYPE_ADMIN = "A";
     public static final String ACCOUNT_TYPE_BETA = "B";
@@ -71,10 +66,17 @@ public class Constant
     // Column Names
     // The current muscle group a user is recommended to do.
     public static final String COLUMN_CURRENT_MUSCLE_GROUP = "currentMuscleGroup";
-    // The id from the following table if a user is following that user from a search.
-    public static final String COLUMN_FOLLOWING_ID = "FollowingId";
     public static final String COLUMN_DISPLAY_NAME = "DisplayName";
     public static final String COLUMN_EXERCISE_NAME = "ExerciseName";
+    public static final String COLUMN_ACCOUNT_TYPE = "AccountType";
+    public static final String COLUMN_EMAIL = "Email";
+    public static final String COLUMN_ID = "ID";
+    public static final String COLUMN_FIRST_NAME = "FirstName";
+    public static final String COLUMN_LAST_NAME = "LastName";
+    public static final String COLUMN_EARNED_POINTS = "EarnedPoints";
+    public static final String COLUMN_PROFILE_PICTURE_URL = "Url";
+    // The id from the following table if a user is following that user from a search.
+    public static final String COLUMN_FOLLOWING_ID = "FollowingId";
 
     public static final String SPACE_REGEX = "\\s";
     public static final String REGEX_EMAIL = "[a-zA-Z0-9]+([\\-\\.\\{\\}\\^\\+*_~]*[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([\\.\\-]*[a-zA-Z0-9]+)*[\\.][a-zA-Z]{2}[A-Za-z]*";

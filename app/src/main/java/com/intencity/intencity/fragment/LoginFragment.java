@@ -118,8 +118,8 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         {
             JSONObject json = new JSONObject(response);
 
-            String email = json.getString(Constant.JSON_EMAIL);
-            String accountType = json.getString(Constant.JSON_ACCOUNT_TYPE);
+            String email = json.getString(Constant.COLUMN_EMAIL);
+            String accountType = json.getString(Constant.COLUMN_ACCOUNT_TYPE);
 
             loadIntencity(email, accountType);
         }

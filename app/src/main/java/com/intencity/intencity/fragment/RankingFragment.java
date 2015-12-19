@@ -61,7 +61,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         RankingListAdapter arrayAdapter = new RankingListAdapter(
                 context,
                 R.layout.list_item_ranking,
-                users, null);
+                users);
 
         ranking.setAdapter(arrayAdapter);
     }
