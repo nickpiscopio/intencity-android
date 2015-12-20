@@ -48,7 +48,7 @@ public class FragmentHandler
      * @param bundle            The information to send to the next fragment.
      * @param replace           Boolean on whether to replace the previous fragment.
      */
-    public void pushFragment(FragmentManager manager, int parent, Fragment fragmentToAdd, boolean invert, Bundle bundle, boolean replace)
+    public void pushFragment(FragmentManager manager, int parent, Fragment fragmentToAdd, String tag, boolean invert, Bundle bundle, boolean replace)
     {
         FragmentTransaction transaction = manager.beginTransaction();
 
@@ -75,7 +75,7 @@ public class FragmentHandler
             fragmentToAdd.setArguments(bundle);
         }
 
-        transaction.add(parent, fragmentToAdd);
+        transaction.add(parent, fragmentToAdd, tag);
         transaction.commit();
 
         if (fragmentToAdd instanceof CardFragmentExercise ||
@@ -83,6 +83,20 @@ public class FragmentHandler
         {
             fragmentListener.onFragmentAdded();
         }
+    }
+
+    /**
+     * Remove a fragment from the fragment manager.
+     *
+     * @param manager   The FragmentManager.
+     * @param tag       The tag of the fragment to remove.
+     */
+    public void removeFragment(FragmentManager manager, String tag)
+    {
+        FragmentTransaction transaction = manager.beginTransaction();
+        Fragment fragment = manager.findFragmentByTag(tag);
+        transaction.remove(fragment);
+        transaction.commit();
     }
 
     /**

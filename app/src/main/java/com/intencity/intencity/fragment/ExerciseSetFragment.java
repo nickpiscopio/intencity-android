@@ -100,7 +100,7 @@ public class ExerciseSetFragment extends Fragment
         bundle.putInt(Constant.BUNDLE_ID, layoutId);
 
         FragmentHandler.getInstance().pushFragment(getFragmentManager(), layoutId,
-                                                   new ExerciseSetFragment(), true, bundle, false);
+                                                   new ExerciseSetFragment(), "", true, bundle, false);
     }
 
     private View.OnFocusChangeListener clickListener = new View.OnFocusChangeListener()

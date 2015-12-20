@@ -19,7 +19,6 @@ import com.intencity.intencity.util.FragmentHandler;
 
 import java.util.ArrayList;
 
-
 /**
  * The Fitness Guru Fragment for Intencity.
  *
@@ -75,6 +74,6 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         fragmentHandler = FragmentHandler.getInstance();
         fragmentHandler.setFragmentListener(this);
         fragmentHandler.pushFragment(manager, R.id.layout_fitness_log,
-                                     new CardRoutineFragment(), false, bundle, false);
+                                     new CardRoutineFragment(), "", false, bundle, false);
     }
 }

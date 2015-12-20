@@ -199,14 +199,14 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
                 e.printStackTrace();
             }
 
-            pushCardFragmentExercise(exercises, 0, false);
+            pushCardFragmentExercise(exercises, 0);
         }
 
         @Override
         public void onRetrievalFailed() { }
     };
 
-    private void pushCardFragmentExercise(ArrayList<Exercise> exercises, int index, boolean autoFill)
+    private void pushCardFragmentExercise(ArrayList<Exercise> exercises, int index)
     {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, exercises);
@@ -215,7 +215,7 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
 
         FragmentHandler.getInstance().pushFragment(getFragmentManager(),
                                                    R.id.layout_fitness_log,
-                                                   new CardFragmentExercise(), false, bundle,
+                                                   new CardFragmentExercise(), exercises.get(0).getName(), false, bundle,
                                                    true);
     }
 
@@ -246,7 +246,7 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
             if (spinner.getItemAtPosition(spinnerPosition)
                        .equals(getString(R.string.routine_continue)))
             {
-                pushCardFragmentExercise(previousExercises, index, true);
+                pushCardFragmentExercise(previousExercises, index);
             }
             else
             {

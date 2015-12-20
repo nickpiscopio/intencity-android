@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.intencity.intencity.R;
 import com.intencity.intencity.activity.MainActivity;
 import com.intencity.intencity.dialog.CustomDialog;
+import com.intencity.intencity.dialog.Dialog;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
@@ -108,7 +109,11 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
 
     private void showErrorMessage()
     {
-        new CustomDialog(context, this, context.getString(R.string.login_error_title), context.getString(R.string.login_error_message), false);
+        Dialog dialog = new Dialog(context.getString(R.string.login_error_title),
+                                   context.getString(R.string.login_error_message),
+                                   false);
+
+        new CustomDialog(context, this, dialog);
     }
 
     @Override
@@ -134,6 +139,11 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     public void onRetrievalFailed()
     {
         showErrorMessage();
+    }
+
+    @Override public void onButtonPressed(int which)
+    {
+
     }
 
     @Override
