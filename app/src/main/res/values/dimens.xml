@@ -10,7 +10,7 @@
     <dimen name="layout_margin">16dp</dimen>
     <dimen name="layout_margin_half">8dp</dimen>
     <dimen name="layout_margin_quarter">4dp</dimen>
-    <dimen name="rounded_corner_radius">3dp</dimen>
+    <dimen name="rounded_corner_radius">4dp</dimen>
     <dimen name="shadow">2dp</dimen>
     <dimen name="element_margin">14dp</dimen>
     <dimen name="related_item_margin">5dp</dimen>

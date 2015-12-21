@@ -211,11 +211,10 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, exercises);
         bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, index);
-        bundle.putInt(Constant.BUNDLE_EXERCISE_AUTOFILL_FROM, 0);
 
         FragmentHandler.getInstance().pushFragment(getFragmentManager(),
                                                    R.id.layout_fitness_log,
-                                                   new CardFragmentExercise(), exercises.get(0).getName(), false, bundle,
+                                                   new ExerciseListFragment(), "", false, bundle,
                                                    true);
     }
 

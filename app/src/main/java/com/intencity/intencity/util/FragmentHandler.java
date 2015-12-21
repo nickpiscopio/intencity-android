@@ -6,9 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.fragment.CardFragmentExercise;
-import com.intencity.intencity.fragment.CardFragmentExerciseStat;
-import com.intencity.intencity.listener.FragmentListener;
 
 import java.util.List;
 
@@ -20,8 +17,6 @@ import java.util.List;
 public class FragmentHandler
 {
     public static FragmentHandler fragmentHandler = null;
-
-    private FragmentListener fragmentListener;
 
     /**
      * Gets the instance of the singleton for the FragmentHandler.
@@ -78,34 +73,5 @@ public class FragmentHandler
         transaction.add(parent, fragmentToAdd, tag);
         transaction.commit();
 
-        if (fragmentToAdd instanceof CardFragmentExercise ||
-            fragmentToAdd instanceof CardFragmentExerciseStat)
-        {
-            fragmentListener.onFragmentAdded();
-        }
-    }
-
-    /**
-     * Remove a fragment from the fragment manager.
-     *
-     * @param manager   The FragmentManager.
-     * @param tag       The tag of the fragment to remove.
-     */
-    public void removeFragment(FragmentManager manager, String tag)
-    {
-        FragmentTransaction transaction = manager.beginTransaction();
-        Fragment fragment = manager.findFragmentByTag(tag);
-        transaction.remove(fragment);
-        transaction.commit();
-    }
-
-    /**
-     * The fragmentListener setter.
-     *
-     * @param fragmentListener  The fragmentListener to set.
-     */
-    public void setFragmentListener(FragmentListener fragmentListener)
-    {
-        this.fragmentListener = fragmentListener;
     }
 }
