@@ -1,16 +1,19 @@
 package com.intencity.intencity.adapter.viewholder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.activity.Direction;
 import com.intencity.intencity.dialog.CustomDialog;
 import com.intencity.intencity.dialog.Dialog;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ExerciseListener;
+import com.intencity.intencity.util.Constant;
 
 /**
  * Created by nickpiscopio on 12/21/15.
@@ -51,6 +54,18 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder implements Dialo
         {
             listener.onExerciseClicked();
             v.setOnClickListener(null);
+            exercise.setOnClickListener(exerciseClickListener);
+        }
+    };
+
+    private View.OnClickListener exerciseClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            Intent intent = new Intent(context, Direction.class);
+            intent.putExtra(Constant.BUNDLE_EXERCISE_NAME, exercise.getText().toString());
+            context.startActivity(intent);
         }
     };
 

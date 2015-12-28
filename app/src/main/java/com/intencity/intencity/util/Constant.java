@@ -22,12 +22,9 @@ public class Constant
     // Bundles
     public static final String BUNDLE_SET_NUMBER = "com.intencity.intencity.bundle.set.number";
     public static final String BUNDLE_EXERCISE_LIST = "com.intencity.intencity.bundle.exercise.list";
-    public static final String BUNDLE_CURRENT_EXERCISE_LIST = "com.intencity.intencity.bundle.exercise.list";
     public static final String BUNDLE_EXERCISE_LIST_INDEX = "com.intencity.intencity.bundle.exercise.list.index";
-    public static final String BUNDLE_EXERCISE_AUTOFILL_FROM = "com.intencity.intencity.bundle.exercise.auto.fill";
+    public static final String BUNDLE_EXERCISE_NAME = "com.intencity.intencity.bundle.exercise.name";
     public static final String BUNDLE_ID = "com.intencity.intencity.bundle.id";
-
-    public static final String TAG_SET = "TAG_SET";
 
     // Service Endpoint
     private static final String ENDPOINT = "http://www.intencityapp.com/";
@@ -58,6 +55,7 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_FOLLOWING = "getFollowing";
     public static final String STORED_PROCEDURE_SEARCH_USERS = "searchUsers";
     public static final String STORED_PROCEDURE_FOLLOW_USER = "followUser";
+    public static final String STORED_PROCEDURE_GET_EXERCISE_DIRECTION = "getDirection";
 
     // Column Values
     public static final String ACCOUNT_TYPE_ADMIN = "A";
@@ -83,6 +81,9 @@ public class Constant
     public static final String COLUMN_PROFILE_PICTURE_URL = "Url";
     // The id from the following table if a user is following that user from a search.
     public static final String COLUMN_FOLLOWING_ID = "FollowingId";
+    public static final String COLUMN_SUBMITTED_BY = "SubmittedBy";
+    public static final String COLUMN_VIDEO_URL = "VideoURL";
+    public static final String COLUMN_DIRECTION = "Direction";
 
     public static final String SPACE_REGEX = "\\s";
     public static final String REGEX_EMAIL = "[a-zA-Z0-9]+([\\-\\.\\{\\}\\^\\+*_~]*[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([\\.\\-]*[a-zA-Z0-9]+)*[\\.][a-zA-Z]{2}[A-Za-z]*";

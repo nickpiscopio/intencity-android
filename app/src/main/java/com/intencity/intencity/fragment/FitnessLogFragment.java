@@ -45,6 +45,9 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
             bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, index);
         }
 
+        // TODO: There is an issue with this.
+        // TODO: If Android recreates this view, the fragment manager will push 2 CardRoutineFragments
+
         FragmentManager manager = getFragmentManager();
         FragmentHandler fragmentHandler = FragmentHandler.getInstance();
         fragmentHandler.pushFragment(manager, R.id.layout_fitness_log,

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/text_view_direction_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/secondary_dark"
+        android:paddingTop="@dimen/layout_margin_quarter"
+        android:paddingRight="@dimen/layout_margin_quarter"
+        android:paddingBottom="@dimen/layout_margin_quarter"
+        android:text="1"/>
+
+    <TextView
+        android:id="@+id/text_view_direction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/secondary_dark"
+        android:padding="@dimen/layout_margin_quarter"
+        android:text="Directions"/>
+
+</LinearLayout>
