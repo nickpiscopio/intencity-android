@@ -27,6 +27,7 @@ public class DbHelper extends SQLiteOpenHelper
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE IF NOT EXISTS " + ExerciseTable.TABLE_NAME + " (" +
             ExerciseTable.COLUMN_INDEX + INTEGER_TYPE + COMMA_SEP +
+            ExerciseTable.COLUMN_ROUTINE_NAME + TEXT_TYPE + COMMA_SEP +
             ExerciseTable.COLUMN_NAME + TEXT_TYPE + NOT_NULL + COMMA_SEP +
             ExerciseTable.COLUMN_WEIGHT + INTEGER_TYPE + COMMA_SEP +
             ExerciseTable.COLUMN_REP + INTEGER_TYPE + COMMA_SEP +

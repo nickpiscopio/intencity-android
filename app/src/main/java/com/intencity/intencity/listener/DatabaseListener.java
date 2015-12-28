@@ -9,5 +9,5 @@ import java.util.ArrayList;
  */
 public interface DatabaseListener
 {
-    void onRetrievalSuccessful(ArrayList<?> results, int index);
+    void onRetrievalSuccessful(String routineName, ArrayList<?> results, int index);
 }

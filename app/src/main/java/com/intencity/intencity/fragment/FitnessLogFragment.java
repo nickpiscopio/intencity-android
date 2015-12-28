@@ -34,13 +34,14 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onRetrievalSuccessful(ArrayList<?> results, int index)
+    public void onRetrievalSuccessful(String routineName, ArrayList<?> results, int index)
     {
         Bundle bundle = null;
 
         if (results.size() > 0)
         {
             bundle = new Bundle();
+            bundle.putString(Constant.BUNDLE_ROUTINE_NAME, routineName);
             bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, (ArrayList<Exercise>)results);
             bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, index);
         }

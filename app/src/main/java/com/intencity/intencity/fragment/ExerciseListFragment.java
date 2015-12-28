@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.CardExerciseAdapter;
@@ -24,6 +26,8 @@ import java.util.ArrayList;
  */
 public class ExerciseListFragment extends android.support.v4.app.Fragment implements ExerciseListener
 {
+    private int TOTAL_EXERCISE_NUM = 5;
+
     private RecyclerView recyclerView;
 
     private int autoFillTo;
@@ -31,37 +35,59 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private ArrayList<Exercise> allExercises;
     private ArrayList<Exercise> currentExercises;
 
+    private TextView routine;
+    private Button nextExercise;
+
     private RecyclerView.Adapter mAdapter;
 
     private Context context;
+
+    private String routineName;
+
+    private int completedExerciseNum = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_exercise_list, container, false);
 
+        nextExercise = (Button) view.findViewById(R.id.button_next);
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+
+        routine = (TextView) view.findViewById(R.id.text_view_routine);
+
+        nextExercise.setOnClickListener(nextExerciseClickListener);
 
         Bundle bundle = getArguments();
 
+        routineName = bundle.getString(Constant.BUNDLE_ROUTINE_NAME);
+
         allExercises = bundle.getParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST);
-        // This will add one more exercise every time it starts.
-        // If we don't want this, then add a ternary operator to set this to
-        // autoFillTo = bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX) > 0 ?
-        //              bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX) : 1;
-        autoFillTo = bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX) + 1;
+
+        autoFillTo = bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX) > 0 ?
+                        bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX) : 1;
         currentExercises = new ArrayList<>();
 
         for (int i = 0; i < autoFillTo; i++)
         {
             currentExercises.add(allExercises.get(i));
+
+            completedExerciseNum++;
         }
+
+        updateRoutineName(completedExerciseNum);
+
+        checkNextButtonEnablement();
 
         context = getContext();
 
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new HeaderDecoration(context,
+                                                            recyclerView,
+                                                            R.layout.recycler_view_header));
 
         // specify an adapter (see also next example)
         mAdapter = new CardExerciseAdapter(context, this, currentExercises);
@@ -70,11 +96,16 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         return view;
     }
 
-    @Override
-    public void onExerciseClicked()
+    private View.OnClickListener nextExerciseClickListener = new View.OnClickListener()
     {
-        addExercise();
-    }
+        @Override
+        public void onClick(View v)
+        {
+            addExercise();
+
+            checkNextButtonEnablement();
+        }
+    };
 
     @Override
     public void onHideClicked(int position)
@@ -96,13 +127,40 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         }
     }
 
+    /**
+     * Gets the next exercise from the list.
+     */
     private void addExercise()
     {
-        currentExercises.add(allExercises.get(++autoFillTo));
+        completedExerciseNum++;
+        updateRoutineName(completedExerciseNum);
+
+        currentExercises.add(allExercises.get(autoFillTo++));
 
         mAdapter.notifyDataSetChanged();
         // TODO: set the recycler view to scroll to the bottom when a new view is added.
         //        recyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
+    }
+
+    /**
+     * Sets the next button to be gone if we don't have anymore exercises left.
+     */
+    private void checkNextButtonEnablement()
+    {
+        if (currentExercises.size() == allExercises.size())
+        {
+            nextExercise.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Updates the routine name.
+     *
+     * @param completedExerciseNum  The number of completed exercises.
+     */
+    private void updateRoutineName(int completedExerciseNum)
+    {
+        routine.setText(routineName + " " + completedExerciseNum + "/" + TOTAL_EXERCISE_NUM);
     }
 
     @Override
@@ -112,6 +170,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         // Save the exercises to the database in case the user wants
         // to continue with this routine later.
-        new SetExerciseTask(context, allExercises, currentExercises.size()).execute();
+        new SetExerciseTask(context, routineName, allExercises, currentExercises.size()).execute();
     }
 }

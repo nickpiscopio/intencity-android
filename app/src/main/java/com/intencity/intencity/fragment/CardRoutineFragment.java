@@ -41,6 +41,7 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
 
     private String email;
 
+    private String routineName;
     private ArrayList<Exercise> previousExercises;
     private int index;
 
@@ -64,6 +65,7 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
 
         if (bundle != null)
         {
+            routineName = bundle.getString(Constant.BUNDLE_ROUTINE_NAME);
             previousExercises = bundle.getParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST);
             index = bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX);
         }
@@ -209,6 +211,7 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
     private void pushCardFragmentExercise(ArrayList<Exercise> exercises, int index)
     {
         Bundle bundle = new Bundle();
+        bundle.putString(Constant.BUNDLE_ROUTINE_NAME, routineName);
         bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, exercises);
         bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, index);
 
@@ -241,14 +244,17 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
         {
             int spinnerPosition = spinner.getSelectedItemPosition();
 
+            String routineSelection = spinner.getItemAtPosition(spinnerPosition).toString();
+
             // If the user selects to continue from the last routine he or she chose.
-            if (spinner.getItemAtPosition(spinnerPosition)
-                       .equals(getString(R.string.routine_continue)))
+            if (routineSelection.equals(getString(R.string.routine_continue)))
             {
                 pushCardFragmentExercise(previousExercises, index);
             }
             else
             {
+                routineName = routineSelection;
+
                 String routine = String.valueOf(spinnerPosition + 1);
                 String storedProcedureParameters = Constant.getStoredProcedure(
                         Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);

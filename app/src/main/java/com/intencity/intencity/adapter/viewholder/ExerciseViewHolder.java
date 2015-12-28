@@ -42,21 +42,9 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder implements Dialo
         exercise = (TextView) view.findViewById(R.id.exercise);
         hide = (ImageButton) view.findViewById(R.id.button_hide);
 
-        view.setOnClickListener(viewClickListener);
-
+        exercise.setOnClickListener(exerciseClickListener);
         hide.setOnClickListener(hideClickListener);
     }
-
-    private View.OnClickListener viewClickListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v)
-        {
-            listener.onExerciseClicked();
-            v.setOnClickListener(null);
-            exercise.setOnClickListener(exerciseClickListener);
-        }
-    };
 
     private View.OnClickListener exerciseClickListener = new View.OnClickListener()
     {

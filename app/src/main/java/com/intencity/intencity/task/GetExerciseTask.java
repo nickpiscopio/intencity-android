@@ -27,6 +27,8 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
 
     private int index = 0;
 
+    private String routineName;
+
     public GetExerciseTask(Context context, DatabaseListener listener)
     {
         this.context = context;
@@ -42,7 +44,7 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
     @Override
     protected void onPostExecute(ArrayList<Exercise> exercises)
     {
-        listener.onRetrievalSuccessful(exercises, index);
+        listener.onRetrievalSuccessful(routineName, exercises, index);
     }
 
     /**
@@ -72,6 +74,8 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
                 {
                     index = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_INDEX));
                 }
+
+                routineName = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_ROUTINE_NAME));
 
                 String name = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_NAME));
                 String duration = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_DURATION));

@@ -7,6 +7,5 @@ package com.intencity.intencity.listener;
  */
 public interface ExerciseListener
 {
-    void onExerciseClicked();
     void onHideClicked(int position);
 }

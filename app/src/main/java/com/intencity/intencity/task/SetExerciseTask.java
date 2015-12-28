@@ -21,13 +21,17 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
 {
     private Context context;
 
+    private String routineName;
+
     private ArrayList<Exercise> exercises;
 
     private int index;
 
-    public SetExerciseTask(Context context, ArrayList<Exercise> exercises, int index)
+    public SetExerciseTask(Context context, String routineName, ArrayList<Exercise> exercises, int index)
     {
         this.context = context;
+
+        this.routineName = routineName;
 
         this.exercises = exercises;
 
@@ -61,6 +65,7 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
 
             ContentValues values = new ContentValues();
             values.put(ExerciseTable.COLUMN_INDEX, index);
+            values.put(ExerciseTable.COLUMN_ROUTINE_NAME, routineName);
             values.put(ExerciseTable.COLUMN_NAME, exercise.getName());
 
             if (weight > 0)

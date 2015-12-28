@@ -19,11 +19,8 @@ public class ExerciseTable implements BaseColumns
 {
     public static final String TABLE_NAME = "Exercise";
 
-    // This is the name of the auto incremented column for id.
-    // We do not create this in the database.
-    public static final String ID = "rowid";
-
     // The last exercise we left off at.
+    public static final String COLUMN_ROUTINE_NAME = "RoutineName";
     public static final String COLUMN_INDEX = "LastExerciseIndex";
     public static final String COLUMN_NAME = "ExerciseName";
     public static final String COLUMN_WEIGHT = "ExerciseWeight";
