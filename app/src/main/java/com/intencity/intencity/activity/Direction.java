@@ -108,8 +108,6 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
     @Override
     public void onRetrievalSuccessful(String response)
     {
-        Log.i(Constant.TAG, "Direction: " + response);
-
         try
         {
             ArrayList<String> directions = new ArrayList<>();

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.RelativeLayout;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.viewholder.ExerciseViewHolder;
@@ -21,10 +20,8 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 12/21/15.
  */
-public class CardExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    private final int POSITION_0 = 0;
-
     private Context context;
 
     private ExerciseListener listener;
@@ -34,35 +31,32 @@ public class CardExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     // Allows to remember the last item shown on screen
     private int lastPosition = 0;
 
-    public CardExerciseAdapter(Context context, ExerciseListener listener, ArrayList<Exercise> exercises)
+    public ExerciseAdapter(Context context, ExerciseListener listener,
+                           ArrayList<Exercise> exercises)
     {
         this.context = context;
         this.listener = listener;
         this.exercises = exercises;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_card_exercise, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_exercise, parent, false);
 
         return new ExerciseViewHolder(context, listener, v);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
+        Exercise exercise = exercises.get(position);
+
         ExerciseViewHolder exerciseHolder = (ExerciseViewHolder) holder;
         exerciseHolder.setPosition(position);
-        exerciseHolder.getExercise().setText(exercises.get(position).getName());
+        exerciseHolder.initializeSets(exercise.getSets());
+        exerciseHolder.getExercise().setText(exercise.getName());
         View view = exerciseHolder.getView();
-
-//        if (position == POSITION_0 || position == exercises.size() - 1)
-//        {
-//            view.setLayoutParams(getNewLayout(position));
-//        }
 
         // Here you apply the animation when the view is bound
         setAnimation(view, position);
@@ -82,7 +76,8 @@ public class CardExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      */
     private void setAnimation(View viewToAnimate, int position)
     {
-        // If the bound view wasn't previously displayed on screen, it's animated
+        // If the bound view wasn't previously displayed on screen.
+        // Add animation.
         if (position > lastPosition)
         {
             Animation animation = AnimationUtils
@@ -110,29 +105,5 @@ public class CardExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void setLastPosition(int lastPosition)
     {
         this.lastPosition = lastPosition;
-    }
-
-    private RelativeLayout.LayoutParams getNewLayout(int position)
-    {
-        RelativeLayout.LayoutParams lp =
-                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                                                RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-        if (position == POSITION_0)
-        {
-            lp.setMargins(0,
-                          (int)context.getResources().getDimension(R.dimen.layout_margin),
-                          0,
-                          (int)context.getResources().getDimension(R.dimen.layout_margin_half));
-        }
-        else
-        {
-            lp.setMargins(0,
-                          0,
-                          0,
-                          (int)context.getResources().getDimension(R.dimen.layout_margin));
-        }
-
-        return lp;
     }
 }

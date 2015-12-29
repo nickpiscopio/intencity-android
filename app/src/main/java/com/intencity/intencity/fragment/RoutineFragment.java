@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
+import com.intencity.intencity.model.Set;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.FragmentHandler;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 12/12/15.
  */
-public class CardRoutineFragment extends android.support.v4.app.Fragment
+public class RoutineFragment extends android.support.v4.app.Fragment
 {
     private Spinner spinner;
 
@@ -48,7 +49,7 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_card_routine, container, false);
+        View view = inflater.inflate(R.layout.fragment_routine, container, false);
 
         spinner = (Spinner) view.findViewById(R.id.spinner_routine);
 
@@ -179,18 +180,22 @@ public class CardRoutineFragment extends android.support.v4.app.Fragment
                     String duration = object.getString(Constant.COLUMN_EXERCISE_DURATION);
                     String difficulty = object.getString(Constant.COLUMN_EXERCISE_DIFFICULTY);
 
+                    Set set = new Set();
+                    set.setWeight(
+                            weight.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
+                                    Integer.valueOf(weight));
+                    set.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
+                                        Integer.valueOf(reps));
+                    set.setDuration(duration);
+                    set.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ?
+                                              Constant.CODE_FAILED : Integer.valueOf(difficulty));
+
+                    ArrayList<Set> sets = new ArrayList<>();
+                    sets.add(set);
+
                     Exercise exercise = new Exercise();
                     exercise.setName(name);
-                    exercise.setWeight(weight.equalsIgnoreCase(Constant.RETURN_NULL) ?
-                                               Constant.CODE_FAILED :
-                                               Integer.valueOf(weight));
-                    exercise.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ?
-                                             Constant.CODE_FAILED :
-                                             Integer.valueOf(reps));
-                    exercise.setDuration(duration);
-                    exercise.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ?
-                                                   Constant.CODE_FAILED :
-                                                   Integer.valueOf(difficulty));
+                    exercise.setSets(sets);
 
                     // Add all the exercises from the database to the array list.
                     exercises.add(exercise);

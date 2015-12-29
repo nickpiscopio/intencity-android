@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 import com.intencity.intencity.listener.DialogListener;
+import com.intencity.intencity.util.Constant;
 
 /**
  * This class creates a dialog to show to the user.
@@ -30,7 +31,7 @@ public class CustomDialog
             {
                 public void onClick(DialogInterface dialog, int which)
                 {
-                    dialogListener.onPositiveButtonPressed();
+                    dialogListener.onButtonPressed(Constant.POSITIVE_BUTTON);
                 }
             });
 
@@ -40,7 +41,7 @@ public class CustomDialog
                 {
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        dialogListener.onNegativeButtonPressed();
+                        dialogListener.onButtonPressed(Constant.NEGATIVE_BUTTON);
                     }
                 });
             }

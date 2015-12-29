@@ -9,6 +9,7 @@ import com.intencity.intencity.helper.DbHelper;
 import com.intencity.intencity.helper.ExerciseTable;
 import com.intencity.intencity.listener.DatabaseListener;
 import com.intencity.intencity.model.Exercise;
+import com.intencity.intencity.model.Set;
 
 import org.json.JSONException;
 
@@ -83,12 +84,18 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
                 int reps = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_REP));
                 int difficulty = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_DIFFICULTY));
 
+                Set set = new Set();
+                set.setReps(reps);
+                set.setWeight(weight);
+                set.setDuration(duration);
+                set.setDifficulty(difficulty);
+
+                ArrayList<Set> sets = new ArrayList<>();
+                sets.add(set);
+
                 Exercise exercise = new Exercise();
                 exercise.setName(name);
-                exercise.setReps(reps);
-                exercise.setWeight(weight);
-                exercise.setDuration(duration);
-                exercise.setDifficulty(difficulty);
+                exercise.setSets(sets);
 
                 exercises.add(exercise);
 

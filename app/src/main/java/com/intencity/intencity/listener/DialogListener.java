@@ -8,6 +8,4 @@ package com.intencity.intencity.listener;
 public interface DialogListener
 {
     void onButtonPressed(int which);
-    void onPositiveButtonPressed();
-    void onNegativeButtonPressed();
 }

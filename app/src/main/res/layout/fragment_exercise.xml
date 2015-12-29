@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_exercise"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card"
+    android:layout_marginBottom="@dimen/layout_margin_half">
+
+    <LinearLayout
+        android:id="@+id/layout_exercise_stats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/exercise"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="CURRENT EXERCISE"
+            android:layout_marginTop="@dimen/layout_margin_half"
+            android:padding="@dimen/layout_margin"
+            android:textSize="@dimen/card_title_size"
+            android:textColor="@color/primary"
+            android:textStyle="bold"/>
+
+        <ImageButton
+            android:id="@+id/button_hide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_margin_half"
+            android:padding="@dimen/layout_margin"
+            android:src="@mipmap/exercise_menu"
+            android:background="@null" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="@dimen/layout_margin_half"
+                android:layout_marginRight="@dimen/layout_margin_half"
+                android:padding="@dimen/layout_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/layout_margin_half">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.25"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_weight"
+                        android:gravity="center"
+                        android:textSize="@dimen/card_title3_size"
+                        android:textColor="@color/secondary_dark"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_reps"
+                        android:gravity="center"
+                        android:textSize="@dimen/card_title3_size"
+                        android:textColor="@color/secondary_dark"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_intensity"
+                        android:gravity="center"
+                        android:textSize="@dimen/card_title3_size"
+                        android:textColor="@color/secondary_dark"/>
+
+                </LinearLayout>
+
+                <ListView
+                    android:id="@+id/list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/layout_margin"
+                    android:paddingRight="@dimen/layout_margin"
+                    android:scrollbars="none"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/note_hint"
+                    android:textColor="@color/secondary_dark"
+                    android:layout_marginTop="@dimen/layout_margin"
+                    android:padding="@dimen/layout_margin"
+                    android:background="@drawable/edit_text_flat"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

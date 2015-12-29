@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.adapter.CardExerciseAdapter;
+import com.intencity.intencity.adapter.ExerciseAdapter;
 import com.intencity.intencity.listener.ExerciseListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.task.SetExerciseTask;
@@ -39,7 +39,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private TextView routine;
     private Button nextExercise;
 
-    private CardExerciseAdapter mAdapter;
+    private ExerciseAdapter mAdapter;
 
     private Context context;
 
@@ -84,14 +84,12 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         context = getContext();
 
-        // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(
                 new HeaderDecoration(context, recyclerView, R.layout.recycler_view_header));
 
-        // specify an adapter (see also next example)
-        mAdapter = new CardExerciseAdapter(context, this, currentExercises);
+        mAdapter = new ExerciseAdapter(context, this, currentExercises);
         recyclerView.setAdapter(mAdapter);
 
         return view;

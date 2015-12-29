@@ -31,6 +31,7 @@
     <string name="title_intensity">INTENSITY</string>
     <string name="note_hint">This exercise was...</string>
 
+    <string name="add_set">Add set</string>
     <string name="hide_forever">Hide forever</string>
     <string name="hide_for_now">Hide for now</string>
 

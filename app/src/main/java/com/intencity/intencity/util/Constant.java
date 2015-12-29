@@ -13,6 +13,9 @@ public class Constant
 
     public static final String RETURN_NULL = "null";
 
+    public static final int NEGATIVE_BUTTON = 0;
+    public static final int POSITIVE_BUTTON = 1;
+
     // Currently not used
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences

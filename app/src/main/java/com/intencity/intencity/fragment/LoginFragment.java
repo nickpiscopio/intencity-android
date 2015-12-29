@@ -141,14 +141,6 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         showErrorMessage();
     }
 
-    @Override public void onButtonPressed(int which)
-    {
-
-    }
-
     @Override
-    public void onPositiveButtonPressed() { }
-
-    @Override
-    public void onNegativeButtonPressed() { }
+    public void onButtonPressed(int which) { }
 }

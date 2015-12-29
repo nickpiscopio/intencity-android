@@ -9,6 +9,7 @@ import com.intencity.intencity.helper.DbHelper;
 import com.intencity.intencity.helper.ExerciseTable;
 import com.intencity.intencity.helper.doa.ExerciseDao;
 import com.intencity.intencity.model.Exercise;
+import com.intencity.intencity.model.Set;
 
 import java.util.ArrayList;
 
@@ -58,10 +59,14 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
 
         for (Exercise exercise : exercises)
         {
-            int weight = exercise.getWeight();
-            int reps = exercise.getReps();
-            int difficulty = exercise.getDifficulty();
-            String duration = exercise.getDuration();
+            ArrayList<Set> sets = exercise.getSets();
+            // Gets the last set in the array.
+            Set set = sets.get(sets.size() - 1);
+
+            int weight = set.getWeight();
+            int reps = set.getReps();
+            int difficulty = set.getDifficulty();
+            String duration = set.getDuration();
 
             ContentValues values = new ContentValues();
             values.put(ExerciseTable.COLUMN_INDEX, index);
