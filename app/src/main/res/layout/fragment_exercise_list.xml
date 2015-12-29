@@ -9,16 +9,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/secondary_dark">
+        android:background="@color/secondary_light"
+        android:paddingTop="@dimen/card_button_margin"
+        android:paddingRight="@dimen/card_button_margin"
+        android:paddingBottom="@dimen/card_button_margin"
+        android:paddingLeft="@dimen/layout_margin"
+        android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/text_view_routine"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Legs Lower Back 1/5"
-            android:padding="@dimen/layout_margin"
-            android:textColor="@color/page_background"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_view_routine_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/card_title_size"
+                android:text="1/5"
+                android:textStyle="bold"
+                android:textColor="@color/page_background"
+                android:paddingRight="@dimen/layout_margin_quarter"/>
+
+            <TextView
+                android:id="@+id/text_view_routine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Legs and Lower Back"
+                android:textColor="@color/page_background"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/button_next"
@@ -30,7 +51,14 @@
             android:padding="@dimen/card_button_padding"
             android:background="@drawable/button_card_dark"
             style="?android:attr/borderlessButtonStyle"/>
+
     </LinearLayout>
+
+    <!-- Shadow -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow"
+        android:background="@drawable/shadow_dark"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

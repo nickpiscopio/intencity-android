@@ -74,6 +74,12 @@ public class CardExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return exercises.size();
     }
 
+    /**
+     * Sets the animation for a view.
+     *
+     * @param viewToAnimate     The view to set an animation.
+     * @param position          The current position of the recycler view.
+     */
     private void setAnimation(View viewToAnimate, int position)
     {
         // If the bound view wasn't previously displayed on screen, it's animated
@@ -84,6 +90,26 @@ public class CardExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
+    }
+
+    /**
+     * Gets the last position of the recycler view.
+     *
+     * @return  The last position of the recycler view.
+     */
+    public int getLastPosition()
+    {
+        return lastPosition;
+    }
+
+    /**
+     * Sets the last position of the recycler view.
+     *
+     * @param lastPosition  The position to set.
+     */
+    public void setLastPosition(int lastPosition)
+    {
+        this.lastPosition = lastPosition;
     }
 
     private RelativeLayout.LayoutParams getNewLayout(int position)

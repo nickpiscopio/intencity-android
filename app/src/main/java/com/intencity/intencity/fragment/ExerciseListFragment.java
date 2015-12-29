@@ -35,10 +35,11 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private ArrayList<Exercise> allExercises;
     private ArrayList<Exercise> currentExercises;
 
+    private TextView routineProgress;
     private TextView routine;
     private Button nextExercise;
 
-    private RecyclerView.Adapter mAdapter;
+    private CardExerciseAdapter mAdapter;
 
     private Context context;
 
@@ -55,6 +56,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
+        routineProgress = (TextView) view.findViewById(R.id.text_view_routine_progress);
         routine = (TextView) view.findViewById(R.id.text_view_routine);
 
         nextExercise.setOnClickListener(nextExerciseClickListener);
@@ -85,9 +87,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new HeaderDecoration(context,
-                                                            recyclerView,
-                                                            R.layout.recycler_view_header));
+        recyclerView.addItemDecoration(
+                new HeaderDecoration(context, recyclerView, R.layout.recycler_view_header));
 
         // specify an adapter (see also next example)
         mAdapter = new CardExerciseAdapter(context, this, currentExercises);
@@ -116,6 +117,11 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         allExercises.remove(exerciseToRemove);
 
         autoFillTo--;
+        completedExerciseNum--;
+
+        // Remove 1 from the last position so we can se the animation
+        // for the next exercise that will be added.
+        mAdapter.setLastPosition(mAdapter.getLastPosition() - 1);
 
         if (position == currentExercises.size())
         {
@@ -149,7 +155,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         if (currentExercises.size() == allExercises.size())
         {
-            nextExercise.setVisibility(View.GONE);
+            nextExercise.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -160,7 +166,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void updateRoutineName(int completedExerciseNum)
     {
-        routine.setText(routineName + " " + completedExerciseNum + "/" + TOTAL_EXERCISE_NUM);
+        routineProgress.setText(completedExerciseNum + "/" + TOTAL_EXERCISE_NUM);
+        routine.setText(routineName.toUpperCase());
     }
 
     @Override

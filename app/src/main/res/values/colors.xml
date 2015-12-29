@@ -9,6 +9,7 @@
     <color name="page_background">#F6F6FF</color>
 
     <color name="shadow">#CECECE</color>
+    <color name="shadow_dark">#4D5665</color>
     <color name="card_button_select">#F3F3F3</color>
 
 </resources>
