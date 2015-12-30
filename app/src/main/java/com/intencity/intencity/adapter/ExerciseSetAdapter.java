@@ -12,7 +12,11 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.SetListener;
+import com.intencity.intencity.listener.ViewChangeListener;
 import com.intencity.intencity.model.Set;
+import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.GenericItemSelectionListener;
+import com.intencity.intencity.util.GenericTextWatcher;
 
 import java.util.ArrayList;
 
@@ -21,9 +25,12 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 12/21/15.
  */
-public class ExerciseSetAdapter extends ArrayAdapter<Set>
+public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeListener
 {
     private final Integer[] intensityValues = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    public static final int WEIGHT = R.id.edit_text_weight;
+    public static final int DURATION = R.id.edit_text_duration;
+    public static final int INTENSITY = R.id.spinner_intensity;
 
     private Context context;
 
@@ -33,7 +40,7 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set>
 
     private View row;
 
-    int layoutResourceId;
+    private int layoutResourceId;
 
     static class SetHolder
     {
@@ -41,8 +48,6 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set>
         EditText weightEditText;
         EditText durationEditText;
         Spinner intensitySpinner;
-
-        int intensity;
     }
 
     public ExerciseSetAdapter(Context context, int layoutResourceId, SetListener listener,
@@ -60,75 +65,80 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set>
     {
         row = convertView;
 
-//
-//        if(row == null)
-//        {
+        SetHolder holder;
+
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+        // Would recreate this only if (row == null),
+        // but when that happens the second list item always overwrites the first.
+        // This is how it will have to be for now.
         row = inflater.inflate(layoutResourceId, parent, false);
 
-        SetHolder holder = new SetHolder();
+        holder = new SetHolder();
         holder.setNumber = (TextView) row.findViewById(R.id.text_view_set);
-        holder.weightEditText = (EditText) row.findViewById(R.id.edit_text_weight);
-        holder.durationEditText = (EditText) row.findViewById(R.id.edit_text_duration);
-        holder.intensitySpinner = (Spinner) row.findViewById(R.id.spinner_intensity);
+        holder.weightEditText = (EditText) row.findViewById(WEIGHT);
+        holder.durationEditText = (EditText) row.findViewById(DURATION);
+        holder.intensitySpinner = (Spinner) row.findViewById(INTENSITY);
 
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner, intensityValues);
         holder.intensitySpinner.setAdapter(adapter);
 
+        // Add the listeners to the views for each list item.
+        holder.weightEditText.addTextChangedListener(new GenericTextWatcher(this, position, WEIGHT));
+//        holder.durationEditText.addTextChangedListener(new GenericTextWatcher(this, position, DURATION));
+        holder.intensitySpinner.setOnItemSelectedListener(new GenericItemSelectionListener(this, position));
+
+        // This is auto incremented with each added view.
         holder.setNumber.setText(String.valueOf(position + 1));
 
-        holder.intensitySpinner.setSelection(holder.intensity);
+        Set set = sets.get(position);
 
-//            holder.weightEditText.setOnClickListener(new View.OnClickListener()
-//            {
-//                @Override
-//                public void onClick(View v)
-//                {
-//                    listener.onSetClicked();
-//                }
-//            });
-//            holder.durationEditText.setOnClickListener(setClickListener);
-//            holder.intensitySpinner.setOnItemSelectedListener(itemClickListener);
+        // Get the values that were in the list items before or the default values.
+        String weight = String.valueOf(set.getWeight());
+        String duration = String.valueOf(set.getDuration());
+        int difficulty = set.getDifficulty();
+        int intensity = difficulty < intensityValues[0] ? intensityValues[intensityValues.length - 1] : difficulty;
 
-//        row.setTag(holder);
+        String codeFailed = String.valueOf(Constant.CODE_FAILED);
 
-        // Notify the ExerciseViewHolder that a set was added.
-        // This is where we will set the new height of the ListView.
-//        listener.onSetAdded();
-//        }
-//        else
-//        {
-//            holder = (SetHolder)row.getTag();
-//
-////            holder.intensity = holder.
-////            holder.intensitySpinner.setSelection(holder.intensitySpinner.getSelectedItemPosition());
-//        }
+        // Add the values to each list item.
+        holder.weightEditText.setText(weight.equals(codeFailed) ? "" : weight);
+        holder.durationEditText.setText(duration.equals(codeFailed) ||
+                                        duration == Constant.RETURN_NULL ? "" : duration);
+
+        holder.intensitySpinner.setSelection(intensity - 1);
 
         return row;
     }
 
-//    public View.OnClickListener setClickListener = new View.OnClickListener()
-//    {
-//        @Override
-//        public void onClick(View v)
-//        {
-//            listener.onSetClicked();
-//        }
-//    };
-//
-//    private AdapterView.OnItemSelectedListener itemClickListener = new AdapterView.OnItemSelectedListener()
-//    {
-//        @Override
-//        public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-//        {
-//        }
-//
-//        @Override
-//        public void onNothingSelected(AdapterView<?> parent)
-//        {
-////            listener.onSetClicked();
-//        }
-//    };
+    @Override
+    public void onTextChanged(String value, int position, int viewId) {
+        // Not implemented for now. Will implement later when duration is implemented.
+    }
+
+    @Override
+    public void onTextChanged(int value, int position, int viewId)
+    {
+        Set set = sets.get(position);
+
+        switch (viewId)
+        {
+            case WEIGHT:
+                set.setWeight(value);
+                break;
+            case DURATION:
+                set.setReps(value);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onSpinnerItemSelected(int spinnerPosition, int position)
+    {
+        Set set = sets.get(position);
+        set.setDifficulty(intensityValues[spinnerPosition]);
+    }
 
     /**
      * Gets the view of the set adapter.
