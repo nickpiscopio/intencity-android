@@ -11,7 +11,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.listener.SetListener;
 import com.intencity.intencity.listener.ViewChangeListener;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.util.Constant;
@@ -27,14 +26,12 @@ import java.util.ArrayList;
  */
 public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeListener
 {
-    private final Integer[] intensityValues = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    private final Integer[] intensityValues = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     public static final int WEIGHT = R.id.edit_text_weight;
     public static final int DURATION = R.id.edit_text_duration;
     public static final int INTENSITY = R.id.spinner_intensity;
 
     private Context context;
-
-    private SetListener listener;
 
     private ArrayList<Set> sets;
 
@@ -50,13 +47,11 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
         Spinner intensitySpinner;
     }
 
-    public ExerciseSetAdapter(Context context, int layoutResourceId, SetListener listener,
-                              ArrayList<Set> sets)
+    public ExerciseSetAdapter(Context context, int layoutResourceId, ArrayList<Set> sets)
     {
         super(context, layoutResourceId, sets);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
-        this.listener = listener;
         this.sets = sets;
     }
 
@@ -103,7 +98,7 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
         // Add the values to each list item.
         holder.weightEditText.setText(weight.equals(codeFailed) ? "" : weight);
         holder.durationEditText.setText(duration.equals(codeFailed) ||
-                                        duration == Constant.RETURN_NULL ? "" : duration);
+                                        duration.equals(Constant.RETURN_NULL) ? "" : duration);
 
         holder.intensitySpinner.setSelection(intensity - 1);
 

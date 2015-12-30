@@ -15,7 +15,6 @@ import com.intencity.intencity.dialog.CustomDialog;
 import com.intencity.intencity.dialog.Dialog;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ExerciseListener;
-import com.intencity.intencity.listener.SetListener;
 import com.intencity.intencity.model.ExerciseViewHolderEntity;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.util.Constant;
@@ -25,8 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by nickpiscopio on 12/21/15.
  */
-public class ExerciseViewHolder extends RecyclerView.ViewHolder implements DialogListener,
-                                                                           SetListener
+public class ExerciseViewHolder extends RecyclerView.ViewHolder implements DialogListener
 {
     private Context context;
 
@@ -109,7 +107,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder implements Dialo
 
     }
 
-    public void initializeSets(ArrayList<Set> setList)
+    public void initializeSets(ArrayList<Set> sets)
     {
         ArrayList<ExerciseSetAdapter> adapters = entity.getAdapters();
 
@@ -119,10 +117,9 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder implements Dialo
         }
         catch (Exception e)
         {
-            sets = new ArrayList<>();
-            sets.addAll(setList);
+            this.sets = sets;
 
-            ExerciseSetAdapter adapter = new ExerciseSetAdapter(context, R.layout.fragment_exercise_set, this, sets);
+            ExerciseSetAdapter adapter = new ExerciseSetAdapter(context, R.layout.fragment_exercise_set, this.sets);
 
             adapters.add(adapter);
 
@@ -130,61 +127,9 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder implements Dialo
         }
     }
 
-
-//    public ListView.OnItemClickListener setClickLisener = new ListView.OnItemClickListener()
-//    {
-//        @Override
-//        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-//        {
-//            EditText weightEditText = (EditText) view.findViewById(R.id.edit_text_weight);
-//            EditText durationEditText = (EditText) view.findViewById(R.id.edit_text_duration);
-//            Spinner intensitySpinner = (Spinner) view.findViewById(R.id.spinner_intensity);
-//
-//            weightEditText.setOnClickListener(setClickListener);
-//            durationEditText.setOnClickListener(setClickListener);
-//            intensitySpinner.setOnItemSelectedListener(itemClickListener);
-//        }
-//    };
-//
-//    public View.OnClickListener setClickListener = new View.OnClickListener()
-//    {
-//        @Override
-//        public void onClick(View v)
-//        {
-//            addSet();
-//        }
-//    };
-//
-//    private AdapterView.OnItemSelectedListener itemClickListener = new AdapterView.OnItemSelectedListener()
-//    {
-//        @Override
-//        public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-//        {
-//            //            if (!isEnabled)
-//            //            {
-//            //                addSet();
-//            //            }
-//        }
-//
-//        @Override
-//        public void onNothingSelected(AdapterView<?> parent)
-//        {
-//            addSet();
-//        }
-//    };
-
-    @Override
-    public void onSetAdded()
-    {
-//        setListViewHeight();
-    }
-
-    @Override
-    public void onSetClicked()
-    {
-        addSet();
-    }
-
+    /**
+     * Adds a set to the exercise and the ArrayList.
+     */
     private void addSet()
     {
         Set set = new Set();
@@ -200,6 +145,11 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder implements Dialo
         setListViewHeight();
     }
 
+    /**
+     * Sets the ListView height. This is needed because we use a ListView inside of a
+     * RecyclerView. It is not recommended to do this, but it is needed so we don't need
+     * to keep track of the indexes of different fragments.
+     */
     private void setListViewHeight()
     {
         ExerciseSetAdapter adapter = entity.getAdapters().get(position);
