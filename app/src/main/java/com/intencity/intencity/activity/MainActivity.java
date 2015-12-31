@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ViewPagerAdapter;
 import com.intencity.intencity.fragment.FitnessLogFragment;
-import com.intencity.intencity.fragment.MenuFragment;
 import com.intencity.intencity.fragment.RankingFragment;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
@@ -25,17 +24,15 @@ import com.intencity.intencity.util.SecurePreferences;
  */
 public class MainActivity extends AppCompatActivity
 {
-    private final int TAB_RANKING = 0;
-    private final int TAB_FITNESS_GURU = 1;
-    private final int TAB_MENU = 2;
+    private final int TAB_FITNESS_GURU = 0;
+    private final int TAB_RANKING = 1;
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
-            R.drawable.tab_icon_ranking,
             R.drawable.tab_icon_fitness_guru,
-            R.drawable.tab_icon_menu
+            R.drawable.tab_icon_ranking,
     };
 
     @Override
@@ -93,9 +90,8 @@ public class MainActivity extends AppCompatActivity
     {
         if (tabLayout != null)
         {
-            tabLayout.getTabAt(TAB_RANKING).setIcon(tabIcons[TAB_RANKING]);
             tabLayout.getTabAt(TAB_FITNESS_GURU).setIcon(tabIcons[TAB_FITNESS_GURU]);
-            tabLayout.getTabAt(TAB_MENU).setIcon(tabIcons[TAB_MENU]);
+            tabLayout.getTabAt(TAB_RANKING).setIcon(tabIcons[TAB_RANKING]);
         }
     }
 
@@ -107,10 +103,11 @@ public class MainActivity extends AppCompatActivity
     private void setupViewPager(ViewPager viewPager)
     {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new RankingFragment(), "");
         adapter.addFrag(new FitnessLogFragment(), "");
-        adapter.addFrag(new MenuFragment(), "");
+        adapter.addFrag(new RankingFragment(), "");
         viewPager.setAdapter(adapter);
+
+
     }
 
     @Override
@@ -128,11 +125,24 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case R.id.search:
-                Intent intent = new Intent(this, SearchActivity.class);
-                startActivity(intent);
+                startActivity(SearchActivity.class);
+                return true;
+            case R.id.about:
+                startActivity(AboutActivity.class);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * Starts an activity.
+     *
+     * @param cls   The class to start.
+     */
+    private void startActivity(Class<?> cls)
+    {
+        Intent intent = new Intent(this, cls);
+        startActivity(intent);
     }
 }

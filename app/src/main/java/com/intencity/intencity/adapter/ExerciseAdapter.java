@@ -10,7 +10,6 @@ import android.view.animation.AnimationUtils;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.viewholder.ExerciseViewHolder;
-import com.intencity.intencity.listener.ExerciseListener;
 import com.intencity.intencity.model.Exercise;
 
 import java.util.ArrayList;
@@ -24,18 +23,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 {
     private Context context;
 
-    private ExerciseListener listener;
-
     private ArrayList<Exercise> exercises;
 
     // Allows to remember the last item shown on screen
     private int lastPosition = 0;
 
-    public ExerciseAdapter(Context context, ExerciseListener listener,
-                           ArrayList<Exercise> exercises)
+    public ExerciseAdapter(Context context, ArrayList<Exercise> exercises)
     {
         this.context = context;
-        this.listener = listener;
         this.exercises = exercises;
     }
 
@@ -44,7 +39,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_exercise, parent, false);
 
-        return new ExerciseViewHolder(context, listener, v);
+        return new ExerciseViewHolder(context, v);
     }
 
     @Override
@@ -53,8 +48,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Exercise exercise = exercises.get(position);
 
         ExerciseViewHolder exerciseHolder = (ExerciseViewHolder) holder;
-        exerciseHolder.setPosition(position);
-        exerciseHolder.initializeSets(exercise.getSets());
+        exerciseHolder.setSets(exercise.getSets());
         exerciseHolder.getExercise().setText(exercise.getName());
         View view = exerciseHolder.getView();
 

@@ -30,7 +30,7 @@
                 android:text="1/5"
                 android:textStyle="bold"
                 android:textColor="@color/page_background"
-                android:paddingRight="@dimen/layout_margin_quarter"/>
+                android:paddingRight="@dimen/layout_margin_half"/>
 
             <TextView
                 android:id="@+id/text_view_routine"

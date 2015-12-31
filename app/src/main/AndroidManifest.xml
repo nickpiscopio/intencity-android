@@ -26,6 +26,11 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name=".activity.StatActivity"
+            android:theme="@style/AppTheme.Base"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.Direction"
             android:theme="@style/AppTheme.Base"
             android:screenOrientation="portrait" />

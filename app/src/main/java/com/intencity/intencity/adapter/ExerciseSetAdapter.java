@@ -1,6 +1,5 @@
 package com.intencity.intencity.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +61,7 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
 
         SetHolder holder;
 
-        LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // Would recreate this only if (row == null),
         // but when that happens the second list item always overwrites the first.
         // This is how it will have to be for now.

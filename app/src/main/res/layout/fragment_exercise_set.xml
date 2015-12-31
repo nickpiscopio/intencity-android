@@ -36,6 +36,7 @@
                 android:textColor="@color/secondary_dark"
                 android:padding="@dimen/layout_margin"
                 android:inputType="number"
+                android:maxLength="@integer/weight_characters"
                 android:background="@drawable/edit_text_flat"/>
 
         </RelativeLayout>
@@ -69,7 +70,7 @@
                 android:layout_centerInParent="true"
                 android:textSize="@dimen/card_title3_size"
                 android:textColor="@color/secondary_dark"
-                android:padding="@dimen/layout_margin"/>
+                android:padding="@dimen/layout_margin_half"/>
 
         </RelativeLayout>
 

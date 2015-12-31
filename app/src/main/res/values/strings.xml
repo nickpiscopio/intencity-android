@@ -16,6 +16,8 @@
     <string name="title_fitness_guru">Fitness Guru</string>
     <string name="title_menu">Menu</string>
     <string name="menu_search">Search</string>
+    <string name="menu_info">Info</string>
+    <string name="menu_add">Add</string>
 
     <!-- Ranking Strings -->
     <string name="points">POINTS</string>
@@ -29,7 +31,7 @@
     <string name="title_reps">REPS</string>
     <string name="title_time">TIME</string>
     <string name="title_intensity">INTENSITY</string>
-    <string name="note_hint">This exercise was...</string>
+    <string name="note_hint">Notes&#8230;</string>
 
     <string name="add_set">Add set</string>
     <string name="hide_forever">Hide forever</string>
