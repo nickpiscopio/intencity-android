@@ -14,9 +14,14 @@ public class Exercise implements Parcelable
 {
     private String name;
 
-   private ArrayList<Set> sets;
+    private ArrayList<Set> sets;
 
     public Exercise() { }
+
+    public Exercise(ArrayList<Set> sets)
+    {
+        this.sets = sets;
+    }
 
     private Exercise(Parcel in)
     {

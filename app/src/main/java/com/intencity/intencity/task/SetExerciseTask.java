@@ -60,40 +60,40 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
         for (Exercise exercise : exercises)
         {
             ArrayList<Set> sets = exercise.getSets();
-            // Gets the last set in the array.
-            Set set = sets.get(sets.size() - 1);
-
-            int weight = set.getWeight();
-            int reps = set.getReps();
-            int difficulty = set.getDifficulty();
-            String duration = set.getDuration();
-
-            ContentValues values = new ContentValues();
-            values.put(ExerciseTable.COLUMN_INDEX, index);
-            values.put(ExerciseTable.COLUMN_ROUTINE_NAME, routineName);
-            values.put(ExerciseTable.COLUMN_NAME, exercise.getName());
-
-            if (weight > 0)
+            for (Set set : sets)
             {
-                values.put(ExerciseTable.COLUMN_WEIGHT, weight);
-            }
+                ContentValues values = new ContentValues();
+                values.put(ExerciseTable.COLUMN_INDEX, index);
+                values.put(ExerciseTable.COLUMN_ROUTINE_NAME, routineName);
+                values.put(ExerciseTable.COLUMN_NAME, exercise.getName());
 
-            if (reps > 0)
-            {
-                values.put(ExerciseTable.COLUMN_REP, reps);
-            }
+                int weight = set.getWeight();
+                int reps = set.getReps();
+                int difficulty = set.getDifficulty();
+                String duration = set.getDuration();
 
-            if (duration != null)
-            {
-                values.put(ExerciseTable.COLUMN_DURATION, duration);
-            }
+                if (weight > 0)
+                {
+                    values.put(ExerciseTable.COLUMN_WEIGHT, weight);
+                }
 
-            if (difficulty > 0)
-            {
-                values.put(ExerciseTable.COLUMN_DIFFICULTY, difficulty);
-            }
+                if (reps > 0)
+                {
+                    values.put(ExerciseTable.COLUMN_REP, reps);
+                }
 
-            exerciseDaos.add(new ExerciseDao(ExerciseTable.TABLE_NAME, values));
+                if (duration != null)
+                {
+                    values.put(ExerciseTable.COLUMN_DURATION, duration);
+                }
+
+                if (difficulty > 0)
+                {
+                    values.put(ExerciseTable.COLUMN_DIFFICULTY, difficulty);
+                }
+
+                exerciseDaos.add(new ExerciseDao(ExerciseTable.TABLE_NAME, values));
+            }
         }
 
         DbHelper dbHelper = new DbHelper(context);

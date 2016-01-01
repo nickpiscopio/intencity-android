@@ -1,6 +1,7 @@
 package com.intencity.intencity.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,11 +13,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.activity.StatActivity;
 import com.intencity.intencity.adapter.ExerciseAdapter;
 import com.intencity.intencity.dialog.CustomDialog;
 import com.intencity.intencity.dialog.Dialog;
 import com.intencity.intencity.listener.DialogListener;
+import com.intencity.intencity.listener.ExerciseListener;
 import com.intencity.intencity.model.Exercise;
+import com.intencity.intencity.model.Set;
 import com.intencity.intencity.task.SetExerciseTask;
 import com.intencity.intencity.util.Constant;
 
@@ -27,7 +31,8 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 12/12/15.
  */
-public class ExerciseListFragment extends android.support.v4.app.Fragment implements DialogListener
+public class ExerciseListFragment extends android.support.v4.app.Fragment implements DialogListener,
+                                                                                     ExerciseListener
 {
     private int TOTAL_EXERCISE_NUM = 5;
 
@@ -92,7 +97,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         recyclerView.addItemDecoration(
                 new HeaderDecoration(context, recyclerView, R.layout.recycler_view_header));
 
-        mAdapter = new ExerciseAdapter(context, currentExercises);
+        mAdapter = new ExerciseAdapter(context, currentExercises, this);
         recyclerView.setAdapter(mAdapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
@@ -214,11 +219,36 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     mAdapter.notifyDataSetChanged();
                 }
                 break;
-            case 1:
+            case 1: // Cancel was clicked.
                 mAdapter.notifyDataSetChanged();
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onExerciseClicked(int position)
+    {
+        Intent intent = new Intent(context, StatActivity.class);
+        intent.putExtra(Constant.BUNDLE_EXERCISE_POSITION, position);
+        intent.putExtra(Constant.BUNDLE_EXERCISE, currentExercises.get(position));
+        startActivityForResult(intent, Constant.REQUEST_CODE_STAT);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == Constant.REQUEST_CODE_STAT)
+        {
+            Bundle extras = data.getExtras();
+            int position = extras.getInt(Constant.BUNDLE_EXERCISE_POSITION);
+            ArrayList<Set> sets = extras.getParcelableArrayList(Constant.BUNDLE_EXERCISE_SETS);
+
+            currentExercises.get(position).setSets(sets);
+            allExercises.get(position).setSets(sets);
         }
     }
 }

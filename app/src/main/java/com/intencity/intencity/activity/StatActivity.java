@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ExerciseSetAdapter;
+import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.util.Constant;
 
@@ -29,7 +30,8 @@ public class StatActivity extends AppCompatActivity
     private ExerciseSetAdapter adapter;
     private ArrayList<Set> sets;
 
-//    private ExerciseViewHolderEntity entity;
+    private Exercise exercise;
+    private int position;
 
     private Context context;
 
@@ -47,11 +49,14 @@ public class StatActivity extends AppCompatActivity
 
         Bundle bundle = getIntent().getExtras();
 
-        exerciseName = bundle.getString(Constant.BUNDLE_EXERCISE_NAME, "");
-        ArrayList<Set> sets = bundle.getParcelableArrayList(Constant.BUNDLE_EXERCISE_SETS);
+        exercise = bundle.getParcelable(Constant.BUNDLE_EXERCISE);
+        position = bundle.getInt(Constant.BUNDLE_EXERCISE_POSITION);
 
-        if(!exerciseName.equals(""))
+        if(exercise != null)
         {
+            exerciseName = exercise.getName();
+            sets = exercise.getSets();
+
             if (actionBar != null)
             {
                 actionBar.setDisplayHomeAsUpEnabled(true);
@@ -59,11 +64,12 @@ public class StatActivity extends AppCompatActivity
             }
         }
 
-//        entity = ExerciseViewHolderEntity.getInstance();
-
         context = getApplicationContext();
 
-        initializeSets(sets);
+        // Initialize the set adapter with the sets.
+        adapter = new ExerciseSetAdapter(context, R.layout.fragment_exercise_set, sets);
+
+        setsListView.setAdapter(adapter);
     }
 
     @Override
@@ -96,15 +102,6 @@ public class StatActivity extends AppCompatActivity
         }
     }
 
-    public void initializeSets(ArrayList<Set> sets)
-    {
-        this.sets = sets;
-
-        adapter = new ExerciseSetAdapter(context, R.layout.fragment_exercise_set, this.sets);
-
-        setsListView.setAdapter(adapter);
-    }
-
     /**
      * Adds a set to the exercise and the ArrayList.
      */
@@ -121,6 +118,19 @@ public class StatActivity extends AppCompatActivity
         adapter.notifyDataSetChanged();
 
 //        setListViewHeight();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        // Send the new sets back to the exercise listener so we can use them later.
+        Intent intent = new Intent();
+        intent.putExtra(Constant.BUNDLE_EXERCISE_POSITION, position);
+        intent.putExtra(Constant.BUNDLE_EXERCISE_SETS, sets);
+        setResult(Constant.REQUEST_CODE_STAT, intent);
+        finish();
+
+        super.onBackPressed();
     }
 
     /**

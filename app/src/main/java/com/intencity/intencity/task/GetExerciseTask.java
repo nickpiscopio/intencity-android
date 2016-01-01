@@ -65,9 +65,13 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
 
         Cursor cursor = database.rawQuery(DbHelper.SQL_GET_EXERCISES, null);
 
+        String lastExerciseName = "";
+
         if (cursor != null && cursor.getCount() > 0)
         {
             cursor.moveToFirst();
+
+            Exercise exercise = null;
 
             do
             {
@@ -79,6 +83,21 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
                 routineName = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_ROUTINE_NAME));
 
                 String name = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_NAME));
+
+                // If the last exercise name is equal to the last exercise we just got,
+                // or if the exercise is the first in the list,
+                // then we want to create a new exercise object.
+                if (!lastExerciseName.equals(name))
+                {
+                    lastExerciseName = name;
+
+                    exercise = new Exercise(new ArrayList<Set>());
+                    exercise.setName(name);
+
+                    exercises.add(exercise);
+                }
+
+                ArrayList<Set> sets = exercise.getSets();
                 String duration = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_DURATION));
                 int weight  = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_WEIGHT));
                 int reps = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_REP));
@@ -90,14 +109,9 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
                 set.setDuration(duration);
                 set.setDifficulty(difficulty);
 
-                ArrayList<Set> sets = new ArrayList<>();
                 sets.add(set);
 
-                Exercise exercise = new Exercise();
-                exercise.setName(name);
                 exercise.setSets(sets);
-
-                exercises.add(exercise);
 
             } while(cursor.moveToNext());
 

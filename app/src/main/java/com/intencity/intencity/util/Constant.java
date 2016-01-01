@@ -22,10 +22,16 @@ public class Constant
     public static final String USER_ACCOUNT_EMAIL = "com.intencity.intencity.user.email";
     public static final String USER_ACCOUNT_TYPE = "com.intencity.intencity.user.account.type";
 
+    // Request codes
+
+    public static final int REQUEST_CODE_STAT = 10;
+
     // Bundles
     public static final String BUNDLE_SET_NUMBER = "com.intencity.intencity.bundle.set.number";
     public static final String BUNDLE_ROUTINE_NAME = "com.intencity.intencity.bundle.routine.name";
     public static final String BUNDLE_EXERCISE_LIST = "com.intencity.intencity.bundle.exercise.list";
+    public static final String BUNDLE_EXERCISE = "com.intencity.intencity.bundle.exercise";
+    public static final String BUNDLE_EXERCISE_POSITION = "com.intencity.intencity.bundle.exercise.position";
     public static final String BUNDLE_EXERCISE_SETS = "com.intencity.intencity.bundle.exercise.sets";
     public static final String BUNDLE_EXERCISE_LIST_INDEX = "com.intencity.intencity.bundle.exercise.list.index";
     public static final String BUNDLE_EXERCISE_NAME = "com.intencity.intencity.bundle.exercise.name";
