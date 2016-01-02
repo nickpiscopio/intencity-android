@@ -79,7 +79,8 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
         // Add the listeners to the views for each list item.
         holder.weightEditText.addTextChangedListener(new GenericTextWatcher(this, position, WEIGHT));
 //        holder.durationEditText.addTextChangedListener(new GenericTextWatcher(this, position, DURATION));
-        holder.intensitySpinner.setOnItemSelectedListener(new GenericItemSelectionListener(this, position));
+        holder.intensitySpinner.setOnItemSelectedListener(
+                new GenericItemSelectionListener(this, position));
 
         // This is auto incremented with each added view.
         holder.setNumber.setText(String.valueOf(position + 1));
@@ -88,16 +89,28 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
 
         // Get the values that were in the list items before or the default values.
         String weight = String.valueOf(set.getWeight());
+        String reps = String.valueOf(set.getReps());
         String duration = String.valueOf(set.getDuration());
         int difficulty = set.getDifficulty();
         int intensity = difficulty < intensityValues[0] ? intensityValues[intensityValues.length - 1] : difficulty;
+
+
 
         String codeFailed = String.valueOf(Constant.CODE_FAILED);
 
         // Add the values to each list item.
         holder.weightEditText.setText(weight.equals(codeFailed) ? "" : weight);
-        holder.durationEditText.setText(duration.equals(codeFailed) ||
-                                        duration.equals(Constant.RETURN_NULL) ? "" : duration);
+
+        if (duration.equals(Constant.RETURN_NULL))
+        {
+            holder.durationEditText.setText(reps.equals(codeFailed) ||
+                                            reps.equals(Constant.RETURN_NULL) ? "" : reps);
+        }
+        else
+        {
+           holder.durationEditText.setText(duration.equals(codeFailed) ||
+                                           duration.equals(Constant.RETURN_NULL) ? "" : duration);
+        }
 
         holder.intensitySpinner.setSelection(intensity - 1);
 
