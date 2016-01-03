@@ -8,7 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ExerciseSetAdapter;
@@ -25,6 +29,9 @@ import java.util.ArrayList;
  */
 public class StatActivity extends AppCompatActivity
 {
+    private final int REPS = 0;
+    private final int TIME = 1;
+
     private ListView setsListView;
 
     private ExerciseSetAdapter adapter;
@@ -44,6 +51,7 @@ public class StatActivity extends AppCompatActivity
         setContentView(R.layout.activity_stat);
 
         setsListView = (ListView) findViewById(R.id.list_view);
+        Spinner durationSpinner = (Spinner) findViewById(R.id.spinner_duration);
 
         ActionBar actionBar = getSupportActionBar();
 
@@ -69,6 +77,16 @@ public class StatActivity extends AppCompatActivity
         // Initialize the set adapter with the sets.
         adapter = new ExerciseSetAdapter(context, R.layout.fragment_exercise_set, sets);
         setsListView.setAdapter(adapter);
+
+        // Populate the spinner.
+        String[] spinnerValues = new String[] { context.getString(
+                R.string.title_reps), context.getString(R.string.title_time) };
+        ArrayAdapter<String> durationAdapter = new ArrayAdapter<>(context, R.layout.spinner_duration, spinnerValues);
+        durationAdapter.setDropDownViewResource(R.layout.spinner_item);
+
+        durationSpinner.setAdapter(durationAdapter);
+        durationSpinner.setSelection(sets.get(0).getDuration().contains(":") ? TIME : REPS, false);
+        durationSpinner.setOnItemSelectedListener(durationTypeSelected);
     }
 
     @Override
@@ -99,6 +117,69 @@ public class StatActivity extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
+    }
+
+    private AdapterView.OnItemSelectedListener durationTypeSelected = new AdapterView.OnItemSelectedListener()
+    {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+        {
+            switch (position)
+            {
+                case REPS: //Reps selected.
+                    setRepFormat();
+                    break;
+                case TIME: // Time selected.
+                    setTimeFormat();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent)
+        {
+
+        }
+    };
+
+    private void setRepFormat()
+    {
+        for (Set set : sets)
+        {
+            String duration = set.getDuration();
+
+            // Make the input 0 if it doesn't have a value.
+            duration = duration == null ||
+                       duration.equals(Constant.RETURN_NULL) ||
+                       duration.length() < 1 ? "0": duration;
+
+            String formatted = duration.replaceAll(":", "");
+
+            int reps = Integer.parseInt(formatted.replaceFirst("^0+(?!$)", ""));
+            set.setReps(reps);
+            set.setDuration(Constant.RETURN_NULL);
+        }
+
+        adapter.notifyDataSetChanged();
+    }
+
+    private void setTimeFormat()
+    {
+        for (Set set : sets)
+        {
+            int reps = set.getReps();
+
+            int timeLength = 6;
+
+            String padded = String.format("%0" + timeLength + "d", reps);
+            String duration = padded.replaceAll("..(?!$)", "$0:");
+            set.setDuration(duration);
+            set.setReps(Constant.CODE_FAILED);
+        }
+
+        adapter.notifyDataSetChanged();
     }
 
     /**

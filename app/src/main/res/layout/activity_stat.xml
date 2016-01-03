@@ -7,7 +7,6 @@
     android:background="@android:color/white">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/layout_margin"
@@ -25,47 +24,35 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/layout_margin_quarter">
+            android:orientation="horizontal">
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="@integer/weight_set"/>
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="@integer/weight_edit_text"
+                    android:text="@string/title_weight"
+                    android:gravity="center"
+                    android:textSize="@dimen/card_title3_size"
+                    android:textColor="@color/secondary_dark"/>
+
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/weight_edit_text">
 
-                <LinearLayout
+                <Spinner
+                    android:id="@+id/spinner_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/title_duration"
+                    android:textSize="@dimen/card_title3_size"
                     android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_weight"
-                        android:gravity="center"
-                        android:textSize="@dimen/card_title3_size"
-                        android:padding="@dimen/layout_margin_quarter"
-                        android:textColor="@color/secondary_dark"/>
-
-                    <include layout="@layout/divider" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_duration"
-                        android:gravity="center"
-                        android:textSize="@dimen/card_title3_size"
-                        android:padding="@dimen/layout_margin_quarter"
-                        android:textColor="@color/secondary_dark"/>
-
-                </LinearLayout>
+                    android:background="@null"/>
 
             </RelativeLayout>
 
@@ -74,7 +61,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/weight_intensity"
                 android:text="@string/title_intensity"
-                android:layout_gravity="center"
                 android:gravity="center"
                 android:textSize="@dimen/card_title3_size"
                 android:textColor="@color/secondary_dark"/>

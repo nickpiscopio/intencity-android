@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -27,8 +26,7 @@ import java.util.ArrayList;
 public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeListener
 {
     private final Integer[] INTENSITY_VALUES = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    private final int REPS = 0;
-    private final int TIME = 1;
+
     public static final int WEIGHT = R.id.edit_text_weight;
     public static final int DURATION = R.id.edit_text_duration;
     public static final int INTENSITY = R.id.spinner_intensity;
@@ -48,7 +46,6 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
         TextView setNumber;
         EditText weightEditText;
         EditText durationEditText;
-        Spinner durationTypeSpinner;
         Spinner intensitySpinner;
     }
 
@@ -78,19 +75,17 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
             holder.setNumber = (TextView)convertView.findViewById(R.id.text_view_set);
             holder.weightEditText = (EditText)convertView.findViewById(WEIGHT);
             holder.durationEditText = (EditText)convertView.findViewById(DURATION);
-            holder.durationTypeSpinner = (Spinner)convertView.findViewById(R.id.spinner_duration);
             holder.intensitySpinner = (Spinner)convertView.findViewById(INTENSITY);
 
             ArrayAdapter<Integer> adapter =
-                    new ArrayAdapter<>(getContext(), R.layout.spinner, INTENSITY_VALUES);
+                    new ArrayAdapter<>(context, R.layout.spinner, INTENSITY_VALUES);
             holder.intensitySpinner.setAdapter(adapter);
             adapter.setDropDownViewResource(R.layout.spinner_item);
 
-            final GenericTextWatcher genericTextWatcher = new GenericTextWatcher(this, position, holder.durationEditText);
             // Add the listeners to the views for each list item.
             holder.weightEditText.addTextChangedListener(
                     new GenericTextWatcher(this, position, holder.weightEditText));
-            holder.durationEditText.addTextChangedListener(genericTextWatcher);
+            holder.durationEditText.addTextChangedListener(new GenericTextWatcher(this, position, holder.durationEditText));
             holder.intensitySpinner
                     .setOnItemSelectedListener(new GenericItemSelectionListener(this, position));
 
@@ -111,65 +106,21 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
             // Add the values to each list item.
             holder.weightEditText.setText(weight.equals(codeFailed) ? "" : weight);
 
-            // Populate the spinner.
-            String[] spinnerValues = new String[] { context.getString(
-                    R.string.title_reps), context.getString(R.string.title_time) };
-            ArrayAdapter<String> durationAdapter = new ArrayAdapter<>(context, R.layout.spinner_duration, spinnerValues);
-            durationAdapter.setDropDownViewResource(R.layout.spinner_item);
-
-            holder.durationTypeSpinner.setAdapter(durationAdapter);
-            holder.durationTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-            {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-                {
-                    String duration = "";
-
-                    switch (position)
-                    {
-                        case REPS: //Reps selected.
-                            duration = getRepFormat(holder.durationEditText.getText().toString());
-
-                            genericTextWatcher.setIsReps(true);
-                            break;
-                        case TIME: // Time selected.
-                            duration = getTimeFormat(holder.durationEditText.getText().toString());
-
-                            genericTextWatcher.setIsReps(false);
-                            break;
-                        default:
-                            break;
-                    }
-
-                    holder.durationEditText.setText(duration);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent)
-                {
-
-                }
-            });
-
             if (time.equals(Constant.RETURN_NULL))
             {
-                holder.durationEditText.setText(reps.equals(codeFailed) ||
-                                                reps.equals(Constant.RETURN_NULL) ? "" : reps);
-                holder.durationTypeSpinner.setSelection(REPS);
+                holder.durationEditText.setText(
+                        reps.equals(codeFailed) || reps.equals(Constant.RETURN_NULL) ? "" : reps);
             }
             else
             {
-                holder.durationEditText.setText(time.equals(codeFailed) ||
-                                                time.equals(Constant.RETURN_NULL) ? "" : time);
-                holder.durationTypeSpinner.setSelection(TIME);
+                holder.durationEditText.setText(
+                        time.equals(codeFailed) || time.equals(Constant.RETURN_NULL) ? "" : time);
             }
 
             holder.intensitySpinner.setSelection(intensity - 1);
 
-
             convertView.setTag(holder);
         }
-
 
         return convertView;
     }
@@ -205,23 +156,14 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
 
         int timeLength = 6;
 
-        String padded = String.format("%0" + timeLength + "d", Integer.parseInt(getRepFormat(input)));
+        String padded = String.format("%0" + timeLength + "d",
+                                      Integer.parseInt(getRepFormat(input)));
         if (padded.length() > timeLength)
         {
             padded = padded.substring(0, timeLength);
         }
         return padded.replaceAll("..(?!$)", "$0:");
     }
-
-    View.OnClickListener clickListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v)
-        {
-            EditText editText = (EditText) v;
-            editText.selectAll();
-        }
-    };
 
     @Override
     public void onTextChanged(String value, int position, EditText editText)

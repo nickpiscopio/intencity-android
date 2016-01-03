@@ -23,8 +23,6 @@ public class GenericTextWatcher implements TextWatcher
 
     private String beforeText;
 
-    private boolean isReps;
-
     /**
      * Constructor for the GenericTextWatcher.
      *
@@ -41,8 +39,6 @@ public class GenericTextWatcher implements TextWatcher
         this.editText = editText;
 
         beforeText = "";
-
-        isReps = false;
     }
 
     @Override
@@ -68,7 +64,7 @@ public class GenericTextWatcher implements TextWatcher
                     listener.onTextChanged(value.equals("") ? 0 : Integer.parseInt(value), position, viewId);
                     break;
                 case ExerciseSetAdapter.DURATION:
-                    if (!isReps && value.contains(":"))
+                    if (value.contains(":"))
                     {
                         listener.onTextChanged(value.equals("") ? "0" : value, position, editText);
                     }
@@ -81,15 +77,5 @@ public class GenericTextWatcher implements TextWatcher
                     break;
             }
         }
-    }
-
-    /**
-     * Sets the changingToRepsVariable.
-     *
-     * @param changingToReps    Boolean if the spinner selected Reps.
-     */
-    public void setIsReps(boolean changingToReps)
-    {
-        this.isReps = changingToReps;
     }
 }
