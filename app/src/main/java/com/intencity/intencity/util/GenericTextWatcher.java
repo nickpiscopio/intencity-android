@@ -2,6 +2,7 @@ package com.intencity.intencity.util;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.EditText;
 
 import com.intencity.intencity.adapter.ExerciseSetAdapter;
 import com.intencity.intencity.listener.ViewChangeListener;
@@ -18,24 +19,30 @@ public class GenericTextWatcher implements TextWatcher
 
     private int position;
 
-    private int viewId;
+    private EditText editText;
 
     private String beforeText;
+
+    private boolean isReps;
 
     /**
      * Constructor for the GenericTextWatcher.
      *
      * @param listener  The ViewChangeListener to call when we have a value to send.
      * @param position  The index of the ListView where the TextView is located.
-     * @param viewId    The resource id of the view for this TextWatcher.
+     * @param editText  The EditText we are editing.
      */
-    public GenericTextWatcher(ViewChangeListener listener, int position, int viewId)
+    public GenericTextWatcher(ViewChangeListener listener, int position, EditText editText)
     {
         this.listener = listener;
 
         this.position = position;
 
-        this.viewId = viewId;
+        this.editText = editText;
+
+        beforeText = "";
+
+        isReps = false;
     }
 
     @Override
@@ -54,18 +61,35 @@ public class GenericTextWatcher implements TextWatcher
 
         if (!beforeText.equals(value))
         {
+            int viewId = editText.getId();
             switch (viewId)
             {
                 case ExerciseSetAdapter.WEIGHT:
                     listener.onTextChanged(value.equals("") ? 0 : Integer.parseInt(value), position, viewId);
                     break;
                 case ExerciseSetAdapter.DURATION:
-                    break;
-                case ExerciseSetAdapter.INTENSITY:
+                    if (!isReps && value.contains(":"))
+                    {
+                        listener.onTextChanged(value.equals("") ? "0" : value, position, editText);
+                    }
+                    else
+                    {
+                        listener.onTextChanged(value.equals("") ? 0 : Integer.parseInt(value), position, viewId);
+                    }
                     break;
                 default:
                     break;
             }
         }
+    }
+
+    /**
+     * Sets the changingToRepsVariable.
+     *
+     * @param changingToReps    Boolean if the spinner selected Reps.
+     */
+    public void setIsReps(boolean changingToReps)
+    {
+        this.isReps = changingToReps;
     }
 }

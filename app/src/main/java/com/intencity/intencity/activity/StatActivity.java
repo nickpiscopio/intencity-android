@@ -68,7 +68,6 @@ public class StatActivity extends AppCompatActivity
 
         // Initialize the set adapter with the sets.
         adapter = new ExerciseSetAdapter(context, R.layout.fragment_exercise_set, sets);
-
         setsListView.setAdapter(adapter);
     }
 
@@ -116,8 +115,6 @@ public class StatActivity extends AppCompatActivity
         sets.add(set);
 
         adapter.notifyDataSetChanged();
-
-//        setListViewHeight();
     }
 
     @Override
@@ -132,23 +129,4 @@ public class StatActivity extends AppCompatActivity
 
         super.onBackPressed();
     }
-
-    /**
-     * Sets the ListView height. This is needed because we use a ListView inside of a
-     * RecyclerView. It is not recommended to do this, but it is needed so we don't need
-     * to keep track of the indexes of different fragments.
-     */
-//    private void setListViewHeight()
-//    {
-//        ExerciseSetAdapter adapter = entity.getAdapters().get(position);
-//        View listItem = adapter.getView();
-//        listItem.measure(0, 0);
-//
-//        int height = listItem.getMeasuredHeight();
-//        int count = adapter.getItemCount();
-//
-//        // Set a new height for the layout.
-//        // If we don't do this, the height is 0 because we are inside a RecyclerView.
-//        setsListView.getLayoutParams().height = height * count;
-//    }
 }

@@ -1,5 +1,7 @@
 package com.intencity.intencity.listener;
 
+import android.widget.EditText;
+
 /**
  * A listener for when text changes on an EditText.
  *
@@ -7,7 +9,7 @@ package com.intencity.intencity.listener;
  */
 public interface ViewChangeListener
 {
-    void onTextChanged(String value, int position, int viewId);
+    void onTextChanged(String value, int position, EditText editText);
     void onTextChanged(int value, int position, int viewId);
     void onSpinnerItemSelected(int spinnerPosition, int position);
 }

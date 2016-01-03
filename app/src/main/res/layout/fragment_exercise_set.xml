@@ -17,60 +17,118 @@
             android:id="@+id/text_view_set"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:gravity="center"
+            android:layout_weight="@integer/weight_set"
+            android:layout_gravity="center"
             android:textSize="@dimen/card_title3_size"
             android:textColor="@color/secondary_dark"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="@integer/weight_edit_text"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/edit_text_weight"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:textSize="@dimen/card_title_size"
-                android:textColor="@color/secondary_dark"
-                android:padding="@dimen/layout_margin"
-                android:inputType="number"
-                android:maxLength="@integer/weight_characters"
-                android:background="@drawable/edit_text_flat"/>
+                android:orientation="vertical">
 
-        </RelativeLayout>
+            </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <EditText
-                android:id="@+id/edit_text_duration"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:textSize="@dimen/card_title_size"
-                android:textColor="@color/secondary_dark"
-                android:padding="@dimen/layout_margin"
-                android:background="@drawable/edit_text_flat"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-        </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/edit_text_weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/card_title_size"
+                        android:textColor="@color/secondary_dark"
+                        android:paddingTop="@dimen/layout_margin"
+                        android:paddingLeft="@dimen/layout_margin"
+                        android:paddingRight="@dimen/layout_margin"
+                        android:paddingBottom="@dimen/layout_margin_quarter"
+                        android:inputType="number"
+                        android:maxLength="@integer/weight_characters"
+                        android:background="@null"/>
+
+                    <include layout="@layout/divider_edit_text" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_lbs"
+                    android:paddingLeft="@dimen/layout_margin"
+                    android:textSize="@dimen/card_title3_size"
+                    android:textColor="@color/secondary_light"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/divider" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/edit_text_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/card_title_size"
+                        android:textColor="@color/secondary_dark"
+                        android:paddingTop="@dimen/layout_margin"
+                        android:paddingLeft="@dimen/layout_margin"
+                        android:paddingRight="@dimen/layout_margin"
+                        android:paddingBottom="@dimen/layout_margin_quarter"
+                        android:inputType="number"
+                        android:background="@null"/>
+
+                    <include layout="@layout/divider_edit_text" />
+
+                </LinearLayout>
+
+                <Spinner
+                    android:id="@+id/spinner_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:popupBackground="@android:color/white"
+                    android:background="@null"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="@integer/weight_intensity"
+            android:layout_gravity="center">
 
             <Spinner
                 android:id="@+id/spinner_intensity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textSize="@dimen/card_title3_size"
-                android:textColor="@color/secondary_dark"
-                android:padding="@dimen/layout_margin_half"/>
+                android:popupBackground="@android:color/white"
+                android:background="@null"/>
 
         </RelativeLayout>
 

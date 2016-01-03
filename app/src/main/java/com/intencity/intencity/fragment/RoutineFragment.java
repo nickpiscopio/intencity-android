@@ -236,6 +236,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner, displayMuscleGroups);
 
         spinner.setAdapter(adapter);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setSelection(recommended);
     }
 

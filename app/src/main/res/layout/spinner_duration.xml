@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:textColor="@color/secondary_dark"
     android:padding="@dimen/layout_margin"
+    android:textSize="@dimen/card_title3_size"
     android:drawableRight="@mipmap/spinner_arrow"
     android:drawableEnd="@mipmap/spinner_arrow"
     android:drawablePadding="@dimen/layout_margin_half"/>

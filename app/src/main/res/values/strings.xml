@@ -28,6 +28,8 @@
 
     <!-- Exercise Strings -->
     <string name="title_weight">WEIGHT</string>
+    <string name="title_lbs">LBS</string>
+    <string name="title_duration">DURATION</string>
     <string name="title_reps">REPS</string>
     <string name="title_time">TIME</string>
     <string name="title_intensity">INTENSITY</string>

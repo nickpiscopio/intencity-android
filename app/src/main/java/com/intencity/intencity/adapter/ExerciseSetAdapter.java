@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -25,24 +26,29 @@ import java.util.ArrayList;
  */
 public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeListener
 {
-    private final Integer[] intensityValues = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    private final Integer[] INTENSITY_VALUES = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    private final int REPS = 0;
+    private final int TIME = 1;
     public static final int WEIGHT = R.id.edit_text_weight;
     public static final int DURATION = R.id.edit_text_duration;
     public static final int INTENSITY = R.id.spinner_intensity;
 
     private Context context;
 
+    private int layoutResourceId;
+
     private ArrayList<Set> sets;
 
-    private View row;
+    private LayoutInflater inflater;
 
-    private int layoutResourceId;
+    private int position;
 
     static class SetHolder
     {
         TextView setNumber;
         EditText weightEditText;
         EditText durationEditText;
+        Spinner durationTypeSpinner;
         Spinner intensitySpinner;
     }
 
@@ -52,74 +58,182 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.sets = sets;
+
+        position = -1;
+
+        inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        row = convertView;
+        final SetHolder holder = (convertView == null) ? new SetHolder() : (SetHolder)convertView.getTag();
 
-        SetHolder holder;
-
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        // Would recreate this only if (row == null),
-        // but when that happens the second list item always overwrites the first.
-        // This is how it will have to be for now.
-        row = inflater.inflate(layoutResourceId, parent, false);
-
-        holder = new SetHolder();
-        holder.setNumber = (TextView) row.findViewById(R.id.text_view_set);
-        holder.weightEditText = (EditText) row.findViewById(WEIGHT);
-        holder.durationEditText = (EditText) row.findViewById(DURATION);
-        holder.intensitySpinner = (Spinner) row.findViewById(INTENSITY);
-
-        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner, intensityValues);
-        holder.intensitySpinner.setAdapter(adapter);
-
-        // Add the listeners to the views for each list item.
-        holder.weightEditText.addTextChangedListener(new GenericTextWatcher(this, position, WEIGHT));
-//        holder.durationEditText.addTextChangedListener(new GenericTextWatcher(this, position, DURATION));
-        holder.intensitySpinner.setOnItemSelectedListener(
-                new GenericItemSelectionListener(this, position));
-
-        // This is auto incremented with each added view.
-        holder.setNumber.setText(String.valueOf(position + 1));
-
-        Set set = sets.get(position);
-
-        // Get the values that were in the list items before or the default values.
-        String weight = String.valueOf(set.getWeight());
-        String reps = String.valueOf(set.getReps());
-        String duration = String.valueOf(set.getDuration());
-        int difficulty = set.getDifficulty();
-        int intensity = difficulty < intensityValues[0] ? intensityValues[intensityValues.length - 1] : difficulty;
-
-
-
-        String codeFailed = String.valueOf(Constant.CODE_FAILED);
-
-        // Add the values to each list item.
-        holder.weightEditText.setText(weight.equals(codeFailed) ? "" : weight);
-
-        if (duration.equals(Constant.RETURN_NULL))
+        if (this.position != position || convertView == null)
         {
-            holder.durationEditText.setText(reps.equals(codeFailed) ||
-                                            reps.equals(Constant.RETURN_NULL) ? "" : reps);
-        }
-        else
-        {
-           holder.durationEditText.setText(duration.equals(codeFailed) ||
-                                           duration.equals(Constant.RETURN_NULL) ? "" : duration);
+            this.position = position;
+
+            convertView = inflater.inflate(layoutResourceId, parent, false);
+
+            holder.setNumber = (TextView)convertView.findViewById(R.id.text_view_set);
+            holder.weightEditText = (EditText)convertView.findViewById(WEIGHT);
+            holder.durationEditText = (EditText)convertView.findViewById(DURATION);
+            holder.durationTypeSpinner = (Spinner)convertView.findViewById(R.id.spinner_duration);
+            holder.intensitySpinner = (Spinner)convertView.findViewById(INTENSITY);
+
+            ArrayAdapter<Integer> adapter =
+                    new ArrayAdapter<>(getContext(), R.layout.spinner, INTENSITY_VALUES);
+            holder.intensitySpinner.setAdapter(adapter);
+            adapter.setDropDownViewResource(R.layout.spinner_item);
+
+            final GenericTextWatcher genericTextWatcher = new GenericTextWatcher(this, position, holder.durationEditText);
+            // Add the listeners to the views for each list item.
+            holder.weightEditText.addTextChangedListener(
+                    new GenericTextWatcher(this, position, holder.weightEditText));
+            holder.durationEditText.addTextChangedListener(genericTextWatcher);
+            holder.intensitySpinner
+                    .setOnItemSelectedListener(new GenericItemSelectionListener(this, position));
+
+            // This is auto incremented with each added view.
+            holder.setNumber.setText(String.valueOf(position + 1));
+
+            Set set = sets.get(position);
+
+            // Get the values that were in the list items before or the default values.
+            String weight = String.valueOf(set.getWeight());
+            String reps = String.valueOf(set.getReps());
+            String time = String.valueOf(set.getDuration());
+            int difficulty = set.getDifficulty();
+            int intensity = difficulty < INTENSITY_VALUES[0] ? INTENSITY_VALUES[INTENSITY_VALUES.length - 1] : difficulty;
+
+            String codeFailed = String.valueOf(Constant.CODE_FAILED);
+
+            // Add the values to each list item.
+            holder.weightEditText.setText(weight.equals(codeFailed) ? "" : weight);
+
+            // Populate the spinner.
+            String[] spinnerValues = new String[] { context.getString(
+                    R.string.title_reps), context.getString(R.string.title_time) };
+            ArrayAdapter<String> durationAdapter = new ArrayAdapter<>(context, R.layout.spinner_duration, spinnerValues);
+            durationAdapter.setDropDownViewResource(R.layout.spinner_item);
+
+            holder.durationTypeSpinner.setAdapter(durationAdapter);
+            holder.durationTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+            {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+                {
+                    String duration = "";
+
+                    switch (position)
+                    {
+                        case REPS: //Reps selected.
+                            duration = getRepFormat(holder.durationEditText.getText().toString());
+
+                            genericTextWatcher.setIsReps(true);
+                            break;
+                        case TIME: // Time selected.
+                            duration = getTimeFormat(holder.durationEditText.getText().toString());
+
+                            genericTextWatcher.setIsReps(false);
+                            break;
+                        default:
+                            break;
+                    }
+
+                    holder.durationEditText.setText(duration);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent)
+                {
+
+                }
+            });
+
+            if (time.equals(Constant.RETURN_NULL))
+            {
+                holder.durationEditText.setText(reps.equals(codeFailed) ||
+                                                reps.equals(Constant.RETURN_NULL) ? "" : reps);
+                holder.durationTypeSpinner.setSelection(REPS);
+            }
+            else
+            {
+                holder.durationEditText.setText(time.equals(codeFailed) ||
+                                                time.equals(Constant.RETURN_NULL) ? "" : time);
+                holder.durationTypeSpinner.setSelection(TIME);
+            }
+
+            holder.intensitySpinner.setSelection(intensity - 1);
+
+
+            convertView.setTag(holder);
         }
 
-        holder.intensitySpinner.setSelection(intensity - 1);
 
-        return row;
+        return convertView;
     }
 
+    /**
+     * Gets a rep format from an input.
+     *
+     * @param input     The value to be converted.
+     *
+     * @return  An integer of the formatted value.
+     */
+    private String getRepFormat(String input)
+    {
+        // Make the input 0 if it doesn't have a value.
+        input = (input.length() < 1) ? "0" : input;
+
+        String formatted = input.replaceAll(":", "");
+        return formatted.replaceFirst("^0+(?!$)", "");
+    }
+
+    /**
+     * Gets the time format of an input.
+     *
+     * @param input     The value to convert to a time format.
+     *
+     * @return  The vlue in a time format.
+     */
+    private String getTimeFormat(String input)
+    {
+        // Convert to rep format so we can remove all the colons.
+        // We do this so we don't add unwanted colons later.
+        input = getRepFormat(input);
+
+        int timeLength = 6;
+
+        String padded = String.format("%0" + timeLength + "d", Integer.parseInt(getRepFormat(input)));
+        if (padded.length() > timeLength)
+        {
+            padded = padded.substring(0, timeLength);
+        }
+        return padded.replaceAll("..(?!$)", "$0:");
+    }
+
+    View.OnClickListener clickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            EditText editText = (EditText) v;
+            editText.selectAll();
+        }
+    };
+
     @Override
-    public void onTextChanged(String value, int position, int viewId) {
-        // Not implemented for now. Will implement later when duration is implemented.
+    public void onTextChanged(String value, int position, EditText editText)
+    {
+        editText.setText(getTimeFormat(value));
+
+        String time = editText.getText().toString();
+
+        editText.setSelection(time.length());
+
+        Set set = sets.get(position);
+        set.setDuration(time);
     }
 
     @Override
@@ -144,26 +258,6 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
     public void onSpinnerItemSelected(int spinnerPosition, int position)
     {
         Set set = sets.get(position);
-        set.setDifficulty(intensityValues[spinnerPosition]);
-    }
-
-    /**
-     * Gets the view of the set adapter.
-     *
-     * @return  The view.
-     */
-    public View getView()
-    {
-        return row;
-    }
-
-    /**
-     * Gets the number of items in the adapter.
-     *
-     * @return  The amount of sets.
-     */
-    public int getItemCount()
-    {
-        return sets.size();
+        set.setDifficulty(INTENSITY_VALUES[spinnerPosition]);
     }
 }

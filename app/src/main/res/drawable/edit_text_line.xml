@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:top="@dimen/negative_shadow"
+          android:left="@dimen/negative_shadow"
+          android:right="@dimen/negative_shadow">
+        <shape>
+            <solid android:color="@android:color/white"/>
+            <stroke android:color="@color/shadow_dark" android:width="@dimen/shadow"/>
+        </shape>
+    </item>
+</layer-list>
