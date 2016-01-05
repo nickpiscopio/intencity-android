@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.activity.Direction;
 import com.intencity.intencity.activity.StatActivity;
 import com.intencity.intencity.adapter.ExerciseAdapter;
 import com.intencity.intencity.dialog.CustomDialog;
@@ -229,6 +230,14 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     @Override
     public void onExerciseClicked(int position)
+    {
+        Intent intent = new Intent(context, Direction.class);
+        intent.putExtra(Constant.BUNDLE_EXERCISE_NAME, currentExercises.get(position).getName());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onStatClicked(int position)
     {
         Intent intent = new Intent(context, StatActivity.class);
         intent.putExtra(Constant.BUNDLE_EXERCISE_POSITION, position);

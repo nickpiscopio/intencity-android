@@ -10,4 +10,5 @@ import java.io.Serializable;
 public interface ExerciseListener extends Serializable
 {
     void onExerciseClicked(int position);
+    void onStatClicked(int position);
 }

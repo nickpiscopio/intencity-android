@@ -12,6 +12,8 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.viewholder.ExerciseViewHolder;
 import com.intencity.intencity.listener.ExerciseListener;
 import com.intencity.intencity.model.Exercise;
+import com.intencity.intencity.model.Set;
+import com.intencity.intencity.util.Constant;
 
 import java.util.ArrayList;
 
@@ -52,13 +54,22 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     {
         Exercise exercise = exercises.get(position);
 
+        ArrayList<Set> sets = exercise.getSets();
+        Set set = sets.get(sets.size() - 1);
+
         ExerciseViewHolder exerciseHolder = (ExerciseViewHolder) holder;
-        exerciseHolder.getExerciseTextView().setText(exercise.getName());
+        exerciseHolder.setExerciseText(exercise.getName());
         exerciseHolder.setPosition(position);
-        View view = exerciseHolder.getView();
+        exerciseHolder.setWeight(String.valueOf(set.getWeight()));
+
+        String reps = String.valueOf(set.getReps());
+        String duration = set.getDuration();
+        exerciseHolder.setDuration(duration.equals(Constant.RETURN_NULL) ? reps : duration);
+
+        exerciseHolder.showEditLayout();
 
         // Here you apply the animation when the view is bound
-        setAnimation(view, position);
+        setAnimation(exerciseHolder.getView(), position);
     }
 
     @Override
