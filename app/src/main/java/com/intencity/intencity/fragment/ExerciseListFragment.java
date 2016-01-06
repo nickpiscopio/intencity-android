@@ -46,7 +46,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private TextView routine;
     private Button nextExercise;
 
-    private ExerciseAdapter mAdapter;
+    private ExerciseAdapter adapter;
 
     private Context context;
 
@@ -98,8 +98,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         recyclerView.addItemDecoration(
                 new HeaderDecoration(context, recyclerView, R.layout.recycler_view_header));
 
-        mAdapter = new ExerciseAdapter(context, currentExercises, this);
-        recyclerView.setAdapter(mAdapter);
+        adapter = new ExerciseAdapter(context, currentExercises, this);
+        recyclerView.setAdapter(adapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -156,9 +156,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         currentExercises.add(allExercises.get(autoFillTo++));
 
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
         // TODO: set the recycler view to scroll to the bottom when a new view is added.
-        //        recyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
+        //        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     /**
@@ -209,7 +209,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
                 // Remove 1 from the last position so we can se the animation
                 // for the next exercise that will be added.
-                mAdapter.setLastPosition(mAdapter.getLastPosition() - 1);
+                adapter.setLastPosition(adapter.getLastPosition() - 1);
 
                 if (position == currentExercises.size())
                 {
@@ -217,11 +217,11 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 }
                 else
                 {
-                    mAdapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
                 }
                 break;
             case 1: // Cancel was clicked.
-                mAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
                 break;
             default:
                 break;
@@ -258,6 +258,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
             currentExercises.get(position).setSets(sets);
             allExercises.get(position).setSets(sets);
+
+            adapter.notifyDataSetChanged();
         }
     }
 }

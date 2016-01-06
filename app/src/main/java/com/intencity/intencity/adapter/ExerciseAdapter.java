@@ -64,7 +64,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         String reps = String.valueOf(set.getReps());
         String duration = set.getDuration();
-        exerciseHolder.setDuration(duration.equals(Constant.RETURN_NULL) ? reps : duration);
+        exerciseHolder.setDuration(duration == null || duration.equals(Constant.RETURN_NULL) ? reps : duration);
 
         exerciseHolder.showEditLayout();
 

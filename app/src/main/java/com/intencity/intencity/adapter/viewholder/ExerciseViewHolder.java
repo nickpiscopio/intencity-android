@@ -129,6 +129,11 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
             lastSet.setVisibility(View.GONE);
             edit.setVisibility(View.VISIBLE);
         }
+        else
+        {
+            edit.setVisibility(View.GONE);
+            lastSet.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
