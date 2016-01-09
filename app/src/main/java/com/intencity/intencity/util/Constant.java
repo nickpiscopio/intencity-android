@@ -46,12 +46,13 @@ public class Constant
     public static final String SERVICE_VALIDATE_USER_CREDENTIALS = SERVICE_FOLDER + "user_credentials.php";
     public static final String SERVICE_TRIAL_ACCOUNT = SERVICE_FOLDER + "account.php";
     public static final String SERVICE_STORED_PROCEDURE = SERVICE_FOLDER + "stored_procedure.php";
+    public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER + "complex_insert.php";
 
     // Parameters
     public static final String LIKE_OPERATOR = "%";
-    private static final String PARAMETER_AMPERSAND = "&";
-    private static final String PARAMETER_DELIMITER = ",";
-    private static final String PARAMETER_EMAIL = "email=";
+    public static final String PARAMETER_AMPERSAND = "&";
+    public static final String PARAMETER_DELIMITER = ",";
+    public static final String PARAMETER_EMAIL = "email=";
     private static final String PARAMETER_PASSWORD = "password=";
     private static final String PARAMETER_DATA = "d=";
     private static final String PARAMETER_VARIABLE = "v=";
@@ -112,9 +113,17 @@ public class Constant
                PARAMETER_ACCOUNT_TYPE + ACCOUNT_TYPE_TRIAL;
     }
 
-    public static String getStoredProcedure(String data, String... variables)
+    /**
+     * Generates the stored procedure parameters.
+     *
+     * @param name          The name of the stored procedure to call.
+     * @param variables     The variable to send into the stored procedure.
+     *
+     * @return  The stored procedure method call with the parameters included.
+     */
+    public static String generateStoredProcedureParameters(String name, String... variables)
     {
-        String storedProcedureParameters = PARAMETER_DATA + data + PARAMETER_AMPERSAND + PARAMETER_VARIABLE;
+        String storedProcedureParameters = PARAMETER_DATA + name + PARAMETER_AMPERSAND + PARAMETER_VARIABLE;
 
         int length = variables.length;
 

@@ -81,7 +81,7 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
     private void searchForDirections(String exerciseName)
     {
         new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                         Constant.getStoredProcedure(
+                                                         Constant.generateStoredProcedureParameters(
                                                                  Constant.STORED_PROCEDURE_GET_EXERCISE_DIRECTION,
                                                                  exerciseName));
     }

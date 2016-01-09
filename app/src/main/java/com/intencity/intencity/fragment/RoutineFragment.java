@@ -72,7 +72,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         }
 
         new ServiceTask(spinnerServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                        Constant.getStoredProcedure(
+                                                        Constant.generateStoredProcedureParameters(
                                                                 Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS,
                                                                 email));
 
@@ -145,7 +145,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         public void onRetrievalSuccessful(String response)
         {
             new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                             Constant.getStoredProcedure(
+                                                             Constant.generateStoredProcedureParameters(
                                                                      Constant.STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY,
                                                                      email));
         }
@@ -262,7 +262,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment
                 routineName = routineSelection;
 
                 String routine = String.valueOf(spinnerPosition + 1);
-                String storedProcedureParameters = Constant.getStoredProcedure(
+                String storedProcedureParameters = Constant.generateStoredProcedureParameters(
                         Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);
 
                 new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,

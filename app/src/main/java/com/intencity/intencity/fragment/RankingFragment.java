@@ -44,7 +44,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
 
 
         new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                        Constant.getStoredProcedure(
+                                                        Constant.generateStoredProcedureParameters(
                                                                 Constant.STORED_PROCEDURE_GET_FOLLOWING,
                                                                 email));
 

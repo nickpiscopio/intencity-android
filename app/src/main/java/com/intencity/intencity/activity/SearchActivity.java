@@ -80,7 +80,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         String searchTerm = Constant.LIKE_OPERATOR + query.replaceAll(Constant.SPACE_REGEX, "") + Constant.LIKE_OPERATOR;
 
         new ServiceTask(searchUsersServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                            Constant.getStoredProcedure(
+                                                            Constant.generateStoredProcedureParameters(
                                                                     Constant.STORED_PROCEDURE_SEARCH_USERS,
                                                                     email, searchTerm));
         return false;

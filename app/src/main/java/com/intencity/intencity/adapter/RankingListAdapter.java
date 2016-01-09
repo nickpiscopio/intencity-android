@@ -92,8 +92,8 @@ public class RankingListAdapter extends ArrayAdapter<User>
                     @Override
                     public void onRetrievalFailed() { }
                 }).execute(Constant.SERVICE_STORED_PROCEDURE,
-                           Constant.getStoredProcedure(Constant.STORED_PROCEDURE_FOLLOW_USER, email,
-                                                       String.valueOf(id)));
+                           Constant.generateStoredProcedureParameters(
+                                   Constant.STORED_PROCEDURE_FOLLOW_USER, email, String.valueOf(id)));
             }
         });
 

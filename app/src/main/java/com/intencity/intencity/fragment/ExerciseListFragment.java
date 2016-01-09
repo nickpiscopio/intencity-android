@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,13 @@ import com.intencity.intencity.dialog.CustomDialog;
 import com.intencity.intencity.dialog.Dialog;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ExerciseListener;
+import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
+import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.task.SetExerciseTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.SecurePreferences;
 
 import java.util.ArrayList;
 
@@ -33,7 +37,8 @@ import java.util.ArrayList;
  * Created by Nick Piscopio on 12/12/15.
  */
 public class ExerciseListFragment extends android.support.v4.app.Fragment implements DialogListener,
-                                                                                     ExerciseListener
+                                                                                     ExerciseListener,
+                                                                                     ServiceListener
 {
     private int TOTAL_EXERCISE_NUM = 5;
 
@@ -55,6 +60,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private int completedExerciseNum = 0;
 
     private int position;
+
+    private String email;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -103,6 +110,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        SecurePreferences securePreferences = new SecurePreferences(context);
+        email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
         return view;
     }
@@ -256,10 +266,106 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             int position = extras.getInt(Constant.BUNDLE_EXERCISE_POSITION);
             ArrayList<Set> sets = extras.getParcelableArrayList(Constant.BUNDLE_EXERCISE_SETS);
 
-            currentExercises.get(position).setSets(sets);
+            Exercise currentExercise = currentExercises.get(position);
+            currentExercise.setSets(sets);
             allExercises.get(position).setSets(sets);
 
             adapter.notifyDataSetChanged();
+
+            // Save exercise to the web.
+            new ServiceTask(this).execute(Constant.SERVICE_COMPLEX_INSERT,
+                                          generateComplexInsertParameters(currentExercise));
         }
     }
+
+    /**
+     * Constructs the parameter query sent to the service.
+     *
+     * @param exercise  The exercise that is getting parsed to create the query.
+     *
+     * @return  The constructed String.
+     */
+    private String generateComplexInsertParameters(Exercise exercise)
+    {
+        String statements = "statements=";
+        String table = "table";
+        String columns = "columns";
+        String inserts = "inserts";
+        String tableCompletedExercise = "CompletedExercise";
+        String columnDate = "Date";
+        String columnTime = "Time";
+        String columnExerciseName = "ExerciseName";
+        String columnExerciseWeight = "ExerciseWeight";
+        String columnExerciseReps = "ExerciseReps";
+        String columnExerciseDuration = "ExerciseDuration";
+        String columnExerciseDifficulty = "ExerciseDifficulty";
+
+        String curDate = "CURDATE()";
+        String now = "NOW()";
+
+        String exerciseName = exercise.getName();
+        ArrayList<Set> sets = exercise.getSets();
+
+        int setSize = sets.size();
+
+        String parameter = statements + setSize
+                           + Constant.PARAMETER_AMPERSAND + Constant.PARAMETER_EMAIL + email;
+
+        for (int i = 0; i < setSize; i++)
+        {
+            Set set = sets.get(i);
+            int weight = set.getWeight();
+
+            String duration = set.getDuration();
+            boolean hasWeight = weight > 0;
+            boolean isDuration = duration.contains(":");
+
+            String weightParam = hasWeight ? columnExerciseWeight + Constant.PARAMETER_DELIMITER : "";
+            String weightValue = hasWeight ? String.valueOf(weight) + Constant.PARAMETER_DELIMITER : "";
+            // Choose whether we are inserting reps or duration.
+            String durationParam = isDuration ? columnExerciseDuration + Constant.PARAMETER_DELIMITER :
+                                                                columnExerciseReps + Constant.PARAMETER_DELIMITER;
+            String durationValue = isDuration ? duration : String.valueOf(set.getReps());
+
+            parameter += getParameterTitle(table, i)
+                            + tableCompletedExercise
+                            + getParameterTitle(columns, i) + columnDate + Constant.PARAMETER_DELIMITER
+                                                            + columnTime + Constant.PARAMETER_DELIMITER
+                                                            + columnExerciseName + Constant.PARAMETER_DELIMITER
+                                                            + weightParam
+                                                            + durationParam
+                                                            + columnExerciseDifficulty
+                            + getParameterTitle(inserts, i) + curDate + Constant.PARAMETER_DELIMITER
+                                                            + now + Constant.PARAMETER_DELIMITER
+                                                            + exerciseName + Constant.PARAMETER_DELIMITER
+                                                            + weightValue
+                                                            + durationValue + Constant.PARAMETER_DELIMITER
+                                                            + set.getDifficulty();
+        }
+
+        return parameter;
+    }
+
+    /**
+     * Constructs the parameter title.
+     *
+     * @param name      The name of the parameter to use.
+     * @param index     The index of the parameter to use.
+     *
+     * @return  The formatted parameter to send to the service.
+     *          i.e. &columns0=
+     */
+    private String getParameterTitle(String name, int index)
+    {
+        return Constant.PARAMETER_AMPERSAND + name + index + "=";
+    }
+
+    @Override
+    public void onRetrievalSuccessful(String response)
+    {
+        Log.i(Constant.TAG, "COMPLEX INSERT RESPONSE: " + response);
+    }
+
+    @Override
+    public void onRetrievalFailed() { }
 }
