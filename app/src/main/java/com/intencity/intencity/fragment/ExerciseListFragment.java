@@ -30,6 +30,7 @@ import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * The Exercise List Fragment for Intencity.
@@ -37,8 +38,7 @@ import java.util.ArrayList;
  * Created by Nick Piscopio on 12/12/15.
  */
 public class ExerciseListFragment extends android.support.v4.app.Fragment implements DialogListener,
-                                                                                     ExerciseListener,
-                                                                                     ServiceListener
+                                                                                     ExerciseListener
 {
     private int TOTAL_EXERCISE_NUM = 5;
 
@@ -264,86 +264,182 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         {
             Bundle extras = data.getExtras();
             int position = extras.getInt(Constant.BUNDLE_EXERCISE_POSITION);
-            ArrayList<Set> sets = extras.getParcelableArrayList(Constant.BUNDLE_EXERCISE_SETS);
+            final ArrayList<Set> sets = extras.getParcelableArrayList(Constant.BUNDLE_EXERCISE_SETS);
 
             Exercise currentExercise = currentExercises.get(position);
             currentExercise.setSets(sets);
+            String exerciseName = currentExercise.getName();
             allExercises.get(position).setSets(sets);
 
             adapter.notifyDataSetChanged();
 
-            // Save exercise to the web.
-            new ServiceTask(this).execute(Constant.SERVICE_COMPLEX_INSERT,
-                                          generateComplexInsertParameters(currentExercise));
+            int setSize = sets.size();
+            String statements = "statements=";
+            String updateString = statements + setSize + Constant.PARAMETER_AMPERSAND + Constant.PARAMETER_EMAIL + email;
+            String insertString = statements + setSize + Constant.PARAMETER_AMPERSAND + Constant.PARAMETER_EMAIL + email;
+
+            // The update and insert Strings already starts out with a value in it,
+            // so we need this boolean to decide if we are going to conduct these actions.
+            boolean conductUpdate = false;
+            boolean conductInsert = false;
+
+            // we need our own indexes here or the services won't work properly.
+            int updateIndex = 0;
+            int insertIndex = 0;
+
+            // Sort through the sets to determine if we are updating or inserting.
+            for (int i = 0; i < setSize; i++)
+            {
+                Set set = sets.get(i);
+                if (set.getWebId() > 0)
+                {
+                    // Call update
+                    updateString += generateComplexUpdateParameters(updateIndex, set);
+                    conductUpdate = true;
+                    updateIndex++;
+                }
+                else
+                {
+                    // Concatenate the insert parameter String.
+                    insertString += generateComplexInsertParameters(insertIndex, exerciseName, set);
+                    conductInsert = true;
+                    insertIndex++;
+                }
+            }
+
+            if (conductUpdate)
+            {
+                // Update the exercise on the web.
+                new ServiceTask(new ServiceListener()
+                {
+                    @Override
+                    public void onRetrievalSuccessful(String response)
+                    {
+                        Log.i(Constant.TAG, "COMPLEX UPDATE RESPONSE: " + response);
+                    }
+
+                    @Override
+                    public void onRetrievalFailed() { }
+                }).execute(Constant.SERVICE_COMPLEX_UPDATE, updateString);
+            }
+
+            if (conductInsert)
+            {
+                // Save the exercise to the web.
+                // The service listener was placed in here so we can update the sets of the exercise
+                // with the auto incremented ids from the web.
+                new ServiceTask(new ServiceListener()
+                {
+                    @Override
+                    public void onRetrievalSuccessful(String response)
+                    {
+                        Log.i(Constant.TAG, "COMPLEX INSERT RESPONSE: " + response);
+
+                        // Remove the first and last character because they are "[" and "]";
+                        String responseArr = response.substring(1, response.length() - 1);
+                        String[] ids =  responseArr.split(Constant.PARAMETER_DELIMITER);
+
+                        for (Set set : sets)
+                        {
+                            if (set.getWebId() > 0)
+                            {
+                                continue;
+                            }
+
+                            // Set the web id to the first id in the list.
+                            set.setWebId(Integer.valueOf(ids[0]));
+
+                            // Create a new array withe the use id removed.
+                            ids = Arrays.copyOfRange(ids, 1, ids.length);
+                        }
+                    }
+
+                    @Override
+                    public void onRetrievalFailed() { }
+                }).execute(Constant.SERVICE_COMPLEX_INSERT, insertString);
+            }
         }
     }
 
     /**
-     * Constructs the parameter query sent to the service.
+     * Constructs a snippet of the parameter query sent to the service for updating.
      *
-     * @param exercise  The exercise that is getting parsed to create the query.
+     * @param index     The index of the sets we are updating.
+     * @param set       The set we are updating.
      *
-     * @return  The constructed String.
+     * @return  The constructed snippet of the complex update parameter String.
      */
-    private String generateComplexInsertParameters(Exercise exercise)
+    private String generateComplexUpdateParameters(int index, Set set)
     {
-        String statements = "statements=";
-        String table = "table";
+        String equals = "=";
+        String setParam = "set";
+        String whereParam = "where";
+        String nullString = "NULL";
+
+        int weight = set.getWeight();
+        String duration = set.getDuration();
+        boolean hasWeight = weight > 0;
+        boolean isDuration = duration != null && duration.contains(":");
+
+        String weightParam = hasWeight ? Constant.COLUMN_EXERCISE_WEIGHT + equals + weight + Constant.PARAMETER_DELIMITER : "";
+        // Choose whether we are inserting reps or duration.
+        String durationParam = isDuration ?
+                Constant.COLUMN_EXERCISE_DURATION + equals + "'" + duration + "'" + Constant.PARAMETER_DELIMITER
+                + Constant.COLUMN_EXERCISE_REPS + equals + nullString + Constant.PARAMETER_DELIMITER :
+                Constant.COLUMN_EXERCISE_DURATION + equals + nullString + Constant.PARAMETER_DELIMITER
+                + Constant.COLUMN_EXERCISE_REPS + equals + set.getReps() + Constant.PARAMETER_DELIMITER;
+
+        return getParameterTitle(Constant.PARAMETER_TABLE, index) + Constant.TABLE_COMPLETED_EXERCISE
+               + getParameterTitle(setParam, index)
+                    + weightParam
+                    + durationParam
+                    + Constant.COLUMN_EXERCISE_DIFFICULTY + equals + set.getDifficulty()
+               + getParameterTitle(whereParam, index)
+                    + Constant.COLUMN_ID + equals + set.getWebId();
+    }
+    /**
+     * Constructs a snippet of the parameter query sent to the service to insert.
+     *
+     * @param index     The index of the sets we are inserting.
+     * @param name      The name of the exercise we are inserting.
+     * @param set       The set we are inserting.
+     *
+     * @return  The constructed snippet of the complex insert parameter String.
+     */
+    private String generateComplexInsertParameters(int index, String name, Set set)
+    {
         String columns = "columns";
         String inserts = "inserts";
-        String tableCompletedExercise = "CompletedExercise";
-        String columnDate = "Date";
-        String columnTime = "Time";
-        String columnExerciseName = "ExerciseName";
-        String columnExerciseWeight = "ExerciseWeight";
-        String columnExerciseReps = "ExerciseReps";
-        String columnExerciseDuration = "ExerciseDuration";
-        String columnExerciseDifficulty = "ExerciseDifficulty";
 
         String curDate = "CURDATE()";
         String now = "NOW()";
 
-        String exerciseName = exercise.getName();
-        ArrayList<Set> sets = exercise.getSets();
+        int weight = set.getWeight();
+        String duration = set.getDuration();
+        boolean hasWeight = weight > 0;
+        boolean isDuration = duration != null && duration.contains(":");
 
-        int setSize = sets.size();
+        String weightParam = hasWeight ? Constant.COLUMN_EXERCISE_WEIGHT + Constant.PARAMETER_DELIMITER : "";
+        String weightValue = hasWeight ? weight + Constant.PARAMETER_DELIMITER : "";
+        // Choose whether we are inserting reps or duration.
+        String durationParam = isDuration ? Constant.COLUMN_EXERCISE_DURATION + Constant.PARAMETER_DELIMITER :
+                                            Constant.COLUMN_EXERCISE_REPS + Constant.PARAMETER_DELIMITER;
+        String durationValue = isDuration ? duration : String.valueOf(set.getReps());
 
-        String parameter = statements + setSize
-                           + Constant.PARAMETER_AMPERSAND + Constant.PARAMETER_EMAIL + email;
-
-        for (int i = 0; i < setSize; i++)
-        {
-            Set set = sets.get(i);
-            int weight = set.getWeight();
-
-            String duration = set.getDuration();
-            boolean hasWeight = weight > 0;
-            boolean isDuration = duration.contains(":");
-
-            String weightParam = hasWeight ? columnExerciseWeight + Constant.PARAMETER_DELIMITER : "";
-            String weightValue = hasWeight ? String.valueOf(weight) + Constant.PARAMETER_DELIMITER : "";
-            // Choose whether we are inserting reps or duration.
-            String durationParam = isDuration ? columnExerciseDuration + Constant.PARAMETER_DELIMITER :
-                                                                columnExerciseReps + Constant.PARAMETER_DELIMITER;
-            String durationValue = isDuration ? duration : String.valueOf(set.getReps());
-
-            parameter += getParameterTitle(table, i)
-                            + tableCompletedExercise
-                            + getParameterTitle(columns, i) + columnDate + Constant.PARAMETER_DELIMITER
-                                                            + columnTime + Constant.PARAMETER_DELIMITER
-                                                            + columnExerciseName + Constant.PARAMETER_DELIMITER
-                                                            + weightParam
-                                                            + durationParam
-                                                            + columnExerciseDifficulty
-                            + getParameterTitle(inserts, i) + curDate + Constant.PARAMETER_DELIMITER
-                                                            + now + Constant.PARAMETER_DELIMITER
-                                                            + exerciseName + Constant.PARAMETER_DELIMITER
-                                                            + weightValue
-                                                            + durationValue + Constant.PARAMETER_DELIMITER
-                                                            + set.getDifficulty();
-        }
-
-        return parameter;
+        return getParameterTitle(Constant.PARAMETER_TABLE, index)
+                + Constant.TABLE_COMPLETED_EXERCISE
+                + getParameterTitle(columns, index) + Constant.COLUMN_DATE + Constant.PARAMETER_DELIMITER
+                                                    + Constant.COLUMN_TIME + Constant.PARAMETER_DELIMITER
+                                                    + Constant.COLUMN_EXERCISE_NAME + Constant.PARAMETER_DELIMITER
+                                                    + weightParam
+                                                    + durationParam
+                                                    + Constant.COLUMN_EXERCISE_DIFFICULTY
+                + getParameterTitle(inserts, index) + curDate + Constant.PARAMETER_DELIMITER
+                                                    + now + Constant.PARAMETER_DELIMITER
+                                                    + name + Constant.PARAMETER_DELIMITER
+                                                    + weightValue
+                                                    + durationValue + Constant.PARAMETER_DELIMITER
+                                                    + set.getDifficulty();
     }
 
     /**
@@ -359,13 +455,4 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         return Constant.PARAMETER_AMPERSAND + name + index + "=";
     }
-
-    @Override
-    public void onRetrievalSuccessful(String response)
-    {
-        Log.i(Constant.TAG, "COMPLEX INSERT RESPONSE: " + response);
-    }
-
-    @Override
-    public void onRetrievalFailed() { }
 }

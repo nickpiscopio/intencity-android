@@ -47,11 +47,15 @@ public class Constant
     public static final String SERVICE_TRIAL_ACCOUNT = SERVICE_FOLDER + "account.php";
     public static final String SERVICE_STORED_PROCEDURE = SERVICE_FOLDER + "stored_procedure.php";
     public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER + "complex_insert.php";
+    public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER + "complex_update.php";
 
     // Parameters
     public static final String LIKE_OPERATOR = "%";
     public static final String PARAMETER_AMPERSAND = "&";
     public static final String PARAMETER_DELIMITER = ",";
+    // This does not have "=" because it usually has a number followed by it.
+    // i.e. &table0
+    public static final String PARAMETER_TABLE = "table";
     public static final String PARAMETER_EMAIL = "email=";
     private static final String PARAMETER_PASSWORD = "password=";
     private static final String PARAMETER_DATA = "d=";
@@ -75,10 +79,15 @@ public class Constant
     public static final String ACCOUNT_TYPE_NORMAL = "N";
     public static final String ACCOUNT_TYPE_TRIAL = "T";
 
+    // Table Names
+    public static final String TABLE_COMPLETED_EXERCISE = "CompletedExercise";
+
     // Column Names
     // The current muscle group a user is recommended to do.
     public static final String COLUMN_CURRENT_MUSCLE_GROUP = "currentMuscleGroup";
     public static final String COLUMN_DISPLAY_NAME = "DisplayName";
+    public static final String COLUMN_DATE = "Date";
+    public static final String COLUMN_TIME = "Time";
     public static final String COLUMN_EXERCISE_NAME = "ExerciseName";
     public static final String COLUMN_EXERCISE_WEIGHT = "ExerciseWeight";
     public static final String COLUMN_EXERCISE_REPS = "ExerciseReps";

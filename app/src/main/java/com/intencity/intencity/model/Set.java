@@ -10,6 +10,8 @@ import android.os.Parcelable;
  */
 public class Set implements Parcelable
 {
+    // This is the auto generated webId set when inserting a record in the web database.
+    private int webId;
     private int weight;
     private int reps;
 
@@ -21,6 +23,7 @@ public class Set implements Parcelable
 
     private Set(Parcel in)
     {
+        webId = in.readInt();
         weight = in.readInt();
         reps = in.readInt();
         duration = in.readString();
@@ -51,6 +54,7 @@ public class Set implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
+        dest.writeInt(webId);
         dest.writeInt(weight);
         dest.writeInt(reps);
         dest.writeString(duration);
@@ -60,6 +64,16 @@ public class Set implements Parcelable
     /**
      * Getters and setters for the set model.
      */
+    public int getWebId()
+    {
+        return webId;
+    }
+
+    public void setWebId(int webId)
+    {
+        this.webId = webId;
+    }
+
     public int getWeight()
     {
         return weight;

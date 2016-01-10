@@ -23,6 +23,7 @@ public class ExerciseTable implements BaseColumns
     public static final String COLUMN_ROUTINE_NAME = "RoutineName";
     public static final String COLUMN_INDEX = "LastExerciseIndex";
     public static final String COLUMN_NAME = "ExerciseName";
+    public static final String COLUMN_WEB_ID = "WebId";
     public static final String COLUMN_WEIGHT = "ExerciseWeight";
     public static final String COLUMN_REP = "ExerciseRep";
     public static final String COLUMN_DURATION = "ExerciseDuration";

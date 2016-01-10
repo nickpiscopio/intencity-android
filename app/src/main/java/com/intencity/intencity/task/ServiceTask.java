@@ -20,10 +20,16 @@ import java.net.URL;
  */
 public class ServiceTask extends AsyncTask<String, Void, String>
 {
+    private final String FAILURE = "FAILURE";
     private ServiceListener serviceListener;
 
     private boolean success = true;
 
+    /**
+     * This is the generic constructor for the ServiceTask.
+     *
+     * @param serviceListener   The listener to call when the service is done.
+     */
     public ServiceTask(ServiceListener serviceListener)
     {
         this.serviceListener = serviceListener;
@@ -75,7 +81,7 @@ public class ServiceTask extends AsyncTask<String, Void, String>
     @Override
     protected void onPostExecute(String result)
     {
-        if (success && result.length() > 0)
+        if (success && result.length() > 0 && !result.replaceAll("\"", "").equalsIgnoreCase(FAILURE))
         {
             serviceListener.onRetrievalSuccessful(result);
         }
