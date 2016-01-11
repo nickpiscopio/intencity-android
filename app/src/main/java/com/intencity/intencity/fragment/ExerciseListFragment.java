@@ -2,6 +2,7 @@ package com.intencity.intencity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +29,7 @@ import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.task.SetExerciseTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
+import com.intencity.intencity.util.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -150,11 +152,42 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         @Override
         public void onClick(View v)
         {
-            addExercise();
+            if (nextExercise.getText().toString().equals(getString(R.string.finish)))
+            {
+                Uri uri = Uri.parse(generateTweet());
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+            }
+            else
+            {
+                addExercise();
 
-            checkNextButtonEnablement();
+                checkNextButtonEnablement();
+            }
         }
     };
+
+    /**
+     * Randomly generates a tweet from an array.
+     *
+     * @return  The generated tweet.
+     */
+    private String generateTweet()
+    {
+        int tweet = Util.getRandom(0, 3);
+
+        // Remove all the whitespace so the hashtags are proper.
+        // Replace the ampersand with its equivalent url code and add a hashtag.
+        String routine = routineName.replaceAll(" ", "").replace(Constant.PARAMETER_AMPERSAND, " %26 %23");
+
+        String twitterUrl = "https://twitter.com/intent/tweet?text=";
+        String[] tweetText = { "I completed my %23workout with %23Intencity!",
+                               "My %23workout of the day is with %23Intencity! %23WOD %23Fitness",
+                               "My %23fitness %23routine is with %23Intencity!",
+                               "I completed %23" + routine + " with %23Intencity!" };
+        String tweetUrl = "&url=IntencityApp.com";
+
+        return twitterUrl + tweetText[tweet] + tweetUrl;
+    }
 
     /**
      * Gets the next exercise from the list.
@@ -176,9 +209,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void checkNextButtonEnablement()
     {
-        if (currentExercises.size() == allExercises.size())
+        if (currentExercises.size() == allExercises.size() || completedExerciseNum == TOTAL_EXERCISE_NUM)
         {
-            nextExercise.setVisibility(View.INVISIBLE);
+            nextExercise.setText(getString(R.string.finish));
         }
     }
 

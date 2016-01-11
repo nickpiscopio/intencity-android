@@ -43,6 +43,7 @@
     <!-- Buttons -->
     <string name="start">START</string>
     <string name="next_exercise">NEXT EXERCISE</string>
+    <string name="finish">FINISH</string>
 
     <!-- Menu Strings-->
     <string name="title_about">About</string>
