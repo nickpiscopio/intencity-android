@@ -10,6 +10,23 @@ import java.util.Random;
 public class Util
 {
     /**
+     * Gets a rep format from an input.
+     *
+     * @param input     The value to be converted.
+     *
+     * @return  An integer of the formatted value.
+     */
+    public static String getRepFormat(String input)
+    {
+        // Make the input 0 if it doesn't have a value.
+        input = (input == null ||
+                 input.equals(Constant.RETURN_NULL)
+                 || input.length() < 1) ? "0" : input;
+
+        String formatted = input.replaceAll(":", "");
+        return formatted.replaceFirst("^0+(?!$)", "");
+    }
+    /**
      * Generate a random number between two values.
      *
      * @param min   The minimum number.

@@ -16,9 +16,13 @@ import android.widget.Spinner;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ExerciseSetAdapter;
+import com.intencity.intencity.dialog.CustomDialog;
+import com.intencity.intencity.dialog.Dialog;
+import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.Util;
 
 import java.util.ArrayList;
 
@@ -27,10 +31,12 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 12/31/15.
  */
-public class StatActivity extends AppCompatActivity
+public class StatActivity extends AppCompatActivity implements DialogListener
 {
     private final int REPS = 0;
     private final int TIME = 1;
+
+    private int durationType;
 
     private ListView setsListView;
 
@@ -75,8 +81,7 @@ public class StatActivity extends AppCompatActivity
         context = getApplicationContext();
 
         // Initialize the set adapter with the sets.
-        adapter = new ExerciseSetAdapter(context, R.layout.fragment_exercise_set, sets);
-        setsListView.setAdapter(adapter);
+        initializeExerciseSetAdapter();
 
         // Populate the spinner.
         String[] spinnerValues = new String[] { context.getString(
@@ -85,7 +90,9 @@ public class StatActivity extends AppCompatActivity
         durationAdapter.setDropDownViewResource(R.layout.spinner_item);
 
         durationSpinner.setAdapter(durationAdapter);
-        durationSpinner.setSelection(sets.get(0).getDuration().contains(":") ? TIME : REPS, false);
+
+        durationType = sets.get(0).getDuration().contains(":") ? TIME : REPS;
+        durationSpinner.setSelection(durationType, false);
         durationSpinner.setOnItemSelectedListener(durationTypeSelected);
     }
 
@@ -112,13 +119,23 @@ public class StatActivity extends AppCompatActivity
                 startActivity(intent);
                 return true;
             case R.id.add:
-                addSet();
+                if (hasDuration())
+                {
+                    addSet();
+                }
+                else
+                {
+                    notifyToAddDuration(false);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
     }
 
+    /**
+     * The selection listener for the duration menu item.
+     */
     private AdapterView.OnItemSelectedListener durationTypeSelected = new AdapterView.OnItemSelectedListener()
     {
         @Override
@@ -138,26 +155,35 @@ public class StatActivity extends AppCompatActivity
         }
 
         @Override
-        public void onNothingSelected(AdapterView<?> parent)
-        {
-
-        }
+        public void onNothingSelected(AdapterView<?> parent) { }
     };
 
+    /**
+     * Initializes the set adapter for the ListView.
+     */
+    private void initializeExerciseSetAdapter()
+    {
+        adapter = new ExerciseSetAdapter(context, R.layout.fragment_exercise_set, sets);
+        setsListView.setAdapter(adapter);
+    }
+
+    /**
+     * Converts the sets to rep format.
+     */
     private void setRepFormat()
     {
+        durationType = REPS;
+
+        if (sets.size() == 1)
+        {
+            initializeExerciseSetAdapter();
+        }
+
         for (Set set : sets)
         {
             String duration = set.getDuration();
 
-            // Make the input 0 if it doesn't have a value.
-            duration = duration == null ||
-                       duration.equals(Constant.RETURN_NULL) ||
-                       duration.length() < 1 ? "0": duration;
-
-            String formatted = duration.replaceAll(":", "");
-
-            int reps = Integer.parseInt(formatted.replaceFirst("^0+(?!$)", ""));
+            int reps = Integer.parseInt(Util.getRepFormat(duration));
             set.setReps(reps);
             set.setDuration(Constant.RETURN_NULL);
         }
@@ -165,8 +191,18 @@ public class StatActivity extends AppCompatActivity
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Converts the sets to a time format.
+     */
     private void setTimeFormat()
     {
+        durationType = TIME;
+
+        if (sets.size() == 1)
+        {
+            initializeExerciseSetAdapter();
+        }
+
         for (Set set : sets)
         {
             int reps = set.getReps();
@@ -183,14 +219,37 @@ public class StatActivity extends AppCompatActivity
     }
 
     /**
+     * Checks if the user ahs added a duration.
+     * If he or she has, then the user can add another set.
+     */
+    private boolean hasDuration()
+    {
+        Set set = sets.get(sets.size() - 1);
+        return set.getReps() > 0 || Integer.parseInt(Util.getRepFormat(set.getDuration())) > 0;
+    }
+
+    /**
      * Adds a set to the exercise and the ArrayList.
      */
     private void addSet()
     {
         Set set = new Set();
         set.setWeight(Constant.CODE_FAILED);
-        set.setReps(Constant.CODE_FAILED);
-        set.setDuration(null);
+
+        switch (durationType)
+        {
+            case REPS: //Reps selected.
+                set.setReps(0);
+                set.setDuration(null);
+                break;
+            case TIME: // Time selected.
+                set.setReps(Constant.CODE_FAILED);
+                set.setDuration(Constant.DURATION_0);
+                break;
+            default:
+                break;
+        }
+
         set.setDifficulty(10);
 
         sets.add(set);
@@ -198,8 +257,27 @@ public class StatActivity extends AppCompatActivity
         adapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onBackPressed()
+    /**
+     * Displays a dialog to tell the user to add a duration to the last set.
+     */
+    private void notifyToAddDuration(boolean notifyToRemoveLastSet)
+    {
+        if (notifyToRemoveLastSet)
+        {
+            new CustomDialog(StatActivity.this, StatActivity.this,
+                             new Dialog(getString(R.string.title_add_set_error),
+                                        new String[] { getString(R.string.button_remove_set), getString(android.R.string.cancel) }));
+        }
+        else
+        {
+            new CustomDialog(StatActivity.this, StatActivity.this,
+                             new Dialog(getString(R.string.title_add_set_error),
+                                        getString(R.string.message_add_set_error), false));
+        }
+
+    }
+
+    private void dismissActivity()
     {
         // Send the new sets back to the exercise listener so we can use them later.
         Intent intent = new Intent();
@@ -207,7 +285,36 @@ public class StatActivity extends AppCompatActivity
         intent.putExtra(Constant.BUNDLE_EXERCISE_SETS, sets);
         setResult(Constant.REQUEST_CODE_STAT, intent);
         finish();
+    }
 
-        super.onBackPressed();
+    @Override
+    public void onBackPressed()
+    {
+        if (hasDuration())
+        {
+            dismissActivity();
+
+            super.onBackPressed();
+        }
+        else
+        {
+            notifyToAddDuration(true);
+        }
+    }
+
+    @Override
+    public void onButtonPressed(int which)
+    {
+        // If removing the last set was clicked.
+        if (which == 0)
+        {
+            if (sets.size() > 1)
+            {
+                // Remove the last set.
+                sets.remove(sets.size() - 1);
+            }
+
+            dismissActivity();
+        }
     }
 }

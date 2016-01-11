@@ -40,6 +40,10 @@
     <string name="hide_forever">Hide forever</string>
     <string name="hide_for_now">Hide for now</string>
 
+    <string name="title_add_set_error">Missing duration</string>
+    <string name="message_add_set_error">Please enter reps or time in your last set.</string>
+    <string name="button_remove_set">Remove last set</string>
+
     <!-- Buttons -->
     <string name="start">START</string>
     <string name="next_exercise">NEXT EXERCISE</string>

@@ -19,8 +19,9 @@ public class Dialog
         this.includeNegativeButton = includeNegativeButton;
     }
 
-    public Dialog(String[] buttons)
+    public Dialog(String title, String[] buttons)
     {
+        this.title = title;
         this.buttons = buttons;
     }
 

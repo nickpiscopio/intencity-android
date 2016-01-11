@@ -44,6 +44,7 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/weight_suffix"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_lbs"
@@ -51,6 +52,7 @@
                 android:textSize="@dimen/card_title2_size"/>
 
             <TextView
+                android:id="@+id/slash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="/"

@@ -15,6 +15,7 @@ import com.intencity.intencity.model.Set;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.GenericItemSelectionListener;
 import com.intencity.intencity.util.GenericTextWatcher;
+import com.intencity.intencity.util.Util;
 
 import java.util.ArrayList;
 
@@ -126,22 +127,6 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
     }
 
     /**
-     * Gets a rep format from an input.
-     *
-     * @param input     The value to be converted.
-     *
-     * @return  An integer of the formatted value.
-     */
-    private String getRepFormat(String input)
-    {
-        // Make the input 0 if it doesn't have a value.
-        input = (input.length() < 1) ? "0" : input;
-
-        String formatted = input.replaceAll(":", "");
-        return formatted.replaceFirst("^0+(?!$)", "");
-    }
-
-    /**
      * Gets the time format of an input.
      *
      * @param input     The value to convert to a time format.
@@ -152,12 +137,12 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
     {
         // Convert to rep format so we can remove all the colons.
         // We do this so we don't add unwanted colons later.
-        input = getRepFormat(input);
+        input = Util.getRepFormat(input);
 
         int timeLength = 6;
 
         String padded = String.format("%0" + timeLength + "d",
-                                      Integer.parseInt(getRepFormat(input)));
+                                      Integer.parseInt(input));
         if (padded.length() > timeLength)
         {
             padded = padded.substring(0, timeLength);

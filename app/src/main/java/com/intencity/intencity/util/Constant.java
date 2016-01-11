@@ -11,6 +11,7 @@ public class Constant
 
     public static final int CODE_FAILED = -1;
 
+    public static final String DURATION_0 = "00:00:00";
     public static final String RETURN_NULL = "null";
 
     public static final int NEGATIVE_BUTTON = 0;

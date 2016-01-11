@@ -184,7 +184,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment
                     set.setWeight(
                             weight.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
                                     Integer.valueOf(weight));
-                    set.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
+                    set.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ? 0 :
                                         Integer.valueOf(reps));
                     set.setDuration(duration);
                     set.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ?
@@ -213,6 +213,12 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         public void onRetrievalFailed() { }
     };
 
+    /**
+     * Push the exercise list fragment onto the stack.
+     *
+     * @param exercises     The list of exercises the user will do.
+     * @param index         The index to start.
+     */
     private void pushCardFragmentExercise(ArrayList<Exercise> exercises, int index)
     {
         Bundle bundle = new Bundle();

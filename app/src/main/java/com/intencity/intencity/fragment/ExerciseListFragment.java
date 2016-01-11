@@ -140,7 +140,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                                                context.getString(android.R.string.cancel)/*,
                                                context.getString(R.string.hide_forever)*/};
 
-            new CustomDialog(context, ExerciseListFragment.this, new Dialog(buttonText));
+            new CustomDialog(context, ExerciseListFragment.this, new Dialog("", buttonText));
         }
     };
 

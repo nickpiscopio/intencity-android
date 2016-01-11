@@ -22,6 +22,8 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
     private LinearLayout lastSet;
     private TextView exercise;
     private TextView weight;
+    private TextView weightSuffix;
+    private TextView slash;
     private TextView duration;
     private TextView repsTextView;
     private TextView edit;
@@ -43,6 +45,8 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         lastSet = (LinearLayout) view.findViewById(R.id.last_set);
         exercise = (TextView) view.findViewById(R.id.exercise);
         weight = (TextView) view.findViewById(R.id.weight);
+        weightSuffix = (TextView) view.findViewById(R.id.weight_suffix);
+        slash = (TextView) view.findViewById(R.id.slash);
         duration = (TextView) view.findViewById(R.id.duration);
         repsTextView = (TextView) view.findViewById(R.id.suffix);
         edit = (TextView) view.findViewById(R.id.edit);
@@ -113,9 +117,22 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
      *
      * @param weight    The string to set in the TextView.
      */
-    public void setWeight(String weight)
+    public void setWeight(int weight)
     {
-        this.weight.setText(weight);
+        if (weight <= 0)
+        {
+            this.weight.setVisibility(View.GONE);
+            this.weightSuffix.setVisibility(View.GONE);
+            this.slash.setVisibility(View.GONE);
+        }
+        else
+        {
+            this.weight.setVisibility(View.VISIBLE);
+            this.weightSuffix.setVisibility(View.VISIBLE);
+            this.slash.setVisibility(View.VISIBLE);
+
+            this.weight.setText(String.valueOf(weight));
+        }
     }
 
     /**
@@ -123,8 +140,8 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
      */
     public void showEditLayout()
     {
-        if (Integer.parseInt(weight.getText().toString()) <= 0
-                && Integer.parseInt(duration.getText().toString().replaceAll(":", "")) <= 0)
+        // If a user doesn't have a duration, set the last set to gone and show the edit button.
+        if (Integer.parseInt(duration.getText().toString().replaceAll(":", "")) <= 0)
         {
             lastSet.setVisibility(View.GONE);
             edit.setVisibility(View.VISIBLE);
