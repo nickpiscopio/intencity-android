@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +64,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     private String email;
 
+    private boolean workoutFinished;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -84,6 +85,12 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         routineName = bundle.getString(Constant.BUNDLE_ROUTINE_NAME);
 
         allExercises = bundle.getParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST);
+
+        // Change the total number of exercises if the exercise list doesn't have enough exercises.
+        if (allExercises != null && allExercises.size() < TOTAL_EXERCISE_NUM)
+        {
+            TOTAL_EXERCISE_NUM = allExercises.size();
+        }
 
         autoFillTo = bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX) > 0 ?
                         bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX) : 1;
@@ -115,6 +122,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         SecurePreferences securePreferences = new SecurePreferences(context);
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+
+        workoutFinished = false;
 
         return view;
     }
@@ -156,6 +165,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             {
                 Uri uri = Uri.parse(generateTweet());
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
+
+                workoutFinished = true;
             }
             else
             {
@@ -231,9 +242,17 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         super.onStop();
 
-        // Save the exercises to the database in case the user wants
-        // to continue with this routine later.
-        new SetExerciseTask(context, routineName, allExercises, currentExercises.size()).execute();
+        if (workoutFinished)
+        {
+            // Remove exercises from database since we are finished with the workout.
+            new SetExerciseTask(context).execute();
+        }
+        else
+        {
+            // Save the exercises to the database in case the user wants
+            // to continue with this routine later.
+            new SetExerciseTask(context, routineName, allExercises, currentExercises.size()).execute();
+        }
     }
 
     @Override
@@ -346,10 +365,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 new ServiceTask(new ServiceListener()
                 {
                     @Override
-                    public void onRetrievalSuccessful(String response)
-                    {
-                        Log.i(Constant.TAG, "COMPLEX UPDATE RESPONSE: " + response);
-                    }
+                    public void onRetrievalSuccessful(String response){ }
 
                     @Override
                     public void onRetrievalFailed() { }
@@ -366,8 +382,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     @Override
                     public void onRetrievalSuccessful(String response)
                     {
-                        Log.i(Constant.TAG, "COMPLEX INSERT RESPONSE: " + response);
-
                         // Remove the first and last character because they are "[" and "]";
                         String responseArr = response.substring(1, response.length() - 1);
                         String[] ids =  responseArr.split(Constant.PARAMETER_DELIMITER);

@@ -28,6 +28,11 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
 
     private int index;
 
+    public SetExerciseTask(Context context)
+    {
+        this.context = context;
+    }
+
     public SetExerciseTask(Context context, String routineName, ArrayList<Exercise> exercises, int index)
     {
         this.context = context;
@@ -42,7 +47,7 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
     @Override
     protected Void doInBackground(Void... params)
     {
-        writeExercises();
+        editSavedExercises();
 
         return null;
     }
@@ -51,61 +56,72 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
     protected void onPostExecute(Void result) { }
 
     /**
-     * Creates content values and inserts it into the database.
+     * Edits the exercises in the database.
      */
-    private void writeExercises()
+    private void editSavedExercises()
     {
         ArrayList<ExerciseDao> exerciseDaos = new ArrayList<>();
 
-        for (Exercise exercise : exercises)
+        // Add the exercises to ContentValues if there are exercises to save.
+        if (exercises != null)
         {
-            ArrayList<Set> sets = exercise.getSets();
-            for (Set set : sets)
+            for (Exercise exercise : exercises)
             {
-                ContentValues values = new ContentValues();
-                values.put(ExerciseTable.COLUMN_INDEX, index);
-                values.put(ExerciseTable.COLUMN_ROUTINE_NAME, routineName);
-                values.put(ExerciseTable.COLUMN_NAME, exercise.getName());
-
-                int webId = set.getWebId();
-                int weight = set.getWeight();
-                int reps = set.getReps();
-                int difficulty = set.getDifficulty();
-                String duration = set.getDuration();
-
-                if (webId > 0)
+                ArrayList<Set> sets = exercise.getSets();
+                for (Set set : sets)
                 {
-                    values.put(ExerciseTable.COLUMN_WEB_ID, set.getWebId());
-                }
+                    ContentValues values = new ContentValues();
+                    values.put(ExerciseTable.COLUMN_INDEX, index);
+                    values.put(ExerciseTable.COLUMN_ROUTINE_NAME, routineName);
+                    values.put(ExerciseTable.COLUMN_NAME, exercise.getName());
 
-                if (weight > 0)
-                {
-                    values.put(ExerciseTable.COLUMN_WEIGHT, weight);
-                }
+                    int webId = set.getWebId();
+                    int weight = set.getWeight();
+                    int reps = set.getReps();
+                    int difficulty = set.getDifficulty();
+                    String duration = set.getDuration();
 
-                if (reps > 0)
-                {
-                    values.put(ExerciseTable.COLUMN_REP, reps);
-                }
+                    if (webId > 0)
+                    {
+                        values.put(ExerciseTable.COLUMN_WEB_ID, set.getWebId());
+                    }
 
-                if (duration != null)
-                {
-                    values.put(ExerciseTable.COLUMN_DURATION, duration);
-                }
+                    if (weight > 0)
+                    {
+                        values.put(ExerciseTable.COLUMN_WEIGHT, weight);
+                    }
 
-                if (difficulty > 0)
-                {
-                    values.put(ExerciseTable.COLUMN_DIFFICULTY, difficulty);
-                }
+                    if (reps > 0)
+                    {
+                        values.put(ExerciseTable.COLUMN_REP, reps);
+                    }
 
-                exerciseDaos.add(new ExerciseDao(ExerciseTable.TABLE_NAME, values));
+                    if (duration != null)
+                    {
+                        values.put(ExerciseTable.COLUMN_DURATION, duration);
+                    }
+
+                    if (difficulty > 0)
+                    {
+                        values.put(ExerciseTable.COLUMN_DIFFICULTY, difficulty);
+                    }
+
+                    exerciseDaos.add(new ExerciseDao(ExerciseTable.TABLE_NAME, values));
+                }
             }
+
         }
 
         DbHelper dbHelper = new DbHelper(context);
 
         SQLiteDatabase database = dbHelper.getReadableDatabase();
+        // Reset the database.
         dbHelper.resetDb(database);
-        dbHelper.insertIntoDb(database, exerciseDaos);
+
+        // Insert exercises into the database if there are exercises to save.
+        if (exercises != null)
+        {
+            dbHelper.insertIntoDb(database, exerciseDaos);
+        }
     }
 }

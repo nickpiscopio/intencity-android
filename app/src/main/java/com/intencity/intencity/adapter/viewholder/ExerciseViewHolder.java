@@ -108,6 +108,10 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         {
             repsTextView.setVisibility(View.GONE);
         }
+        else
+        {
+            repsTextView.setVisibility(View.VISIBLE);
+        }
 
         this.duration.setText(duration);
     }
