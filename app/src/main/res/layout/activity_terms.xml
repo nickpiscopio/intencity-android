@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/layout_margin"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/intencity_sign_in_logo"
+        android:layout_gravity="center_horizontal"
+        android:padding="@dimen/layout_margin"/>
+
+   <WebView
+       android:id="@+id/web_view_terms"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"/>
+
+</LinearLayout>

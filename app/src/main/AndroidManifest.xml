@@ -26,6 +26,23 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name=".activity.CreateAccountActivity"
+            android:theme="@style/AppTheme.Base"
+            android:label="@string/title_create_account"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ForgotPasswordActivity"
+            android:theme="@style/AppTheme.Base"
+            android:label="@string/title_forgot_password"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.TermsActivity"
+            android:theme="@style/AppTheme.Base"
+            android:label="@string/title_terms"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.StatActivity"
             android:theme="@style/AppTheme.Base"
             android:screenOrientation="portrait" />

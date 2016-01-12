@@ -2,6 +2,7 @@ package com.intencity.intencity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.activity.CreateAccountActivity;
+import com.intencity.intencity.activity.ForgotPasswordActivity;
 import com.intencity.intencity.activity.MainActivity;
 import com.intencity.intencity.dialog.CustomDialog;
 import com.intencity.intencity.dialog.Dialog;
@@ -42,16 +45,22 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_demo_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         email = (EditText) view.findViewById(R.id.edit_text_email);
         password = (EditText) view.findViewById(R.id.edit_text_password);
 
         Button signIn = (Button) view.findViewById(R.id.btn_sign_in);
         TextView tryIntencity = (TextView) view.findViewById(R.id.btn_try_intencity);
+        TextView forgotPassword = (TextView) view.findViewById(R.id.forgot_password);
+        TextView createAccount = (TextView) view.findViewById(R.id.btn_create_account);
+
+        password.setTypeface(Typeface.DEFAULT);
 
         signIn.setOnClickListener(signInListener);
         tryIntencity.setOnClickListener(tryIntencityListener);
+        forgotPassword.setOnClickListener(forgotPasswordListener);
+        createAccount.setOnClickListener(createAccountListener);
 
         context = getContext();
 
@@ -78,6 +87,27 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         }
     };
 
+    View.OnClickListener forgotPasswordListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            startActivity(new Intent(context, ForgotPasswordActivity.class));
+        }
+    };
+
+    View.OnClickListener createAccountListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            startActivity(new Intent(context, CreateAccountActivity.class));
+        }
+    };
+
+    /**
+     * Starts the service to check if the credentials the user typed in are in the web database.
+     */
     private void checkCredentials()
     {
         new ServiceTask(this).execute(Constant.SERVICE_VALIDATE_USER_CREDENTIALS,
@@ -107,6 +137,9 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         getActivity().finish();
     }
 
+    /**
+     * Displays the login error to the user.
+     */
     private void showErrorMessage()
     {
         Dialog dialog = new Dialog(context.getString(R.string.login_error_title),

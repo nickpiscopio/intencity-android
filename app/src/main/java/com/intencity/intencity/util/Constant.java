@@ -41,14 +41,16 @@ public class Constant
     // Service Endpoint
     private static final String ENDPOINT = "http://www.intencityapp.com/";
     //TODO: Change this when creating release build.
-    private static final String SERVICE_FOLDER = ENDPOINT + "dev/services/mobile/";
+    private static final String SERVICE_FOLDER = ENDPOINT + "dev/services/";
+    private static final String SERVICE_FOLDER_MOBILE = ENDPOINT + SERVICE_FOLDER + "mobile/";
 
     // Services
-    public static final String SERVICE_VALIDATE_USER_CREDENTIALS = SERVICE_FOLDER + "user_credentials.php";
-    public static final String SERVICE_TRIAL_ACCOUNT = SERVICE_FOLDER + "account.php";
-    public static final String SERVICE_STORED_PROCEDURE = SERVICE_FOLDER + "stored_procedure.php";
-    public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER + "complex_insert.php";
-    public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER + "complex_update.php";
+    public static final String SERVICE_VALIDATE_USER_CREDENTIALS = SERVICE_FOLDER_MOBILE + "user_credentials.php";
+    public static final String SERVICE_TRIAL_ACCOUNT = SERVICE_FOLDER_MOBILE + "account.php";
+    public static final String SERVICE_STORED_PROCEDURE = SERVICE_FOLDER_MOBILE + "stored_procedure.php";
+    public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER_MOBILE + "complex_insert.php";
+    public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
+    public static final String SERVICE_FORGOT_PASSWORD = SERVICE_FOLDER + "forgot_password.php";
 
     // Parameters
     public static final String LIKE_OPERATOR = "%";
@@ -109,10 +111,16 @@ public class Constant
 
     public static final String SPACE_REGEX = "\\s";
     public static final String REGEX_EMAIL = "[a-zA-Z0-9]+([\\-\\.\\{\\}\\^\\+*_~]*[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([\\.\\-]*[a-zA-Z0-9]+)*[\\.][a-zA-Z]{2}[A-Za-z]*";
+    public static final String REGEX_FIELD = "[a-zA-Z0-9]+[\\-\\.\\{\\}\\^\\*\\(\\)\\[\\]\\$/;:,*_~!@#%]*";
 
     public static String getValidateUserCredentialsServiceParameters(String email, String password)
     {
         return PARAMETER_EMAIL + email + PARAMETER_AMPERSAND + PARAMETER_PASSWORD + password;
+    }
+
+    public static String getNewPassword(String email)
+    {
+        return PARAMETER_EMAIL + email;
     }
 
     public static String getTrialAccountParameters(long date)

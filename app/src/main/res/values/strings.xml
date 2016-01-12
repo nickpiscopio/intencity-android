@@ -1,15 +1,39 @@
 <resources>
-    <string name="app_version">1.1</string>
     <string name="app_name">Intencity</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
     <string name="email">Email</string>
+    <string name="confirm_email">Confirm Email</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="terms_checkbox">I agree to the @Terms of Use@.</string>
     <string name="sign_in">SIGN IN</string>
-    <string name="try_intencity">Try Intencity</string>
+    <string name="try_intencity">TRY INTENCITY</string>
+    <string name="title_forgot_password">Forgot password</string>
+    <string name="reset_password_message">Enter your email, and we\'ll send you a new password.</string>
+    <string name="forgot_password_email_sent_title">Password reset</string>
+    <string name="forgot_password_email_sent">Please check your email for your new password.</string>
+    <string name="reset">RESET PASSWORD</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="separator">&#183;</string>
+    <string name="create_account">Create an account</string>
+
+    <string name="title_create_account">Create Account</string>
+    <string name="title_terms">Terms of Use</string>
 
     <!-- Login Strings -->
     <string name="login_error_title">Error logging in</string>
     <string name="login_error_message">Please check your email and password, and try again.</string>
+
+    <!-- Create acount Strings-->
+    <string name="generic_error">Error</string>
+    <string name="fill_in_fields">Please fill in all fields.</string>
+    <string name="accept_terms">Please accept the Terms of Use.</string>
+    <string name="email_validation_error">Please enter a valid email.</string>
+    <string name="email_match_error">Emails do not match.</string>
+    <string name="password_match_error">Passwords do not match.</string>
+    <string name="password_validation_error">Passwords must be between 8 and 75 characters and cannot contain &lt; &gt; " = +</string>
+    <string name="field_validation_error">Fields cannot contain &lt; &gt; " = +</string>
 
     <!-- Intencity Strings-->
     <string name="title_rankings">Rankings</string>
@@ -63,7 +87,5 @@
     <string name="title_version">VERSION</string>
 
     <string name="mission">We strive to deliver the greatest platform that will influence, motivate, and connect people, which will help them achieve their fitness goals.</string>
-    <string name="founders">Nick Piscopio\nChris Piscopio</string>
-    <string name="contributors">Lisa Troncelliti\nHalen Dang\nChad Reynolds\nRandy Dang\nChristina Dang\nLaura D\'Alfonso\nKha Dang\nPhiladelphia University</string>
 
 </resources>
