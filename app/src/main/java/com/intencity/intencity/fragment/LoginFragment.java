@@ -92,7 +92,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
                 public void onRetrievalSuccessful(String response)
                 {
                     response = response.replaceAll("\"", "");
-                    
+
                     if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
                     {
                         Util.loadIntencity(LoginFragment.this.getActivity(), email, Constant.ACCOUNT_TYPE_TRIAL);

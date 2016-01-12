@@ -180,6 +180,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     /**
      * Randomly generates a tweet from an array.
      *
+     * Documentation:
+     * https://dev.twitter.com/web/tweet-button/parameters
+     *
      * @return  The generated tweet.
      */
     private String generateTweet()
@@ -191,13 +194,14 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         String routine = routineName.replaceAll(" ", "").replace(Constant.PARAMETER_AMPERSAND, " %26 %23");
 
         String twitterUrl = "https://twitter.com/intent/tweet?text=";
-        String[] tweetText = { "I completed my %23workout with %23Intencity!",
-                               "My %23workout of the day is with %23Intencity! %23WOD %23Fitness",
-                               "My %23fitness %23routine is with %23Intencity!",
-                               "I completed %23" + routine + " with %23Intencity!" };
+        String[] tweetText = { "I %23dominated my %23workout with %23Intencity! %23WOD %23Fitness",
+                               "I %23finished my %23workout of the day with %23Intencity! %23WOD %23Fitness",
+                               "I made it through %23Intencity%27s %23routine! %23Fitness",
+                               "I %23completed %23" + routine + " with %23Intencity! %23WOD %23Fitness" };
         String tweetUrl = "&url=IntencityApp.com";
+        String via = "&via=IntencityApp";
 
-        return twitterUrl + tweetText[tweet] + tweetUrl;
+        return twitterUrl + tweetText[tweet] + tweetUrl +via;
     }
 
     /**
