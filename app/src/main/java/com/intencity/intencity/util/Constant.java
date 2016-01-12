@@ -17,6 +17,9 @@ public class Constant
     public static final int NEGATIVE_BUTTON = 0;
     public static final int POSITIVE_BUTTON = 1;
 
+    public static final String EMAIL_EXISTS = "Email already exists";
+    public static final String ACCOUNT_CREATED = "Account created";
+
     // Currently not used
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences
@@ -42,11 +45,11 @@ public class Constant
     private static final String ENDPOINT = "http://www.intencityapp.com/";
     //TODO: Change this when creating release build.
     private static final String SERVICE_FOLDER = ENDPOINT + "dev/services/";
-    private static final String SERVICE_FOLDER_MOBILE = ENDPOINT + SERVICE_FOLDER + "mobile/";
+    private static final String SERVICE_FOLDER_MOBILE = SERVICE_FOLDER + "mobile/";
 
     // Services
     public static final String SERVICE_VALIDATE_USER_CREDENTIALS = SERVICE_FOLDER_MOBILE + "user_credentials.php";
-    public static final String SERVICE_TRIAL_ACCOUNT = SERVICE_FOLDER_MOBILE + "account.php";
+    public static final String SERVICE_CREATE_ACCOUNT = SERVICE_FOLDER + "account.php";
     public static final String SERVICE_STORED_PROCEDURE = SERVICE_FOLDER_MOBILE + "stored_procedure.php";
     public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER_MOBILE + "complex_insert.php";
     public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
@@ -118,17 +121,36 @@ public class Constant
         return PARAMETER_EMAIL + email + PARAMETER_AMPERSAND + PARAMETER_PASSWORD + password;
     }
 
-    public static String getNewPassword(String email)
+    /**
+     * Generates the forgot password parameter to send to the server.
+     *
+     * @param email     The user's email to add to the url.
+     *
+     * @return  The generated url parameter.
+     */
+    public static String getForgotPasswordParameter(String email)
     {
         return PARAMETER_EMAIL + email;
     }
 
-    public static String getTrialAccountParameters(long date)
+    /**
+     * Generates the create account parameters.
+     *
+     * @param firstName     The first name of the user.
+     * @param lastName      The last name of the user.
+     * @param email         The user's email.
+     * @param password      The password of the user.
+     * @param accountType   The account type of the user.
+     *
+     * @return  The parameters for creating an account.
+     */
+    public static String getAccountParameters(String firstName, String lastName, String email, String password, String accountType)
     {
-        return PARAMETER_FIRST_NAME + "Anonymous" + PARAMETER_AMPERSAND +
-               PARAMETER_LAST_NAME + "User" + PARAMETER_AMPERSAND +
-               PARAMETER_EMAIL + "user" + date + "@intencityapp.com" + PARAMETER_AMPERSAND +
-               PARAMETER_ACCOUNT_TYPE + ACCOUNT_TYPE_TRIAL;
+        return PARAMETER_FIRST_NAME + firstName + PARAMETER_AMPERSAND +
+               PARAMETER_LAST_NAME + lastName + PARAMETER_AMPERSAND +
+               PARAMETER_EMAIL + email + PARAMETER_AMPERSAND +
+               PARAMETER_PASSWORD + password + PARAMETER_AMPERSAND +
+               PARAMETER_ACCOUNT_TYPE + accountType;
     }
 
     /**

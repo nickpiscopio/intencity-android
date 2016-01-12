@@ -15,14 +15,13 @@ import android.widget.TextView;
 import com.intencity.intencity.R;
 import com.intencity.intencity.activity.CreateAccountActivity;
 import com.intencity.intencity.activity.ForgotPasswordActivity;
-import com.intencity.intencity.activity.MainActivity;
 import com.intencity.intencity.dialog.CustomDialog;
 import com.intencity.intencity.dialog.Dialog;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.SecurePreferences;
+import com.intencity.intencity.util.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,9 +80,37 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         @Override
         public void onClick(View v)
         {
-            new ServiceTask(LoginFragment.this).execute(Constant.SERVICE_TRIAL_ACCOUNT,
-                                                        Constant.getTrialAccountParameters(
-                                                                new Date().getTime()));
+            long uniqueNumber = new Date().getTime();
+
+            String firstName = "Anonymous";
+            String lastName = "User";
+            final String email = lastName + uniqueNumber + "@intencityapp.com";
+            String password = String.valueOf(uniqueNumber);
+
+            new ServiceTask(new ServiceListener() {
+                @Override
+                public void onRetrievalSuccessful(String response)
+                {
+                    response = response.replaceAll("\"", "");
+                    
+                    if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
+                    {
+                        Util.loadIntencity(LoginFragment.this.getActivity(), email, Constant.ACCOUNT_TYPE_TRIAL);
+                    }
+                    else
+                    {
+                        showErrorMessage(context.getString(R.string.intencity_communication_error));
+                    }
+                }
+
+                @Override
+                public void onRetrievalFailed() { }
+            }).execute(Constant.SERVICE_CREATE_ACCOUNT,
+                                                        Constant.getAccountParameters(firstName,
+                                                                                      lastName,
+                                                                                      email,
+                                                                                      password,
+                                                                                      Constant.ACCOUNT_TYPE_TRIAL));
         }
     };
 
@@ -117,33 +144,12 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     }
 
     /**
-     * Saves the login information for Intencity.
-     *
-     * @param email         The email of the user.
-     * @param accountType   The account type of the user.
-     */
-    private void loadIntencity(String email, String accountType)
-    {
-        SecurePreferences securePreferences = new SecurePreferences(context);
-        SecurePreferences.Editor editor = securePreferences.edit();
-        editor.putString(Constant.USER_ACCOUNT_EMAIL, email);
-        editor.putString(Constant.USER_ACCOUNT_TYPE, accountType);
-        editor.apply();
-
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        startActivity(intent);
-        getActivity().finish();
-    }
-
-    /**
      * Displays the login error to the user.
      */
-    private void showErrorMessage()
+    private void showErrorMessage(String message)
     {
         Dialog dialog = new Dialog(context.getString(R.string.login_error_title),
-                                   context.getString(R.string.login_error_message),
+                                   message,
                                    false);
 
         new CustomDialog(context, this, dialog);
@@ -159,11 +165,11 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
             String email = json.getString(Constant.COLUMN_EMAIL);
             String accountType = json.getString(Constant.COLUMN_ACCOUNT_TYPE);
 
-            loadIntencity(email, accountType);
+            Util.loadIntencity(LoginFragment.this.getActivity(), email, accountType);
         }
         catch (JSONException e)
         {
-            showErrorMessage();
+            showErrorMessage(context.getString(R.string.login_error_message));
             Log.e(Constant.TAG, "Error parsing login data " + e.toString());
         }
     }
@@ -171,7 +177,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     @Override
     public void onRetrievalFailed()
     {
-        showErrorMessage();
+        showErrorMessage(context.getString(R.string.login_error_message));
     }
 
     @Override

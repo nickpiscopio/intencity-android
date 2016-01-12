@@ -1,5 +1,11 @@
 package com.intencity.intencity.util;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+
+import com.intencity.intencity.activity.MainActivity;
+
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,5 +64,27 @@ public class Util
         Matcher matcher = pattern.matcher(input);
 
         return matcher.matches();
+    }
+
+    /**
+     * Saves the login information for Intencity.
+     *
+     * @param email         The email of the user.
+     * @param accountType   The account type of the user.
+     */
+    public static void loadIntencity(Activity activity, String email, String accountType)
+    {
+        Context context = activity.getApplicationContext();
+        SecurePreferences securePreferences = new SecurePreferences(context);
+        SecurePreferences.Editor editor = securePreferences.edit();
+        editor.putString(Constant.USER_ACCOUNT_EMAIL, email);
+        editor.putString(Constant.USER_ACCOUNT_TYPE, accountType);
+        editor.apply();
+
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        context.startActivity(intent);
+        activity.finish();
     }
 }

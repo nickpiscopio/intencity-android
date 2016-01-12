@@ -21,15 +21,18 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.dialog.CustomDialog;
 import com.intencity.intencity.dialog.Dialog;
 import com.intencity.intencity.listener.DialogListener;
+import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
 
 /**
  * This is the create account activity for Intencity.
- * <p/>
+ *
  * Created by Nick Piscopio on 1/11/16.
  */
-public class CreateAccountActivity extends AppCompatActivity implements DialogListener
+public class CreateAccountActivity extends AppCompatActivity implements DialogListener,
+                                                                        ServiceListener
 {
     private EditText firstNameEditText;
     private EditText lastNameEditText;
@@ -157,8 +160,27 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
             {
                 showErrorMessage(context.getString(R.string.accept_terms));
             }
+            else
+            {
+                new ServiceTask(CreateAccountActivity.this).execute(
+                        Constant.SERVICE_CREATE_ACCOUNT,
+                        Constant.getAccountParameters(firstName, lastName, replacePlus(email), password, Constant.ACCOUNT_TYPE_NORMAL));
+            }
         }
     };
+
+    /**
+     * Replaces the '+' character in a String of text.
+     * This is so we can create an account on the server with an email that has a '+' in it.
+     *
+     * @param text  The text to search.
+     *
+     * @return  The new String with its replaced character.
+     */
+    private String replacePlus(String text)
+    {
+        return text.replaceAll("\\+", "%2B");
+    }
 
     /**
      * Checks if the user has entered text in the edit text.
@@ -184,7 +206,8 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
     }
 
 
-    @Override public boolean onOptionsItemSelected(MenuItem menuItem)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem)
     {
         switch (menuItem.getItemId())
         {
@@ -197,4 +220,26 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
     }
 
     @Override public void onButtonPressed(int which){ }
+
+    @Override
+    public void onRetrievalSuccessful(String response)
+    {
+        response = response.replaceAll("\"", "");
+
+        if (response.equalsIgnoreCase(Constant.EMAIL_EXISTS))
+        {
+            showErrorMessage(context.getString(R.string.email_exists));
+        }
+        else if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
+        {
+            Util.loadIntencity(this, emailEditText.getText().toString(), Constant.ACCOUNT_TYPE_NORMAL);
+        }
+        else
+        {
+            showErrorMessage(context.getString(R.string.intencity_communication_error));
+        }
+    }
+
+    @Override
+    public void onRetrievalFailed() { }
 }

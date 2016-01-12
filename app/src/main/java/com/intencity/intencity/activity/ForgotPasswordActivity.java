@@ -65,7 +65,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements DialogL
             {
                 new ServiceTask(ForgotPasswordActivity.this).execute(
                         Constant.SERVICE_FORGOT_PASSWORD,
-                        Constant.getNewPassword(email.getText().toString()));
+                        Constant.getForgotPasswordParameter(email.getText().toString()));
             }
             else
             {
