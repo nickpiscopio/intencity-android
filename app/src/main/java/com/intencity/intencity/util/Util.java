@@ -3,11 +3,14 @@ package com.intencity.intencity.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.ContextCompat;
 import android.widget.ProgressBar;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.activity.MainActivity;
+import com.intencity.intencity.helper.DbHelper;
 
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -78,8 +81,15 @@ public class Util
     public static void loadIntencity(Activity activity, String email, String accountType)
     {
         Context context = activity.getApplicationContext();
+
+        // Clear the database because when uninstalling it doesn't do that.
+        DbHelper dbHelper = new DbHelper(context);
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        dbHelper.resetDb(database);
+
+        // Set the email and account type in the SecurePreferences.
         SecurePreferences securePreferences = new SecurePreferences(context);
-        SecurePreferences.Editor editor = securePreferences.edit();
+        SharedPreferences.Editor editor = securePreferences.edit();
         editor.putString(Constant.USER_ACCOUNT_EMAIL, email);
         editor.putString(Constant.USER_ACCOUNT_TYPE, accountType);
         editor.apply();

@@ -21,7 +21,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
@@ -46,11 +45,11 @@ import javax.crypto.spec.SecretKeySpec;
  * Wrapper class for Android's {@link SharedPreferences} interface, which adds a layer of
  * encryption to the persistent storage and retrieval of sensitive key-value pairs of primitive
  * data types.
- * <p>
+ *
  * This class provides important - but nevertheless imperfect - protection against simple attacks
  * by casual snoopers. It is crucial to remember that even encrypted data may still be susceptible
  * to attacks, especially on rooted or stolen devices!
- * <p>
+ *
  * This class requires API level 8 (Android 2.2, a.k.a. "Froyo") or greater.
  *
  * @see <a href="http://www.codeproject.com/Articles/549119/Encryption-Wrapper-for-Android-SharedPreferences">CodeProject article</a>
@@ -68,7 +67,7 @@ public class SecurePreferences implements SharedPreferences {
     public SecurePreferences(Context context) {
         // Proxy design pattern
         if (SecurePreferences.sFile == null) {
-            SecurePreferences.sFile = PreferenceManager.getDefaultSharedPreferences(context);
+            SecurePreferences.sFile = context.getSharedPreferences(Constant.SHARED_PREFERENCES, Context.MODE_PRIVATE);
         }
         // Initialize encryption/decryption key
         try {

@@ -1,6 +1,7 @@
 package com.intencity.intencity.activity;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ public class TermsActivity extends AppCompatActivity
         }
 
         WebView webview = (WebView)findViewById(R.id.web_view_terms);
+        webview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.page_background));
         webview.loadUrl(TERMS_URL);
     }
 
