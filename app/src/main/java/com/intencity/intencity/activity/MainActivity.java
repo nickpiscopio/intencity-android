@@ -1,5 +1,6 @@
 package com.intencity.intencity.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity
         SecurePreferences prefs = new SecurePreferences(getApplicationContext());
         if (prefs.getString(Constant.USER_ACCOUNT_EMAIL, nullString).equals(nullString))
         {
-            showDemo();
+            showDemo(DemoActivity.DESCRIPTION_PAGE);
         }
         else
         {
@@ -56,11 +57,14 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Shows the demo screens.
+     *
+     * @param page  The page to open when the demo starts.
      */
-    private void showDemo()
+    private void showDemo(int page)
     {
         Intent intent = new Intent(this, DemoActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Constant.EXTRA_DEMO_PAGE, page);
         startActivity(intent);
         finish();
     }
@@ -128,6 +132,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.about:
                 startActivity(AboutActivity.class);
                 return true;
+            case R.id.log_out:
+                logOut();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -142,5 +149,19 @@ public class MainActivity extends AppCompatActivity
     {
         Intent intent = new Intent(this, cls);
         startActivity(intent);
+    }
+
+    /**
+     * Removes the user's secure preferences and returns him or her to the login page.
+     */
+    private void logOut()
+    {
+        Context context = getApplicationContext();
+        SecurePreferences securePreferences = new SecurePreferences(context);
+        SecurePreferences.Editor editor = securePreferences.edit();
+        editor.clear();
+        editor.apply();
+
+        showDemo(DemoActivity.LOG_IN_PAGE);
     }
 }

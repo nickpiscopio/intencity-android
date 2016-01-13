@@ -11,6 +11,7 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ViewPagerAdapter;
 import com.intencity.intencity.fragment.LoginFragment;
 import com.intencity.intencity.fragment.PagerFragment;
+import com.intencity.intencity.util.Constant;
 
 /**
  * Screens to demo the application before the user logs into Intencity.
@@ -19,10 +20,10 @@ import com.intencity.intencity.fragment.PagerFragment;
  */
 public class DemoActivity extends FragmentActivity
 {
-    // TODO: RENAME THESE LATER.
     public static final int DESCRIPTION_PAGE = 0;
     public static final int INSPIRATION_PAGE = 1;
     public static final int SHARE_PAGE = 2;
+    public static final int LOG_IN_PAGE = 3;
 
     private static final int PAGER_SELECTED_RESOURCE = R.mipmap.pager_selected;
     private static final int PAGER_UNSELECTED_RESOURCE = R.mipmap.pager_unselected;
@@ -49,9 +50,8 @@ public class DemoActivity extends FragmentActivity
         adapter.addFrag(getNewPagerFragment(SHARE_PAGE), "");
         adapter.addFrag(new LoginFragment(), "");
 
-        mPager = (ViewPager)findViewById(R.id.pager);
-        mPager.setAdapter(adapter);
-        mPager.addOnPageChangeListener(pageChangeListener);
+        Bundle extras = getIntent().getExtras();
+        int pageToStart = extras.getInt(Constant.EXTRA_DEMO_PAGE);
 
         pager0 = (ImageView)findViewById(R.id.pager_0);
         pager1 = (ImageView)findViewById(R.id.pager_1);
@@ -60,8 +60,20 @@ public class DemoActivity extends FragmentActivity
 
         next = (ImageButton)findViewById(R.id.button_next);
         next.setOnClickListener(nextListener);
+
+        mPager = (ViewPager)findViewById(R.id.pager);
+        mPager.setAdapter(adapter);
+        mPager.addOnPageChangeListener(pageChangeListener);
+        mPager.setCurrentItem(pageToStart);
     }
 
+    /**
+     * Creates a new PagerFragment for the view pager.
+     *
+     * @param position  The position the fragment will be added.
+     *
+     * @return  The PagerFragment
+     */
     private PagerFragment getNewPagerFragment(int position)
     {
         Bundle bundle = new Bundle();
@@ -89,6 +101,9 @@ public class DemoActivity extends FragmentActivity
         }
     }
 
+    /**
+     * The listener for the page changing.
+     */
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener()
     {
         @Override
@@ -99,19 +114,20 @@ public class DemoActivity extends FragmentActivity
         {
             switch (position)
             {
-                case 0:
+                case DESCRIPTION_PAGE:
                     pager0.setImageResource(PAGER_SELECTED_RESOURCE);
                     pager1.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager2.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager3.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     break;
-                case 1:
+                case INSPIRATION_PAGE:
                     pager0.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager1.setImageResource(PAGER_SELECTED_RESOURCE);
                     pager2.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager3.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     break;
-                case 2:
+                case SHARE_PAGE:
+                    pager0.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager1.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager2.setImageResource(PAGER_SELECTED_RESOURCE);
                     pager3.setImageResource(PAGER_UNSELECTED_RESOURCE);
@@ -121,8 +137,7 @@ public class DemoActivity extends FragmentActivity
                     pager3.setVisibility(View.VISIBLE);
                     next.setVisibility(View.VISIBLE);
                     break;
-                case 3:
-                    // TODO: Fix this. The pager 3 cannot be seen.
+                case LOG_IN_PAGE:
                     pager0.setVisibility(View.GONE);
                     pager1.setVisibility(View.GONE);
                     pager2.setVisibility(View.GONE);
@@ -138,6 +153,9 @@ public class DemoActivity extends FragmentActivity
         public void onPageScrollStateChanged(int state) { }
     };
 
+    /**
+     * The listener for the next button.
+     */
     private View.OnClickListener nextListener = new View.OnClickListener()
     {
         @Override

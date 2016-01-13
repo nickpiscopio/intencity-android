@@ -30,6 +30,9 @@ public class Constant
 
     public static final int REQUEST_CODE_STAT = 10;
 
+    // Extras
+    public static final String EXTRA_DEMO_PAGE = "com.intencity.intencity.extra.demo.page";
+
     // Bundles
     public static final String BUNDLE_SET_NUMBER = "com.intencity.intencity.bundle.set.number";
     public static final String BUNDLE_ROUTINE_NAME = "com.intencity.intencity.bundle.routine.name";
