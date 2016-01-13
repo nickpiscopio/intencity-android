@@ -119,6 +119,9 @@ public class StatActivity extends AppCompatActivity implements DialogListener
                 startActivity(intent);
                 return true;
             case R.id.add:
+                // We only add a set if the user has set a duration.
+                // This is because we don't want to add tons of sets that couldn't have happened.
+                // If there isn't a duration, then the user didn't do the exercise.
                 if (hasDuration())
                 {
                     addSet();
