@@ -18,6 +18,10 @@
     <string name="separator">&#183;</string>
     <string name="create_account">Create an account</string>
 
+    <string name="trial_account_title">Trial account</string>
+    <string name="trial_account_message">You are creating a trial account. Trial accounts get deleted after 1 week.</string>
+    <string name="create_trial">Create trial account</string>
+
     <string name="title_create_account">Create Account</string>
     <string name="title_terms">Terms of Use</string>
 
@@ -25,8 +29,8 @@
     <string name="login_error_title">Error logging in</string>
     <string name="login_error_message">Please check your email and password, and try again.</string>
 
-    <!-- Create acount Strings-->
-    <string name="generic_error">Error</string>
+    <!-- Create account Strings-->
+    <string name="generic_error">A problem occurred</string>
     <string name="fill_in_fields">Please fill in all fields.</string>
     <string name="accept_terms">Please accept the Terms of Use.</string>
     <string name="email_validation_error">Please enter a valid email.</string>
@@ -89,6 +93,7 @@
 
     <string name="mission">We strive to deliver the greatest platform that will influence, motivate, and connect people, which will help them achieve their fitness goals.</string>
 
-    <string name="intencity_communication_error">There was an problem communicating with Intencity\'s server. Please try again later.</string>
+    <string name="intencity_communication_error">There was a problem communicating with Intencity\'s server. Please try again later.</string>
+    <string name="intencity_communication_error_email">There was either a problem communicating with Intencity\'s server or with the email you provided. Please check your email or try again later.</string>
 
 </resources>

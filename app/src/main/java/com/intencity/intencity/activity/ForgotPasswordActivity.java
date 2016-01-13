@@ -8,11 +8,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.dialog.CustomDialog;
 import com.intencity.intencity.dialog.Dialog;
-import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
@@ -23,9 +24,12 @@ import com.intencity.intencity.util.Util;
  *
  * Created by Nick Piscopio on 1/11/16.
  */
-public class ForgotPasswordActivity extends AppCompatActivity implements DialogListener,
-                                                                         ServiceListener
+public class ForgotPasswordActivity extends AppCompatActivity implements ServiceListener
 {
+    private ProgressBar loadingProgressBar;
+
+    private LinearLayout form;
+
     private EditText email;
 
     private Button resetPassword;
@@ -37,12 +41,19 @@ public class ForgotPasswordActivity extends AppCompatActivity implements DialogL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
 
+        loadingProgressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
+
+        form = (LinearLayout) findViewById(R.id.linear_layout_form);
+
         email = (EditText) findViewById(R.id.edit_text_email);
 
         resetPassword = (Button) findViewById(R.id.btn_reset_password);
         resetPassword.setOnClickListener(resetPasswordListener);
 
         context = getApplicationContext();
+
+        // Sets the progress bar color.
+        Util.setProgressBarColor(context, loadingProgressBar);
 
         // Add the back button to the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -63,6 +74,9 @@ public class ForgotPasswordActivity extends AppCompatActivity implements DialogL
             String emailText = email.getText().toString();
             if (Util.isFieldValid(emailText, Constant.REGEX_EMAIL))
             {
+                loadingProgressBar.setVisibility(View.VISIBLE);
+                form.setVisibility(View.GONE);
+
                 new ServiceTask(ForgotPasswordActivity.this).execute(
                         Constant.SERVICE_FORGOT_PASSWORD,
                         Constant.getForgotPasswordParameter(email.getText().toString()));
@@ -84,9 +98,8 @@ public class ForgotPasswordActivity extends AppCompatActivity implements DialogL
     {
         Dialog dialog = new Dialog(title , message, false);
 
-        new CustomDialog(ForgotPasswordActivity.this, this, dialog);
+        new CustomDialog(ForgotPasswordActivity.this, null, dialog);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem)
@@ -102,14 +115,22 @@ public class ForgotPasswordActivity extends AppCompatActivity implements DialogL
     }
 
     @Override
-    public void onButtonPressed(int which){ }
-
-    @Override
     public void onRetrievalSuccessful(String response)
     {
+        loadingProgressBar.setVisibility(View.GONE);
+        form.setVisibility(View.VISIBLE);
+
         showMessage(context.getString(R.string.forgot_password_email_sent_title),
                     context.getString(R.string.forgot_password_email_sent));
     }
 
-    @Override public void onRetrievalFailed() { }
+    @Override
+    public void onRetrievalFailed()
+    {
+        loadingProgressBar.setVisibility(View.GONE);
+        form.setVisibility(View.VISIBLE);
+
+        showMessage(context.getString(R.string.generic_error),
+                    context.getString(R.string.intencity_communication_error_email));
+    }
 }

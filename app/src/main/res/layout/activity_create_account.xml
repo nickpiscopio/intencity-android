@@ -10,111 +10,147 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/layout_margin"
+        android:animateLayoutChanges="true"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edit_text_first_name"
+        <LinearLayout
+            android:id="@+id/linear_layout_loading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/first_name"
-            android:inputType="textNoSuggestions"
-            android:digits="@string/name_characters"
-            android:background="@drawable/card"
-            android:textColor="@color/secondary_dark"
-            android:textColorHint="@color/secondary_light"
-            android:textCursorDrawable="@drawable/cursor"
-            android:maxLength="@integer/name_length"
-            android:padding="@dimen/element_margin"/>
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <EditText
-            android:id="@+id/edit_text_last_name"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/intencity_sign_in_logo"
+                android:paddingTop="@dimen/layout_margin"
+                android:paddingRight="@dimen/logo_margin"
+                android:paddingBottom="@dimen/layout_margin"
+                android:background="@drawable/button_card"
+                android:paddingLeft="@dimen/logo_margin"/>
+
+            <ProgressBar
+                android:id="@+id/progress_bar_loading"
+                style="?android:attr/android:progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/last_name"
-            android:digits="@string/name_characters"
-            android:inputType="textNoSuggestions"
-            android:background="@drawable/card"
-            android:textColor="@color/secondary_dark"
-            android:textColorHint="@color/secondary_light"
-            android:textCursorDrawable="@drawable/cursor"
-            android:maxLength="@integer/name_length"
-            android:layout_marginTop="@dimen/related_item_margin"
-            android:padding="@dimen/element_margin"/>
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edit_text_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:maxLength="@integer/email_length"
-            android:background="@drawable/card"
-            android:textColor="@color/secondary_dark"
-            android:textColorHint="@color/secondary_light"
-            android:textCursorDrawable="@drawable/cursor"
-            android:layout_marginTop="@dimen/related_item_margin"
-            android:padding="@dimen/element_margin"/>
+            <EditText
+                android:id="@+id/edit_text_first_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/first_name"
+                android:inputType="textNoSuggestions"
+                android:digits="@string/name_characters"
+                android:background="@drawable/card"
+                android:textColor="@color/secondary_dark"
+                android:textColorHint="@color/secondary_light"
+                android:textCursorDrawable="@drawable/cursor"
+                android:maxLength="@integer/name_length"
+                android:padding="@dimen/element_margin"/>
 
-        <EditText
-            android:id="@+id/edit_text_confirm_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/confirm_email"
-            android:inputType="textEmailAddress"
-            android:maxLength="@integer/email_length"
-            android:background="@drawable/card"
-            android:textColor="@color/secondary_dark"
-            android:textColorHint="@color/secondary_light"
-            android:textCursorDrawable="@drawable/cursor"
-            android:layout_marginTop="@dimen/related_item_margin"
-            android:padding="@dimen/element_margin"/>
+            <EditText
+                android:id="@+id/edit_text_last_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/last_name"
+                android:digits="@string/name_characters"
+                android:inputType="textNoSuggestions"
+                android:background="@drawable/card"
+                android:textColor="@color/secondary_dark"
+                android:textColorHint="@color/secondary_light"
+                android:textCursorDrawable="@drawable/cursor"
+                android:maxLength="@integer/name_length"
+                android:layout_marginTop="@dimen/related_item_margin"
+                android:padding="@dimen/element_margin"/>
 
-        <EditText
-            android:id="@+id/edit_text_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:background="@drawable/card"
-            android:maxLength="@integer/password_length"
-            android:textColor="@color/secondary_dark"
-            android:textColorHint="@color/secondary_light"
-            android:textCursorDrawable="@drawable/cursor"
-            android:layout_marginTop="@dimen/related_item_margin"
-            android:padding="@dimen/element_margin"/>
+            <EditText
+                android:id="@+id/edit_text_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:maxLength="@integer/email_length"
+                android:background="@drawable/card"
+                android:textColor="@color/secondary_dark"
+                android:textColorHint="@color/secondary_light"
+                android:textCursorDrawable="@drawable/cursor"
+                android:layout_marginTop="@dimen/related_item_margin"
+                android:padding="@dimen/element_margin"/>
 
-        <EditText
-            android:id="@+id/edit_text_confirm_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/confirm_password"
-            android:inputType="textPassword"
-            android:background="@drawable/card"
-            android:maxLength="@integer/password_length"
-            android:textColor="@color/secondary_dark"
-            android:textColorHint="@color/secondary_light"
-            android:textCursorDrawable="@drawable/cursor"
-            android:layout_marginTop="@dimen/related_item_margin"
-            android:padding="@dimen/element_margin"/>
+            <EditText
+                android:id="@+id/edit_text_confirm_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/confirm_email"
+                android:inputType="textEmailAddress"
+                android:maxLength="@integer/email_length"
+                android:background="@drawable/card"
+                android:textColor="@color/secondary_dark"
+                android:textColorHint="@color/secondary_light"
+                android:textCursorDrawable="@drawable/cursor"
+                android:layout_marginTop="@dimen/related_item_margin"
+                android:padding="@dimen/element_margin"/>
 
-        <CheckBox
-            android:id="@+id/check_box_terms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/terms_checkbox"
-            android:textColor="@color/secondary_dark"
-            android:layout_marginTop="@dimen/related_item_margin"
-            android:buttonTint="@color/shadow_dark"/>
+            <EditText
+                android:id="@+id/edit_text_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:background="@drawable/card"
+                android:maxLength="@integer/password_length"
+                android:textColor="@color/secondary_dark"
+                android:textColorHint="@color/secondary_light"
+                android:textCursorDrawable="@drawable/cursor"
+                android:layout_marginTop="@dimen/related_item_margin"
+                android:padding="@dimen/element_margin"/>
 
-        <Button
-            android:id="@+id/btn_create_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/create_account"
-            android:background="@drawable/button_full"
-            android:textColor="@color/page_background"
-            android:layout_marginTop="@dimen/layout_margin"
-            android:padding="@dimen/element_margin"/>
+            <EditText
+                android:id="@+id/edit_text_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/confirm_password"
+                android:inputType="textPassword"
+                android:background="@drawable/card"
+                android:maxLength="@integer/password_length"
+                android:textColor="@color/secondary_dark"
+                android:textColorHint="@color/secondary_light"
+                android:textCursorDrawable="@drawable/cursor"
+                android:layout_marginTop="@dimen/related_item_margin"
+                android:padding="@dimen/element_margin"/>
+
+            <CheckBox
+                android:id="@+id/check_box_terms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_checkbox"
+                android:textColor="@color/secondary_dark"
+                android:layout_marginTop="@dimen/related_item_margin"
+                android:layout_gravity="left"/>
+
+            <Button
+                android:id="@+id/btn_create_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/create_account"
+                android:background="@drawable/button_full"
+                android:textColor="@color/page_background"
+                android:layout_marginTop="@dimen/layout_margin"
+                android:padding="@dimen/element_margin"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

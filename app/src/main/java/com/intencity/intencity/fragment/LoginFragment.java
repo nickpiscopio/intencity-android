@@ -4,17 +4,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.activity.CreateAccountActivity;
 import com.intencity.intencity.activity.ForgotPasswordActivity;
+import com.intencity.intencity.activity.TermsActivity;
 import com.intencity.intencity.dialog.CustomDialog;
 import com.intencity.intencity.dialog.Dialog;
 import com.intencity.intencity.listener.DialogListener;
@@ -33,11 +41,16 @@ import java.util.Date;
  *
  * Created by Nick Piscopio on 12/9/15.
  */
-public class LoginFragment extends android.support.v4.app.Fragment implements ServiceListener,
-                                                                              DialogListener
+public class LoginFragment extends android.support.v4.app.Fragment implements ServiceListener
 {
     private EditText email;
     private EditText password;
+
+    private ProgressBar loadingProgressBar;
+
+    private LinearLayout loginForm;
+
+    private CheckBox termsCheckBox;
 
     private Context context;
 
@@ -48,6 +61,12 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
 
         email = (EditText) view.findViewById(R.id.edit_text_email);
         password = (EditText) view.findViewById(R.id.edit_text_password);
+
+        loadingProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar_loading);
+
+        loginForm = (LinearLayout) view.findViewById(R.id.linear_layout_login_form);
+
+        termsCheckBox = (CheckBox) view.findViewById(R.id.check_box_terms);
 
         Button signIn = (Button) view.findViewById(R.id.btn_sign_in);
         TextView tryIntencity = (TextView) view.findViewById(R.id.btn_try_intencity);
@@ -63,6 +82,24 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
 
         context = getContext();
 
+        // Sets the progress bar color.
+        Util.setProgressBarColor(context, loadingProgressBar);
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+
+        String[] checkBoxString = termsCheckBox.getText().toString().split("@");
+        String termsString = checkBoxString[1];
+        SpannableString redSpannable = new SpannableString(termsString);
+        redSpannable
+                .setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.primary)),
+                         0, termsString.length(), 0);
+        builder.append(checkBoxString[0]);
+        builder.append(redSpannable);
+        builder.append(checkBoxString[2]);
+
+        termsCheckBox.setText(builder, TextView.BufferType.SPANNABLE);
+        termsCheckBox.setOnClickListener(termsClickListener);
+
         return view;
     }
 
@@ -71,7 +108,23 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         @Override
         public void onClick(View v)
         {
-            checkCredentials();
+            String userEmail = email.getText().toString();
+            String userPassword = password.getText().toString();
+
+            if (userEmail.length() < 1 || userPassword.length() < 1)
+            {
+                showMessage(context.getString(R.string.generic_error),
+                            getString(R.string.fill_in_fields));
+            }
+            else if (!termsCheckBox.isChecked())
+            {
+                showMessage(context.getString(R.string.generic_error),
+                            getString(R.string.accept_terms));
+            }
+            else
+            {
+                checkCredentials(userEmail, userPassword);
+            }
         }
     };
 
@@ -80,37 +133,15 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         @Override
         public void onClick(View v)
         {
-            long uniqueNumber = new Date().getTime();
-
-            String firstName = "Anonymous";
-            String lastName = "User";
-            final String email = lastName + uniqueNumber + "@intencityapp.com";
-            String password = String.valueOf(uniqueNumber);
-
-            new ServiceTask(new ServiceListener() {
-                @Override
-                public void onRetrievalSuccessful(String response)
-                {
-                    response = response.replaceAll("\"", "");
-
-                    if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
-                    {
-                        Util.loadIntencity(LoginFragment.this.getActivity(), email, Constant.ACCOUNT_TYPE_TRIAL);
-                    }
-                    else
-                    {
-                        showErrorMessage(context.getString(R.string.intencity_communication_error));
-                    }
-                }
-
-                @Override
-                public void onRetrievalFailed() { }
-            }).execute(Constant.SERVICE_CREATE_ACCOUNT,
-                                                        Constant.getAccountParameters(firstName,
-                                                                                      lastName,
-                                                                                      email,
-                                                                                      password,
-                                                                                      Constant.ACCOUNT_TYPE_TRIAL));
+            if (termsCheckBox.isChecked())
+            {
+                new CustomDialog(context, trialDialogListener, new Dialog(getString(R.string.trial_account_title), getString(R.string.trial_account_message), true));
+            }
+            else
+            {
+               showMessage(context.getString(R.string.generic_error),
+                           getString(R.string.accept_terms));
+            }
         }
     };
 
@@ -133,26 +164,47 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     };
 
     /**
+     * The click listener for the terms checkbox.
+     */
+    private View.OnClickListener termsClickListener = new View.OnClickListener()
+    {
+        @Override public void onClick(View v)
+        {
+            // The terms checkbox gets checked first, then the click listener gets called,
+            // so we want to start the TermsActivity only if the checkbox is checked.
+            if (termsCheckBox.isChecked())
+            {
+                startActivity(new Intent(LoginFragment.this.getContext(), TermsActivity.class));
+            }
+        }
+    };
+
+    /**
      * Starts the service to check if the credentials the user typed in are in the web database.
      */
-    private void checkCredentials()
+    private void checkCredentials(String email, String password)
     {
+        loadingProgressBar.setVisibility(View.VISIBLE);
+        loginForm.setVisibility(View.GONE);
+
         new ServiceTask(this).execute(Constant.SERVICE_VALIDATE_USER_CREDENTIALS,
                                       Constant.getValidateUserCredentialsServiceParameters(
-                                              email.getText().toString(),
-                                              password.getText().toString()));
+                                              email, password));
     }
 
     /**
      * Displays the login error to the user.
      */
-    private void showErrorMessage(String message)
+    private void showMessage(String title, String message)
     {
-        Dialog dialog = new Dialog(context.getString(R.string.login_error_title),
+        loadingProgressBar.setVisibility(View.GONE);
+        loginForm.setVisibility(View.VISIBLE);
+
+        Dialog dialog = new Dialog(title,
                                    message,
                                    false);
 
-        new CustomDialog(context, this, dialog);
+        new CustomDialog(context, null, dialog);
     }
 
     @Override
@@ -169,7 +221,11 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         }
         catch (JSONException e)
         {
-            showErrorMessage(context.getString(R.string.login_error_message));
+            loadingProgressBar.setVisibility(View.GONE);
+            loginForm.setVisibility(View.VISIBLE);
+
+            showMessage(context.getString(R.string.login_error_title),
+                        context.getString(R.string.login_error_message));
             Log.e(Constant.TAG, "Error parsing login data " + e.toString());
         }
     }
@@ -177,9 +233,61 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     @Override
     public void onRetrievalFailed()
     {
-        showErrorMessage(context.getString(R.string.login_error_message));
+        loadingProgressBar.setVisibility(View.GONE);
+        loginForm.setVisibility(View.VISIBLE);
+
+        showMessage(context.getString(R.string.login_error_title),
+                    context.getString(R.string.login_error_message));
     }
 
-    @Override
-    public void onButtonPressed(int which) { }
+    /**
+     * The dialog listener for the "Try Intencity" button.
+     */
+    private DialogListener trialDialogListener = new DialogListener()
+    {
+        @Override
+        public void onButtonPressed(int which)
+        {
+            switch (which)
+            {
+                case Constant.POSITIVE_BUTTON: // Create Trial Account
+                    long uniqueNumber = new Date().getTime();
+
+                    String firstName = "Anonymous";
+                    String lastName = "User";
+                    final String email = lastName + uniqueNumber + "@intencityapp.com";
+                    String password = String.valueOf(uniqueNumber);
+
+                    loadingProgressBar.setVisibility(View.VISIBLE);
+                    loginForm.setVisibility(View.GONE);
+
+                    new ServiceTask(new ServiceListener() {
+                        @Override
+                        public void onRetrievalSuccessful(String response)
+                        {
+                            response = response.replaceAll("\"", "");
+
+                            if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
+                            {
+                                Util.loadIntencity(LoginFragment.this.getActivity(), email, Constant.ACCOUNT_TYPE_TRIAL);
+                            }
+                            else
+                            {
+                                showMessage(context.getString(R.string.login_error_title),
+                                            context.getString(
+                                                    R.string.intencity_communication_error));
+                            }
+                        }
+
+                        @Override
+                        public void onRetrievalFailed() { }
+                    }).execute(Constant.SERVICE_CREATE_ACCOUNT,
+                               Constant.getAccountParameters(firstName, lastName, email, password,
+                                                             Constant.ACCOUNT_TYPE_TRIAL));
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 }

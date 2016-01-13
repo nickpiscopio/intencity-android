@@ -3,6 +3,7 @@ package com.intencity.intencity.dialog;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.util.Constant;
@@ -16,7 +17,10 @@ public class CustomDialog
 {
     public CustomDialog(Context context, final DialogListener dialogListener, Dialog dialog)
     {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+        int style = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) ?
+                android.R.style.Theme_DeviceDefault_Light_Dialog_Alert :
+                AlertDialog.THEME_DEVICE_DEFAULT_LIGHT;
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, style);
 
         String title = dialog.getTitle();
         String message = dialog.getMessage();
@@ -31,7 +35,10 @@ public class CustomDialog
             {
                 public void onClick(DialogInterface dialog, int which)
                 {
-                    dialogListener.onButtonPressed(Constant.POSITIVE_BUTTON);
+                    if (dialogListener != null)
+                    {
+                        dialogListener.onButtonPressed(Constant.POSITIVE_BUTTON);
+                    }
                 }
             });
 
@@ -41,7 +48,10 @@ public class CustomDialog
                 {
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        dialogListener.onButtonPressed(Constant.NEGATIVE_BUTTON);
+                        if (dialogListener != null)
+                        {
+                            dialogListener.onButtonPressed(Constant.NEGATIVE_BUTTON);
+                        }
                     }
                 });
             }
@@ -57,7 +67,10 @@ public class CustomDialog
             {
                 @Override public void onClick(DialogInterface dialog, int which)
                 {
-                    dialogListener.onButtonPressed(which);
+                    if (dialogListener != null)
+                    {
+                        dialogListener.onButtonPressed(which);
+                    }
                 }
             });
         }

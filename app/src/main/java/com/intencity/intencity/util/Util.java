@@ -3,7 +3,10 @@ package com.intencity.intencity.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
+import android.widget.ProgressBar;
 
+import com.intencity.intencity.R;
 import com.intencity.intencity.activity.MainActivity;
 
 import java.util.Random;
@@ -86,5 +89,18 @@ public class Util
 
         context.startActivity(intent);
         activity.finish();
+    }
+
+    /**
+     * Sets the progress bar color.
+     *
+     * @param context       The application context.
+     * @param progressBar   The progress bar to change the color.
+     */
+    public static void setProgressBarColor(Context context, ProgressBar progressBar)
+    {
+        progressBar.getIndeterminateDrawable().setColorFilter(
+                ContextCompat.getColor(context, R.color.primary),
+                android.graphics.PorterDuff.Mode.MULTIPLY);
     }
 }

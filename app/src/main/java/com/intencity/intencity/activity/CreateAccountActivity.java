@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
@@ -34,6 +36,11 @@ import com.intencity.intencity.util.Util;
 public class CreateAccountActivity extends AppCompatActivity implements DialogListener,
                                                                         ServiceListener
 {
+    private LinearLayout loadingLayout;
+    private LinearLayout formLayout;
+
+    private ProgressBar progressBar;
+
     private EditText firstNameEditText;
     private EditText lastNameEditText;
     private EditText emailEditText;
@@ -52,6 +59,11 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
 
+        loadingLayout = (LinearLayout) findViewById(R.id.linear_layout_loading);
+        formLayout = (LinearLayout) findViewById(R.id.linear_layout_form);
+
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
+
         firstNameEditText = (EditText) findViewById(R.id.edit_text_first_name);
         lastNameEditText = (EditText) findViewById(R.id.edit_text_last_name);
         emailEditText = (EditText) findViewById(R.id.edit_text_email);
@@ -64,6 +76,9 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
         createAccount = (Button) findViewById(R.id.btn_create_account);
 
         context = getApplicationContext();
+
+        // Sets the progress bar color.
+        Util.setProgressBarColor(context, progressBar);
 
         passwordEditText.setTypeface(Typeface.DEFAULT);
         confirmPasswordEditText.setTypeface(Typeface.DEFAULT);
@@ -78,6 +93,7 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
                          0, termsString.length(), 0);
         builder.append(checkBoxString[0]);
         builder.append(redSpannable);
+        builder.append(checkBoxString[2]);
 
         termsCheckBox.setText(builder, TextView.BufferType.SPANNABLE);
         termsCheckBox.setOnClickListener(termsClickListener);
@@ -162,6 +178,9 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
             }
             else
             {
+                loadingLayout.setVisibility(View.VISIBLE);
+                formLayout.setVisibility(View.GONE);
+
                 new ServiceTask(CreateAccountActivity.this).execute(
                         Constant.SERVICE_CREATE_ACCOUNT,
                         Constant.getAccountParameters(firstName, lastName, replacePlus(email), password, Constant.ACCOUNT_TYPE_NORMAL));
@@ -228,6 +247,9 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
 
         if (response.equalsIgnoreCase(Constant.EMAIL_EXISTS))
         {
+            loadingLayout.setVisibility(View.GONE);
+            formLayout.setVisibility(View.VISIBLE);
+
             showErrorMessage(context.getString(R.string.email_exists));
         }
         else if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
@@ -236,10 +258,19 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
         }
         else
         {
+            loadingLayout.setVisibility(View.GONE);
+            formLayout.setVisibility(View.VISIBLE);
+
             showErrorMessage(context.getString(R.string.intencity_communication_error));
         }
     }
 
     @Override
-    public void onRetrievalFailed() { }
+    public void onRetrievalFailed()
+    {
+        loadingLayout.setVisibility(View.GONE);
+        formLayout.setVisibility(View.VISIBLE);
+
+        showErrorMessage(context.getString(R.string.intencity_communication_error));
+    }
 }
