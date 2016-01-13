@@ -49,6 +49,6 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         FragmentManager manager = getFragmentManager();
         FragmentHandler fragmentHandler = FragmentHandler.getInstance();
         fragmentHandler.pushFragment(manager, R.id.layout_fitness_log,
-                                     new RoutineFragment(), "", false, bundle, true);
+                                     new RoutineFragment(), "", false, bundle, false);
     }
 }

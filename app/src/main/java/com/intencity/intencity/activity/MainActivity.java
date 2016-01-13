@@ -106,8 +106,6 @@ public class MainActivity extends AppCompatActivity
         adapter.addFrag(new FitnessLogFragment(), "");
         adapter.addFrag(new RankingFragment(), "");
         viewPager.setAdapter(adapter);
-
-
     }
 
     @Override

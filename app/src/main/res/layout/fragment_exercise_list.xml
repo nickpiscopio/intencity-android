@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/page_background"
     android:orientation="vertical">
 
     <LinearLayout
@@ -63,9 +64,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/layout_margin"
-        android:paddingRight="@dimen/layout_margin"/>
+        android:layout_height="wrap_content"/>
 
     <!-- TODO: Place holder for the AD -->
 
