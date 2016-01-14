@@ -17,7 +17,6 @@ import com.intencity.intencity.model.Set;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
-import com.intencity.intencity.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,9 +97,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         @Override
         public void onRetrievalFailed()
         {
-            Util.showCommunicationErrorMessage(context);
-
-            listener.onFinishedLoading(Constant.CODE_FAILED);
+            listener.onFinishedLoading(Constant.CODE_FAILED_REPOPULATE);
         }
     };
 
@@ -160,18 +157,14 @@ public class RoutineFragment extends android.support.v4.app.Fragment
             {
                 e.printStackTrace();
 
-                Util.showCommunicationErrorMessage(context);
-
-                listener.onFinishedLoading(Constant.CODE_FAILED);
+                listener.onFinishedLoading(Constant.CODE_FAILED_REPOPULATE);
             }
         }
 
         @Override
         public void onRetrievalFailed()
         {
-            Util.showCommunicationErrorMessage(context);
-
-            listener.onFinishedLoading(Constant.CODE_FAILED);
+            listener.onFinishedLoading(Constant.CODE_FAILED_REPOPULATE);
         }
     };
 
@@ -229,6 +222,11 @@ public class RoutineFragment extends android.support.v4.app.Fragment
     public String getRoutineName()
     {
         return routineName;
+    }
+
+    public void setRoutineName(String routineName)
+    {
+        this.routineName = routineName;
     }
 
     public ArrayList<Exercise> getPreviousExercises()

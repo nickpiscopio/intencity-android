@@ -21,7 +21,6 @@ import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.FragmentHandler;
 import com.intencity.intencity.util.SecurePreferences;
-import com.intencity.intencity.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,20 +73,9 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         return view;
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void onRetrievalSuccessful(String routineName, ArrayList<?> results, int index)
-    {
-        this.routineName = routineName;
-        previousExercises = (ArrayList<Exercise>)results;
-        this.index = index;
-
-        SecurePreferences securePreferences = new SecurePreferences(context);
-        email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
-
-        getMuscleGroups();
-    }
-
+    /**
+     * Starts the service to get the muscle groups from the web server.
+     */
     private void getMuscleGroups()
     {
         new ServiceTask(muscleGroupServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
@@ -96,6 +84,9 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                                                                     email));
     }
 
+    /**
+     * The listener to try to get the exercise data again.
+     */
     private View.OnClickListener tryConnectingAgainListener = new View.OnClickListener()
     {
         @Override
@@ -156,10 +147,9 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                 if (pushedTryAgain)
                 {
                     // Repopulate the spinner if the user gets their connection back
-                    routineFragment.setDisplayMuscleGroups(displayMuscleGroups);
-                    routineFragment.setRecommendedRoutine(recommendedRoutine);
-                    routineFragment.populateMuscleGroupSpinner();
+                    repopulateSpinner(displayMuscleGroups);
 
+                    removeConnectionIssueMessage();
                     stopLoading();
                 }
                 else
@@ -171,29 +161,31 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
             {
                 Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
 
-                Util.showCommunicationErrorMessage(context);
-
-                onFinishedLoading(Constant.CODE_FAILED);
+                onFinishedLoading(
+                        pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : Constant.CODE_FAILED);
             }
         }
 
         @Override
         public void onRetrievalFailed()
         {
-            onFinishedLoading(Constant.CODE_FAILED);
-
-            if (previousExercises != null && previousExercises.size() > 0 && !pushedTryAgain)
-            {
-                ArrayList<String> displayMuscleGroups = new ArrayList<>();
-                // Need the context here because we haven't started this fragment yet.
-                displayMuscleGroups.add(getString(R.string.routine_continue));
-                recommendedRoutine = displayMuscleGroups.size() - 1;
-
-                // Only add the saved exercises to the spinner because of the network issue.
-                pushRoutineFragment(displayMuscleGroups);
-            }
+            onFinishedLoading(pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : Constant.CODE_FAILED);
         }
     };
+
+    /**
+     * Repopulates the RoutineFragment's spinner
+     *
+     * @param values    The values to add to the spinner
+     *
+     */
+    private void repopulateSpinner(ArrayList<String> values)
+    {
+        routineFragment.setRoutineName(routineName);
+        routineFragment.setDisplayMuscleGroups(values);
+        routineFragment.setRecommendedRoutine(recommendedRoutine);
+        routineFragment.populateMuscleGroupSpinner();
+    }
 
     /**
      * Pushes the RoutineFragment on the stack.
@@ -216,19 +208,73 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         // Pushes the routine fragment onto the stack when everything has finished loading.
         FragmentManager manager = getFragmentManager();
         FragmentHandler fragmentHandler = FragmentHandler.getInstance();
-        fragmentHandler.pushFragment(manager, R.id.layout_fitness_log, routineFragment, "",
-                                     false, bundle, false);
+        fragmentHandler.pushFragment(manager, R.id.layout_fitness_log, routineFragment, "", false,
+                                     bundle, false);
 
         stopLoading();
     }
 
+    /**
+     * Checks if there are previous exercises and repopulates the spinner.
+     *
+     * @param hasRoutineFragment    Boolean value of if the RoutineFragment has already been added.
+     */
+    private void checkPreviousExercises(Boolean hasRoutineFragment)
+    {
+        if (previousExercises != null && previousExercises.size() > 0)
+        {
+            ArrayList<String> displayMuscleGroups = new ArrayList<>();
+            // Need the context here because we haven't started this fragment yet.
+            displayMuscleGroups.add(getString(R.string.routine_continue));
+            recommendedRoutine = displayMuscleGroups.size() - 1;
+
+            if (hasRoutineFragment)
+            {
+                // Repopulate the spinner since we lost the connection
+                repopulateSpinner(displayMuscleGroups);
+            }
+            else
+            {
+                // Only add the saved exercises to the spinner because of the network issue.
+                pushRoutineFragment(displayMuscleGroups);
+            }
+        }
+    }
+
+    /**
+     * Removes the message to the user about the connection issue.
+     */
+    private void removeConnectionIssueMessage()
+    {
+        connectionIssue.setVisibility(View.GONE);
+    }
+
+    /**
+     * Removes the progress bar from the UI.
+     */
+    private void stopLoading()
+    {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void onRetrievalSuccessful(String routineName, ArrayList<?> results, int index)
+    {
+        this.routineName = routineName;
+        previousExercises = (ArrayList<Exercise>)results;
+        this.index = index;
+
+        SecurePreferences securePreferences = new SecurePreferences(context);
+        email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+
+        getMuscleGroups();
+    }
 
     @Override
     public void onStartLoading()
     {
         progressBar.setVisibility(View.VISIBLE);
-
-        connectionIssue.setVisibility(View.GONE);
     }
 
     @Override
@@ -249,23 +295,21 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                                                            new ExerciseListFragment(), "", false,
                                                            bundle, true);
 
-                connectionIssue.setVisibility(View.GONE);
+                removeConnectionIssueMessage();
 
                 break;
-            case Constant.CODE_FAILED:
-            default:
+            case Constant.CODE_FAILED_REPOPULATE:
                 connectionIssue.setVisibility(View.VISIBLE);
+                checkPreviousExercises(true);
+                break;
+            case Constant.CODE_FAILED:
+                connectionIssue.setVisibility(View.VISIBLE);
+                checkPreviousExercises(false);
+                break;
+            default:
                 break;
         }
 
         stopLoading();
-    }
-
-    /**
-     * Removes the progress bar from the UI.
-     */
-    private void stopLoading()
-    {
-        progressBar.setVisibility(View.GONE);
     }
 }

@@ -10,6 +10,7 @@ public class Constant
     public static final String TAG = "Intencity";
 
     public static final int CODE_FAILED = -1;
+    public static final int CODE_FAILED_REPOPULATE = -2;
 
     public static final String DURATION_0 = "00:00:00";
     public static final String RETURN_NULL = "null";
@@ -30,7 +31,6 @@ public class Constant
     public static final int REQUEST_CODE_STAT = 10;
 
     // Fragment IDs
-    public static final int ID_FRAGMENT_ROUTINE = 0;
     public static final int ID_FRAGMENT_EXERCISE_LIST = 1;
 
     // Extras
