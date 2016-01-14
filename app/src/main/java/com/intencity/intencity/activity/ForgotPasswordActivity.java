@@ -12,8 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.dialog.CustomDialog;
-import com.intencity.intencity.dialog.Dialog;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
@@ -83,23 +81,10 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
             }
             else
             {
-                showMessage(context.getString(R.string.generic_error), context.getString(R.string.email_validation_error));
+                Util.showMessage(context, context.getString(R.string.generic_error), context.getString(R.string.email_validation_error));
             }
         }
     };
-
-    /**
-     * Displays the login error to the user.
-     *
-     * @param title     The title the dialog should display.
-     * @param message   The message the dialog should display.
-     */
-    private void showMessage(String title, String message)
-    {
-        Dialog dialog = new Dialog(title , message, false);
-
-        new CustomDialog(ForgotPasswordActivity.this, null, dialog);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem)
@@ -120,8 +105,8 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
         loadingProgressBar.setVisibility(View.GONE);
         form.setVisibility(View.VISIBLE);
 
-        showMessage(context.getString(R.string.forgot_password_email_sent_title),
-                    context.getString(R.string.forgot_password_email_sent));
+        Util.showMessage(context, context.getString(R.string.forgot_password_email_sent_title),
+                         context.getString(R.string.forgot_password_email_sent));
     }
 
     @Override
@@ -130,7 +115,6 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
         loadingProgressBar.setVisibility(View.GONE);
         form.setVisibility(View.VISIBLE);
 
-        showMessage(context.getString(R.string.generic_error),
-                    context.getString(R.string.intencity_communication_error_email));
+        Util.showCommunicationErrorMessage(context);
     }
 }

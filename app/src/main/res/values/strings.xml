@@ -96,5 +96,6 @@
 
     <string name="intencity_communication_error">There was a problem communicating with Intencity\'s server. Please try again later.</string>
     <string name="intencity_communication_error_email">There was either a problem communicating with Intencity\'s server or with the email you provided. Please check your email or try again later.</string>
+    <string name="try_again">TRY AGAIN</string>
 
 </resources>

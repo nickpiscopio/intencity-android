@@ -2,7 +2,6 @@ package com.intencity.intencity.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +10,14 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.FragmentHandler;
 import com.intencity.intencity.util.SecurePreferences;
+import com.intencity.intencity.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,11 +40,14 @@ public class RoutineFragment extends android.support.v4.app.Fragment
 
     private ArrayList<String> displayMuscleGroups;
 
-    private String email;
-
     private String routineName;
     private ArrayList<Exercise> previousExercises;
     private int index;
+    private int recommendedRoutine;
+
+    private LoadingListener listener;
+
+    String email;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -56,85 +59,26 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         start = (Button) view.findViewById(R.id.button_start);
         start.setOnClickListener(startClickListener);
 
-        context = getContext();
-
-        SecurePreferences securePreferences = new SecurePreferences(context);
-
-        email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
-
         Bundle bundle = getArguments();
 
         if (bundle != null)
         {
+            displayMuscleGroups = bundle.getStringArrayList(Constant.BUNDLE_DISPLAY_MUSCLE_GROUPS);
             routineName = bundle.getString(Constant.BUNDLE_ROUTINE_NAME);
             previousExercises = bundle.getParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST);
             index = bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX);
+            recommendedRoutine = bundle.getInt(Constant.BUNDLE_RECOMMENDED_ROUTINE);
         }
 
-        new ServiceTask(spinnerServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                        Constant.generateStoredProcedureParameters(
-                                                                Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS,
-                                                                email));
+        context = getContext();
+
+        SecurePreferences securePreferences = new SecurePreferences(context);
+        email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+
+        populateMuscleGroupSpinner();
 
         return view;
     }
-
-    /**
-     * The service listener for populating the spinner with routine names.
-     *
-     * The routine name that gets set is the recommended routine name.
-     */
-    public ServiceListener spinnerServiceListener = new ServiceListener()
-    {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-            try
-            {
-                int recommendedRoutine = 0;
-
-                displayMuscleGroups = new ArrayList<>();
-
-                JSONArray array = new JSONArray(response);
-
-                int length = array.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject object = array.getJSONObject(i);
-
-                    String routine = object.getString(Constant.COLUMN_DISPLAY_NAME);
-                    String recommended = object.getString(Constant.COLUMN_CURRENT_MUSCLE_GROUP);
-
-                    // Add all the muscle groups from the database to the array list.
-                    displayMuscleGroups.add(routine);
-
-                    if (routine.equals(recommended))
-                    {
-                        // Get the index of the recommended routine which is
-                        // the COLUMN_CURRENT_MUSCLE_GROUP from the database.
-                        recommendedRoutine = i;
-                    }
-                }
-
-                // Add the previous exercise to the list.
-                if (previousExercises != null && previousExercises.size() > 0)
-                {
-                    displayMuscleGroups.add(getString(R.string.routine_continue));
-                    recommendedRoutine = displayMuscleGroups.size() - 1;
-                }
-
-                populateMuscleGroupSpinner(recommendedRoutine);
-            }
-            catch (JSONException e)
-            {
-                Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
-            }
-        }
-
-        @Override
-        public void onRetrievalFailed() { }
-    };
 
     /**
      * The service listener for setting the routine.
@@ -144,6 +88,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         @Override
         public void onRetrievalSuccessful(String response)
         {
+            listener.onStartLoading();
             new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                              Constant.generateStoredProcedureParameters(
                                                                      Constant.STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY,
@@ -151,7 +96,12 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         }
 
         @Override
-        public void onRetrievalFailed() { }
+        public void onRetrievalFailed()
+        {
+            Util.showCommunicationErrorMessage(context);
+
+            listener.onFinishedLoading(Constant.CODE_FAILED);
+        }
     };
 
     /**
@@ -200,50 +150,41 @@ public class RoutineFragment extends android.support.v4.app.Fragment
                     // Add all the exercises from the database to the array list.
                     exercises.add(exercise);
                 }
+
+                previousExercises = exercises;
+                index = 0;
+
+                listener.onFinishedLoading(Constant.ID_FRAGMENT_EXERCISE_LIST);
             }
             catch (JSONException e)
             {
                 e.printStackTrace();
-            }
 
-            pushCardFragmentExercise(exercises, 0);
+                Util.showCommunicationErrorMessage(context);
+
+                listener.onFinishedLoading(Constant.CODE_FAILED);
+            }
         }
 
         @Override
-        public void onRetrievalFailed() { }
+        public void onRetrievalFailed()
+        {
+            Util.showCommunicationErrorMessage(context);
+
+            listener.onFinishedLoading(Constant.CODE_FAILED);
+        }
     };
 
     /**
-     * Push the exercise list fragment onto the stack.
-     *
-     * @param exercises     The list of exercises the user will do.
-     * @param index         The index to start.
-     */
-    private void pushCardFragmentExercise(ArrayList<Exercise> exercises, int index)
-    {
-        Bundle bundle = new Bundle();
-        bundle.putString(Constant.BUNDLE_ROUTINE_NAME, routineName);
-        bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, exercises);
-        bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, index);
-
-        FragmentHandler.getInstance().pushFragment(getFragmentManager(),
-                                                   R.id.layout_fitness_log,
-                                                   new ExerciseListFragment(), "", false, bundle,
-                                                   true);
-    }
-
-    /**
      * Populates the muscle spinner.
-     *
-     * @param recommended   Sets the spinner to the recommended selection.
      */
-    private void populateMuscleGroupSpinner(int recommended)
+    public void populateMuscleGroupSpinner()
     {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner, displayMuscleGroups);
 
         spinner.setAdapter(adapter);
         adapter.setDropDownViewResource(R.layout.spinner_item);
-        spinner.setSelection(recommended);
+        spinner.setSelection(recommendedRoutine);
     }
 
     /**
@@ -261,7 +202,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment
             // If the user selects to continue from the last routine he or she chose.
             if (routineSelection.equals(getString(R.string.routine_continue)))
             {
-                pushCardFragmentExercise(previousExercises, index);
+                listener.onFinishedLoading(Constant.ID_FRAGMENT_EXERCISE_LIST);
             }
             else
             {
@@ -276,4 +217,37 @@ public class RoutineFragment extends android.support.v4.app.Fragment
             }
         }
     };
+
+    /**
+     * Setters and getters for the RoutineFragment.
+     */
+    public void setListener(LoadingListener listener)
+    {
+        this.listener = listener;
+    }
+
+    public String getRoutineName()
+    {
+        return routineName;
+    }
+
+    public ArrayList<Exercise> getPreviousExercises()
+    {
+        return previousExercises;
+    }
+
+    public int getIndex()
+    {
+        return index;
+    }
+
+    public void setRecommendedRoutine(int recommendedRoutine)
+    {
+        this.recommendedRoutine = recommendedRoutine;
+    }
+
+    public void setDisplayMuscleGroups(ArrayList<String> displayMuscleGroups)
+    {
+        this.displayMuscleGroups = displayMuscleGroups;
+    }
 }

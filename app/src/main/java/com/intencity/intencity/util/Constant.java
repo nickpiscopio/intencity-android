@@ -27,20 +27,25 @@ public class Constant
     public static final String USER_ACCOUNT_TYPE = "com.intencity.intencity.user.account.type";
 
     // Request codes
-
     public static final int REQUEST_CODE_STAT = 10;
+
+    // Fragment IDs
+    public static final int ID_FRAGMENT_ROUTINE = 0;
+    public static final int ID_FRAGMENT_EXERCISE_LIST = 1;
 
     // Extras
     public static final String EXTRA_DEMO_PAGE = "com.intencity.intencity.extra.demo.page";
 
     // Bundles
     public static final String BUNDLE_SET_NUMBER = "com.intencity.intencity.bundle.set.number";
+    public static final String BUNDLE_DISPLAY_MUSCLE_GROUPS = "com.intencity.intencity.bundle.display.muscle.groups";
     public static final String BUNDLE_ROUTINE_NAME = "com.intencity.intencity.bundle.routine.name";
     public static final String BUNDLE_EXERCISE_LIST = "com.intencity.intencity.bundle.exercise.list";
     public static final String BUNDLE_EXERCISE = "com.intencity.intencity.bundle.exercise";
     public static final String BUNDLE_EXERCISE_POSITION = "com.intencity.intencity.bundle.exercise.position";
     public static final String BUNDLE_EXERCISE_SETS = "com.intencity.intencity.bundle.exercise.sets";
     public static final String BUNDLE_EXERCISE_LIST_INDEX = "com.intencity.intencity.bundle.exercise.list.index";
+    public static final String BUNDLE_RECOMMENDED_ROUTINE = "com.intencity.intencity.bundle.recommended.routine";
     public static final String BUNDLE_EXERCISE_NAME = "com.intencity.intencity.bundle.exercise.name";
     public static final String BUNDLE_ID = "com.intencity.intencity.bundle.id";
 

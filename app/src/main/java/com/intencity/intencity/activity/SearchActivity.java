@@ -53,7 +53,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setIconifiedByDefault(false);
         searchView.setQueryHint(getString(R.string.menu_search));
-        //        searchView.requestFocus();
         searchView.setOnQueryTextListener(this);
 
         MenuItemCompat.setOnActionExpandListener(searchItem, actionExpandListener);
@@ -71,7 +70,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     public boolean onQueryTextSubmit(String query)
     {
         SecurePreferences securePreferences = new SecurePreferences(context);
-
         String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
         // Get all the users from the database with the search query minus the spaces.
@@ -94,7 +92,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         @Override
         public boolean onMenuItemActionExpand(MenuItem item)
         {
-            return false;
+            return true;
         }
 
         @Override
@@ -102,17 +100,14 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         {
             // Calling finish() here so when the user hits the
             // back button on the search, the activity also closes.
-            finish();
-
-            return false;
+            onBackPressed();
+            return true;
         }
     };
 
     @Override
     public void onBackPressed()
     {
-        finish();
-
         super.onBackPressed();
     }
 

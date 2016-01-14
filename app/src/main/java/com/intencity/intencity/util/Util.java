@@ -10,6 +10,8 @@ import android.widget.ProgressBar;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.activity.MainActivity;
+import com.intencity.intencity.dialog.CustomDialog;
+import com.intencity.intencity.dialog.Dialog;
 import com.intencity.intencity.helper.DbHelper;
 
 import java.util.Random;
@@ -112,5 +114,31 @@ public class Util
         progressBar.getIndeterminateDrawable().setColorFilter(
                 ContextCompat.getColor(context, R.color.primary),
                 android.graphics.PorterDuff.Mode.MULTIPLY);
+    }
+
+    /**
+     * Shows a communication error message to the user.
+     *
+     * @param context   The application context.
+     */
+    public static void showCommunicationErrorMessage(Context context)
+    {
+        showMessage(context,
+                    context.getString(R.string.generic_error),
+                    context.getString(R.string.intencity_communication_error_email));
+    }
+
+    /**
+     * Displays the login error to the user.
+     *
+     * @param context   The application context.
+     * @param title     The title the dialog should display.
+     * @param message   The message the dialog should display.
+     */
+    public static void showMessage(Context context, String title, String message)
+    {
+        Dialog dialog = new Dialog(title , message, false);
+
+        new CustomDialog(context, null, dialog);
     }
 }

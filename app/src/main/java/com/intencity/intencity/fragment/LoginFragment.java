@@ -200,11 +200,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         loadingProgressBar.setVisibility(View.GONE);
         loginForm.setVisibility(View.VISIBLE);
 
-        Dialog dialog = new Dialog(title,
-                                   message,
-                                   false);
-
-        new CustomDialog(context, null, dialog);
+        Util.showMessage(context, title, message);
     }
 
     @Override
@@ -237,7 +233,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         loginForm.setVisibility(View.VISIBLE);
 
         showMessage(context.getString(R.string.login_error_title),
-                    context.getString(R.string.login_error_message));
+                         context.getString(R.string.login_error_message));
     }
 
     /**
