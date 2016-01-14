@@ -34,7 +34,8 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
 
     private Context context;
 
-    @Override protected void onCreate(Bundle savedInstanceState)
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
@@ -81,7 +82,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
             }
             else
             {
-                Util.showMessage(context, context.getString(R.string.generic_error), context.getString(R.string.email_validation_error));
+                Util.showMessage(ForgotPasswordActivity.this, context.getString(R.string.generic_error), context.getString(R.string.email_validation_error));
             }
         }
     };
@@ -105,7 +106,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
         loadingProgressBar.setVisibility(View.GONE);
         form.setVisibility(View.VISIBLE);
 
-        Util.showMessage(context, context.getString(R.string.forgot_password_email_sent_title),
+        Util.showMessage(ForgotPasswordActivity.this, context.getString(R.string.forgot_password_email_sent_title),
                          context.getString(R.string.forgot_password_email_sent));
     }
 
@@ -115,6 +116,6 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
         loadingProgressBar.setVisibility(View.GONE);
         form.setVisibility(View.VISIBLE);
 
-        Util.showCommunicationErrorMessage(context);
+        Util.showCommunicationErrorMessage(ForgotPasswordActivity.this);
     }
 }
