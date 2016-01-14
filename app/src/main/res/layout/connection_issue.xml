@@ -13,7 +13,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_cloud_outline_off_grey600_24dp"/>
+        android:src="@mipmap/ic_cloud_outline_off_grey"/>
 
     <TextView
         android:layout_width="wrap_content"
