@@ -15,26 +15,37 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ViewPagerAdapter;
 import com.intencity.intencity.fragment.FitnessLogFragment;
 import com.intencity.intencity.fragment.RankingFragment;
+import com.intencity.intencity.listener.ExerciseListListener;
+import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
+
+import java.util.ArrayList;
 
 /**
  * This is the main activity for Intencity.
  *
  * Created by Nick Piscopio on 12/9/15.
  */
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements ExerciseListListener
 {
     private final int TAB_FITNESS_GURU = 0;
     private final int TAB_RANKING = 1;
 
     private Toolbar toolbar;
+
     private TabLayout tabLayout;
+
     private ViewPager viewPager;
+
     private int[] tabIcons = {
             R.drawable.tab_icon_fitness_guru,
             R.drawable.tab_icon_ranking,
     };
+
+    private FitnessLogFragment fitnessLogFragment;
+
+    private ArrayList<Exercise> exercises;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -78,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
-        setupViewPager(viewPager);
+        setupViewPager();
         viewPager.setCurrentItem(TAB_FITNESS_GURU);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -101,13 +112,14 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Sets up the view pager.
-     *
-     * @param viewPager     The view pager to add the adapter to.
      */
-    private void setupViewPager(ViewPager viewPager)
+    private void setupViewPager()
     {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new FitnessLogFragment(), "");
+
+        fitnessLogFragment = new FitnessLogFragment();
+        fitnessLogFragment.setMainActivityExerciseListListener(this);
+        adapter.addFrag(fitnessLogFragment, "");
         adapter.addFrag(new RankingFragment(), "");
         viewPager.setAdapter(adapter);
     }
@@ -127,10 +139,10 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case R.id.search:
-                startActivity(SearchActivity.class);
+                search();
                 return true;
             case R.id.about:
-                startActivity(AboutActivity.class);
+                startActivity(new Intent(this, AboutActivity.class));
                 return true;
             case R.id.log_out:
                 logOut();
@@ -141,14 +153,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Starts an activity.
-     *
-     * @param cls   The class to start.
+     * Opens the SearchActivity.
      */
-    private void startActivity(Class<?> cls)
+    private void search()
     {
-        Intent intent = new Intent(this, cls);
-        startActivity(intent);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(Constant.BUNDLE_SEARCH_EXERCISES,
+                          viewPager.getCurrentItem() == TAB_FITNESS_GURU);
+        bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, exercises);
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, Constant.REQUEST_CODE_SEARCH);
     }
 
     /**
@@ -163,5 +178,25 @@ public class MainActivity extends AppCompatActivity
         editor.apply();
 
         showDemo(DemoActivity.LOG_IN_PAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == Constant.REQUEST_CODE_SEARCH)
+        {
+            Bundle extras = data.getExtras();
+            Exercise exercise = extras.getParcelable(Constant.BUNDLE_EXERCISE);
+
+            fitnessLogFragment.addExerciseToList(exercise);
+        }
+    }
+
+    @Override
+    public void onNextExercise(ArrayList<Exercise> exercises)
+    {
+        this.exercises = exercises;
     }
 }

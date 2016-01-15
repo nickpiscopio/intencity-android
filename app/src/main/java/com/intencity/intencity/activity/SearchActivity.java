@@ -1,19 +1,25 @@
 package com.intencity.intencity.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RankingListAdapter;
+import com.intencity.intencity.adapter.SearchExerciseListAdapter;
+import com.intencity.intencity.helper.doa.ExerciseDao;
 import com.intencity.intencity.helper.doa.UserDao;
+import com.intencity.intencity.listener.SearchListener;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.User;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
@@ -26,9 +32,17 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 12/18/15.
  */
-public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener
+public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
+                                                                 SearchListener
 {
+    private ListView listView;
+
     private Context context;
+
+    private boolean searchExercises;
+
+    // This is the list of exercises that the user has already completed.
+    private ArrayList<Exercise> exercises;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,7 +50,13 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        listView = (ListView) findViewById(R.id.list_view_search);
+
         context = getApplicationContext();
+
+        Bundle bundle = getIntent().getExtras();
+        searchExercises = bundle.getBoolean(Constant.BUNDLE_SEARCH_EXERCISES);
+        exercises = bundle.getParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST);
     }
 
     @Override
@@ -75,12 +95,18 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         // Get all the users from the database with the search query minus the spaces.
         // Need to add % before and after the search term, so we can get back the proper
         // values from the database.
-        String searchTerm = Constant.LIKE_OPERATOR + query.replaceAll(Constant.SPACE_REGEX, "") + Constant.LIKE_OPERATOR;
+        query = searchExercises ? query : query.replaceAll(Constant.SPACE_REGEX, "");
+        String searchTerm = Constant.LIKE_OPERATOR + query + Constant.LIKE_OPERATOR;
 
-        new ServiceTask(searchUsersServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                            Constant.generateStoredProcedureParameters(
-                                                                    Constant.STORED_PROCEDURE_SEARCH_USERS,
-                                                                    email, searchTerm));
+        // Get the stored procedure depending upon what we are searching.
+        String urlParameters = searchExercises ?
+                Constant.generateStoredProcedureParameters(
+                        Constant.STORED_PROCEDURE_SEARCH_EXERCISES, email, searchTerm) :
+                Constant.generateStoredProcedureParameters(
+                        Constant.STORED_PROCEDURE_SEARCH_USERS, email, searchTerm);
+
+        new ServiceTask(searchListener).execute(Constant.SERVICE_STORED_PROCEDURE, urlParameters);
+
         return false;
     }
 
@@ -112,33 +138,41 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     /**
-     * Populates the ranking list.
-     *
-     * @param users  The list of users.
-     */
-    private void populateSearchList(ArrayList<User> users)
-    {
-        ListView listView = (ListView) findViewById(R.id.list_view_search);
-
-        RankingListAdapter arrayAdapter = new RankingListAdapter(
-                context,
-                R.layout.list_item_ranking,
-                users);
-
-        listView.setAdapter(arrayAdapter);
-    }
-
-    /**
      * Service listener for searching for a user.
      */
-    ServiceListener searchUsersServiceListener = new ServiceListener()
+    ServiceListener searchListener = new ServiceListener()
     {
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            populateSearchList(new UserDao().parseJson(response));
+            ArrayAdapter arrayAdapter;
+
+            if (searchExercises)
+            {
+                ArrayList<Exercise> searchedExerciseResults = new ExerciseDao().parseJson(response);
+                arrayAdapter  = new SearchExerciseListAdapter(context, R.layout.list_item_search_exercise, searchedExerciseResults, exercises, SearchActivity.this);
+            }
+            else
+            {
+                ArrayList<User> users = new UserDao().parseJson(response);
+                arrayAdapter  = new RankingListAdapter(context, R.layout.list_item_ranking, users);
+            }
+
+            listView.setAdapter(arrayAdapter);
         }
 
-        @Override public void onRetrievalFailed() { }
+        @Override
+        public void onRetrievalFailed() { }
     };
+
+    @Override
+    public void onExerciseAdded(Exercise exercise)
+    {
+        // Send the exercise back to the main activity
+        // so we can send it to the fragment to get added to the list.
+        Intent intent = new Intent();
+        intent.putExtra(Constant.BUNDLE_EXERCISE, exercise);
+        setResult(Constant.REQUEST_CODE_SEARCH, intent);
+        finish();
+    }
 }

@@ -29,6 +29,7 @@ public class Constant
 
     // Request codes
     public static final int REQUEST_CODE_STAT = 10;
+    public static final int REQUEST_CODE_SEARCH = 20;
 
     // Fragment IDs
     public static final int ID_FRAGMENT_EXERCISE_LIST = 1;
@@ -37,6 +38,7 @@ public class Constant
     public static final String EXTRA_DEMO_PAGE = "com.intencity.intencity.extra.demo.page";
 
     // Bundles
+    public static final String BUNDLE_SEARCH_EXERCISES = "com.intencity.intencity.bundle.search.exercises";
     public static final String BUNDLE_SET_NUMBER = "com.intencity.intencity.bundle.set.number";
     public static final String BUNDLE_DISPLAY_MUSCLE_GROUPS = "com.intencity.intencity.bundle.display.muscle.groups";
     public static final String BUNDLE_ROUTINE_NAME = "com.intencity.intencity.bundle.routine.name";
@@ -83,6 +85,7 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY = "getExercisesForToday";
     public static final String STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP = "setCurrentMuscleGroup";
     public static final String STORED_PROCEDURE_GET_FOLLOWING = "getFollowing";
+    public static final String STORED_PROCEDURE_SEARCH_EXERCISES = "searchExercises";
     public static final String STORED_PROCEDURE_SEARCH_USERS = "searchUsers";
     public static final String STORED_PROCEDURE_FOLLOW_USER = "followUser";
     public static final String STORED_PROCEDURE_GET_EXERCISE_DIRECTION = "getDirection";

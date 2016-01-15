@@ -20,6 +20,7 @@ import com.intencity.intencity.adapter.ExerciseAdapter;
 import com.intencity.intencity.dialog.CustomDialog;
 import com.intencity.intencity.dialog.Dialog;
 import com.intencity.intencity.listener.DialogListener;
+import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.ExerciseListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
@@ -66,6 +67,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     private boolean workoutFinished;
 
+    private ExerciseListListener fitnessLogListener;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -102,6 +105,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
             completedExerciseNum++;
         }
+
+        notifyFitnessLogOfNewExercise();
 
         updateRoutineName(completedExerciseNum);
 
@@ -214,6 +219,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         currentExercises.add(allExercises.get(autoFillTo++));
 
+        notifyFitnessLogOfNewExercise();
+
         adapter.notifyDataSetChanged();
         // TODO: set the recycler view to scroll to the bottom when a new view is added.
         //        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
@@ -231,6 +238,14 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     }
 
     /**
+     * Notifies the fitness log of the new exercise so we can update the search to not include the add button.
+     */
+    private void notifyFitnessLogOfNewExercise()
+    {
+        fitnessLogListener.onNextExercise(currentExercises);
+    }
+
+    /**
      * Updates the routine name.
      *
      * @param completedExerciseNum  The number of completed exercises.
@@ -239,6 +254,18 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         routineProgress.setText(completedExerciseNum + "/" + TOTAL_EXERCISE_NUM);
         routine.setText(routineName.toUpperCase());
+    }
+
+    /**
+     * Adds an exercise to the list of exercises the user has completed
+     * as well as the total exercises from the web server.
+     *
+     * @param exercise  The exercise to add.
+     */
+    public void addExerciseToList(Exercise exercise)
+    {
+        allExercises.add(autoFillTo, exercise);
+        addExercise();
     }
 
     @Override
@@ -505,5 +532,15 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private String getParameterTitle(String name, int index)
     {
         return Constant.PARAMETER_AMPERSAND + name + index + "=";
+    }
+
+    /**
+     * Sets the fitness listener.
+     *
+     * @param listener  The ExerciseListListener to set the fitness listener to.
+     */
+    public void setFitnessLogListener(ExerciseListListener listener)
+    {
+        fitnessLogListener = listener;
     }
 }

@@ -18,6 +18,13 @@ import java.util.ArrayList;
  */
 public class UserDao
 {
+    /**
+     * Parses the JSON response.
+     *
+     * @param response  The String response from the server in a JSON format.
+     *
+     * @return  The ArrayList of users.
+     */
     public ArrayList<User> parseJson(String response)
     {
         ArrayList<User> users = new ArrayList<>();

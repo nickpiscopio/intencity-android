@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.DatabaseListener;
+import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
@@ -34,7 +35,8 @@ import java.util.ArrayList;
  * Created by Nick Piscopio on 12/12/15.
  */
 public class FitnessLogFragment extends android.support.v4.app.Fragment implements DatabaseListener,
-                                                                                   LoadingListener
+                                                                                   LoadingListener,
+                                                                                   ExerciseListListener
 {
     private LinearLayout connectionIssue;
 
@@ -54,6 +56,10 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     private String email;
 
     private boolean pushedTryAgain = false;
+
+    private ExerciseListFragment exerciseListFragment;
+
+    private ExerciseListListener mainActivityExerciseListListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -242,6 +248,19 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     }
 
     /**
+     * Adds an exercise to the current exercise list.
+     *
+     * @param exercise  The exercise to add.
+     */
+    public void addExerciseToList(Exercise exercise)
+    {
+        if (exerciseListFragment != null)
+        {
+            exerciseListFragment.addExerciseToList(exercise);
+        }
+    }
+
+    /**
      * Removes the message to the user about the connection issue.
      */
     private void removeConnectionIssueMessage()
@@ -290,9 +309,12 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                                               routineFragment.getPreviousExercises());
                 bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, routineFragment.getIndex());
 
+                exerciseListFragment = new ExerciseListFragment();
+                exerciseListFragment.setFitnessLogListener(FitnessLogFragment.this);
+
                 FragmentHandler.getInstance().pushFragment(getFragmentManager(),
                                                            R.id.layout_fitness_log,
-                                                           new ExerciseListFragment(), "", false,
+                                                           exerciseListFragment, "", false,
                                                            bundle, true);
 
                 removeConnectionIssueMessage();
@@ -311,5 +333,22 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         }
 
         stopLoading();
+    }
+
+    /**
+     * Sets the MainActivity's ExerciseListListener, so we can call it when we have new exercises.
+     * This is so we can tell the search to not include teh 'Add' button to that exercise.
+     *
+     * @param listener  The listener to set the MainActivity's ExerciseListListener to.
+     */
+    public void setMainActivityExerciseListListener(ExerciseListListener listener)
+    {
+        this.mainActivityExerciseListListener = listener;
+    }
+
+    @Override
+    public void onNextExercise(ArrayList<Exercise> exercises)
+    {
+        mainActivityExerciseListListener.onNextExercise(exercises);
     }
 }
