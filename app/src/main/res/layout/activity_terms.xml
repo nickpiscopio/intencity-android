@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/intencity_sign_in_logo"
+        android:src="@mipmap/intencity_logo"
         android:layout_gravity="center_horizontal"
         android:padding="@dimen/layout_margin"/>
 

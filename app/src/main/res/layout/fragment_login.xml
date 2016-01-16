@@ -17,7 +17,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/intencity_sign_in_logo"
+            android:src="@mipmap/intencity_logo"
             android:paddingTop="@dimen/layout_margin"
             android:paddingRight="@dimen/logo_margin"
             android:paddingLeft="@dimen/logo_margin"
