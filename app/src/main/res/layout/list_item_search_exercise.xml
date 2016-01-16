@@ -24,6 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/card_button_margin"
-        android:src="@android:drawable/ic_menu_add"/>
+        android:padding="@dimen/layout_margin"
+        android:src="@mipmap/ic_plus_grey"
+        android:background="@drawable/button_card"/>
 
 </LinearLayout>

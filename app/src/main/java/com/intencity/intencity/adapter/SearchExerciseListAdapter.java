@@ -94,7 +94,7 @@ public class SearchExerciseListAdapter extends ArrayAdapter<Exercise>
 
         if (currentExercises == null)
         {
-            addButton.setVisibility(View.VISIBLE);
+            addButton.setVisibility(View.GONE);
         }
         else
         {
