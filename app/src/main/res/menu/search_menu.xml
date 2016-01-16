@@ -8,6 +8,6 @@
         android:icon="@mipmap/ic_magnify_white"
         android:title="@string/menu_search"
         app:showAsAction="collapseActionView"
-        app:actionViewClass="android.widget.SearchView"/>
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
 
 </menu>

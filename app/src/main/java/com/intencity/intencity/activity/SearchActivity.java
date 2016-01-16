@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SearchView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RankingListAdapter;
@@ -35,6 +35,7 @@ import java.util.ArrayList;
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
                                                                  SearchListener
 {
+    private SearchView searchView;
     private ListView listView;
 
     private Context context;
@@ -65,12 +66,12 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         super.onCreateOptionsMenu(menu);
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+        inflater.inflate(R.menu.search_menu, menu);
 
         MenuItem searchItem = menu.findItem(R.id.search);
         searchItem.expandActionView();
 
-        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView = (SearchView) searchItem.getActionView();
         searchView.setIconifiedByDefault(false);
         searchView.setQueryHint(getString(R.string.menu_search));
         searchView.setOnQueryTextListener(this);
@@ -134,6 +135,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     @Override
     public void onBackPressed()
     {
+        finish();
+
         super.onBackPressed();
     }
 
@@ -145,6 +148,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         @Override
         public void onRetrievalSuccessful(String response)
         {
+            searchView.clearFocus();
+
             ArrayAdapter arrayAdapter;
 
             if (searchExercises)
@@ -162,7 +167,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         }
 
         @Override
-        public void onRetrievalFailed() { }
+        public void onRetrievalFailed()
+        {
+            searchView.clearFocus();
+        }
     };
 
     @Override

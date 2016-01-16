@@ -92,21 +92,29 @@ public class SearchExerciseListAdapter extends ArrayAdapter<Exercise>
             }
         });
 
-        // TODO: This search will need to be updated better in case we have a lot of results.
-        // TODO: (continued) Either that, or we should only get so many results at once.
-        // Adds the add button to the UI if the user has not completed the exercise yet.
-        for (Exercise searchedExercise : currentExercises)
+        if (currentExercises == null)
         {
-            if (searchedExercise.getName().equalsIgnoreCase(exerciseName))
+            addButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            // TODO: This search will need to be updated better in case we have a lot of results.
+            // TODO: (continued) Either that, or we should only get so many results at once.
+            // Adds the add button to the UI if the user has not completed the exercise yet.
+            for (Exercise searchedExercise : currentExercises)
             {
-                addButton.setVisibility(View.GONE);
-                break;
-            }
-            else
-            {
-                addButton.setVisibility(View.VISIBLE);
+                if (searchedExercise.getName().equalsIgnoreCase(exerciseName))
+                {
+                    addButton.setVisibility(View.GONE);
+                    break;
+                }
+                else
+                {
+                    addButton.setVisibility(View.VISIBLE);
+                }
             }
         }
+
 
         return view;
     }
