@@ -1,5 +1,7 @@
 package com.intencity.intencity.util;
 
+import java.util.ArrayList;
+
 /**
  * A class to hold the Constants for Intencity.
  *
@@ -11,6 +13,8 @@ public class Constant
 
     public static final int CODE_FAILED = -1;
     public static final int CODE_FAILED_REPOPULATE = -2;
+
+    public static final String TRUE = "true";
 
     public static final String DURATION_0 = "00:00:00";
     public static final String RETURN_NULL = "null";
@@ -63,6 +67,7 @@ public class Constant
     public static final String SERVICE_STORED_PROCEDURE = SERVICE_FOLDER_MOBILE + "stored_procedure.php";
     public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER_MOBILE + "complex_insert.php";
     public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
+    public static final String SERVICE_UPDATE_EQUIPMENT = SERVICE_FOLDER_MOBILE + "update_equipment.php";
     public static final String SERVICE_FORGOT_PASSWORD = SERVICE_FOLDER + "forgot_password.php";
 
     // Parameters
@@ -79,6 +84,7 @@ public class Constant
     private static final String PARAMETER_FIRST_NAME = "first_name=";
     private static final String PARAMETER_LAST_NAME = "last_name=";
     private static final String PARAMETER_ACCOUNT_TYPE = "account_type=";
+    private static final String PARAMETER_INSERTS = "inserts=";
 
     // Stored Procedure Names
     public static final String STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS = "getAllDisplayMuscleGroups";
@@ -89,6 +95,7 @@ public class Constant
     public static final String STORED_PROCEDURE_SEARCH_USERS = "searchUsers";
     public static final String STORED_PROCEDURE_FOLLOW_USER = "followUser";
     public static final String STORED_PROCEDURE_GET_EXERCISE_DIRECTION = "getDirection";
+    public static final String STORED_PROCEDURE_GET_EQUIPMENT = "getEquipment";
 
     // Column Values
     public static final String ACCOUNT_TYPE_ADMIN = "A";
@@ -122,6 +129,8 @@ public class Constant
     public static final String COLUMN_SUBMITTED_BY = "SubmittedBy";
     public static final String COLUMN_VIDEO_URL = "VideoURL";
     public static final String COLUMN_DIRECTION = "Direction";
+    public static final String COLUMN_EQUIPMENT_NAME = "EquipmentName";
+    public static final String COLUMN_HAS_EQUIPMENT = "HasEquipment";
 
     public static final String SPACE_REGEX = "\\s";
     public static final String REGEX_EMAIL = "[a-zA-Z0-9]+([\\-\\.\\{\\}\\^\\+*_~]*[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([\\.\\-]*[a-zA-Z0-9]+)*[\\.][a-zA-Z]{2}[A-Za-z]*";
@@ -184,5 +193,27 @@ public class Constant
         }
 
         return storedProcedureParameters;
+    }
+
+    /**
+     * Generates the URL string to update the user's equipment list.
+     *
+     * @param email         The user's email.
+     * @param variables     The list of equipment the user selected.
+     *
+     * @return  The generated URL string.
+     */
+    public static String generateEquipmentListVariables(String email, ArrayList<String> variables)
+    {
+        String parameters = PARAMETER_EMAIL + email + PARAMETER_AMPERSAND + PARAMETER_INSERTS;
+
+        int length = variables.size();
+
+        for (int i = 0; i < length; i++)
+        {
+            parameters += ((i > 0) ? PARAMETER_DELIMITER : "") + variables.get(i);
+        }
+
+        return parameters;
     }
 }

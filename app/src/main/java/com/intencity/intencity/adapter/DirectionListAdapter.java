@@ -44,7 +44,7 @@ public class DirectionListAdapter extends ArrayAdapter<String>
         if (view == null)
         {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.list_item_standard, null);
+            view = inflater.inflate(R.layout.list_item_direction, null);
         }
 
         String step = steps.get(position);

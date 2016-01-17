@@ -63,6 +63,24 @@
             android:label="@string/title_about"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:theme="@style/AppTheme.Base"
+            android:label="@string/title_settings"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.EquipmentActivity"
+            android:theme="@style/AppTheme.Base"
+            android:label="@string/edit_equipment"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.ChangePasswordActivity"
+            android:theme="@style/AppTheme.Base"
+            android:label="@string/change_password"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>
