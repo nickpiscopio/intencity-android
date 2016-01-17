@@ -141,11 +141,14 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
             case R.id.search:
                 search();
                 return true;
+            case R.id.settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
             case R.id.about:
                 startActivity(new Intent(this, AboutActivity.class));
                 return true;
-            case R.id.settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+            case R.id.terms:
+                startActivity(new Intent(this, TermsActivity.class));
                 return true;
             case R.id.log_out:
                 logOut();
