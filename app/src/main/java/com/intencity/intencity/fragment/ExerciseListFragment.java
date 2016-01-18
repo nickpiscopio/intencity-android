@@ -33,6 +33,7 @@ import com.intencity.intencity.util.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * The Exercise List Fragment for Intencity.
@@ -68,6 +69,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private boolean workoutFinished;
 
     private ExerciseListListener fitnessLogListener;
+
+    private  SecurePreferences securePreferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -125,7 +128,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        SecurePreferences securePreferences = new SecurePreferences(context);
+        securePreferences = new SecurePreferences(context);
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
         workoutFinished = false;
@@ -172,6 +175,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
 
                 workoutFinished = true;
+
+                Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT);
             }
             else
             {
@@ -214,6 +219,18 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void addExercise()
     {
+        long lastExerciseTime = securePreferences.getLong(Constant.USER_LAST_EXERCISE_TIME, 0);
+        long now = new Date().getTime();
+
+        if ((now - lastExerciseTime) >= Constant.EXERCISE_POINTS_THRESHOLD)
+        {
+            SecurePreferences.Editor editor = securePreferences.edit();
+            editor.putLong(Constant.USER_LAST_EXERCISE_TIME, now);
+            editor.apply();
+
+            Util.grantPointsToUser(email, Constant.POINTS_EXERICSE);
+        }
+
         completedExerciseNum++;
         updateRoutineName(completedExerciseNum);
 
@@ -231,7 +248,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void checkNextButtonEnablement()
     {
-        if (currentExercises.size() == allExercises.size() || completedExerciseNum == TOTAL_EXERCISE_NUM)
+        if (currentExercises.size() >= allExercises.size() || completedExerciseNum >= TOTAL_EXERCISE_NUM)
         {
             nextExercise.setText(getString(R.string.finish));
         }
@@ -266,6 +283,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         allExercises.add(autoFillTo, exercise);
         addExercise();
+
+        checkNextButtonEnablement();
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.intencity.intencity.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.ContextCompat;
 import android.widget.ProgressBar;
@@ -13,6 +12,7 @@ import com.intencity.intencity.activity.MainActivity;
 import com.intencity.intencity.dialog.CustomDialog;
 import com.intencity.intencity.dialog.Dialog;
 import com.intencity.intencity.helper.DbHelper;
+import com.intencity.intencity.task.ServiceTask;
 
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -91,7 +91,8 @@ public class Util
 
         // Set the email and account type in the SecurePreferences.
         SecurePreferences securePreferences = new SecurePreferences(context);
-        SharedPreferences.Editor editor = securePreferences.edit();
+        SecurePreferences.Editor editor = securePreferences.edit();
+
         editor.putString(Constant.USER_ACCOUNT_EMAIL, email);
         editor.putString(Constant.USER_ACCOUNT_TYPE, accountType);
         editor.apply();
@@ -123,8 +124,7 @@ public class Util
      */
     public static void showCommunicationErrorMessage(Context context)
     {
-        showMessage(context,
-                    context.getString(R.string.generic_error),
+        showMessage(context, context.getString(R.string.generic_error),
                     context.getString(R.string.intencity_communication_error_email));
     }
 
@@ -140,5 +140,18 @@ public class Util
         Dialog dialog = new Dialog(title , message, false);
 
         new CustomDialog(context, null, dialog);
+    }
+
+    /**
+     * Calls the service to grant points to the user.
+     *
+     * @param email     The email of the user to grant points.
+     * @param points    The amount of points that will be granted.
+     */
+    public static void grantPointsToUser(String email, int points)
+    {
+        new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                      Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GRANT_POINTS,
+                                                                                 email, String.valueOf(points)));
     }
 }

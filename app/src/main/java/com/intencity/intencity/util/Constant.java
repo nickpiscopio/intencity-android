@@ -14,6 +14,16 @@ public class Constant
     public static final int CODE_FAILED = -1;
     public static final int CODE_FAILED_REPOPULATE = -2;
 
+    public static final int LOGIN_POINTS_THRESHOLD = 43200000;
+    public static final int EXERCISE_POINTS_THRESHOLD = 60000;
+
+    public static final int POINTS_LOGIN = 5;
+    public static final int POINTS_EXERICSE = 5;
+    public static final int POINTS_COMPLETING_WORKOUT = 10;
+    public static final int POINTS_SHARING = 5;
+    public static final int POINTS_FOLLOWING = 5;
+    public static final int POINTS_AWARD = 10;
+
     public static final String TRUE = "true";
 
     public static final String DURATION_0 = "00:00:00";
@@ -25,11 +35,12 @@ public class Constant
     public static final String EMAIL_EXISTS = "Email already exists";
     public static final String ACCOUNT_CREATED = "Account created";
 
-    // Currently not used
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences
     public static final String USER_ACCOUNT_EMAIL = "com.intencity.intencity.user.email";
     public static final String USER_ACCOUNT_TYPE = "com.intencity.intencity.user.account.type";
+    public static final String USER_LAST_LOGIN = "com.intencity.intencity.user.last.login";
+    public static final String USER_LAST_EXERCISE_TIME = "com.intencity.intencity.user.last.exercise.time";
 
     // Request codes
     public static final int REQUEST_CODE_STAT = 10;
@@ -96,6 +107,7 @@ public class Constant
     public static final String STORED_PROCEDURE_FOLLOW_USER = "followUser";
     public static final String STORED_PROCEDURE_GET_EXERCISE_DIRECTION = "getDirection";
     public static final String STORED_PROCEDURE_GET_EQUIPMENT = "getEquipment";
+    public static final String STORED_PROCEDURE_GRANT_POINTS = "grantPointsToUser";
 
     // Column Values
     public static final String ACCOUNT_TYPE_ADMIN = "A";

@@ -32,12 +32,11 @@ public class RankingListAdapter extends ArrayAdapter<User>
      * The constructor.
      *
      * @param context   The application context.
-     * @param resId     The layout resource id for the list item.
      * @param users     The list of users to populate the list.
      */
-    public RankingListAdapter(Context context, int resId, ArrayList<User> users)
+    public RankingListAdapter(Context context, ArrayList<User> users)
     {
-        super(context, resId, users);
+        super(context, 0, users);
 
         this.context = context;
 

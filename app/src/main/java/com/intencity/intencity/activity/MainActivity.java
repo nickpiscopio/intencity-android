@@ -19,8 +19,10 @@ import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
+import com.intencity.intencity.util.Util;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * This is the main activity for Intencity.
@@ -47,6 +49,12 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
 
     private ArrayList<Exercise> exercises;
 
+    private Context context;
+
+    private SecurePreferences securePreferences;
+
+    boolean userHasLoggedIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -58,11 +66,26 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         SecurePreferences prefs = new SecurePreferences(getApplicationContext());
         if (prefs.getString(Constant.USER_ACCOUNT_EMAIL, nullString).equals(nullString))
         {
+            userHasLoggedIn = false;
+
             showDemo(DemoActivity.DESCRIPTION_PAGE);
         }
         else
         {
+            userHasLoggedIn = true;
+
             runIntencity();
+        }
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        if (userHasLoggedIn)
+        {
+            rewardUserForUsingIntencity();
         }
     }
 
@@ -96,6 +119,35 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         tabLayout.setupWithViewPager(viewPager);
 
         setupTabIcons();
+
+        context = getApplicationContext();
+
+        securePreferences = new SecurePreferences(context);
+    }
+
+    /**
+     * Reward the user for using Intencity every 12 hours the user comes back to the app.
+     *
+     * This is not in UTC, but I don't believe we need to be that specific for this.
+     * We grant users points in a relaxed way.
+     */
+    private void rewardUserForUsingIntencity()
+    {
+        // Set the email and account type in the SecurePreferences.
+        SecurePreferences securePreferences = new SecurePreferences(context);
+        long lastLogin = securePreferences.getLong(Constant.USER_LAST_LOGIN, 0);
+        long now = new Date().getTime();
+
+        SecurePreferences.Editor editor = securePreferences.edit();
+
+        if ((now - lastLogin) >= Constant.LOGIN_POINTS_THRESHOLD)
+        {
+            String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+            Util.grantPointsToUser(email, Constant.POINTS_LOGIN);
+
+            editor.putLong(Constant.USER_LAST_LOGIN, now);
+            editor.apply();
+        }
     }
 
     /**
@@ -177,8 +229,6 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
      */
     private void logOut()
     {
-        Context context = getApplicationContext();
-        SecurePreferences securePreferences = new SecurePreferences(context);
         SecurePreferences.Editor editor = securePreferences.edit();
         editor.clear();
         editor.apply();

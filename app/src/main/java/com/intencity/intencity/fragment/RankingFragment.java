@@ -51,21 +51,6 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         return view;
     }
 
-    /**
-     * Populates the ranking list.
-     *
-     * @param users  The list of users.
-     */
-    private void populateRankingList(ArrayList<User> users)
-    {
-        RankingListAdapter arrayAdapter = new RankingListAdapter(
-                context,
-                R.layout.list_item_ranking,
-                users);
-
-        ranking.setAdapter(arrayAdapter);
-    }
-
     @Override
     public void onRetrievalSuccessful(String response)
     {
@@ -74,4 +59,16 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
 
     @Override
     public void onRetrievalFailed() { }
+
+    /**
+     * Populates the ranking list.
+     *
+     * @param users  The list of users.
+     */
+    private void populateRankingList(ArrayList<User> users)
+    {
+        RankingListAdapter arrayAdapter = new RankingListAdapter(context, users);
+
+        ranking.setAdapter(arrayAdapter);
+    }
 }
