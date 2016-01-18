@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
     };
 
     private FitnessLogFragment fitnessLogFragment;
+    private RankingFragment rankingFragment;
 
     private ArrayList<Exercise> exercises;
 
@@ -172,7 +173,10 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         fitnessLogFragment = new FitnessLogFragment();
         fitnessLogFragment.setMainActivityExerciseListListener(this);
         adapter.addFrag(fitnessLogFragment, "");
-        adapter.addFrag(new RankingFragment(), "");
+
+        rankingFragment = new RankingFragment();
+        adapter.addFrag(rankingFragment, "");
+
         viewPager.setAdapter(adapter);
     }
 
@@ -244,9 +248,18 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         if(resultCode == Constant.REQUEST_CODE_SEARCH)
         {
             Bundle extras = data.getExtras();
-            Exercise exercise = extras.getParcelable(Constant.BUNDLE_EXERCISE);
+            boolean searchExercise = extras.getBoolean(Constant.BUNDLE_SEARCH_EXERCISES);
 
-            fitnessLogFragment.addExerciseToList(exercise);
+            if (searchExercise)
+            {
+                Exercise exercise = extras.getParcelable(Constant.BUNDLE_EXERCISE);
+
+                fitnessLogFragment.addExerciseToList(exercise);
+            }
+            else
+            {
+                rankingFragment.getFollowing();
+            }
         }
     }
 

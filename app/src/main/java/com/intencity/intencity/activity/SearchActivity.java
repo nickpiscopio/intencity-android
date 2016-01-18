@@ -73,7 +73,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
         searchView = (SearchView) searchItem.getActionView();
         searchView.setIconifiedByDefault(false);
-        searchView.setQueryHint(getString(R.string.menu_search));
+        searchView.setQueryHint(searchExercises ?
+                                        getString(R.string.search_exercise) :
+                                        getString(R.string.search_user));
         searchView.setOnQueryTextListener(this);
 
         MenuItemCompat.setOnActionExpandListener(searchItem, actionExpandListener);
@@ -135,7 +137,14 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     @Override
     public void onBackPressed()
     {
-        finish();
+        if (!searchExercises)
+        {
+            setResult(null);
+        }
+        else
+        {
+            finish();
+        }
 
         super.onBackPressed();
     }
@@ -160,7 +169,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             else
             {
                 ArrayList<User> users = new UserDao().parseJson(response);
-                arrayAdapter  = new RankingListAdapter(context, R.layout.list_item_ranking, users);
+                arrayAdapter  = new RankingListAdapter(context, users);
             }
 
             listView.setAdapter(arrayAdapter);
@@ -173,14 +182,30 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         }
     };
 
-    @Override
-    public void onExerciseAdded(Exercise exercise)
+    /**
+     * Sets the result for this activity and goes back.
+     *
+     * @param exercise  The exercise that was added if we are searching exercises.
+     */
+    private void setResult(Exercise exercise)
     {
         // Send the exercise back to the main activity
         // so we can send it to the fragment to get added to the list.
         Intent intent = new Intent();
-        intent.putExtra(Constant.BUNDLE_EXERCISE, exercise);
+
+        if (exercise != null)
+        {
+            intent.putExtra(Constant.BUNDLE_EXERCISE, exercise);
+        }
+
+        intent.putExtra(Constant.BUNDLE_SEARCH_EXERCISES, searchExercises);
         setResult(Constant.REQUEST_CODE_SEARCH, intent);
         finish();
+    }
+
+    @Override
+    public void onExerciseAdded(Exercise exercise)
+    {
+        setResult(exercise);
     }
 }

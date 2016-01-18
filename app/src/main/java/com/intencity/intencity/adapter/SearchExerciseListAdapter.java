@@ -86,7 +86,8 @@ public class SearchExerciseListAdapter extends ArrayAdapter<Exercise>
         // getting overwritten by the last id in the list.
         addButton.setOnClickListener(new View.OnClickListener()
         {
-            @Override public void onClick(View v)
+            @Override
+            public void onClick(View v)
             {
                 listener.onExerciseAdded(exercise);
             }
