@@ -172,7 +172,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             if (nextExercise.getText().toString().equals(getString(R.string.finish)))
             {
                 Uri uri = Uri.parse(generateTweet());
-                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                startActivityForResult(new Intent(Intent.ACTION_VIEW, uri), Constant.REQUEST_CODE_TWEET);
 
                 workoutFinished = true;
 
@@ -362,6 +362,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // Result codes are set from an activity with setResult().
         if(resultCode == Constant.REQUEST_CODE_STAT)
         {
             Bundle extras = data.getExtras();
@@ -455,6 +456,13 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     public void onRetrievalFailed() { }
                 }).execute(Constant.SERVICE_COMPLEX_INSERT, insertString);
             }
+        }
+        // Request codes are from the original startActivityForResult().
+        else if (requestCode == Constant.REQUEST_CODE_TWEET)
+        {
+            // There will be no way we can know if they actually tweeted or not, so we will
+            // Grant points to the user for at least opening up twitter and thinking about tweeting.
+            Util.grantPointsToUser(email, Constant.POINTS_SHARING);
         }
     }
 

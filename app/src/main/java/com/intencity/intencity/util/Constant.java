@@ -49,6 +49,7 @@ public class Constant
     // Request codes
     public static final int REQUEST_CODE_STAT = 10;
     public static final int REQUEST_CODE_SEARCH = 20;
+    public static final int REQUEST_CODE_TWEET = 30;
 
     // Fragment IDs
     public static final int ID_FRAGMENT_EXERCISE_LIST = 1;
