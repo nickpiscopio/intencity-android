@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.SecurePreferences;
 
 /**
  * This is the settings activity for Intencity.
@@ -32,8 +34,21 @@ public class SettingsActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        String[] settingsList = new String[] { getString(R.string.edit_equipment),
-                                                         getString(R.string.change_password) };
+        String[] settingsList;
+
+        SecurePreferences securePreferences = new SecurePreferences(getApplicationContext());
+        String accountType = securePreferences.getString(Constant.USER_ACCOUNT_TYPE, "");
+
+        // Do not add the change password if we are using a trial account.
+        if (!accountType.equals(Constant.ACCOUNT_TYPE_TRIAL))
+        {
+            settingsList = new String[] { getString(R.string.edit_equipment),
+                                getString(R.string.change_password) };
+        }
+        else
+        {
+            settingsList = new String[] { getString(R.string.edit_equipment) };
+        }
 
         ArrayAdapter<String> settingsAdapter =
                 new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, settingsList);

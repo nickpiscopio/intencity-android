@@ -139,9 +139,9 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
             String confirmPassword = confirmPasswordEditText.getText().toString();
 
             // Check if all the fields are filled in.
-            if (!checkStringLength(firstName, 0) || !checkStringLength(lastName, 0) ||
-                !checkStringLength(email, 0) || !checkStringLength(confirmEmail, 0) ||
-                !checkStringLength(password, 0) || !checkStringLength(confirmPassword, 0))
+            if (!Util.checkStringLength(firstName, 1) || !Util.checkStringLength(lastName, 1) ||
+                !Util.checkStringLength(email, 1) || !Util.checkStringLength(confirmEmail, 1) ||
+                !Util.checkStringLength(password, 1) || !Util.checkStringLength(confirmPassword, 1))
             {
                 showErrorMessage(context.getString(R.string.fill_in_fields));
             }
@@ -162,7 +162,7 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
             }
             // Check to see if the password is greater than the password length needed.
             // Check to see if the password is valid.
-            else if (!checkStringLength(password, 7) || !Util.isFieldValid(password, Constant.REGEX_FIELD))
+            else if (!Util.checkStringLength(password, Constant.REQUIRED_PASSWORD_LENGTH) || !Util.isFieldValid(password, Constant.REGEX_FIELD))
             {
                 showErrorMessage(context.getString(R.string.password_validation_error));
             }
@@ -199,19 +199,6 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
     private String replacePlus(String text)
     {
         return text.replaceAll("\\+", "%2B");
-    }
-
-    /**
-     * Checks if the user has entered text in the edit text.
-     *
-     * @param text      The edit text to check.
-     * @param length    The value the edit text string should be greater than.
-     *
-     * @return Boolean value of if the user has entered text in the edit text.
-     */
-    private boolean checkStringLength(String text, int length)
-    {
-        return text.length() > length;
     }
 
     /**

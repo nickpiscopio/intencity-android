@@ -137,7 +137,7 @@ public class Util
      */
     public static void showMessage(Context context, String title, String message)
     {
-        Dialog dialog = new Dialog(title , message, false);
+        Dialog dialog = new Dialog(title, message, false);
 
         new CustomDialog(context, null, dialog);
     }
@@ -153,5 +153,18 @@ public class Util
         new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GRANT_POINTS,
                                                                                  email, String.valueOf(points)));
+    }
+
+    /**
+     * Checks if the user has entered text in the edit text.
+     *
+     * @param text      The edit text to check.
+     * @param length    The value the edit text string should be greater than.
+     *
+     * @return Boolean value of if the user has entered text in the edit text.
+     */
+    public static boolean checkStringLength(String text, int length)
+    {
+        return text.length() >= length;
     }
 }

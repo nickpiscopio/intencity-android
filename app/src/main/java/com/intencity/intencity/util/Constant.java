@@ -14,6 +14,8 @@ public class Constant
     public static final int CODE_FAILED = -1;
     public static final int CODE_FAILED_REPOPULATE = -2;
 
+    public static final int REQUIRED_PASSWORD_LENGTH = 8;
+
     public static final int LOGIN_POINTS_THRESHOLD = 43200000;
     public static final int EXERCISE_POINTS_THRESHOLD = 60000;
 
@@ -32,7 +34,9 @@ public class Constant
     public static final int NEGATIVE_BUTTON = 0;
     public static final int POSITIVE_BUTTON = 1;
 
+    public static final String SUCCESS = "SUCCESS";
     public static final String EMAIL_EXISTS = "Email already exists";
+    public static final String INVALID_PASSWORD = "Invalid password";
     public static final String ACCOUNT_CREATED = "Account created";
 
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
@@ -79,6 +83,7 @@ public class Constant
     public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER_MOBILE + "complex_insert.php";
     public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
     public static final String SERVICE_UPDATE_EQUIPMENT = SERVICE_FOLDER_MOBILE + "update_equipment.php";
+    public static final String SERVICE_CHANGE_PASSWORD = SERVICE_FOLDER_MOBILE + "change_password.php";
     public static final String SERVICE_FORGOT_PASSWORD = SERVICE_FOLDER + "forgot_password.php";
 
     // Parameters
@@ -90,6 +95,7 @@ public class Constant
     public static final String PARAMETER_TABLE = "table";
     public static final String PARAMETER_EMAIL = "email=";
     private static final String PARAMETER_PASSWORD = "password=";
+    private static final String PARAMETER_CURRENT_PASSWORD = "oldPassword=";
     private static final String PARAMETER_DATA = "d=";
     private static final String PARAMETER_VARIABLE = "v=";
     private static final String PARAMETER_FIRST_NAME = "first_name=";
@@ -227,5 +233,21 @@ public class Constant
         }
 
         return parameters;
+    }
+
+    /**
+     * Generates the change password URL string.
+     *
+     * @param email             The user's email to change the password.
+     * @param currentPassword   The user's current password.
+     * @param newPassword       The user's new password.
+     *
+     * @return  The change password URL string.
+     */
+    public static String generateChangePasswordVariables(String email, String currentPassword, String newPassword)
+    {
+        return PARAMETER_EMAIL + email +
+               PARAMETER_AMPERSAND + PARAMETER_CURRENT_PASSWORD + currentPassword +
+               PARAMETER_AMPERSAND + PARAMETER_PASSWORD + newPassword;
     }
 }
