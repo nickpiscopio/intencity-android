@@ -19,6 +19,8 @@ public class Set implements Parcelable
     private String duration;
     private int difficulty;
 
+    private String notes;
+
     public Set() { }
 
     private Set(Parcel in)
@@ -28,6 +30,7 @@ public class Set implements Parcelable
         reps = in.readInt();
         duration = in.readString();
         difficulty = in.readInt();
+        notes = in.readString();
     }
 
     public static final Creator<Set> CREATOR = new Creator<Set>()
@@ -59,6 +62,7 @@ public class Set implements Parcelable
         dest.writeInt(reps);
         dest.writeString(duration);
         dest.writeInt(difficulty);
+        dest.writeString(notes);
     }
 
     /**
@@ -112,5 +116,15 @@ public class Set implements Parcelable
     public void setDifficulty(int difficulty)
     {
         this.difficulty = difficulty;
+    }
+
+    public String getNotes()
+    {
+        return notes;
+    }
+
+    public void setNotes(String notes)
+    {
+        this.notes = notes;
     }
 }

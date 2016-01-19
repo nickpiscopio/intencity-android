@@ -57,6 +57,7 @@ public class ExerciseDao
                 String reps = object.getString(Constant.COLUMN_EXERCISE_REPS);
                 String duration = object.getString(Constant.COLUMN_EXERCISE_DURATION);
                 String difficulty = object.getString(Constant.COLUMN_EXERCISE_DIFFICULTY);
+                String notes = object.getString(Constant.COLUMN_NOTES);
 
                 Set set = new Set();
                 set.setWeight(
@@ -67,6 +68,7 @@ public class ExerciseDao
                 set.setDuration(duration);
                 set.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ?
                                           Constant.CODE_FAILED : Integer.valueOf(difficulty));
+                set.setNotes(notes);
 
                 ArrayList<Set> sets = new ArrayList<>();
                 sets.add(set);

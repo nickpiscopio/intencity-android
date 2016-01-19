@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -38,6 +41,7 @@ public class StatActivity extends AppCompatActivity implements DialogListener
 
     private int durationType;
 
+    private EditText notes;
     private ListView setsListView;
 
     private ExerciseSetAdapter adapter;
@@ -56,8 +60,11 @@ public class StatActivity extends AppCompatActivity implements DialogListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stat);
 
+        notes = (EditText) findViewById(R.id.edit_text_notes);
         setsListView = (ListView) findViewById(R.id.list_view);
         Spinner durationSpinner = (Spinner) findViewById(R.id.spinner_duration);
+
+        notes.addTextChangedListener(textChangeListener);
 
         ActionBar actionBar = getSupportActionBar();
 
@@ -70,6 +77,10 @@ public class StatActivity extends AppCompatActivity implements DialogListener
         {
             exerciseName = exercise.getName();
             sets = exercise.getSets();
+
+            // Set the notes to that of the first set.
+            // All of them should be the same anyway.
+            notes.setText(sets.get(0).getNotes());
 
             if (actionBar != null)
             {
@@ -135,6 +146,37 @@ public class StatActivity extends AppCompatActivity implements DialogListener
                 return super.onOptionsItemSelected(menuItem);
         }
     }
+
+    /**
+     * The text watcher for the notes.
+     */
+    private TextWatcher textChangeListener = new TextWatcher()
+    {
+        String beforeText = "";
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after)
+        {
+            beforeText = String.valueOf(s);
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+        @Override
+        public void afterTextChanged(Editable s)
+        {
+            String value = String.valueOf(s);
+
+            if (!beforeText.equals(value))
+            {
+                for (Set set : sets)
+                {
+                    set.setNotes(value);
+                }
+            }
+        }
+    };
 
     /**
      * The selection listener for the duration menu item.
@@ -254,6 +296,7 @@ public class StatActivity extends AppCompatActivity implements DialogListener
         }
 
         set.setDifficulty(10);
+        set.setNotes(notes.getText().toString());
 
         sets.add(set);
 
@@ -280,6 +323,9 @@ public class StatActivity extends AppCompatActivity implements DialogListener
 
     }
 
+    /**
+     * Dismisses the stat activity.
+     */
     private void dismissActivity()
     {
         // Send the new sets back to the exercise listener so we can use them later.

@@ -80,6 +80,7 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
                     int reps = set.getReps();
                     int difficulty = set.getDifficulty();
                     String duration = set.getDuration();
+                    String notes = set.getNotes();
 
                     if (webId > 0)
                     {
@@ -104,6 +105,11 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
                     if (difficulty > 0)
                     {
                         values.put(ExerciseTable.COLUMN_DIFFICULTY, difficulty);
+                    }
+
+                    if (notes != null)
+                    {
+                        values.put(ExerciseTable.COLUMN_NOTES, notes);
                     }
 
                     exerciseDaos.add(new ExerciseDao(ExerciseTable.TABLE_NAME, values));

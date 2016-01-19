@@ -503,6 +503,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         int weight = set.getWeight();
         String duration = set.getDuration();
+        String notes = set.getNotes();
         boolean hasWeight = weight > 0;
         boolean isDuration = duration != null && duration.contains(":");
 
@@ -514,11 +515,14 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 Constant.COLUMN_EXERCISE_DURATION + equals + nullString + Constant.PARAMETER_DELIMITER
                 + Constant.COLUMN_EXERCISE_REPS + equals + set.getReps() + Constant.PARAMETER_DELIMITER;
 
+        String notesParam = notes != null ? "'" + notes + "'" : nullString;
+
         return getParameterTitle(Constant.PARAMETER_TABLE, index) + Constant.TABLE_COMPLETED_EXERCISE
                + getParameterTitle(setParam, index)
                     + weightParam
                     + durationParam
-                    + Constant.COLUMN_EXERCISE_DIFFICULTY + equals + set.getDifficulty()
+                    + Constant.COLUMN_EXERCISE_DIFFICULTY + equals + set.getDifficulty() + Constant.PARAMETER_DELIMITER
+                    + Constant.COLUMN_NOTES + equals + notesParam
                + getParameterTitle(whereParam, index)
                     + Constant.COLUMN_ID + equals + set.getWebId();
     }
@@ -558,13 +562,15 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                                                     + Constant.COLUMN_EXERCISE_NAME + Constant.PARAMETER_DELIMITER
                                                     + weightParam
                                                     + durationParam
-                                                    + Constant.COLUMN_EXERCISE_DIFFICULTY
+                                                    + Constant.COLUMN_EXERCISE_DIFFICULTY + Constant.PARAMETER_DELIMITER
+                                                    + Constant.COLUMN_NOTES
                 + getParameterTitle(inserts, index) + curDate + Constant.PARAMETER_DELIMITER
                                                     + now + Constant.PARAMETER_DELIMITER
                                                     + name + Constant.PARAMETER_DELIMITER
                                                     + weightValue
                                                     + durationValue + Constant.PARAMETER_DELIMITER
-                                                    + set.getDifficulty();
+                                                    + set.getDifficulty() + Constant.PARAMETER_DELIMITER
+                                                    + set.getNotes();
     }
 
     /**

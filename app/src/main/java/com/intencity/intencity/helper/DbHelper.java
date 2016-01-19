@@ -33,7 +33,8 @@ public class DbHelper extends SQLiteOpenHelper
             ExerciseTable.COLUMN_WEIGHT + INTEGER_TYPE + COMMA_SEP +
             ExerciseTable.COLUMN_REP + INTEGER_TYPE + COMMA_SEP +
             ExerciseTable.COLUMN_DURATION + TEXT_TYPE + COMMA_SEP +
-            ExerciseTable.COLUMN_DIFFICULTY + INTEGER_TYPE +
+            ExerciseTable.COLUMN_DIFFICULTY + INTEGER_TYPE + COMMA_SEP +
+            ExerciseTable.COLUMN_NOTES + TEXT_TYPE +
             " );";
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + ExerciseTable.TABLE_NAME + ";";

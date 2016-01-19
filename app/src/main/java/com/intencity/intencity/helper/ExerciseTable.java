@@ -28,4 +28,5 @@ public class ExerciseTable implements BaseColumns
     public static final String COLUMN_REP = "ExerciseRep";
     public static final String COLUMN_DURATION = "ExerciseDuration";
     public static final String COLUMN_DIFFICULTY = "ExerciseDifficulty";
+    public static final String COLUMN_NOTES = "Notes";
 }

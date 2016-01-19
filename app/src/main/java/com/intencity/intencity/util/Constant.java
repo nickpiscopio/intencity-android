@@ -66,6 +66,7 @@ public class Constant
     public static final String BUNDLE_EXERCISE = "com.intencity.intencity.bundle.exercise";
     public static final String BUNDLE_EXERCISE_POSITION = "com.intencity.intencity.bundle.exercise.position";
     public static final String BUNDLE_EXERCISE_SETS = "com.intencity.intencity.bundle.exercise.sets";
+    public static final String BUNDLE_EXERCISE_NOTES = "com.intencity.intencity.bundle.exercise.notes";
     public static final String BUNDLE_EXERCISE_LIST_INDEX = "com.intencity.intencity.bundle.exercise.list.index";
     public static final String BUNDLE_RECOMMENDED_ROUTINE = "com.intencity.intencity.bundle.recommended.routine";
     public static final String BUNDLE_EXERCISE_NAME = "com.intencity.intencity.bundle.exercise.name";
@@ -136,6 +137,7 @@ public class Constant
     public static final String COLUMN_EXERCISE_REPS = "ExerciseReps";
     public static final String COLUMN_EXERCISE_DURATION = "ExerciseDuration";
     public static final String COLUMN_EXERCISE_DIFFICULTY = "ExerciseDifficulty";
+    public static final String COLUMN_NOTES = "Notes";
     public static final String COLUMN_ACCOUNT_TYPE = "AccountType";
     public static final String COLUMN_EMAIL = "Email";
     public static final String COLUMN_ID = "ID";

@@ -98,11 +98,13 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
                 }
 
                 ArrayList<Set> sets = exercise.getSets();
-                String duration = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_DURATION));
+                String duration = cursor.getString(
+                        cursor.getColumnIndex(ExerciseTable.COLUMN_DURATION));
                 int webId = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_WEB_ID));
                 int weight  = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_WEIGHT));
                 int reps = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_REP));
                 int difficulty = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_DIFFICULTY));
+                String notes = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_NOTES));
 
                 Set set = new Set();
                 set.setWebId(webId);
@@ -110,6 +112,7 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
                 set.setWeight(weight);
                 set.setDuration(duration);
                 set.setDifficulty(difficulty);
+                set.setNotes(notes);
 
                 sets.add(set);
 
