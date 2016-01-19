@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingTop="@dimen/layout_margin"
         android:orientation="vertical">
 
@@ -79,7 +79,7 @@
         <ListView
             android:id="@+id/list_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:paddingBottom="@dimen/stat_list_view_padding_bottom"
             android:paddingRight="@dimen/layout_margin"
             android:paddingLeft="@dimen/layout_margin"
