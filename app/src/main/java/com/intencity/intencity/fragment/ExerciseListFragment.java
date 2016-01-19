@@ -515,7 +515,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 Constant.COLUMN_EXERCISE_DURATION + equals + nullString + Constant.PARAMETER_DELIMITER
                 + Constant.COLUMN_EXERCISE_REPS + equals + set.getReps() + Constant.PARAMETER_DELIMITER;
 
-        String notesParam = notes != null ? "'" + notes + "'" : nullString;
+        String notesParam = notes != null && notes.length() > 0 ? "'" + notes + "'" : nullString;
 
         return getParameterTitle(Constant.PARAMETER_TABLE, index) + Constant.TABLE_COMPLETED_EXERCISE
                + getParameterTitle(setParam, index)

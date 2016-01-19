@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_exercise"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/layout_margin"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="@dimen/layout_margin"
+        android:paddingRight="@dimen/layout_margin"
+        android:paddingLeft="@dimen/layout_margin"
         android:orientation="vertical">
 
         <EditText
@@ -17,6 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/note_hint"
+            android:maxLength="@integer/exercise_notes_length"
+            android:inputType="textMultiLine"
             android:textColor="@color/secondary_dark"
             android:layout_marginBottom="@dimen/layout_margin"
             android:padding="@dimen/layout_margin"
@@ -78,4 +84,16 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+    <include layout="@layout/divider"/>
+
+    <TextView
+        android:id="@+id/text_view_directions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/direction"
+        android:textColor="@color/primary"
+        android:padding="@dimen/card_button_padding"
+        android:layout_margin="@dimen/card_button_margin"
+        android:background="@drawable/button_card"/>
+
+</LinearLayout>

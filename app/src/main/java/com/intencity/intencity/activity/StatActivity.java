@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ExerciseSetAdapter;
@@ -41,6 +42,7 @@ public class StatActivity extends AppCompatActivity implements DialogListener
 
     private int durationType;
 
+    private TextView directions;
     private EditText notes;
     private ListView setsListView;
 
@@ -60,10 +62,12 @@ public class StatActivity extends AppCompatActivity implements DialogListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stat);
 
+        directions = (TextView) findViewById(R.id.text_view_directions);
         notes = (EditText) findViewById(R.id.edit_text_notes);
         setsListView = (ListView) findViewById(R.id.list_view);
         Spinner durationSpinner = (Spinner) findViewById(R.id.spinner_duration);
 
+        directions.setOnClickListener(directionListener);
         notes.addTextChangedListener(textChangeListener);
 
         ActionBar actionBar = getSupportActionBar();
@@ -102,6 +106,8 @@ public class StatActivity extends AppCompatActivity implements DialogListener
 
         durationSpinner.setAdapter(durationAdapter);
 
+        scrollToBottom();
+
         durationType = sets.get(0).getDuration().contains(":") ? TIME : REPS;
         durationSpinner.setSelection(durationType, false);
         durationSpinner.setOnItemSelectedListener(durationTypeSelected);
@@ -124,11 +130,6 @@ public class StatActivity extends AppCompatActivity implements DialogListener
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.info:
-                Intent intent = new Intent(context, Direction.class);
-                intent.putExtra(Constant.BUNDLE_EXERCISE_NAME, exerciseName);
-                startActivity(intent);
-                return true;
             case R.id.add:
                 // We only add a set if the user has set a duration.
                 // This is because we don't want to add tons of sets that couldn't have happened.
@@ -146,6 +147,20 @@ public class StatActivity extends AppCompatActivity implements DialogListener
                 return super.onOptionsItemSelected(menuItem);
         }
     }
+
+    /**
+     * The listener for the directions EditText.
+     */
+    private View.OnClickListener directionListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            Intent intent = new Intent(context, Direction.class);
+            intent.putExtra(Constant.BUNDLE_EXERCISE_NAME, exerciseName);
+            startActivity(intent);
+        }
+    };
 
     /**
      * The text watcher for the notes.
@@ -301,6 +316,16 @@ public class StatActivity extends AppCompatActivity implements DialogListener
         sets.add(set);
 
         adapter.notifyDataSetChanged();
+
+        scrollToBottom();
+    }
+
+    /**
+     * Scrolls to the bottom of the set list.
+     */
+    private void scrollToBottom()
+    {
+        setsListView.setSelection(adapter.getCount() - 1);
     }
 
     /**
