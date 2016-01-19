@@ -92,11 +92,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         allExercises = bundle.getParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST);
 
-        // Change the total number of exercises if the exercise list doesn't have enough exercises.
-        if (allExercises != null && allExercises.size() < TOTAL_EXERCISE_NUM)
-        {
-            TOTAL_EXERCISE_NUM = allExercises.size();
-        }
+        updateTotalExercises();
 
         autoFillTo = bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX) > 0 ?
                         bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX) : 1;
@@ -136,6 +132,17 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         return view;
     }
 
+    /**
+     * Updates the total number of exercises the user can do.
+     */
+    private void updateTotalExercises()
+    {
+        // Change the total number of exercises if the exercise list doesn't have enough exercises.
+        if (allExercises != null && allExercises.size() < TOTAL_EXERCISE_NUM)
+        {
+            TOTAL_EXERCISE_NUM = allExercises.size();
+        }
+    }
     /**
      * The swipe listener for the recycler view.
      */
@@ -323,9 +330,22 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 // for the next exercise that will be added.
                 adapter.setLastPosition(adapter.getLastPosition() - 1);
 
-                if (position == currentExercises.size())
+                int currentExerciseSize = currentExercises.size();
+
+                if (position == currentExerciseSize)
                 {
-                    addExercise();
+                    updateTotalExercises();
+
+                    if (currentExerciseSize != allExercises.size())
+                    {
+                        addExercise();
+                    }
+                    else
+                    {
+                        updateRoutineName(completedExerciseNum);
+                    }
+
+                    checkNextButtonEnablement();
                 }
                 else
                 {
