@@ -3,6 +3,7 @@ package com.intencity.intencity.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -16,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ExerciseSetAdapter;
@@ -42,9 +42,9 @@ public class StatActivity extends AppCompatActivity implements DialogListener
 
     private int durationType;
 
-    private TextView directions;
     private EditText notes;
     private ListView setsListView;
+    private FloatingActionButton add;
 
     private ExerciseSetAdapter adapter;
     private ArrayList<Set> sets;
@@ -62,13 +62,13 @@ public class StatActivity extends AppCompatActivity implements DialogListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stat);
 
-        directions = (TextView) findViewById(R.id.text_view_directions);
         notes = (EditText) findViewById(R.id.edit_text_notes);
         setsListView = (ListView) findViewById(R.id.list_view);
+        add = (FloatingActionButton) findViewById(R.id.add);
         Spinner durationSpinner = (Spinner) findViewById(R.id.spinner_duration);
 
-        directions.setOnClickListener(directionListener);
         notes.addTextChangedListener(textChangeListener);
+        add.setOnClickListener(addListener);
 
         ActionBar actionBar = getSupportActionBar();
 
@@ -130,18 +130,10 @@ public class StatActivity extends AppCompatActivity implements DialogListener
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.add:
-                // We only add a set if the user has set a duration.
-                // This is because we don't want to add tons of sets that couldn't have happened.
-                // If there isn't a duration, then the user didn't do the exercise.
-                if (hasDuration())
-                {
-                    addSet();
-                }
-                else
-                {
-                    notifyToAddDuration(false);
-                }
+            case R.id.info:
+                Intent intent = new Intent(context, Direction.class);
+                intent.putExtra(Constant.BUNDLE_EXERCISE_NAME, exerciseName);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
@@ -149,16 +141,24 @@ public class StatActivity extends AppCompatActivity implements DialogListener
     }
 
     /**
-     * The listener for the directions EditText.
+     * The listener for the add button.
      */
-    private View.OnClickListener directionListener = new View.OnClickListener()
+    private View.OnClickListener addListener = new View.OnClickListener()
     {
         @Override
         public void onClick(View v)
         {
-            Intent intent = new Intent(context, Direction.class);
-            intent.putExtra(Constant.BUNDLE_EXERCISE_NAME, exerciseName);
-            startActivity(intent);
+            // We only add a set if the user has set a duration.
+            // This is because we don't want to add tons of sets that couldn't have happened.
+            // If there isn't a duration, then the user didn't do the exercise.
+            if (hasDuration())
+            {
+                addSet();
+            }
+            else
+            {
+                notifyToAddDuration(false);
+            }
         }
     };
 

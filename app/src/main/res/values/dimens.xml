@@ -26,4 +26,7 @@
     <!-- Needs to add up to @dimen/layout_margin-->
     <dimen name="card_button_margin">5dp</dimen>
     <dimen name="card_button_padding">11dp</dimen>
+
+    <dimen name="stat_list_view_padding_bottom">90dp</dimen>
+
 </resources>

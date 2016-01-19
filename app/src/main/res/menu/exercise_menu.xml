@@ -4,8 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/add"
-        android:title="@string/menu_add"
+        android:id="@+id/info"
+        android:title="@string/menu_info"
+        android:icon="@mipmap/ic_information_outline_white"
         app:showAsAction="always"/>
 
 </menu>

@@ -45,7 +45,7 @@
     <string name="title_fitness_guru">Fitness Guru</string>
     <string name="title_menu">Menu</string>
     <string name="menu_search">Search</string>
-    <string name="menu_add">+ SET</string>
+    <string name="menu_info">Info</string>
     <string name="direction">Don\'t know how to do this exercise?</string>
 
     <!-- Search Strings -->

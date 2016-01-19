@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_exercise"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,11 +10,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:paddingTop="@dimen/layout_margin"
-        android:paddingRight="@dimen/layout_margin"
-        android:paddingLeft="@dimen/layout_margin"
         android:orientation="vertical">
 
         <EditText
@@ -26,6 +24,8 @@
             android:textColor="@color/secondary_dark"
             android:layout_marginBottom="@dimen/layout_margin"
             android:padding="@dimen/layout_margin"
+            android:layout_marginRight="@dimen/layout_margin"
+            android:layout_marginLeft="@dimen/layout_margin"
             android:background="@drawable/edit_text_flat"/>
 
         <LinearLayout
@@ -80,20 +80,22 @@
             android:id="@+id/list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/stat_list_view_padding_bottom"
+            android:paddingRight="@dimen/layout_margin"
+            android:paddingLeft="@dimen/layout_margin"
+            android:clipToPadding="false"
             android:scrollbars="none"/>
 
     </LinearLayout>
 
-    <include layout="@layout/divider"/>
-
-    <TextView
-        android:id="@+id/text_view_directions"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/direction"
-        android:textColor="@color/primary"
-        android:padding="@dimen/card_button_padding"
-        android:layout_margin="@dimen/card_button_margin"
-        android:background="@drawable/button_card"/>
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@mipmap/ic_plus_white"
+        app:layout_anchor="@id/list_view"
+        app:layout_anchorGravity="bottom|right|end" />
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
