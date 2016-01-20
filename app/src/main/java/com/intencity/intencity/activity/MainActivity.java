@@ -268,4 +268,10 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
     {
         this.exercises = exercises;
     }
+
+    @Override
+    public void onCompletedWorkout()
+    {
+        setupViewPager();
+    }
 }

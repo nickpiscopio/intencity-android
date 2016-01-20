@@ -81,7 +81,7 @@
     <!-- Buttons -->
     <string name="start">START</string>
     <string name="next_exercise">NEXT EXERCISE</string>
-    <string name="finish">FINISH</string>
+    <string name="finish_workout">FINISH</string>
 
     <!-- Menu Strings-->
     <string name="title_settings">Settings</string>
@@ -115,5 +115,10 @@
     <string name="intencity_communication_error">There was a problem communicating with Intencity\'s server. Please try again later.</string>
     <string name="intencity_communication_error_email">There was either a problem communicating with Intencity\'s server or with the email you provided. Please check your email or try again later.</string>
     <string name="try_again">TRY AGAIN</string>
+
+    <string name="badge_earned_title">Badge earned!</string>
+    <string name="badged_earned_finisher">You\'ve earned the \"Finisher\" badge for completing your workout with Intencity!</string>
+    <string name="finish_button">Finish</string>
+    <string name="tweet_button">Tweet</string>
 
 </resources>

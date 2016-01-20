@@ -176,12 +176,16 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         @Override
         public void onClick(View v)
         {
-            if (nextExercise.getText().toString().equals(getString(R.string.finish)))
+            if (nextExercise.getText().toString().equals(getString(R.string.finish_workout)))
             {
-                Uri uri = Uri.parse(generateTweet());
-                startActivityForResult(new Intent(Intent.ACTION_VIEW, uri), Constant.REQUEST_CODE_TWEET);
-
                 workoutFinished = true;
+
+                Dialog dialog = new Dialog(context.getResources().getString(R.string.badge_earned_title), context.getResources().getString(R.string.badged_earned_finisher), true);
+                dialog.setImgRes(R.mipmap.finisher);
+                dialog.setPositiveButtonStringRes(R.string.tweet_button);
+                dialog.setNegativeButtonStringRes(R.string.finish_button);
+
+                new CustomDialog(context, dialogListener, dialog);
 
                 Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT);
             }
@@ -191,6 +195,27 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
                 checkNextButtonEnablement();
             }
+        }
+    };
+
+    private DialogListener dialogListener = new DialogListener()
+    {
+        @Override
+        public void onButtonPressed(int which)
+        {
+            switch (which)
+            {
+                case Constant.POSITIVE_BUTTON:
+                    // The user selected to tweet, so we open the twitter URI.
+                    Uri uri = Uri.parse(generateTweet());
+                    startActivityForResult(new Intent(Intent.ACTION_VIEW, uri), Constant.REQUEST_CODE_TWEET);
+                    break;
+                default:
+                    break;
+            }
+
+            // Start the fitness log over again.
+            fitnessLogListener.onCompletedWorkout();
         }
     };
 
@@ -215,7 +240,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                                "I %23finished my %23workout of the day with %23Intencity! %23WOD %23Fitness",
                                "I made it through %23Intencity%27s %23routine! %23Fitness",
                                "I %23completed %23" + routine + " with %23Intencity! %23WOD %23Fitness" };
-        String tweetUrl = "&url=IntencityApp.com";
+        String tweetUrl = "&url=www.Intencity.fit";
         String via = "&via=IntencityApp";
 
         return twitterUrl + tweetText[tweet] + tweetUrl +via;
@@ -257,7 +282,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         if (currentExercises.size() >= allExercises.size() || completedExerciseNum >= TOTAL_EXERCISE_NUM)
         {
-            nextExercise.setText(getString(R.string.finish));
+            nextExercise.setText(getString(R.string.finish_workout));
         }
     }
 

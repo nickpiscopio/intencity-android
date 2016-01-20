@@ -351,4 +351,10 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     {
         mainActivityExerciseListListener.onNextExercise(exercises);
     }
+
+    @Override
+    public void onCompletedWorkout()
+    {
+        mainActivityExerciseListListener.onCompletedWorkout();
+    }
 }

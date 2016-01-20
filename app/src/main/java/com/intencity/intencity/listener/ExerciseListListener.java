@@ -12,4 +12,5 @@ import java.util.ArrayList;
 public interface ExerciseListListener
 {
     void onNextExercise(ArrayList<Exercise> exercises);
+    void onCompletedWorkout();
 }

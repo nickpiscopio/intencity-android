@@ -12,10 +12,15 @@ public class Dialog
     private String[] buttons;
     private boolean includeNegativeButton;
 
+    private int imgRes;
+    private int positiveButtonStringRes;
+    private int negativeButtonStringRes;
+
     public Dialog(String title, String message, boolean includeNegativeButton)
     {
         this.title = title;
         this.message = message;
+
         this.includeNegativeButton = includeNegativeButton;
     }
 
@@ -43,19 +48,9 @@ public class Dialog
         return message;
     }
 
-    public void setMessage(String message)
-    {
-        this.message = message;
-    }
-
     public String[] getButtons()
     {
         return buttons;
-    }
-
-    public void setButtons(String[] buttons)
-    {
-        this.buttons = buttons;
     }
 
     public boolean includeNegativeButton()
@@ -63,8 +58,33 @@ public class Dialog
         return includeNegativeButton;
     }
 
-    public void setIncludeNegativeButton(boolean includeNegativeButton)
+    public int getImgRes()
     {
-        this.includeNegativeButton = includeNegativeButton;
+        return imgRes;
+    }
+
+    public void setImgRes(int imgRes)
+    {
+        this.imgRes = imgRes;
+    }
+
+    public int getPositiveButtonStringRes()
+    {
+        return positiveButtonStringRes;
+    }
+
+    public void setPositiveButtonStringRes(int positiveButtonStringRes)
+    {
+        this.positiveButtonStringRes = positiveButtonStringRes;
+    }
+
+    public int getNegativeButtonStringRes()
+    {
+        return negativeButtonStringRes;
+    }
+
+    public void setNegativeButtonStringRes(int negativeButtonStringRes)
+    {
+        this.negativeButtonStringRes = negativeButtonStringRes;
     }
 }
