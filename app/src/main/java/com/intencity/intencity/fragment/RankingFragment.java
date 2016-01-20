@@ -100,7 +100,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
      */
     private void populateRankingList(ArrayList<User> users)
     {
-        RankingListAdapter arrayAdapter = new RankingListAdapter(context, users);
+        RankingListAdapter arrayAdapter = new RankingListAdapter(context, R.layout.list_item_ranking, users);
         ranking.setAdapter(arrayAdapter);
 
         // The size will be 1 if there are no followers because

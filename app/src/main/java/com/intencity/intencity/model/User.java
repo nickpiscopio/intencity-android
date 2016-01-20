@@ -10,6 +10,7 @@ public class User
     private int id;
     private int followingId;
     private int earnedPoints;
+    private int totalBadges;
 
     private String firstName;
     private String lastName;
@@ -45,6 +46,16 @@ public class User
     public void setEarnedPoints(int earnedPoints)
     {
         this.earnedPoints = earnedPoints;
+    }
+
+    public int getTotalBadges()
+    {
+        return totalBadges;
+    }
+
+    public void setTotalBadges(int totalBadges)
+    {
+        this.totalBadges = totalBadges;
     }
 
     public String getFirstName()

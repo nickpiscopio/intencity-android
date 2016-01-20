@@ -116,6 +116,7 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_EXERCISE_DIRECTION = "getDirection";
     public static final String STORED_PROCEDURE_GET_EQUIPMENT = "getEquipment";
     public static final String STORED_PROCEDURE_GRANT_POINTS = "grantPointsToUser";
+    public static final String STORED_PROCEDURE_GRANT_BADGE = "grantBadgeToUser";
 
     // Column Values
     public static final String ACCOUNT_TYPE_ADMIN = "A";
@@ -144,6 +145,7 @@ public class Constant
     public static final String COLUMN_FIRST_NAME = "FirstName";
     public static final String COLUMN_LAST_NAME = "LastName";
     public static final String COLUMN_EARNED_POINTS = "EarnedPoints";
+    public static final String COLUMN_TOTAL_BADGES = "TotalBadges";
     public static final String COLUMN_PROFILE_PICTURE_URL = "Url";
     // The id from the following table if a user is following that user from a search.
     public static final String COLUMN_FOLLOWING_ID = "FollowingId";

@@ -27,6 +27,7 @@ import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.task.SetExerciseTask;
+import com.intencity.intencity.util.Badge;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
@@ -188,6 +189,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 new CustomDialog(context, dialogListener, dialog);
 
                 Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT);
+                Util.grantBadgeToUser(email, Badge.FINISHER);
             }
             else
             {

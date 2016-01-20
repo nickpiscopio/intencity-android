@@ -50,7 +50,9 @@ public class UserDao
                 }
 
                 user.setId(Integer.valueOf(object.getString(Constant.COLUMN_ID)));
-                user.setEarnedPoints(Integer.valueOf(object.getString(Constant.COLUMN_EARNED_POINTS)));
+                user.setEarnedPoints(
+                        Integer.valueOf(object.getString(Constant.COLUMN_EARNED_POINTS)));
+                user.setTotalBadges(Integer.valueOf(object.getString(Constant.COLUMN_TOTAL_BADGES)));
                 user.setFirstName(object.getString(Constant.COLUMN_FIRST_NAME));
                 user.setLastName(object.getString(Constant.COLUMN_LAST_NAME));
 

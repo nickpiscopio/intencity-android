@@ -14,6 +14,7 @@ import com.intencity.intencity.dialog.Dialog;
 import com.intencity.intencity.helper.DbHelper;
 import com.intencity.intencity.task.ServiceTask;
 
+import java.util.Date;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -153,6 +154,22 @@ public class Util
         new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GRANT_POINTS,
                                                                                  email, String.valueOf(points)));
+    }
+
+    /**
+     * Calls the service to grant a badge to the user.
+     *
+     * @param email         The email of the user to grant points.
+     * @param badgeName     The name of the badge that is being awarded.
+     */
+    public static void grantBadgeToUser(String email, String badgeName)
+    {
+        // We won't display the date anywhere, so we probably don't need this in local time.
+        long now = new Date().getTime();
+
+        new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                      Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GRANT_BADGE,
+                                                                                 email, String.valueOf(now), badgeName));
     }
 
     /**
