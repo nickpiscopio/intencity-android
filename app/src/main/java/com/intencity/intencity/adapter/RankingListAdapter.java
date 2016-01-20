@@ -31,6 +31,8 @@ public class RankingListAdapter extends ArrayAdapter<User>
 
     private ArrayList<User> objects;
 
+    private boolean addRankingLabel;
+
     private LayoutInflater inflater;
 
     private int position;
@@ -51,15 +53,17 @@ public class RankingListAdapter extends ArrayAdapter<User>
      * @param layoutResourceId  The resource id of the view we are inflating.
      * @param users             The list of users to populate the list.
      */
-    public RankingListAdapter(Context context, int layoutResourceId, ArrayList<User> users)
+    public RankingListAdapter(Context context, int layoutResourceId, ArrayList<User> users, boolean addRankingLabel)
     {
         super(context, layoutResourceId, users);
 
         this.context = context;
 
+        this.layoutResourceId = layoutResourceId;
+
         this.objects = users;
 
-        this.layoutResourceId = layoutResourceId;
+        this.addRankingLabel = addRankingLabel;
 
         position = -1;
 
@@ -75,19 +79,23 @@ public class RankingListAdapter extends ArrayAdapter<User>
         if (this.position != position || convertView == null)
         {
             this.position = position;
-            
+
             convertView = inflater.inflate(layoutResourceId, parent, false);
 
-            User user = objects.get(position);
+            final User user = objects.get(position);
 
             holder.badgesLayout = (LinearLayout) convertView.findViewById(R.id.layout_badges);
-
-            holder.rank = (TextView) convertView.findViewById(R.id.text_view_rank);
             holder.name = (TextView) convertView.findViewById(R.id.text_view_name);
             holder.points = (TextView) convertView.findViewById(R.id.text_view_points);
             holder.totalBadgesTextView = (TextView) convertView.findViewById(R.id.total_badges);
 
-            holder.rank.setText(String.valueOf(position + 1));
+            if (addRankingLabel)
+            {
+                holder.rank = (TextView) convertView.findViewById(R.id.text_view_rank);
+                holder.rank.setText(String.valueOf(position + 1));
+                holder.rank.setVisibility(View.VISIBLE);
+            }
+
             holder.name.setText(user.getFirstName() + " " + user.getLastName());
             holder.points.setText(String.valueOf(user.getEarnedPoints()));
 
@@ -106,6 +114,7 @@ public class RankingListAdapter extends ArrayAdapter<User>
 
             final int id = user.getId();
 
+            // This isn't in the holder because when we set it to invisible, it can't see it.
             final ImageButton addButton = (ImageButton) convertView.findViewById(R.id.button_add);
 
             // Needed to add the click listener in getView because the id was
@@ -116,7 +125,6 @@ public class RankingListAdapter extends ArrayAdapter<User>
                 public void onClick(View v)
                 {
                     SecurePreferences securePreferences = new SecurePreferences(context);
-
                     String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
                     // Needed to add the service listener in the parameter because the ImageButton was
@@ -126,6 +134,9 @@ public class RankingListAdapter extends ArrayAdapter<User>
                         @Override
                         public void onRetrievalSuccessful(String response)
                         {
+                            // Set the following ID to 0, so when this view is recreated,
+                            // we don't get the button back.
+                            user.setFollowingId(0);
                             // Remove the ability to add a user since said user was just added to follow.
                             addButton.setVisibility(View.GONE);
                         }

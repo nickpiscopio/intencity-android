@@ -22,13 +22,13 @@
             android:id="@+id/text_view_rank"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1"/>
+            android:paddingRight="@dimen/layout_margin"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingLeft="@dimen/layout_margin"
             android:paddingRight="@dimen/layout_margin"
             android:orientation="vertical">
 
@@ -78,8 +78,8 @@
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/ranking_badge_size"
+            android:layout_height="@dimen/ranking_badge_size"
             android:src="@mipmap/finisher"/>
 
         <TextView
@@ -103,7 +103,7 @@
         android:id="@+id/button_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/layout_margin"
+        android:padding="@dimen/card_button_padding"
         android:layout_marginRight="@dimen/layout_margin"
         android:src="@mipmap/ic_account_plus_grey"
         android:background="@drawable/button_card"/>
