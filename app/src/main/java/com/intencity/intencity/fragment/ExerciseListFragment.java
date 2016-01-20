@@ -231,8 +231,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private String generateTweet()
     {
-        int tweet = Util.getRandom(0, 3);
-
         // Remove all the whitespace so the hashtags are proper.
         // Replace the ampersand with its equivalent url code and add a hashtag.
         String routine = routineName.replaceAll(" ", "").replace(Constant.PARAMETER_AMPERSAND, " %26 %23");
@@ -241,9 +239,12 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         String[] tweetText = { "I %23dominated my %23workout with %23Intencity! %23WOD %23Fitness",
                                "I %23finished my %23workout of the day with %23Intencity! %23WOD %23Fitness",
                                "I made it through %23Intencity%27s %23routine! %23Fitness",
-                               "I %23completed %23" + routine + " with %23Intencity! %23WOD %23Fitness" };
+                               "I %23completed %23" + routine + " with %23Intencity! %23WOD %23Fitness",
+                               "%23Finished my %23Intencity %23workout! %23Retweet if you %23exercised today. %23WOD %23Fitness"};
         String tweetUrl = "&url=www.Intencity.fit";
         String via = "&via=IntencityApp";
+
+        int tweet = Util.getRandom(0, tweetText.length);
 
         return twitterUrl + tweetText[tweet] + tweetUrl +via;
     }
