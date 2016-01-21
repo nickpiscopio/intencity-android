@@ -1,5 +1,6 @@
 package com.intencity.intencity.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.intencity.intencity.adapter.DirectionListAdapter;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +36,8 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
 
     private String videoUrl = "";
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -41,6 +45,8 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
         setContentView(R.layout.activity_direction);
 
         ActionBar actionBar = getSupportActionBar();
+
+        context = getApplicationContext();
 
         Bundle bundle = getIntent().getExtras();
 
@@ -59,6 +65,7 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
         else
         {
             // Display to user that we can't find the exercise.
+            showMessage(context.getString(R.string.intencity_communication_error));
         }
     }
 
@@ -139,12 +146,17 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
         }
         catch (JSONException e)
         {
+            showMessage(context.getString(R.string.intencity_communication_error));
+
             Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
         }
     }
 
     @Override
-    public void onRetrievalFailed() { }
+    public void onRetrievalFailed()
+    {
+        showMessage(context.getString(R.string.intencity_communication_error));
+    }
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored)
@@ -163,7 +175,7 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
     onInitializationFailure(YouTubePlayer.Provider provider,
                                                   YouTubeInitializationResult youTubeInitializationResult)
     {
-
+        showMessage(context.getString(R.string.intencity_communication_error));
     }
 
     private YouTubePlayer.PlaybackEventListener playbackEventListener = new YouTubePlayer.PlaybackEventListener() {
@@ -216,4 +228,14 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
         public void onVideoStarted() {
         }
     };
+
+    /**
+     * Show a message to the user.
+     *
+     * @param message   The message to display.
+     */
+    private void showMessage(String message)
+    {
+        Util.showMessage(Direction.this, context.getString(R.string.generic_error), message);
+    }
 }

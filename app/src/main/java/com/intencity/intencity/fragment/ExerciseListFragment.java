@@ -240,11 +240,11 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                                "I %23finished my %23workout of the day with %23Intencity! %23WOD %23Fitness",
                                "I made it through %23Intencity%27s %23routine! %23Fitness",
                                "I %23completed %23" + routine + " with %23Intencity! %23WOD %23Fitness",
-                               "%23Finished my %23Intencity %23workout! %23Retweet if you %23exercised today. %23WOD %23Fitness"};
+                               "%23Finished my %23Intencity %23workout! %23Retweet if you've %23exercised today. %23WOD %23Fitness"};
         String tweetUrl = "&url=www.Intencity.fit";
         String via = "&via=IntencityApp";
 
-        int tweet = Util.getRandom(0, tweetText.length);
+        int tweet = Util.getRandom(0, tweetText.length - 1);
 
         return twitterUrl + tweetText[tweet] + tweetUrl +via;
     }
