@@ -1,5 +1,6 @@
 package com.intencity.intencity.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,9 +9,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.dialog.CustomDialog;
+import com.intencity.intencity.dialog.Dialog;
+import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
@@ -29,12 +36,20 @@ import java.util.ArrayList;
  */
 public class EquipmentActivity extends AppCompatActivity
 {
+    private LinearLayout connectionIssue;
+
+    private TextView tryAgain;
+
+    private ProgressBar progressBar;
+
     private ListView listView;
 
     private String email;
 
     private ArrayList<String> equipmentList;
     private ArrayList<String> userEquipment;
+
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -49,7 +64,16 @@ public class EquipmentActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        SecurePreferences securePreferences = new SecurePreferences(getApplicationContext());
+        connectionIssue = (LinearLayout) findViewById(R.id.image_view_connection_issue);
+        tryAgain = (TextView) findViewById(R.id.btn_try_again);
+        tryAgain.setVisibility(View.GONE);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        context = getApplicationContext();
+
+        SecurePreferences securePreferences = new SecurePreferences(context);
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
         new ServiceTask(getEquipmentServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
@@ -109,13 +133,17 @@ public class EquipmentActivity extends AppCompatActivity
             catch (JSONException exception)
             {
                 Log.e(Constant.TAG, "Couldn't parse equipment " + exception.toString());
+
+                connectionIssue.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
             }
         }
 
         @Override
         public void onRetrievalFailed()
         {
-
+            connectionIssue.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
         }
     };
 
@@ -127,22 +155,30 @@ public class EquipmentActivity extends AppCompatActivity
         @Override
         public void onRetrievalSuccessful(String response)
         {
-
+            finish();
         }
 
         @Override
         public void onRetrievalFailed()
         {
+            Dialog dialog = new Dialog(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 
+            new CustomDialog(EquipmentActivity.this, dialogListener, dialog);
         }
     };
 
     @Override
     public void onBackPressed()
     {
-        updateEquipment();
-
-        super.onBackPressed();
+        if (userEquipment != null)
+        {
+            updateEquipment();
+        }
+        else
+        {
+            // We finish the activity manually if we have equipment to update.
+            super.onBackPressed();
+        }
     }
 
     /**
@@ -168,6 +204,8 @@ public class EquipmentActivity extends AppCompatActivity
         }
 
         listView.setOnItemClickListener(settingClicked);
+
+        progressBar.setVisibility(View.GONE);
     }
 
     /**
@@ -199,6 +237,19 @@ public class EquipmentActivity extends AppCompatActivity
             {
                 userEquipment.add(equipment);
             }
+        }
+    };
+
+    /**
+     * The dialog listener for when the connection to Intencity fails.
+     */
+    private DialogListener dialogListener = new DialogListener()
+    {
+        @Override
+        public void onButtonPressed(int which)
+        {
+            // There is only 1 button that can be pressed, so we aren't going to switch on it.
+            finish();
         }
     };
 }
