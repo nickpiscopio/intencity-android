@@ -9,8 +9,12 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RankingListAdapter;
@@ -35,6 +39,12 @@ import java.util.ArrayList;
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
                                                                  SearchListener
 {
+    private LinearLayout connectionIssue;
+
+    private TextView tryAgain;
+
+    private ProgressBar progressBar;
+
     private SearchView searchView;
     private ListView listView;
 
@@ -51,7 +61,13 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        connectionIssue = (LinearLayout) findViewById(R.id.image_view_connection_issue);
+        tryAgain = (TextView) findViewById(R.id.btn_try_again);
+        tryAgain.setVisibility(View.GONE);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
+
         listView = (ListView) findViewById(R.id.list_view_search);
+        listView.setEmptyView(findViewById(R.id.empty_list));
 
         context = getApplicationContext();
 
@@ -92,6 +108,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     @Override
     public boolean onQueryTextSubmit(String query)
     {
+        progressBar.setVisibility(View.VISIBLE);
+
+        connectionIssue.setVisibility(View.GONE);
+
         SecurePreferences securePreferences = new SecurePreferences(context);
         String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
@@ -159,6 +179,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         {
             searchView.clearFocus();
 
+            progressBar.setVisibility(View.GONE);
+
             ArrayAdapter arrayAdapter;
 
             if (searchExercises)
@@ -179,6 +201,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         public void onRetrievalFailed()
         {
             searchView.clearFocus();
+
+            connectionIssue.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
         }
     };
 

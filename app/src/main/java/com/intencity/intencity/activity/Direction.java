@@ -93,6 +93,13 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
                                                                  exerciseName));
     }
 
+    /**
+     * Populates the direction list.
+     *
+     * @param directions    The ArrayList of directions.
+     * @param submittedBy   The user that submitted the exercise.
+     * @param videoUrl      The URL of the video to load from YouTube.
+     */
     private void populate(ArrayList<String> directions, String submittedBy, String videoUrl)
     {
         this.videoUrl = videoUrl;
@@ -110,6 +117,16 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
 
         TextView submittedByTextView = (TextView) findViewById(R.id.text_view_submitted_by);
         submittedByTextView.setText(getResources().getString(R.string.submitted_by, submittedBy));
+    }
+
+    /**
+     * Show a message to the user.
+     *
+     * @param message   The message to display.
+     */
+    private void showMessage(String message)
+    {
+        Util.showMessage(Direction.this, context.getString(R.string.generic_error), message);
     }
 
     @Override
@@ -178,64 +195,42 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
         showMessage(context.getString(R.string.intencity_communication_error));
     }
 
-    private YouTubePlayer.PlaybackEventListener playbackEventListener = new YouTubePlayer.PlaybackEventListener() {
-
-        @Override
-        public void onBuffering(boolean arg0) {
-        }
-
-        @Override
-        public void onPaused() {
-        }
-
-        @Override
-        public void onPlaying() {
-        }
-
-        @Override
-        public void onSeekTo(int arg0) {
-        }
-
-        @Override
-        public void onStopped() {
-        }
-
-    };
-
-    private YouTubePlayer.PlayerStateChangeListener playerStateChangeListener = new YouTubePlayer.PlayerStateChangeListener() {
-
-        @Override
-        public void onAdStarted() {
-        }
-
-        @Override
-        public void onError(YouTubePlayer.ErrorReason arg0) {
-        }
-
-        @Override
-        public void onLoaded(String arg0) {
-        }
-
-        @Override
-        public void onLoading() {
-        }
-
-        @Override
-        public void onVideoEnded() {
-        }
-
-        @Override
-        public void onVideoStarted() {
-        }
-    };
-
-    /**
-     * Show a message to the user.
-     *
-     * @param message   The message to display.
-     */
-    private void showMessage(String message)
+    private YouTubePlayer.PlaybackEventListener playbackEventListener = new YouTubePlayer.PlaybackEventListener()
     {
-        Util.showMessage(Direction.this, context.getString(R.string.generic_error), message);
-    }
+        @Override
+        public void onBuffering(boolean arg0) { }
+
+        @Override
+        public void onPaused() { }
+
+        @Override
+        public void onPlaying() { }
+
+        @Override
+        public void onSeekTo(int arg0) { }
+
+        @Override
+        public void onStopped() { }
+    };
+
+    private YouTubePlayer.PlayerStateChangeListener playerStateChangeListener = new YouTubePlayer.PlayerStateChangeListener()
+    {
+        @Override
+        public void onAdStarted() { }
+
+        @Override
+        public void onError(YouTubePlayer.ErrorReason arg0) { }
+
+        @Override
+        public void onLoaded(String arg0) { }
+
+        @Override
+        public void onLoading()  { }
+
+        @Override
+        public void onVideoEnded()  { }
+
+        @Override
+        public void onVideoStarted()  { }
+    };
 }
