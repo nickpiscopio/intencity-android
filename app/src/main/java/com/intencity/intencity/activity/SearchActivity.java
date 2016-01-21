@@ -45,6 +45,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     private ProgressBar progressBar;
 
+    private View divider;
+
     private SearchView searchView;
     private ListView listView;
 
@@ -65,6 +67,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         tryAgain = (TextView) findViewById(R.id.btn_try_again);
         tryAgain.setVisibility(View.GONE);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
+
+        divider = findViewById(R.id.divider);
+        divider.setVisibility(View.GONE);
 
         listView = (ListView) findViewById(R.id.list_view_search);
         listView.setEmptyView(findViewById(R.id.empty_list));
@@ -195,6 +200,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             }
 
             listView.setAdapter(arrayAdapter);
+
+            divider.setVisibility(View.GONE);
         }
 
         @Override
@@ -204,6 +211,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
             connectionIssue.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
+
+            divider.setVisibility(View.VISIBLE);
         }
     };
 

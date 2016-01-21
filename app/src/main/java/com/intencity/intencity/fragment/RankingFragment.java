@@ -3,11 +3,13 @@ package com.intencity.intencity.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.activity.SearchActivity;
@@ -30,43 +32,75 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
 {
     private Context context;
 
+    private SwipeRefreshLayout swipeContainer;
+
     private ListView ranking;
 
-    private LinearLayout noFriends;
-    private LinearLayout searchUsers;
+    private TextView followingMessage;
 
     private String email;
+
+    private ArrayList<User> users;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_intencity_rankings, container, false);
-
-        ranking = (ListView) view.findViewById(R.id.list_view_ranking);
-
-        noFriends = (LinearLayout) view.findViewById(R.id.layout_no_friends);
-        searchUsers = (LinearLayout) view.findViewById(R.id.searchUsers);
-        searchUsers.setOnClickListener(searchUsersListener);
-
         context = getContext();
 
-        SecurePreferences securePreferences = new SecurePreferences(context);
+        View view = inflater.inflate(R.layout.fragment_intencity_rankings, container, false);
+        View footer = inflater.inflate(R.layout.fragment_intencity_rankings_footer, null);
 
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(refreshListener);
+
+        ranking = (ListView) view.findViewById(R.id.list_view_ranking);
+        ranking.addFooterView(footer, null, false);
+
+        followingMessage = (TextView) footer.findViewById(R.id.following_message);
+
+        LinearLayout searchUsers = (LinearLayout) footer.findViewById(R.id.searchUsers);
+        searchUsers.setOnClickListener(searchUsersListener);
+
+        SecurePreferences securePreferences = new SecurePreferences(context);
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+
+        users = new ArrayList<>();
 
         getFollowing();
 
         return view;
     }
 
+    private SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener()
+    {
+        @Override
+        public void onRefresh()
+        {
+            // Your code to refresh the list here.
+            // Make sure you call swipeContainer.setRefreshing(false)
+            // once the network request has completed successfully.
+            getFollowing();
+        }
+    };
+
     @Override
     public void onRetrievalSuccessful(String response)
     {
-        populateRankingList(new UserDao().parseJson(response));
+        swipeContainer.setRefreshing(false);
+
+        users = new UserDao().parseJson(response);
+
+        populateRankingList();
     }
 
     @Override
-    public void onRetrievalFailed() { }
+    public void onRetrievalFailed()
+    {
+        swipeContainer.setRefreshing(false);
+
+        populateRankingList();
+    }
 
     private View.OnClickListener searchUsersListener = new View.OnClickListener()
     {
@@ -95,10 +129,8 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
 
     /**
      * Populates the ranking list.
-     *
-     * @param users  The list of users.
      */
-    private void populateRankingList(ArrayList<User> users)
+    private void populateRankingList()
     {
         RankingListAdapter arrayAdapter = new RankingListAdapter(context, R.layout.list_item_ranking, users, true);
         ranking.setAdapter(arrayAdapter);
@@ -107,11 +139,11 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         // we get back the current user logged in as well.
         if (users.size() > 1)
         {
-            noFriends.setVisibility(View.GONE);
+            followingMessage.setVisibility(View.GONE);
         }
         else
         {
-            noFriends.setVisibility(View.VISIBLE);
+            followingMessage.setVisibility(View.VISIBLE);
         }
     }
 

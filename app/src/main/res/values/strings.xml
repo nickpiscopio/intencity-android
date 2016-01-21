@@ -55,7 +55,7 @@
 
     <!-- Ranking Strings -->
     <string name="points">POINTS</string>
-    <string name="no_friends">It appears you aren\'t following anyone.</string>
+    <string name="no_friends">We couldn\'t find the users you follow.</string>
     <string name="make_friends">MAKE A FRIEND</string>
 
     <!-- Routine Strings -->
