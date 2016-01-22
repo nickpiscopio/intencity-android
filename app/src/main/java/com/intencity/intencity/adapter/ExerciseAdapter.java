@@ -46,7 +46,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_exercise,
                                                                   parent, false);
 
-        return new ExerciseViewHolder(v, listener);
+        return new ExerciseViewHolder(context, v, listener);
     }
 
     @Override
@@ -61,6 +61,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         exerciseHolder.setExerciseText(exercise.getName());
         exerciseHolder.setPosition(position);
         exerciseHolder.setWeight(set.getWeight());
+        exerciseHolder.setDescription(exercise.getDescription());
 
         String reps = String.valueOf(set.getReps());
         String duration = set.getDuration();

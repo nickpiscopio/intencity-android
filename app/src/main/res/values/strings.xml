@@ -71,6 +71,13 @@
     <string name="title_intensity">INTENSITY</string>
     <string name="note_hint">Notes&#8230;</string>
     <string name="edit">EDIT</string>
+    <string name="warm_up">WARM-UP</string>
+    <string name="warm_up_description">Performing a moderate activity for 3—5 minutes or until warm. This activity can be a light jog, riding a bike, jumping jacks, etc.</string>
+    <string name="stretch">STRETCH</string>
+    <string name="stretch_description">To combat soreness and encourage muscle development, stretch the muscles that were exercised in this workout.</string>
+
+    <string name="stretches_title"> Stretches</string>
+    <string name="warm_ups_title"> Warm-Ups</string>
 
     <string name="hide_forever">Hide forever</string>
     <string name="hide_for_now">Hide for now</string>

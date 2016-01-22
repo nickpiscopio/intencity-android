@@ -66,11 +66,11 @@ public class Constant
     public static final String BUNDLE_EXERCISE = "com.intencity.intencity.bundle.exercise";
     public static final String BUNDLE_EXERCISE_POSITION = "com.intencity.intencity.bundle.exercise.position";
     public static final String BUNDLE_EXERCISE_SETS = "com.intencity.intencity.bundle.exercise.sets";
-    public static final String BUNDLE_EXERCISE_NOTES = "com.intencity.intencity.bundle.exercise.notes";
     public static final String BUNDLE_EXERCISE_LIST_INDEX = "com.intencity.intencity.bundle.exercise.list.index";
     public static final String BUNDLE_RECOMMENDED_ROUTINE = "com.intencity.intencity.bundle.recommended.routine";
     public static final String BUNDLE_EXERCISE_NAME = "com.intencity.intencity.bundle.exercise.name";
     public static final String BUNDLE_ID = "com.intencity.intencity.bundle.id";
+    public static final String BUNDLE_EXERCISE_TYPE = "com.intencity.intencity.exercise.type";
 
     // Service Endpoint
     private static final String ENDPOINT = "http://www.intencityapp.com/";
@@ -117,12 +117,24 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_EQUIPMENT = "getEquipment";
     public static final String STORED_PROCEDURE_GRANT_POINTS = "grantPointsToUser";
     public static final String STORED_PROCEDURE_GRANT_BADGE = "grantBadgeToUser";
+    public static final String STORED_PROCEDURE_GET_INJURY_PREVENTION_WORKOUTS = "getInjurtPreventionWorkouts";
 
     // Column Values
     public static final String ACCOUNT_TYPE_ADMIN = "A";
     public static final String ACCOUNT_TYPE_BETA = "B";
     public static final String ACCOUNT_TYPE_NORMAL = "N";
     public static final String ACCOUNT_TYPE_TRIAL = "T";
+
+    // Exercise Type Values
+    public static final String EXERCISE_TYPE_WARM_UP = "W";
+    public static final String EXERCISE_TYPE_STRETCH = "S";
+    public static final String EXERCISE_TYPE_EXERCISE = "E";
+
+    // Routine Names
+    // We need these because the cardio routine doesn't have stretches or warm-ups,
+    // so we replace them with legs and lower back.
+    public static final String ROUTINE_CARDIO = "Cardio";
+    public static final String ROUTINE_LEGS_AND_LOWER_BACK = "Legs & Lower Back";
 
     // Table Names
     public static final String TABLE_COMPLETED_EXERCISE = "CompletedExercise";

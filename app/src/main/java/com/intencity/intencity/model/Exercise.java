@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class Exercise implements Parcelable
 {
     private String name;
+    private String description;
 
     private ArrayList<Set> sets;
 
@@ -26,6 +27,7 @@ public class Exercise implements Parcelable
     private Exercise(Parcel in)
     {
         name = in.readString();
+        description = in.readString();
 
         sets = new ArrayList<>();
         in.readTypedList(sets, Set.CREATOR);
@@ -56,6 +58,7 @@ public class Exercise implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeString(name);
+        dest.writeString(description);
         dest.writeTypedList(sets);
     }
 
@@ -70,6 +73,16 @@ public class Exercise implements Parcelable
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 
     public ArrayList<Set> getSets()

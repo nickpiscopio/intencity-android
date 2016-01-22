@@ -111,6 +111,15 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         {
             ArrayList<Exercise> exercises = new ArrayList<>();
 
+            // We are adding a warm-up to the exercise list.
+            Exercise warmUp = getNewExercise(context.getString(R.string.warm_up),
+                                             Constant.RETURN_NULL,
+                                             Constant.RETURN_NULL,
+                                             Constant.RETURN_NULL,
+                                             Constant.RETURN_NULL);
+            warmUp.setDescription(context.getString(R.string.warm_up_description));
+            exercises.add(warmUp);
+
             try
             {
                 JSONArray array = new JSONArray(response);
@@ -127,25 +136,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment
                     String duration = object.getString(Constant.COLUMN_EXERCISE_DURATION);
                     String difficulty = object.getString(Constant.COLUMN_EXERCISE_DIFFICULTY);
 
-                    Set set = new Set();
-                    set.setWeight(
-                            weight.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
-                                    Integer.valueOf(weight));
-                    set.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ? 0 :
-                                        Integer.valueOf(reps));
-                    set.setDuration(duration);
-                    set.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ?
-                                              Constant.CODE_FAILED : Integer.valueOf(difficulty));
-
-                    ArrayList<Set> sets = new ArrayList<>();
-                    sets.add(set);
-
-                    Exercise exercise = new Exercise();
-                    exercise.setName(name);
-                    exercise.setSets(sets);
-
                     // Add all the exercises from the database to the array list.
-                    exercises.add(exercise);
+                    exercises.add(getNewExercise(name, weight, reps, duration, difficulty));
                 }
 
                 previousExercises = exercises;
@@ -159,6 +151,15 @@ public class RoutineFragment extends android.support.v4.app.Fragment
 
                 listener.onFinishedLoading(Constant.CODE_FAILED_REPOPULATE);
             }
+
+            // We are adding a stretch to the exercise list.
+            Exercise stretch = getNewExercise(context.getString(R.string.stretch),
+                                              Constant.RETURN_NULL,
+                                              Constant.RETURN_NULL,
+                                              Constant.RETURN_NULL,
+                                              Constant.RETURN_NULL);
+            stretch.setDescription(context.getString(R.string.stretch_description));
+            exercises.add(stretch);
         }
 
         @Override
@@ -167,6 +168,38 @@ public class RoutineFragment extends android.support.v4.app.Fragment
             listener.onFinishedLoading(Constant.CODE_FAILED_REPOPULATE);
         }
     };
+
+    /**
+     * Get a new exercise.
+     *
+     * @param name          The name of the exercise.
+     * @param weight        The weight the user did last time.
+     * @param reps          The amount of reps the user did.
+     * @param duration      The duration the user did.
+     *                      Usually in 00:00:00 format.
+     * @param difficulty    The difficulty from 1-10.
+     *
+     * @return  The new exercise.
+     */
+    private Exercise getNewExercise(String name, String weight, String reps, String duration, String difficulty)
+    {
+        Set set = new Set();
+        set.setWeight(weight.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
+                              Integer.valueOf(weight));
+        set.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ? 0 : Integer.valueOf(reps));
+        set.setDuration(duration);
+        set.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
+                                  Integer.valueOf(difficulty));
+
+        ArrayList<Set> sets = new ArrayList<>();
+        sets.add(set);
+
+        Exercise exercise = new Exercise();
+        exercise.setName(name);
+        exercise.setSets(sets);
+
+        return exercise;
+    }
 
     /**
      * Populates the muscle spinner.

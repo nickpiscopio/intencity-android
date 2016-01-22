@@ -1,5 +1,7 @@
 package com.intencity.intencity.adapter.viewholder;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,6 +17,8 @@ import com.intencity.intencity.listener.ExerciseListener;
  */
 public class ExerciseViewHolder extends RecyclerView.ViewHolder
 {
+    private Context context;
+
     private View view;
 
     private LinearLayout exerciseLayout;
@@ -27,14 +31,17 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
     private TextView duration;
     private TextView repsTextView;
     private TextView edit;
+    private TextView description;
 
     private ExerciseListener listener;
 
     private int position;
 
-    public ExerciseViewHolder(View view, ExerciseListener listener)
+    public ExerciseViewHolder(Context context, View view, ExerciseListener listener)
     {
         super(view);
+
+        this.context = context;
 
         this.view = view;
 
@@ -50,6 +57,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         duration = (TextView) view.findViewById(R.id.duration);
         repsTextView = (TextView) view.findViewById(R.id.suffix);
         edit = (TextView) view.findViewById(R.id.edit);
+        description = (TextView) view.findViewById(R.id.description);
 
         exerciseLayout.setOnClickListener(exerciseClickListener);
         lastSetLayout.setOnClickListener(setClickListener);
@@ -136,6 +144,30 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
             this.slash.setVisibility(View.VISIBLE);
 
             this.weight.setText(String.valueOf(weight));
+        }
+    }
+
+    /**
+     * Sets and shows the description for the exercise.
+     *
+     * @param description   the description to show.
+     */
+    public void setDescription(String description)
+    {
+        if (description != null)
+        {
+            this.description.setText(description);
+            this.description.setVisibility(View.VISIBLE);
+            this.lastSetLayout.setVisibility(View.GONE);
+
+            this.exercise.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
+        }
+        else
+        {
+            this.description.setVisibility(View.GONE);
+            this.lastSetLayout.setVisibility(View.VISIBLE);
+
+            this.exercise.setTextColor(ContextCompat.getColor(context, R.color.primary));
         }
     }
 

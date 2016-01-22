@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.activity.Direction;
+import com.intencity.intencity.activity.ExerciseSearchActivity;
 import com.intencity.intencity.activity.StatActivity;
 import com.intencity.intencity.adapter.ExerciseAdapter;
 import com.intencity.intencity.dialog.CustomDialog;
@@ -44,7 +45,7 @@ import java.util.Date;
 public class ExerciseListFragment extends android.support.v4.app.Fragment implements DialogListener,
                                                                                      ExerciseListener
 {
-    private int TOTAL_EXERCISE_NUM = 5;
+    private int TOTAL_EXERCISE_NUM = 7;
 
     private int autoFillTo;
 
@@ -73,6 +74,10 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     private  SecurePreferences securePreferences;
 
+    private String warmUphExerciseName;
+    private String stretchExerciseName;
+    private String finishWorkoutString;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -93,7 +98,11 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         allExercises = bundle.getParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST);
 
-        updateTotalExercises();
+        warmUphExerciseName = getString(R.string.warm_up);
+        stretchExerciseName = getString(R.string.stretch);
+        finishWorkoutString = getString(R.string.finish_workout);
+
+                updateTotalExercises();
 
         autoFillTo = bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX) > 0 ?
                         bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX) : 1;
@@ -110,7 +119,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         updateRoutineName(completedExerciseNum);
 
-        checkNextButtonEnablement();
+        checkNextButtonEnablement(true);
 
         context = getContext();
 
@@ -177,7 +186,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         @Override
         public void onClick(View v)
         {
-            if (nextExercise.getText().toString().equals(getString(R.string.finish_workout)))
+            if (nextExercise.getText().toString().equals(finishWorkoutString))
             {
                 workoutFinished = true;
 
@@ -187,19 +196,19 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 dialog.setNegativeButtonStringRes(R.string.finish_button);
 
                 new CustomDialog(context, dialogListener, dialog);
-
-                Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT);
-                Util.grantBadgeToUser(email, Badge.FINISHER);
             }
             else
             {
-                addExercise();
+                addExercise(false);
 
-                checkNextButtonEnablement();
+                checkNextButtonEnablement(false);
             }
         }
     };
 
+    /**
+     * The dialog listener for when the user finishes exercising.
+     */
     private DialogListener dialogListener = new DialogListener()
     {
         @Override
@@ -215,6 +224,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 default:
                     break;
             }
+
+            Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT);
+            Util.grantBadgeToUser(email, Badge.FINISHER);
 
             // Start the fitness log over again.
             fitnessLogListener.onCompletedWorkout();
@@ -252,8 +264,19 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     /**
      * Gets the next exercise from the list.
      */
-    private void addExercise()
+    private void addExercise(boolean addingExerciseFromSearch)
     {
+        // If there is 1 exercise left, we want to display the stretch.
+        // We remove all the unnecessary exercises.
+        if (!addingExerciseFromSearch && TOTAL_EXERCISE_NUM - completedExerciseNum <= 1)
+        {
+            Exercise stretch = allExercises.get(allExercises.size() - 1);
+
+            allExercises.clear();
+            allExercises.addAll(currentExercises);
+            allExercises.add(stretch);
+        }
+
         long lastExerciseTime = securePreferences.getLong(Constant.USER_LAST_EXERCISE_TIME, 0);
         long now = new Date().getTime();
 
@@ -281,11 +304,16 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     /**
      * Sets the next button to be gone if we don't have anymore exercises left.
      */
-    private void checkNextButtonEnablement()
+    private void checkNextButtonEnablement(boolean loadedFromStart)
     {
-        if (currentExercises.size() >= allExercises.size() || completedExerciseNum >= TOTAL_EXERCISE_NUM)
+        if (nextExercise.getText().toString().equals(stretchExerciseName) ||
+            (loadedFromStart && completedExerciseNum >= TOTAL_EXERCISE_NUM))
         {
-            nextExercise.setText(getString(R.string.finish_workout));
+            nextExercise.setText(finishWorkoutString);
+        }
+        else if (currentExercises.size() >= allExercises.size() - 1 || completedExerciseNum >= TOTAL_EXERCISE_NUM - 1)
+        {
+            nextExercise.setText(stretchExerciseName);
         }
     }
 
@@ -317,9 +345,15 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     public void addExerciseToList(Exercise exercise)
     {
         allExercises.add(autoFillTo, exercise);
-        addExercise();
+        addExercise(true);
 
-        checkNextButtonEnablement();
+        String nextExerciseText = nextExercise.getText().toString();
+
+        if (!nextExerciseText.equals(stretchExerciseName) &&
+            !nextExerciseText.equals(finishWorkoutString))
+        {
+            checkNextButtonEnablement(false);
+        }
     }
 
     @Override
@@ -347,9 +381,15 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         {
             case 0: // Hide was clicked.
                 Exercise exerciseToRemove = currentExercises.get(position);
+                String exerciseName = exerciseToRemove.getName();
 
                 currentExercises.remove(exerciseToRemove);
-                allExercises.remove(exerciseToRemove);
+
+                // Only remove the exercise from allExercises if it is not a stretch.
+                if(!exerciseName.equalsIgnoreCase(stretchExerciseName))
+                {
+                    allExercises.remove(exerciseToRemove);
+                }
 
                 autoFillTo--;
                 completedExerciseNum--;
@@ -359,21 +399,31 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 adapter.setLastPosition(adapter.getLastPosition() - 1);
 
                 int currentExerciseSize = currentExercises.size();
+                if (exerciseName.equalsIgnoreCase(stretchExerciseName))
+                {
+                    updateTotalExercises();
 
-                if (position == currentExerciseSize)
+                    updateRoutineName(completedExerciseNum);
+
+                    checkNextButtonEnablement(false);
+
+                    adapter.notifyDataSetChanged();
+
+                }
+                else if (position == currentExerciseSize)
                 {
                     updateTotalExercises();
 
                     if (currentExerciseSize != allExercises.size())
                     {
-                        addExercise();
+                        addExercise(false);
                     }
                     else
                     {
                         updateRoutineName(completedExerciseNum);
                     }
 
-                    checkNextButtonEnablement();
+                    checkNextButtonEnablement(false);
                 }
                 else
                 {
@@ -391,8 +441,35 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     @Override
     public void onExerciseClicked(int position)
     {
-        Intent intent = new Intent(context, Direction.class);
-        intent.putExtra(Constant.BUNDLE_EXERCISE_NAME, currentExercises.get(position).getName());
+        String exerciseName = allExercises.get(position).getName();
+        if (exerciseName.equalsIgnoreCase(warmUphExerciseName))
+        {
+            startActivity(context, Constant.EXERCISE_TYPE_WARM_UP, routineName);
+        }
+        else if (exerciseName.equalsIgnoreCase(stretchExerciseName))
+        {
+            startActivity(context, Constant.EXERCISE_TYPE_STRETCH, routineName);
+        }
+        else
+        {
+            Intent intent = new Intent(context, Direction.class);
+            intent.putExtra(Constant.BUNDLE_EXERCISE_NAME, currentExercises.get(position).getName());
+            startActivity(intent);
+        }
+    }
+
+    /**
+     * Starts the ExerciseSearchActivity.
+     *
+     * @param context       The application context.
+     * @param type          The exercise type.
+     * @param routineName   The routine name.
+     */
+    private void startActivity(Context context, String type, String routineName)
+    {
+        Intent intent = new Intent(context, ExerciseSearchActivity.class);
+        intent.putExtra(Constant.BUNDLE_EXERCISE_TYPE, type);
+        intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, routineName);
         startActivity(intent);
     }
 
