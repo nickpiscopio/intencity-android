@@ -71,6 +71,8 @@ public class FragmentHandler
         }
 
         transaction.add(parent, fragmentToAdd, tag);
+        // Changing the way this is committed as per the descriptions from the below URL:
+        // http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit
         transaction.commitAllowingStateLoss();
     }
 }
