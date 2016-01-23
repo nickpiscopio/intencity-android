@@ -71,6 +71,6 @@ public class FragmentHandler
         }
 
         transaction.add(parent, fragmentToAdd, tag);
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 }
