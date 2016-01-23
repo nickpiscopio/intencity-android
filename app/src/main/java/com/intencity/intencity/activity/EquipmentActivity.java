@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.dialog.CustomDialog;
-import com.intencity.intencity.dialog.Dialog;
+import com.intencity.intencity.dialog.DialogContent;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
@@ -161,7 +161,7 @@ public class EquipmentActivity extends AppCompatActivity
         @Override
         public void onRetrievalFailed()
         {
-            Dialog dialog = new Dialog(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
+            DialogContent dialog = new DialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 
             new CustomDialog(EquipmentActivity.this, dialogListener, dialog);
         }

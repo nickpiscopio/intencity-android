@@ -9,8 +9,9 @@ import android.widget.ProgressBar;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.activity.MainActivity;
+import com.intencity.intencity.dialog.AwardDialog;
 import com.intencity.intencity.dialog.CustomDialog;
-import com.intencity.intencity.dialog.Dialog;
+import com.intencity.intencity.dialog.DialogContent;
 import com.intencity.intencity.helper.DbHelper;
 import com.intencity.intencity.task.ServiceTask;
 
@@ -138,7 +139,7 @@ public class Util
      */
     public static void showMessage(Context context, String title, String message)
     {
-        Dialog dialog = new Dialog(title, message, false);
+        DialogContent dialog = new DialogContent(title, message, false);
 
         new CustomDialog(context, null, dialog);
     }
@@ -149,11 +150,14 @@ public class Util
      * @param email     The email of the user to grant points.
      * @param points    The amount of points that will be granted.
      */
-    public static void grantPointsToUser(String email, int points)
+    public static void grantPointsToUser(Context context, String email, int points, String description)
     {
         new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GRANT_POINTS,
                                                                                  email, String.valueOf(points)));
+
+        // Show the awarded points to the user.
+        new AwardDialog(context, "+" + points, description);
     }
 
     /**

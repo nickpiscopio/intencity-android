@@ -21,7 +21,7 @@ import android.widget.Spinner;
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ExerciseSetAdapter;
 import com.intencity.intencity.dialog.CustomDialog;
-import com.intencity.intencity.dialog.Dialog;
+import com.intencity.intencity.dialog.DialogContent;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
@@ -336,13 +336,13 @@ public class StatActivity extends AppCompatActivity implements DialogListener
         if (notifyToRemoveLastSet)
         {
             new CustomDialog(StatActivity.this, StatActivity.this,
-                             new Dialog(getString(R.string.title_add_set_error),
+                             new DialogContent(getString(R.string.title_add_set_error),
                                         new String[] { getString(R.string.button_remove_set), getString(android.R.string.cancel) }));
         }
         else
         {
             new CustomDialog(StatActivity.this, StatActivity.this,
-                             new Dialog(getString(R.string.title_add_set_error),
+                             new DialogContent(getString(R.string.title_add_set_error),
                                         getString(R.string.message_add_set_error), false));
         }
 

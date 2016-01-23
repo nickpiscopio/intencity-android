@@ -20,7 +20,7 @@ import com.intencity.intencity.util.Constant;
  */
 public class CustomDialog
 {
-    public CustomDialog(Context context, final DialogListener dialogListener, Dialog dialog)
+    public CustomDialog(Context context, final DialogListener dialogListener, DialogContent dialog)
     {
         int style = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) ?
                 android.R.style.Theme_DeviceDefault_Light_Dialog_Alert :

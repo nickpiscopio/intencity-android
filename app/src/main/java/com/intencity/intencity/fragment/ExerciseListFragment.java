@@ -19,7 +19,7 @@ import com.intencity.intencity.activity.ExerciseSearchActivity;
 import com.intencity.intencity.activity.StatActivity;
 import com.intencity.intencity.adapter.ExerciseAdapter;
 import com.intencity.intencity.dialog.CustomDialog;
-import com.intencity.intencity.dialog.Dialog;
+import com.intencity.intencity.dialog.DialogContent;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.ExerciseListener;
@@ -174,7 +174,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                                                context.getString(android.R.string.cancel)/*,
                                                context.getString(R.string.hide_forever)*/};
 
-            new CustomDialog(context, ExerciseListFragment.this, new Dialog("", buttonText));
+            new CustomDialog(context, ExerciseListFragment.this, new DialogContent("", buttonText));
         }
     };
 
@@ -190,7 +190,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             {
                 workoutFinished = true;
 
-                Dialog dialog = new Dialog(context.getResources().getString(R.string.badge_earned_title), context.getResources().getString(R.string.badged_earned_finisher), true);
+                DialogContent dialog = new DialogContent(context.getResources().getString(R.string.badge_earned_title), context.getResources().getString(R.string.badged_earned_finisher), true);
                 dialog.setImgRes(R.mipmap.finisher);
                 dialog.setPositiveButtonStringRes(R.string.tweet_button);
                 dialog.setNegativeButtonStringRes(R.string.finish_button);
@@ -225,7 +225,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     break;
             }
 
-            Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT);
+            Util.grantPointsToUser(context, email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(R.string.award_completed_workout_description));
             Util.grantBadgeToUser(email, Badge.FINISHER);
 
             // Start the fitness log over again.
@@ -286,7 +286,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             editor.putLong(Constant.USER_LAST_EXERCISE_TIME, now);
             editor.apply();
 
-            Util.grantPointsToUser(email, Constant.POINTS_EXERICSE);
+            Util.grantPointsToUser(context, email, Constant.POINTS_EXERCISE, context.getString(R.string.award_exercise_description));
         }
 
         completedExerciseNum++;
@@ -587,7 +587,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         {
             // There will be no way we can know if they actually tweeted or not, so we will
             // Grant points to the user for at least opening up twitter and thinking about tweeting.
-            Util.grantPointsToUser(email, Constant.POINTS_SHARING);
+            Util.grantPointsToUser(context, email, Constant.POINTS_SHARING, context.getString(R.string.award_sharing_description));
         }
     }
 

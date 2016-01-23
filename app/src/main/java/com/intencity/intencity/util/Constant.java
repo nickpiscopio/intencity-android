@@ -20,7 +20,7 @@ public class Constant
     public static final int EXERCISE_POINTS_THRESHOLD = 60000;
 
     public static final int POINTS_LOGIN = 5;
-    public static final int POINTS_EXERICSE = 5;
+    public static final int POINTS_EXERCISE = 5;
     public static final int POINTS_COMPLETING_WORKOUT = 10;
     public static final int POINTS_SHARING = 5;
     public static final int POINTS_FOLLOWING = 5;

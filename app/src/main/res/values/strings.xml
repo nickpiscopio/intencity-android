@@ -129,4 +129,10 @@
     <string name="finish_button">Finish</string>
     <string name="tweet_button">Tweet</string>
 
+    <!-- Award Strings -->
+    <string name="award_login_description">for logging in.</string>
+    <string name="award_exercise_description">for doing the next exercise.</string>
+    <string name="award_completed_workout_description">more points for completing Intencity\'s workout!</string>
+    <string name="award_sharing_description">points for sharing your experience of Intencity!</string>
+
 </resources>

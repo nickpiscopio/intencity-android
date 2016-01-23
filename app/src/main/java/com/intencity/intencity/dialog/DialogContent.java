@@ -5,7 +5,7 @@ package com.intencity.intencity.dialog;
  *
  * Created by Nick Piscopio on 12/20/15.
  */
-public class Dialog
+public class DialogContent
 {
     private String title;
     private String message;
@@ -16,7 +16,7 @@ public class Dialog
     private int positiveButtonStringRes;
     private int negativeButtonStringRes;
 
-    public Dialog(String title, String message, boolean includeNegativeButton)
+    public DialogContent(String title, String message, boolean includeNegativeButton)
     {
         this.title = title;
         this.message = message;
@@ -24,7 +24,7 @@ public class Dialog
         this.includeNegativeButton = includeNegativeButton;
     }
 
-    public Dialog(String title, String[] buttons)
+    public DialogContent(String title, String[] buttons)
     {
         this.title = title;
         this.buttons = buttons;

@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         if ((now - lastLogin) >= Constant.LOGIN_POINTS_THRESHOLD)
         {
             String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
-            Util.grantPointsToUser(email, Constant.POINTS_LOGIN);
+            Util.grantPointsToUser(MainActivity.this, email, Constant.POINTS_LOGIN, context.getString(R.string.award_login_description));
 
             editor.putLong(Constant.USER_LAST_LOGIN, now);
             editor.apply();
