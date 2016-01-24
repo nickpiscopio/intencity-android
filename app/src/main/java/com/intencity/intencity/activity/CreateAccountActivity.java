@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.dialog.CustomDialog;
-import com.intencity.intencity.dialog.DialogContent;
+import com.intencity.intencity.dialog.CustomDialogContent;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
@@ -206,8 +206,8 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
      */
     private void showErrorMessage(String message)
     {
-        DialogContent
-                dialog = new DialogContent(context.getString(R.string.generic_error), message, false);
+        CustomDialogContent
+                dialog = new CustomDialogContent(context.getString(R.string.generic_error), message, false);
 
         new CustomDialog(CreateAccountActivity.this, this, dialog);
     }

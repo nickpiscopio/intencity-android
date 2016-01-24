@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.dialog.CustomDialog;
-import com.intencity.intencity.dialog.DialogContent;
+import com.intencity.intencity.dialog.CustomDialogContent;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
@@ -161,7 +161,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
         }
         else if (response.equalsIgnoreCase(Constant.SUCCESS))
         {
-            DialogContent dialog = new DialogContent(context.getString(R.string.password_changed_title),
+            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.password_changed_title),
                                                          context.getString(R.string.password_changed),
                                                          false);
 

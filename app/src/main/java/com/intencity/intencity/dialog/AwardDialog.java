@@ -3,8 +3,10 @@ package com.intencity.intencity.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
@@ -22,11 +24,10 @@ public class AwardDialog
     /**
      * The AwardDialog constructor.
      *
-     * @param context       This is the class (not context) that is needed to display the dialog.
-     * @param title         The title of the dialog.
-     * @param description   The description of the dialog.
+     * @param context   This is the class (not context) that is needed to display the dialog.
+     * @param content   The content of the dialog.
      */
-    public AwardDialog(Context context, String title, String description)
+    public AwardDialog(Context context, AwardDialogContent content)
     {
         // The timeout for when the dialog should be dismissed.
         int dialogTimeout = 3500;
@@ -47,10 +48,27 @@ public class AwardDialog
         window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
         window.setAttributes(layoutParams);
 
+        ImageView imageView = (ImageView) dialog.findViewById(R.id.image_view_award);
         TextView titleTextView = (TextView) dialog.findViewById(R.id.text_view_title);
         TextView descriptionTextView = (TextView) dialog.findViewById(R.id.text_view_description);
 
-        titleTextView.setText(title);
+        int imgRes = content.getImgRes();
+        String title = content.getTitle();
+        String description = content.getDescription();
+
+        if (imgRes > 0)
+        {
+            imageView.setImageResource(imgRes);
+            imageView.setVisibility(View.VISIBLE);
+            titleTextView.setVisibility(View.GONE);
+        }
+        else
+        {
+            titleTextView.setText(title);
+            titleTextView.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.GONE);
+        }
+
         descriptionTextView.setText(description);
 
         dialog.show();
@@ -61,7 +79,13 @@ public class AwardDialog
         {
             public void run()
             {
-                dialog.dismiss();
+                // This try catch is needed in case the dialog
+                // is dismissed before the code dismisses it.
+                try
+                {
+                    dialog.dismiss();
+                }
+                catch (Exception e) { }
             }
         }, dialogTimeout);
     }

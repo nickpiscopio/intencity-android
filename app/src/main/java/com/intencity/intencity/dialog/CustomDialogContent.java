@@ -1,11 +1,11 @@
 package com.intencity.intencity.dialog;
 
 /**
- * This is the dialog entity.
+ * This is the custom dialog entity.
  *
  * Created by Nick Piscopio on 12/20/15.
  */
-public class DialogContent
+public class CustomDialogContent
 {
     private String title;
     private String message;
@@ -16,7 +16,7 @@ public class DialogContent
     private int positiveButtonStringRes;
     private int negativeButtonStringRes;
 
-    public DialogContent(String title, String message, boolean includeNegativeButton)
+    public CustomDialogContent(String title, String message, boolean includeNegativeButton)
     {
         this.title = title;
         this.message = message;
@@ -24,7 +24,7 @@ public class DialogContent
         this.includeNegativeButton = includeNegativeButton;
     }
 
-    public DialogContent(String title, String[] buttons)
+    public CustomDialogContent(String title, String[] buttons)
     {
         this.title = title;
         this.buttons = buttons;

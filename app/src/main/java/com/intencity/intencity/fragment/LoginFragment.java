@@ -24,7 +24,7 @@ import com.intencity.intencity.activity.CreateAccountActivity;
 import com.intencity.intencity.activity.ForgotPasswordActivity;
 import com.intencity.intencity.activity.TermsActivity;
 import com.intencity.intencity.dialog.CustomDialog;
-import com.intencity.intencity.dialog.DialogContent;
+import com.intencity.intencity.dialog.CustomDialogContent;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
@@ -135,7 +135,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         {
             if (termsCheckBox.isChecked())
             {
-                new CustomDialog(context, trialDialogListener, new DialogContent(getString(R.string.trial_account_title), getString(R.string.trial_account_message), true));
+                new CustomDialog(context, trialDialogListener, new CustomDialogContent(getString(R.string.trial_account_title), getString(R.string.trial_account_message), true));
             }
             else
             {

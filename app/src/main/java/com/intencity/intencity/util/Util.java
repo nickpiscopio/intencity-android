@@ -10,8 +10,9 @@ import android.widget.ProgressBar;
 import com.intencity.intencity.R;
 import com.intencity.intencity.activity.MainActivity;
 import com.intencity.intencity.dialog.AwardDialog;
+import com.intencity.intencity.dialog.AwardDialogContent;
 import com.intencity.intencity.dialog.CustomDialog;
-import com.intencity.intencity.dialog.DialogContent;
+import com.intencity.intencity.dialog.CustomDialogContent;
 import com.intencity.intencity.helper.DbHelper;
 import com.intencity.intencity.task.ServiceTask;
 
@@ -139,7 +140,7 @@ public class Util
      */
     public static void showMessage(Context context, String title, String message)
     {
-        DialogContent dialog = new DialogContent(title, message, false);
+        CustomDialogContent dialog = new CustomDialogContent(title, message, false);
 
         new CustomDialog(context, null, dialog);
     }
@@ -157,7 +158,7 @@ public class Util
                                                                                  email, String.valueOf(points)));
 
         // Show the awarded points to the user.
-        new AwardDialog(context, "+" + points, description);
+        new AwardDialog(context, new AwardDialogContent("+" + points, description));
     }
 
     /**
@@ -166,7 +167,7 @@ public class Util
      * @param email         The email of the user to grant points.
      * @param badgeName     The name of the badge that is being awarded.
      */
-    public static void grantBadgeToUser(String email, String badgeName)
+    public static void grantBadgeToUser(Context context, String email, String badgeName, AwardDialogContent content)
     {
         // We won't display the date anywhere, so we probably don't need this in local time.
         long now = new Date().getTime();
@@ -174,6 +175,12 @@ public class Util
         new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GRANT_BADGE,
                                                                                  email, String.valueOf(now), badgeName));
+
+        if (content != null)
+        {
+            // Show the awarded points to the user.
+            new AwardDialog(context, content);
+        }
     }
 
     /**

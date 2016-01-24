@@ -18,8 +18,9 @@ import com.intencity.intencity.activity.Direction;
 import com.intencity.intencity.activity.ExerciseSearchActivity;
 import com.intencity.intencity.activity.StatActivity;
 import com.intencity.intencity.adapter.ExerciseAdapter;
+import com.intencity.intencity.dialog.AwardDialogContent;
 import com.intencity.intencity.dialog.CustomDialog;
-import com.intencity.intencity.dialog.DialogContent;
+import com.intencity.intencity.dialog.CustomDialogContent;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.ExerciseListener;
@@ -36,6 +37,7 @@ import com.intencity.intencity.util.Util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * The Exercise List Fragment for Intencity.
@@ -77,6 +79,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private String warmUphExerciseName;
     private String stretchExerciseName;
     private String finishWorkoutString;
+
+    private HashMap<String, String> awards = new HashMap<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -174,7 +178,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                                                context.getString(android.R.string.cancel)/*,
                                                context.getString(R.string.hide_forever)*/};
 
-            new CustomDialog(context, ExerciseListFragment.this, new DialogContent("", buttonText));
+            new CustomDialog(context, ExerciseListFragment.this, new CustomDialogContent("", buttonText));
         }
     };
 
@@ -190,7 +194,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             {
                 workoutFinished = true;
 
-                DialogContent dialog = new DialogContent(context.getResources().getString(R.string.badge_earned_title), context.getResources().getString(R.string.badged_earned_finisher), true);
+                CustomDialogContent dialog = new CustomDialogContent(context.getResources().getString(R.string.badge_earned_title), context.getResources().getString(R.string.badged_earned_finisher), true);
                 dialog.setImgRes(R.mipmap.finisher);
                 dialog.setPositiveButtonStringRes(R.string.tweet_button);
                 dialog.setNegativeButtonStringRes(R.string.finish_button);
@@ -226,7 +230,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             }
 
             Util.grantPointsToUser(context, email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(R.string.award_completed_workout_description));
-            Util.grantBadgeToUser(email, Badge.FINISHER);
+            Util.grantBadgeToUser(context, email, Badge.FINISHER, null);
 
             // Start the fitness log over again.
             fitnessLogListener.onCompletedWorkout();
@@ -511,6 +515,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             boolean conductUpdate = false;
             boolean conductInsert = false;
 
+            String badge = Badge.LEFT_IT_ON_THE_FIELD;
+            int setsWithRepsGreaterThan10 = 0;
+
             // we need our own indexes here or the services won't work properly.
             int updateIndex = 0;
             int insertIndex = 0;
@@ -519,6 +526,25 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             for (int i = 0; i < setSize; i++)
             {
                 Set set = sets.get(i);
+
+                // Checks to see if the user deserves the "Left it on the Field" badge.
+                if (!awards.containsKey(badge) && set.getReps() >= 10)
+                {
+                    setsWithRepsGreaterThan10++;
+
+                    if (setsWithRepsGreaterThan10 >= 2)
+                    {
+                        SecurePreferences securePreferences = new SecurePreferences(context);
+                        String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+
+                        Util.grantBadgeToUser(context, email, badge,
+                                              new AwardDialogContent(R.mipmap.left_it_on_the_field,
+                                                                     context.getString(R.string.award_left_it_on_the_field_description)));
+
+                        awards.put(badge, exerciseName);
+                    }
+                }
+
                 if (set.getWebId() > 0)
                 {
                     // Call update
