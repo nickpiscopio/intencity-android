@@ -49,8 +49,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 {
     private int TOTAL_EXERCISE_NUM = 7;
 
-    private int autoFillTo;
-
     private ArrayList<Exercise> allExercises;
     private ArrayList<Exercise> currentExercises;
 
@@ -62,20 +60,18 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     private Context context;
 
-    private String routineName;
-
     private int completedExerciseNum = 0;
-
     private int position;
-
-    private String email;
-
-    private boolean workoutFinished;
+    private int autoFillTo;
 
     private ExerciseListListener fitnessLogListener;
 
-    private  SecurePreferences securePreferences;
+    private SecurePreferences securePreferences;
 
+    private boolean workoutFinished;
+
+    private String email;
+    private String routineName;
     private String warmUphExerciseName;
     private String stretchExerciseName;
     private String finishWorkoutString;
@@ -194,12 +190,25 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             {
                 workoutFinished = true;
 
-                CustomDialogContent dialog = new CustomDialogContent(context.getResources().getString(R.string.badge_earned_title), context.getResources().getString(R.string.badged_earned_finisher), true);
+                CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.badge_earned_title), context.getString(R.string.badged_earned_finisher), true);
                 dialog.setImgRes(R.mipmap.finisher);
                 dialog.setPositiveButtonStringRes(R.string.tweet_button);
                 dialog.setNegativeButtonStringRes(R.string.finish_button);
 
                 new CustomDialog(context, dialogListener, dialog);
+
+                // Grant the user the "Kept Swimming" badge if he or she didn't skip an exercise.
+                if (!securePreferences.getBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, false))
+                {
+                    Util.grantBadgeToUser(context, email, Badge.KEPT_SWIMMING,
+                                          new AwardDialogContent(R.mipmap.kept_swimming,
+                                                                 context.getString(R.string.award_kept_swimming_description)));
+                }
+                else
+                {
+                    // Set the user has skipped an exercise to false for next time.
+                    setExerciseSkipped(false);
+                }
             }
             else
             {
@@ -433,6 +442,11 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 {
                     adapter.notifyDataSetChanged();
                 }
+
+                // Add that the user has skipped an exercise.
+                // Can't get the Kept Swimming badge.
+                setExerciseSkipped(true);
+
                 break;
             case 1: // Cancel was clicked.
                 adapter.notifyDataSetChanged();
@@ -440,6 +454,18 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             default:
                 break;
         }
+    }
+
+    /**
+     * Sets whether the user has skipped an exercise for today.
+     *
+     * @param skipped   Boolean of if the user ahs skipped an exercise.
+     */
+    private void setExerciseSkipped(boolean skipped)
+    {
+        SecurePreferences.Editor editor = securePreferences.edit();
+        editor.putBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, skipped);
+        editor.apply();
     }
 
     @Override

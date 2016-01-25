@@ -71,6 +71,7 @@ public class Constant
     public static final String BUNDLE_EXERCISE_NAME = "com.intencity.intencity.bundle.exercise.name";
     public static final String BUNDLE_ID = "com.intencity.intencity.bundle.id";
     public static final String BUNDLE_EXERCISE_TYPE = "com.intencity.intencity.exercise.type";
+    public static final String BUNDLE_EXERCISE_SKIPPED = "com.intencity.intencity.exercise.skipped";
 
     // Service Endpoint
     private static final String ENDPOINT = "http://www.intencityapp.com/";

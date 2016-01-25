@@ -9,4 +9,5 @@ public class Badge
 {
    public static final String FINISHER = "Finisher";
    public static final String LEFT_IT_ON_THE_FIELD = "Left it on the Field";
+   public static final String KEPT_SWIMMING = "Kept Swimming";
 }
