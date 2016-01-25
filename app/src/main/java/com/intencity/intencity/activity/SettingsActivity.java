@@ -42,8 +42,9 @@ public class SettingsActivity extends AppCompatActivity
         // Do not add the change password if we are using a trial account.
         if (!accountType.equals(Constant.ACCOUNT_TYPE_TRIAL))
         {
-            settingsList = new String[] { getString(R.string.edit_equipment),
-                                getString(R.string.change_password) };
+            settingsList = new String[] { getString(R.string.edit_exclusion),
+                                          getString(R.string.edit_equipment),
+                                          getString(R.string.change_password) };
         }
         else
         {
@@ -69,10 +70,13 @@ public class SettingsActivity extends AppCompatActivity
             // This directly correlates with the settingsList indices.
             switch (position)
             {
-                case 0: // Change equipment clicked.
+                case 0: // Change exclusion clicked.
+                    startActivity(ExclusionActivity.class);
+                    break;
+                case 1: // Change equipment clicked.
                     startActivity(EquipmentActivity.class);
                     break;
-                case 1: // Change Password clicked.
+                case 2: // Change Password clicked.
                     startActivity(ChangePasswordActivity.class);
                     break;
                 default:

@@ -86,6 +86,7 @@ public class Constant
     public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER_MOBILE + "complex_insert.php";
     public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
     public static final String SERVICE_UPDATE_EQUIPMENT = SERVICE_FOLDER_MOBILE + "update_equipment.php";
+    public static final String SERVICE_UPDATE_EXCLUSION = SERVICE_FOLDER_MOBILE + "update_exclusion.php";
     public static final String SERVICE_CHANGE_PASSWORD = SERVICE_FOLDER_MOBILE + "change_password.php";
     public static final String SERVICE_FORGOT_PASSWORD = SERVICE_FOLDER + "forgot_password.php";
 
@@ -116,9 +117,11 @@ public class Constant
     public static final String STORED_PROCEDURE_FOLLOW_USER = "followUser";
     public static final String STORED_PROCEDURE_GET_EXERCISE_DIRECTION = "getDirection";
     public static final String STORED_PROCEDURE_GET_EQUIPMENT = "getEquipment";
+    public static final String STORED_PROCEDURE_GET_EXCLUSION = "getExclusionList";
     public static final String STORED_PROCEDURE_GRANT_POINTS = "grantPointsToUser";
     public static final String STORED_PROCEDURE_GRANT_BADGE = "grantBadgeToUser";
-    public static final String STORED_PROCEDURE_GET_INJURY_PREVENTION_WORKOUTS = "getInjurtPreventionWorkouts";
+    public static final String STORED_PROCEDURE_GET_INJURY_PREVENTION_WORKOUTS = "getInjuryPreventionWorkouts";
+    public static final String STORED_PROCEDURE_EXCLUDE_EXERCISE = "excludeExercise";
 
     // Column Values
     public static final String ACCOUNT_TYPE_ADMIN = "A";
@@ -166,6 +169,7 @@ public class Constant
     public static final String COLUMN_VIDEO_URL = "VideoURL";
     public static final String COLUMN_DIRECTION = "Direction";
     public static final String COLUMN_EQUIPMENT_NAME = "EquipmentName";
+    public static final String COLUMN_EXCLUSION_NAME = "ExclusionName";
     public static final String COLUMN_HAS_EQUIPMENT = "HasEquipment";
 
     public static final String SPACE_REGEX = "\\s";
@@ -232,21 +236,25 @@ public class Constant
     }
 
     /**
-     * Generates the URL string to update the user's equipment list.
+     * Generates the URL string to update the user's equipment list or the user's exclusion list.
      *
      * @param email         The user's email.
-     * @param variables     The list of equipment the user selected.
+     * @param variables     The list items to update.
      *
      * @return  The generated URL string.
      */
-    public static String generateEquipmentListVariables(String email, ArrayList<String> variables)
+    public static String generateListVariables(String email, ArrayList<String> variables)
     {
-        String parameters = PARAMETER_EMAIL + email + PARAMETER_AMPERSAND + PARAMETER_INSERTS;
+        String parameters = PARAMETER_EMAIL + email;
 
         int length = variables.size();
-
         for (int i = 0; i < length; i++)
         {
+            if (i == 0)
+            {
+                parameters += PARAMETER_AMPERSAND + PARAMETER_INSERTS;
+            }
+
             parameters += ((i > 0) ? PARAMETER_DELIMITER : "") + variables.get(i);
         }
 

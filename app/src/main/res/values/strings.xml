@@ -109,8 +109,11 @@
     <string name="title_log_out">Log out</string>
 
     <!-- Settings Strings -->
+    <string name="edit_exclusion">Edit hidden exercises</string>
     <string name="edit_equipment">Edit equipment</string>
     <string name="change_password">Change password</string>
+
+    <string name="no_items">No hidden exercises found.</string>
 
     <string name="invalid_password">The password you entered wasn\'t correct. Please try again.</string>
     <string name="password_changed_title">Password changed</string>

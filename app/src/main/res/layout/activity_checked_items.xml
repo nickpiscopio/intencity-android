@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_fitness_log"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/page_background"
     android:gravity="center_horizontal"
     android:animateLayoutChanges="true"
@@ -20,10 +20,22 @@
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:choiceMode="multipleChoice"
         android:background="@android:color/white"
         android:dividerHeight="@dimen/divider_height"
         android:divider="@color/shadow"/>
+
+    <include
+        layout="@layout/divider"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/text_view_hidden_exercises"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/layout_margin"
+        android:text="@string/no_items"
+        android:visibility="gone"/>
 
 </LinearLayout>

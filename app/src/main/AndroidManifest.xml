@@ -70,6 +70,12 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".activity.ExclusionActivity"
+            android:theme="@style/AppTheme.Base"
+            android:label="@string/edit_exclusion"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.EquipmentActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/edit_equipment"
