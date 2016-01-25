@@ -85,7 +85,7 @@
             <ImageView
                 android:layout_width="@dimen/ranking_badge_size"
                 android:layout_height="@dimen/ranking_badge_size"
-                android:src="@mipmap/finisher"/>
+                android:src="@mipmap/badge"/>
 
             <TextView
                 android:layout_width="wrap_content"

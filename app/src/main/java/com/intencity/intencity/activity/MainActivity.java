@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         {
             userHasLoggedIn = false;
 
-            showDemo(DemoActivity.DESCRIPTION_PAGE);
+            showDemo(DemoActivity.DESCRIPTION);
         }
         else
         {
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         editor.clear();
         editor.apply();
 
-        showDemo(DemoActivity.LOG_IN_PAGE);
+        showDemo(DemoActivity.LOG_IN);
     }
 
     @Override

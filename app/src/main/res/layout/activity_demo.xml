@@ -10,6 +10,7 @@
         android:layout_height="match_parent"/>
 
     <RelativeLayout
+        android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -44,6 +45,19 @@
 
             <ImageView
                 android:id="@+id/pager_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/pager_margin"
+                android:src="@mipmap/pager_unselected"/>
+
+            <ImageView
+                android:id="@+id/pager_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/pager_margin"
+                android:src="@mipmap/pager_unselected"/>
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/pager_margin"

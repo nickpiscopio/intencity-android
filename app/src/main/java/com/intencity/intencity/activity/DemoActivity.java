@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ViewPagerAdapter;
@@ -20,20 +21,25 @@ import com.intencity.intencity.util.Constant;
  */
 public class DemoActivity extends FragmentActivity
 {
-    public static final int DESCRIPTION_PAGE = 0;
-    public static final int INSPIRATION_PAGE = 1;
-    public static final int SHARE_PAGE = 2;
-    public static final int LOG_IN_PAGE = 3;
+    public static final int DESCRIPTION = 0;
+    public static final int FITNESS_GURU = 1;
+    public static final int FITNESS_DIRECTION = 2;
+    public static final int FITNESS_LOG = 3;
+    public static final int RANKING = 4;
+    public static final int LOG_IN = 5;
 
     private static final int PAGER_SELECTED_RESOURCE = R.mipmap.pager_selected;
     private static final int PAGER_UNSELECTED_RESOURCE = R.mipmap.pager_unselected;
 
     private ViewPager mPager;
 
+    private RelativeLayout navigation;
+
     private ImageView pager0;
     private ImageView pager1;
     private ImageView pager2;
     private ImageView pager3;
+    private ImageView pager4;
 
     private ImageButton next;
 
@@ -45,23 +51,28 @@ public class DemoActivity extends FragmentActivity
 
         // Instantiate a ViewPager and a PagerAdapter.
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(getNewPagerFragment(DESCRIPTION_PAGE), "");
-        adapter.addFrag(getNewPagerFragment(INSPIRATION_PAGE), "");
-        adapter.addFrag(getNewPagerFragment(SHARE_PAGE), "");
+        adapter.addFrag(getNewPagerFragment(DESCRIPTION), "");
+        adapter.addFrag(getNewPagerFragment(FITNESS_GURU), "");
+        adapter.addFrag(getNewPagerFragment(FITNESS_DIRECTION), "");
+        adapter.addFrag(getNewPagerFragment(FITNESS_LOG), "");
+        adapter.addFrag(getNewPagerFragment(RANKING), "");
         adapter.addFrag(new LoginFragment(), "");
 
         Bundle extras = getIntent().getExtras();
         int pageToStart = extras.getInt(Constant.EXTRA_DEMO_PAGE);
 
-        pager0 = (ImageView)findViewById(R.id.pager_0);
-        pager1 = (ImageView)findViewById(R.id.pager_1);
-        pager2 = (ImageView)findViewById(R.id.pager_2);
-        pager3 = (ImageView)findViewById(R.id.pager_3);
+        navigation = (RelativeLayout) findViewById(R.id.navigation);
 
-        next = (ImageButton)findViewById(R.id.button_next);
+        pager0 = (ImageView) findViewById(R.id.pager_0);
+        pager1 = (ImageView) findViewById(R.id.pager_1);
+        pager2 = (ImageView) findViewById(R.id.pager_2);
+        pager3 = (ImageView) findViewById(R.id.pager_3);
+        pager4 = (ImageView) findViewById(R.id.pager_4);
+
+        next = (ImageButton) findViewById(R.id.button_next);
         next.setOnClickListener(nextListener);
 
-        mPager = (ViewPager)findViewById(R.id.pager);
+        mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(adapter);
         mPager.addOnPageChangeListener(pageChangeListener);
         mPager.setCurrentItem(pageToStart);
@@ -114,35 +125,45 @@ public class DemoActivity extends FragmentActivity
         {
             switch (position)
             {
-                case DESCRIPTION_PAGE:
+                case DESCRIPTION:
                     pager0.setImageResource(PAGER_SELECTED_RESOURCE);
                     pager1.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager2.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager3.setImageResource(PAGER_UNSELECTED_RESOURCE);
+                    pager4.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     break;
-                case INSPIRATION_PAGE:
+                case FITNESS_GURU:
                     pager0.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager1.setImageResource(PAGER_SELECTED_RESOURCE);
                     pager2.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager3.setImageResource(PAGER_UNSELECTED_RESOURCE);
+                    pager4.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     break;
-                case SHARE_PAGE:
+                case FITNESS_DIRECTION:
                     pager0.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager1.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager2.setImageResource(PAGER_SELECTED_RESOURCE);
                     pager3.setImageResource(PAGER_UNSELECTED_RESOURCE);
-                    pager0.setVisibility(View.VISIBLE);
-                    pager1.setVisibility(View.VISIBLE);
-                    pager2.setVisibility(View.VISIBLE);
-                    pager3.setVisibility(View.VISIBLE);
-                    next.setVisibility(View.VISIBLE);
+                    pager4.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     break;
-                case LOG_IN_PAGE:
-                    pager0.setVisibility(View.GONE);
-                    pager1.setVisibility(View.GONE);
-                    pager2.setVisibility(View.GONE);
-                    pager3.setVisibility(View.GONE);
-                    next.setVisibility(View.GONE);
+                case FITNESS_LOG:
+                    pager0.setImageResource(PAGER_UNSELECTED_RESOURCE);
+                    pager1.setImageResource(PAGER_UNSELECTED_RESOURCE);
+                    pager2.setImageResource(PAGER_UNSELECTED_RESOURCE);
+                    pager3.setImageResource(PAGER_SELECTED_RESOURCE);
+                    pager4.setImageResource(PAGER_UNSELECTED_RESOURCE);
+                    break;
+                case RANKING:
+                    pager0.setImageResource(PAGER_UNSELECTED_RESOURCE);
+                    pager1.setImageResource(PAGER_UNSELECTED_RESOURCE);
+                    pager2.setImageResource(PAGER_UNSELECTED_RESOURCE);
+                    pager3.setImageResource(PAGER_UNSELECTED_RESOURCE);
+                    pager4.setImageResource(PAGER_SELECTED_RESOURCE);
+
+                    navigation.setVisibility(View.VISIBLE);
+                    break;
+                case LOG_IN:
+                    navigation.setVisibility(View.GONE);
                     break;
                 default:
                     break;

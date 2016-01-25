@@ -25,17 +25,25 @@ public class PagerFragment extends Fragment
         int page = getArguments().getInt(FRAGMENT_PAGE);
         switch (page)
         {
-            case DemoActivity.INSPIRATION_PAGE:
-                pageId = R.layout.fragment_demo_inspire;
+            case DemoActivity.FITNESS_GURU:
+                pageId = R.layout.fragment_demo_fitness_guru;
                 break;
 
-            case DemoActivity.SHARE_PAGE:
-                pageId = R.layout.fragment_demo_share;
+            case DemoActivity.FITNESS_DIRECTION:
+                pageId = R.layout.fragment_demo_fitness_direction;
                 break;
 
-            case DemoActivity.DESCRIPTION_PAGE:
+            case DemoActivity.FITNESS_LOG:
+                pageId = R.layout.fragment_demo_fitness_log;
+                break;
+
+            case DemoActivity.RANKING:
+                pageId = R.layout.fragment_demo_ranking;
+                break;
+
+            case DemoActivity.DESCRIPTION:
             default:
-                pageId = R.layout.fragment_demo_about;
+                pageId = R.layout.fragment_demo_description;
                 break;
         }
 

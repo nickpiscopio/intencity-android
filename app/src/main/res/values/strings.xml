@@ -1,6 +1,17 @@
 <resources>
     <string name="app_name">Intencity</string>
     <string name="copyright">&#169; Intencity 2016. All Rights Reserved.</string>
+
+    <string name="demo_description">A fitness app designed to help you achieve your fitness goals.</string>
+    <string name="demo_fitness_guru_title">Fitness Guru</string>
+    <string name="demo_fitness_guru_description">Take the guesswork out of your workout, and let Intencity decide your routines.</string>
+    <string name="demo_fitness_direction_title">Get Directions</string>
+    <string name="demo_fitness_direction_description">Get step-by-step directions on how to do each exercise.</string>
+    <string name="demo_fitness_log_title">Log Your Progress</string>
+    <string name="demo_fitness_log_description">Let Intencity remember your last set, so you can get back to your goal.</string>
+    <string name="demo_ranking_title">Rankings</string>
+    <string name="demo_ranking_description">Have a friendly, fitness competition with your friends.</string>
+
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>

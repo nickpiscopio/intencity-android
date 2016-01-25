@@ -16,7 +16,18 @@
     </style>
 
     <style name="demo_text" parent="AppTheme">
+        <item name="android:textSize">@dimen/demo_text_size</item>
         <item name="android:textColor">@color/page_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginBottom">@dimen/layout_margin</item>
+        <item name="android:paddingBottom">@dimen/layout_margin</item>
+    </style>
+
+    <style name="demo_title" parent="demo_text">
+        <item name="android:textSize">@dimen/demo_title_size</item>
+        <item name="android:layout_marginBottom">@dimen/related_item_margin</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 
 </resources>
