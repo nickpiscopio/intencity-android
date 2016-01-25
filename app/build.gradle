@@ -6,9 +6,9 @@ android {
 
     defaultConfig {
         applicationId "com.intencity.intencity"
-        minSdkVersion 15
+        minSdkVersion 14
         targetSdkVersion 23
-        versionCode 15
+        versionCode 16
         versionName "2.0"
     }
 
