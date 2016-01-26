@@ -65,9 +65,15 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name=".activity.NotificationActivity"
             android:theme="@style/AppTheme.Base"
-            android:label="@string/title_settings"
+            android:label="@string/title_notifications"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.MenuActivity"
+            android:theme="@style/AppTheme.Base"
+            android:label="@string/title_menu"
             android:screenOrientation="portrait" />
 
         <activity

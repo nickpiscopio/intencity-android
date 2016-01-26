@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/menu"
-        android:icon="@mipmap/tab_icon_menu"
+        android:icon="@mipmap/menu"
         android:title="@string/title_menu"
         app:showAsAction="always"/>
 </menu>

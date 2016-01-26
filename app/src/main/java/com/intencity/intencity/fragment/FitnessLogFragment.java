@@ -15,12 +15,13 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.listener.DatabaseListener;
 import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.LoadingListener;
+import com.intencity.intencity.listener.NotificationListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.task.GetExerciseTask;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.FragmentHandler;
+import com.intencity.intencity.handler.FragmentHandler;
 import com.intencity.intencity.util.SecurePreferences;
 
 import org.json.JSONArray;
@@ -56,6 +57,8 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     private String email;
 
     private boolean pushedTryAgain = false;
+
+    private NotificationListener notificationListener;
 
     private ExerciseListFragment exerciseListFragment;
 
@@ -323,14 +326,24 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     }
 
     /**
-     * Sets the MainActivity's ExerciseListListener, so we can call it when we have new exercises.
-     * This is so we can tell the search to not include teh 'Add' button to that exercise.
+     * Sets the MainActivity's ExerciseListListener,
+     * so we can call it when the workout is completed.
      *
      * @param listener  The listener to set the MainActivity's ExerciseListListener to.
      */
     public void setMainActivityExerciseListListener(ExerciseListListener listener)
     {
         this.mainActivityExerciseListListener = listener;
+    }
+
+    /**
+     * Sets the MainActivity's NotificationListener.
+     *
+     * @param notificationListener  The listener to set the MainActivity's NotificationListener to.
+     */
+    public void setNotificationListener(NotificationListener notificationListener)
+    {
+        this.notificationListener = notificationListener;
     }
 
     @Override

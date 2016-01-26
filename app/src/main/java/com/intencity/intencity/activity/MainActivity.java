@@ -2,8 +2,10 @@ package com.intencity.intencity.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +17,9 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ViewPagerAdapter;
 import com.intencity.intencity.fragment.FitnessLogFragment;
 import com.intencity.intencity.fragment.RankingFragment;
+import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.listener.ExerciseListListener;
+import com.intencity.intencity.listener.NotificationListener;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
@@ -27,8 +31,11 @@ import java.util.Date;
  *
  * Created by Nick Piscopio on 12/9/15.
  */
-public class MainActivity extends AppCompatActivity implements ExerciseListListener
+public class MainActivity extends AppCompatActivity implements ExerciseListListener,
+                                                               NotificationListener
 {
+    private final int MENU_ID = R.id.menu;
+
     private final int TAB_FITNESS_GURU = 0;
     private final int TAB_RANKING = 1;
 
@@ -37,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
     private TabLayout tabLayout;
 
     private ViewPager viewPager;
+
+    private MenuItem menuItem;
 
     private int[] tabIcons = {
             R.drawable.tab_icon_fitness_guru,
@@ -107,6 +116,10 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
      */
     private void runIntencity()
     {
+        // Instantiate the NotificationHandler,
+        // and set the listener to this class.
+        NotificationHandler.getInstance(this);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -166,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
 
         fitnessLogFragment = new FitnessLogFragment();
         fitnessLogFragment.setMainActivityExerciseListListener(this);
+        fitnessLogFragment.setNotificationListener(this);
         adapter.addFrag(fitnessLogFragment, "");
 
         rankingFragment = new RankingFragment();
@@ -180,6 +194,8 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
 
+        menuItem = menu.findItem(MENU_ID);
+
         return true;
     }
 
@@ -188,9 +204,11 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
     {
         switch (item.getItemId())
         {
-            case R.id.menu:
-                startActivityForResult(new Intent(this, SettingsActivity.class),
+            case MENU_ID:
+                startActivityForResult(new Intent(this, MenuActivity.class),
                                        Constant.REQUEST_CODE_LOG_OUT);
+
+                menuItem.setIcon(ContextCompat.getDrawable(context, R.mipmap.menu));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -224,5 +242,13 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
     public void onCompletedWorkout()
     {
         setupViewPager();
+    }
+
+    @Override
+    public void onNotificationAdded()
+    {
+        menuItem.setIcon(ContextCompat.getDrawable(context, R.drawable.menu_notification));
+
+        ((AnimationDrawable)menuItem.getIcon()).start();
     }
 }

@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 
@@ -19,13 +20,13 @@ import com.intencity.intencity.util.SecurePreferences;
  *
  * Created by Nick Piscopio on 1/17/15.
  */
-public class SettingsActivity extends AppCompatActivity
+public class MenuActivity extends AppCompatActivity
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_standard_list);
 
         // Add the back button to the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -39,10 +40,14 @@ public class SettingsActivity extends AppCompatActivity
         SecurePreferences securePreferences = new SecurePreferences(getApplicationContext());
         String accountType = securePreferences.getString(Constant.USER_ACCOUNT_TYPE, "");
 
+        int awardTotal = NotificationHandler.getInstance(null).getAwardCount();
+
+        // TODO: This needs to be fixed for trial accounts.
         // Do not add the change password if we are using a trial account.
         if (!accountType.equals(Constant.ACCOUNT_TYPE_TRIAL))
         {
-            settingsList = new String[] { getString(R.string.edit_exclusion),
+            settingsList = new String[] { getString(R.string.notifications, "(" + awardTotal + ")"),
+                                          getString(R.string.edit_exclusion),
                                           getString(R.string.edit_equipment),
                                           getString(R.string.change_password),
                                           getString(R.string.title_about),
@@ -75,21 +80,25 @@ public class SettingsActivity extends AppCompatActivity
             switch (position)
             {
                 case 0: // Change exclusion clicked.
+                    startActivity(NotificationActivity.class);
+                    break;
+
+                case 1: // Change exclusion clicked.
                     startActivity(ExclusionActivity.class);
                     break;
-                case 1: // Change equipment clicked.
+                case 2: // Change equipment clicked.
                     startActivity(EquipmentActivity.class);
                     break;
-                case 2: // Change Password clicked.
+                case 3: // Change Password clicked.
                     startActivity(ChangePasswordActivity.class);
                     break;
-                case 3: // About clicked.
+                case 4: // About clicked.
                     startActivity(AboutActivity.class);
                     break;
-                case 4: // Terms clicked.
+                case 5: // Terms clicked.
                     startActivity(TermsActivity.class);
                     break;
-                case 5: // Logout clicked.
+                case 6: // Logout clicked.
                     logOut();
                     break;
                 default:

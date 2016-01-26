@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.FragmentHandler;
+import com.intencity.intencity.handler.FragmentHandler;
 
 /**
  * The Fragment for the exercise.

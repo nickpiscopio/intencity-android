@@ -9,10 +9,10 @@ import android.widget.ProgressBar;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.activity.MainActivity;
-import com.intencity.intencity.dialog.AwardDialog;
 import com.intencity.intencity.dialog.AwardDialogContent;
 import com.intencity.intencity.dialog.CustomDialog;
 import com.intencity.intencity.dialog.CustomDialogContent;
+import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.helper.DbHelper;
 import com.intencity.intencity.task.ServiceTask;
 
@@ -157,8 +157,11 @@ public class Util
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GRANT_POINTS,
                                                                                  email, String.valueOf(points)));
 
+        // Add an award to the notification handler.
+        NotificationHandler.getInstance(null).addAward(new AwardDialogContent("+" + points, description));
+
         // Show the awarded points to the user.
-        new AwardDialog(context, new AwardDialogContent("+" + points, description));
+//        new AwardDialog(context, new AwardDialogContent("+" + points, description));
     }
 
     /**
@@ -178,8 +181,10 @@ public class Util
 
         if (content != null)
         {
+            // Add an award to the notification handler.
+            NotificationHandler.getInstance(null).addAward(content);
             // Show the awarded points to the user.
-            new AwardDialog(context, content);
+//            new AwardDialog(context, content);
         }
     }
 

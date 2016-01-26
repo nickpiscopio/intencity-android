@@ -33,7 +33,7 @@ public class AwardDialog
         int dialogTimeout = 3500;
 
         final Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.dialog_award);
+        dialog.setContentView(R.layout.list_item_award);
 
         Window window = dialog.getWindow();
         WindowManager.LayoutParams layoutParams = window.getAttributes();
