@@ -9,7 +9,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -68,9 +67,6 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         String nullString = "";
 
         context = getApplicationContext();
@@ -122,6 +118,9 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
      */
     private void runIntencity()
     {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         viewPager = (ViewPager) findViewById(R.id.pager);
         setupViewPager();
         viewPager.setCurrentItem(TAB_FITNESS_GURU);
@@ -131,8 +130,9 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
 
         setupTabIcons();
 
-        // Instantiate the NotificationHandler,
-        // and set the listener to this class.
+        // Instantiate the NotificationHandler.
+        // We reset it because it won't work properly if we log out and log back in.
+        NotificationHandler.getInstance(this).resetInstance();
         NotificationHandler.getInstance(this);
     }
 
@@ -255,8 +255,6 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
             menuItem.setIcon(ContextCompat.getDrawable(context, R.drawable.menu_notification));
 
             ((AnimationDrawable)menuItem.getIcon()).start();
-
-            Log.i(Constant.TAG, "Updated menu Item");
         }
     }
 }

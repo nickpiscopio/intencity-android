@@ -45,6 +45,11 @@ public class NotificationHandler
         this.listener = listener;
     }
 
+    public void resetInstance()
+    {
+        fragmentHandler = null;
+    }
+
     public void instantiateAwards()
     {
         awards = new ArrayList<>();
