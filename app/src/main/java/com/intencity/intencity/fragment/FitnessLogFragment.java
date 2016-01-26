@@ -248,19 +248,6 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     }
 
     /**
-     * Adds an exercise to the current exercise list.
-     *
-     * @param exercise  The exercise to add.
-     */
-    public void addExerciseToList(Exercise exercise)
-    {
-        if (exerciseListFragment != null)
-        {
-            exerciseListFragment.addExerciseToList(exercise);
-        }
-    }
-
-    /**
      * Removes the message to the user about the connection issue.
      */
     private void removeConnectionIssueMessage()
@@ -335,14 +322,6 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         stopLoading();
     }
 
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        exerciseListFragment.save();
-    }
-
     /**
      * Sets the MainActivity's ExerciseListListener, so we can call it when we have new exercises.
      * This is so we can tell the search to not include teh 'Add' button to that exercise.
@@ -352,12 +331,6 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     public void setMainActivityExerciseListListener(ExerciseListListener listener)
     {
         this.mainActivityExerciseListListener = listener;
-    }
-
-    @Override
-    public void onNextExercise(ArrayList<Exercise> exercises)
-    {
-        mainActivityExerciseListListener.onNextExercise(exercises);
     }
 
     @Override

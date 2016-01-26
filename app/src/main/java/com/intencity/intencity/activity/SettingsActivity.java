@@ -44,7 +44,11 @@ public class SettingsActivity extends AppCompatActivity
         {
             settingsList = new String[] { getString(R.string.edit_exclusion),
                                           getString(R.string.edit_equipment),
-                                          getString(R.string.change_password) };
+                                          getString(R.string.change_password),
+                                          getString(R.string.title_about),
+                                          getString(R.string.title_terms),
+                                          getString(R.string.title_log_out)
+            };
         }
         else
         {
@@ -79,6 +83,15 @@ public class SettingsActivity extends AppCompatActivity
                 case 2: // Change Password clicked.
                     startActivity(ChangePasswordActivity.class);
                     break;
+                case 3: // About clicked.
+                    startActivity(AboutActivity.class);
+                    break;
+                case 4: // Terms clicked.
+                    startActivity(TermsActivity.class);
+                    break;
+                case 5: // Logout clicked.
+                    logOut();
+                    break;
                 default:
                     break;
             }
@@ -107,5 +120,14 @@ public class SettingsActivity extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
+    }
+
+    /**
+     * Dismisses the activity and tells the MainActivity to log out.
+     */
+    private void logOut()
+    {
+        setResult(Constant.REQUEST_CODE_LOG_OUT);
+        finish();
     }
 }

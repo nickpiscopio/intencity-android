@@ -4,28 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/search"
-        android:icon="@mipmap/ic_magnify_white"
-        android:title="@string/menu_search"
+        android:id="@+id/menu"
+        android:icon="@mipmap/tab_icon_menu"
+        android:title="@string/title_menu"
         app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/settings"
-        android:title="@string/title_settings"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/about"
-        android:title="@string/title_about"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/terms"
-        android:title="@string/title_terms"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/log_out"
-        android:title="@string/title_log_out"
-        app:showAsAction="never"/>
 </menu>

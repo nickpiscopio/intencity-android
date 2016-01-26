@@ -1,9 +1,5 @@
 package com.intencity.intencity.listener;
 
-import com.intencity.intencity.model.Exercise;
-
-import java.util.ArrayList;
-
 /**
  * A listener to find out when a user starts exercising.
  *
@@ -11,6 +7,5 @@ import java.util.ArrayList;
  */
 public interface ExerciseListListener
 {
-    void onNextExercise(ArrayList<Exercise> exercises);
     void onCompletedWorkout();
 }

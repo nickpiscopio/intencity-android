@@ -81,7 +81,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private String routineName;
     private String warmUphExerciseName;
     private String stretchExerciseName;
-    private String finishWorkoutString;
 
     private HashMap<String, String> awards = new HashMap<>();
 
@@ -109,9 +108,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         warmUphExerciseName = getString(R.string.warm_up);
         stretchExerciseName = getString(R.string.stretch);
-        finishWorkoutString = getString(R.string.finish_workout);
 
-                updateTotalExercises();
+        updateTotalExercises();
 
         autoFillTo = bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX) > 0 ?
                         bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX) : 1;
@@ -124,11 +122,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             completedExerciseNum++;
         }
 
-        notifyFitnessLogOfNewExercise();
-
         updateRoutineName(completedExerciseNum);
-
-        checkNextButtonEnablement(true);
 
         context = getContext();
 
@@ -240,8 +234,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             else
             {
                 addExercise(false);
-
-                checkNextButtonEnablement(false);
             }
         }
     };
@@ -334,36 +326,10 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         currentExercises.add(allExercises.get(autoFillTo++));
 
-        notifyFitnessLogOfNewExercise();
-
         adapter.notifyDataSetChanged();
 
         // Scroll to the bottom of the list.
         recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
-    }
-
-    /**
-     * Sets the next button to be gone if we don't have anymore exercises left.
-     */
-    private void checkNextButtonEnablement(boolean loadedFromStart)
-    {
-//        if (nextExercise.getText().toString().equals(stretchExerciseName) ||
-//            (loadedFromStart && completedExerciseNum >= TOTAL_EXERCISE_NUM))
-//        {
-//            nextExercise.setText(finishWorkoutString);
-//        }
-//        else if (currentExercises.size() >= allExercises.size() - 1 || completedExerciseNum >= TOTAL_EXERCISE_NUM - 1)
-//        {
-//            nextExercise.setText(stretchExerciseName);
-//        }
-    }
-
-    /**
-     * Notifies the fitness log of the new exercise so we can update the search to not include the add button.
-     */
-    private void notifyFitnessLogOfNewExercise()
-    {
-        fitnessLogListener.onNextExercise(currentExercises);
     }
 
     /**
@@ -387,36 +353,13 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         allExercises.add(autoFillTo, exercise);
         addExercise(true);
-
-//        String nextExerciseText = nextExercise.getText().toString();
-//
-//        if (!nextExerciseText.equals(stretchExerciseName) &&
-//            !nextExerciseText.equals(finishWorkoutString))
-//        {
-//            checkNextButtonEnablement(false);
-//        }
     }
 
-//    @Override
-//    public void onStop()
-//    {
-//        super.onStop();
-//
-//        if (workoutFinished)
-//        {
-//            // Remove exercises from database since we are finished with the workout.
-//            new SetExerciseTask(context).execute();
-//        }
-//        else
-//        {
-//            // Save the exercises to the database in case the user wants
-//            // to continue with this routine later.
-//            new SetExerciseTask(context, routineName, allExercises, currentExercises.size()).execute();
-//        }
-//    }
-
-    public void save()
+    @Override
+    public void onStop()
     {
+        super.onStop();
+
         if (workoutFinished)
         {
             // Remove exercises from database since we are finished with the workout.
@@ -481,8 +424,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
             updateRoutineName(completedExerciseNum);
 
-            checkNextButtonEnablement(false);
-
             adapter.notifyDataSetChanged();
 
         }
@@ -498,8 +439,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             {
                 updateRoutineName(completedExerciseNum);
             }
-
-            checkNextButtonEnablement(false);
         }
         else
         {
