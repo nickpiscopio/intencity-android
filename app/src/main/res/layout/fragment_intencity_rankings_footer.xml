@@ -19,30 +19,30 @@
         android:text="@string/no_friends"
         android:padding="@dimen/layout_margin_quarter"/>
 
-    <LinearLayout
-        android:id="@+id/searchUsers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/card_button_margin"
-        android:gravity="center_vertical"
-        android:background="@drawable/button_card"
-        android:visibility="visible">
+    <!--<LinearLayout-->
+        <!--android:id="@+id/searchUsers"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:padding="@dimen/card_button_margin"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:background="@drawable/button_card"-->
+        <!--android:visibility="visible">-->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_account_plus_grey"
-            android:layout_marginRight="@dimen/layout_margin_quarter"/>
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@mipmap/ic_account_plus_grey"-->
+            <!--android:layout_marginRight="@dimen/layout_margin_quarter"/>-->
 
-        <TextView
-            android:id="@+id/btn_try_again"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/make_friends"
-            android:padding="@dimen/card_button_margin"
-            android:textStyle="bold"/>
+        <!--<TextView-->
+            <!--android:id="@+id/btn_try_again"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/make_friends"-->
+            <!--android:padding="@dimen/card_button_margin"-->
+            <!--android:textStyle="bold"/>-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
 </LinearLayout>

@@ -335,6 +335,14 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         stopLoading();
     }
 
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+
+        exerciseListFragment.save();
+    }
+
     /**
      * Sets the MainActivity's ExerciseListListener, so we can call it when we have new exercises.
      * This is so we can tell the search to not include teh 'Add' button to that exercise.

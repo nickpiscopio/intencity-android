@@ -3,11 +3,11 @@ package com.intencity.intencity.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,6 +36,8 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
 
     private ListView ranking;
 
+    private FloatingActionButton findFriend;
+
     private TextView followingMessage;
 
     private String email;
@@ -54,13 +56,16 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(refreshListener);
 
+        findFriend = (FloatingActionButton) view.findViewById(R.id.button_next);
+        findFriend.setOnClickListener(searchUsersListener);
+
         ranking = (ListView) view.findViewById(R.id.list_view_ranking);
         ranking.addFooterView(footer, null, false);
 
         followingMessage = (TextView) footer.findViewById(R.id.following_message);
 
-        LinearLayout searchUsers = (LinearLayout) footer.findViewById(R.id.searchUsers);
-        searchUsers.setOnClickListener(searchUsersListener);
+//        LinearLayout searchUsers = (LinearLayout) footer.findViewById(R.id.searchUsers);
+//        searchUsers.setOnClickListener(searchUsersListener);
 
         SecurePreferences securePreferences = new SecurePreferences(context);
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
@@ -72,6 +77,9 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         return view;
     }
 
+    /**
+     * The refresh listener for the listview.
+     */
     private SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener()
     {
         @Override
@@ -102,6 +110,9 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         populateRankingList();
     }
 
+    /**
+     * The click listener for searching for a user.
+     */
     private View.OnClickListener searchUsersListener = new View.OnClickListener()
     {
         @Override

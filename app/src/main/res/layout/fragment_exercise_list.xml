@@ -1,73 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/page_background"
-    android:animateLayoutChanges="true"
-    android:orientation="vertical">
+    android:background="@color/page_background">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/secondary_light"
-        android:paddingTop="@dimen/card_button_margin"
-        android:paddingRight="@dimen/card_button_margin"
-        android:paddingBottom="@dimen/card_button_margin"
-        android:paddingLeft="@dimen/layout_margin"
-        android:gravity="center_vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:animateLayoutChanges="true">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/layout_exercise_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@color/secondary_light"
+            android:paddingTop="@dimen/card_button_margin"
+            android:paddingRight="@dimen/card_button_margin"
+            android:paddingBottom="@dimen/card_button_margin"
+            android:paddingLeft="@dimen/layout_margin"
+            android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/text_view_routine_progress"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_view_routine_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/card_title_size"
+                    android:text="1/5"
+                    android:textStyle="bold"
+                    android:textColor="@color/page_background"
+                    android:paddingRight="@dimen/layout_margin_half"/>
+
+                <TextView
+                    android:id="@+id/text_view_routine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Legs and Lower Back"
+                    android:textColor="@color/page_background"/>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/card_title_size"
-                android:text="1/5"
+                android:text="@string/next_exercise"
+                android:textColor="@android:color/white"
                 android:textStyle="bold"
-                android:textColor="@color/page_background"
-                android:paddingRight="@dimen/layout_margin_half"/>
-
-            <TextView
-                android:id="@+id/text_view_routine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Legs and Lower Back"
-                android:textColor="@color/page_background"/>
+                android:padding="@dimen/card_button_padding"
+                android:background="@drawable/button_card_dark"
+                android:src="@mipmap/ic_magnify_white"/>
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/button_next"
-            android:layout_width="wrap_content"
+        <!-- Shadow -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shadow"
+            android:background="@drawable/shadow_dark"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/next_exercise"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:padding="@dimen/card_button_padding"
-            android:background="@drawable/button_card_dark"
-            style="?android:attr/borderlessButtonStyle"/>
+            android:layout_gravity="bottom"
+            app:layout_anchor="@id/layout_exercise_title"
+            android:paddingBottom="@dimen/list_view_padding_bottom"
+            android:clipToPadding="false"/>
 
     </LinearLayout>
 
-    <!-- Shadow -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/shadow"
-        android:background="@drawable/shadow_dark"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/button_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@mipmap/ic_plus_white"
+        app:layout_anchor="@id/recycler_view"
+        app:layout_anchorGravity="bottom|right|end" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <!-- TODO: Place holder for the AD -->
-
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
 

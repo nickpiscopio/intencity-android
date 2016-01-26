@@ -1,11 +1,14 @@
 package com.intencity.intencity.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * The model class for User.
  *
  * Created by Nick Piscopio on 12/18/15.
  */
-public class User
+public class User implements Parcelable
 {
     private int id;
     private int followingId;
@@ -14,6 +17,48 @@ public class User
 
     private String firstName;
     private String lastName;
+
+    public User() { }
+
+    private User(Parcel in)
+    {
+        id = in.readInt();
+        followingId = in.readInt();
+        earnedPoints = in.readInt();
+        totalBadges = in.readInt();
+        firstName = in.readString();
+        lastName = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>()
+    {
+        @Override public User createFromParcel(Parcel in)
+        {
+            return new User(in);
+        }
+
+        @Override public User[] newArray(int size)
+        {
+            return new User[size];
+        }
+    };
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeInt(id);
+        dest.writeInt(followingId);
+        dest.writeInt(earnedPoints);
+        dest.writeInt(totalBadges);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+    }
 
     /**
      * Getters and setters for the User model.

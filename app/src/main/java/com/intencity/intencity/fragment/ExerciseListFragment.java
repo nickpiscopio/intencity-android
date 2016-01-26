@@ -4,18 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.activity.Direction;
 import com.intencity.intencity.activity.ExerciseSearchActivity;
+import com.intencity.intencity.activity.SearchActivity;
 import com.intencity.intencity.activity.StatActivity;
 import com.intencity.intencity.adapter.ExerciseAdapter;
 import com.intencity.intencity.dialog.AwardDialogContent;
@@ -54,7 +56,12 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     private TextView routineProgress;
     private TextView routine;
-    private Button nextExercise;
+
+    private ImageButton search;
+
+    private RecyclerView recyclerView;
+
+    private FloatingActionButton nextExercise;
 
     private ExerciseAdapter adapter;
 
@@ -83,13 +90,15 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         View view = inflater.inflate(R.layout.fragment_exercise_list, container, false);
 
-        nextExercise = (Button) view.findViewById(R.id.button_next);
+        search = (ImageButton) view.findViewById(R.id.search);
+        nextExercise = (FloatingActionButton) view.findViewById(R.id.button_next);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
         routineProgress = (TextView) view.findViewById(R.id.text_view_routine_progress);
         routine = (TextView) view.findViewById(R.id.text_view_routine);
 
+        search.setOnClickListener(searchClickListener);
         nextExercise.setOnClickListener(nextExerciseClickListener);
 
         Bundle bundle = getArguments();
@@ -181,12 +190,30 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     /**
      * The next exercise click listener.
      */
+    private View.OnClickListener searchClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            // Open the search to search for a new exercise.
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(Constant.BUNDLE_SEARCH_EXERCISES, true);
+            bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, currentExercises);
+            Intent intent = new Intent(ExerciseListFragment.this.getActivity(), SearchActivity.class);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, Constant.REQUEST_CODE_SEARCH);
+        }
+    };
+
+    /**
+     * The next exercise click listener.
+     */
     private View.OnClickListener nextExerciseClickListener = new View.OnClickListener()
     {
         @Override
         public void onClick(View v)
         {
-            if (nextExercise.getText().toString().equals(finishWorkoutString))
+            if (completedExerciseNum >= TOTAL_EXERCISE_NUM)
             {
                 workoutFinished = true;
 
@@ -310,8 +337,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         notifyFitnessLogOfNewExercise();
 
         adapter.notifyDataSetChanged();
-        // TODO: set the recycler view to scroll to the bottom when a new view is added.
-        //        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+
+        // Scroll to the bottom of the list.
+        recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
     }
 
     /**
@@ -319,15 +347,15 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void checkNextButtonEnablement(boolean loadedFromStart)
     {
-        if (nextExercise.getText().toString().equals(stretchExerciseName) ||
-            (loadedFromStart && completedExerciseNum >= TOTAL_EXERCISE_NUM))
-        {
-            nextExercise.setText(finishWorkoutString);
-        }
-        else if (currentExercises.size() >= allExercises.size() - 1 || completedExerciseNum >= TOTAL_EXERCISE_NUM - 1)
-        {
-            nextExercise.setText(stretchExerciseName);
-        }
+//        if (nextExercise.getText().toString().equals(stretchExerciseName) ||
+//            (loadedFromStart && completedExerciseNum >= TOTAL_EXERCISE_NUM))
+//        {
+//            nextExercise.setText(finishWorkoutString);
+//        }
+//        else if (currentExercises.size() >= allExercises.size() - 1 || completedExerciseNum >= TOTAL_EXERCISE_NUM - 1)
+//        {
+//            nextExercise.setText(stretchExerciseName);
+//        }
     }
 
     /**
@@ -360,20 +388,35 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         allExercises.add(autoFillTo, exercise);
         addExercise(true);
 
-        String nextExerciseText = nextExercise.getText().toString();
-
-        if (!nextExerciseText.equals(stretchExerciseName) &&
-            !nextExerciseText.equals(finishWorkoutString))
-        {
-            checkNextButtonEnablement(false);
-        }
+//        String nextExerciseText = nextExercise.getText().toString();
+//
+//        if (!nextExerciseText.equals(stretchExerciseName) &&
+//            !nextExerciseText.equals(finishWorkoutString))
+//        {
+//            checkNextButtonEnablement(false);
+//        }
     }
 
-    @Override
-    public void onStop()
-    {
-        super.onStop();
+//    @Override
+//    public void onStop()
+//    {
+//        super.onStop();
+//
+//        if (workoutFinished)
+//        {
+//            // Remove exercises from database since we are finished with the workout.
+//            new SetExerciseTask(context).execute();
+//        }
+//        else
+//        {
+//            // Save the exercises to the database in case the user wants
+//            // to continue with this routine later.
+//            new SetExerciseTask(context, routineName, allExercises, currentExercises.size()).execute();
+//        }
+//    }
 
+    public void save()
+    {
         if (workoutFinished)
         {
             // Remove exercises from database since we are finished with the workout.
@@ -656,6 +699,18 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     @Override
                     public void onRetrievalFailed() { }
                 }).execute(Constant.SERVICE_COMPLEX_INSERT, insertString);
+            }
+        }
+        else if(resultCode == Constant.REQUEST_CODE_SEARCH)
+        {
+            Bundle extras = data.getExtras();
+            boolean searchExercise = extras.getBoolean(Constant.BUNDLE_SEARCH_EXERCISES);
+
+            if (searchExercise)
+            {
+                Exercise exercise = extras.getParcelable(Constant.BUNDLE_EXERCISE);
+
+                addExerciseToList(exercise);
             }
         }
         // Request codes are from the original startActivityForResult().

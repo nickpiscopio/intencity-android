@@ -6,16 +6,14 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ViewPagerAdapter;
 import com.intencity.intencity.fragment.FitnessLogFragment;
+import com.intencity.intencity.fragment.MenuFragment;
 import com.intencity.intencity.fragment.RankingFragment;
 import com.intencity.intencity.listener.ExerciseListListener;
+import com.intencity.intencity.listener.LogoutListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
@@ -29,12 +27,13 @@ import java.util.Date;
  *
  * Created by Nick Piscopio on 12/9/15.
  */
-public class MainActivity extends AppCompatActivity implements ExerciseListListener
+public class MainActivity extends AppCompatActivity implements ExerciseListListener, LogoutListener
 {
     private final int TAB_FITNESS_GURU = 0;
     private final int TAB_RANKING = 1;
+    private final int TAB_MENU = 2;
 
-    private Toolbar toolbar;
+//    private Toolbar toolbar;
 
     private TabLayout tabLayout;
 
@@ -43,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
     private int[] tabIcons = {
             R.drawable.tab_icon_fitness_guru,
             R.drawable.tab_icon_ranking,
+            R.drawable.tab_icon_menu
     };
 
     private FitnessLogFragment fitnessLogFragment;
@@ -64,8 +64,10 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
 
         String nullString = "";
 
-        SecurePreferences prefs = new SecurePreferences(getApplicationContext());
-        if (prefs.getString(Constant.USER_ACCOUNT_EMAIL, nullString).equals(nullString))
+        context = getApplicationContext();
+
+        securePreferences = new SecurePreferences(context);
+        if (securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, nullString).equals(nullString))
         {
             userHasLoggedIn = false;
 
@@ -109,8 +111,8 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
      */
     private void runIntencity()
     {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         setupViewPager();
@@ -120,10 +122,6 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         tabLayout.setupWithViewPager(viewPager);
 
         setupTabIcons();
-
-        context = getApplicationContext();
-
-        securePreferences = new SecurePreferences(context);
     }
 
     /**
@@ -160,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         {
             tabLayout.getTabAt(TAB_FITNESS_GURU).setIcon(tabIcons[TAB_FITNESS_GURU]);
             tabLayout.getTabAt(TAB_RANKING).setIcon(tabIcons[TAB_RANKING]);
+            tabLayout.getTabAt(TAB_MENU).setIcon(tabIcons[TAB_MENU]);
         }
     }
 
@@ -177,57 +176,61 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         rankingFragment = new RankingFragment();
         adapter.addFrag(rankingFragment, "");
 
+        MenuFragment menuFragment = new MenuFragment();
+        menuFragment.setListener(this);
+        adapter.addFrag(menuFragment, "");
+
         viewPager.setAdapter(adapter);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu)
+//    {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.main_menu, menu);
+//
+//        return true;
+//    }
 
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.search:
-                search();
-                return true;
-            case R.id.settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-            case R.id.about:
-                startActivity(new Intent(this, AboutActivity.class));
-                return true;
-            case R.id.terms:
-                startActivity(new Intent(this, TermsActivity.class));
-                return true;
-            case R.id.log_out:
-                logOut();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item)
+//    {
+//        switch (item.getItemId())
+//        {
+//            case R.id.search:
+//                search();
+//                return true;
+//            case R.id.settings:
+//                startActivity(new Intent(this, SettingsActivity.class));
+//                return true;
+//            case R.id.about:
+//                startActivity(new Intent(this, AboutActivity.class));
+//                return true;
+//            case R.id.terms:
+//                startActivity(new Intent(this, TermsActivity.class));
+//                return true;
+//            case R.id.log_out:
+//                logOut();
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
     /**
      * Opens the SearchActivity.
-     */
-    private void search()
-    {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(Constant.BUNDLE_SEARCH_EXERCISES,
-                          viewPager.getCurrentItem() == TAB_FITNESS_GURU);
-        bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, exercises);
-        Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, Constant.REQUEST_CODE_SEARCH);
-    }
-
+//     */
+//    private void search()
+//    {
+//        Bundle bundle = new Bundle();
+//        bundle.putBoolean(Constant.BUNDLE_SEARCH_EXERCISES,
+//                          viewPager.getCurrentItem() == TAB_FITNESS_GURU);
+//        bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, exercises);
+//        Intent intent = new Intent(this, SearchActivity.class);
+//        intent.putExtras(bundle);
+//        startActivityForResult(intent, Constant.REQUEST_CODE_SEARCH);
+//    }
+//
     /**
      * Removes the user's secure preferences and returns him or her to the login page.
      */
@@ -240,28 +243,28 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         showDemo(DemoActivity.LOG_IN);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(resultCode == Constant.REQUEST_CODE_SEARCH)
-        {
-            Bundle extras = data.getExtras();
-            boolean searchExercise = extras.getBoolean(Constant.BUNDLE_SEARCH_EXERCISES);
-
-            if (searchExercise)
-            {
-                Exercise exercise = extras.getParcelable(Constant.BUNDLE_EXERCISE);
-
-                fitnessLogFragment.addExerciseToList(exercise);
-            }
-            else
-            {
-                rankingFragment.getFollowing();
-            }
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data)
+//    {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if(resultCode == Constant.REQUEST_CODE_SEARCH)
+//        {
+//            Bundle extras = data.getExtras();
+//            boolean searchExercise = extras.getBoolean(Constant.BUNDLE_SEARCH_EXERCISES);
+//
+//            if (searchExercise)
+//            {
+//                Exercise exercise = extras.getParcelable(Constant.BUNDLE_EXERCISE);
+//
+//                fitnessLogFragment.addExerciseToList(exercise);
+//            }
+//            else
+//            {
+//                rankingFragment.getFollowing();
+//            }
+//        }
+//    }
 
     @Override
     public void onNextExercise(ArrayList<Exercise> exercises)
@@ -273,5 +276,11 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
     public void onCompletedWorkout()
     {
         setupViewPager();
+    }
+
+    @Override
+    public void onLogout()
+    {
+        logOut();
     }
 }
