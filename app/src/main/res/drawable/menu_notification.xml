@@ -28,7 +28,7 @@
         android:duration="@integer/menu_animation_duration"/>
 
     <item
-        android:drawable="@mipmap/menu_notification_120"
+        android:drawable="@mipmap/menu_notification_110"
         android:duration="@integer/menu_animation_duration"/>
 
     <item
