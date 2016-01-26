@@ -4,16 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.adapter.MenuAdapter;
 import com.intencity.intencity.handler.NotificationHandler;
+import com.intencity.intencity.model.MenuItem;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
+
+import java.util.ArrayList;
 
 /**
  * This is the settings activity for Intencity.
@@ -22,6 +24,10 @@ import com.intencity.intencity.util.SecurePreferences;
  */
 public class MenuActivity extends AppCompatActivity
 {
+    private ArrayList<MenuItem> menuItems;
+
+    private String logOutTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -35,33 +41,29 @@ public class MenuActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        String[] settingsList;
-
         SecurePreferences securePreferences = new SecurePreferences(getApplicationContext());
         String accountType = securePreferences.getString(Constant.USER_ACCOUNT_TYPE, "");
 
         int awardTotal = NotificationHandler.getInstance(null).getAwardCount();
 
-        // TODO: This needs to be fixed for trial accounts.
-        // Do not add the change password if we are using a trial account.
+        logOutTitle = getString(R.string.title_log_out);
+
+        menuItems = new ArrayList<>();
+        menuItems.add(new MenuItem(getString(R.string.notifications, "(" + awardTotal + ")"), NotificationActivity.class));
+        menuItems.add(new MenuItem(getString(R.string.title_settings), null));
+        menuItems.add(new MenuItem(getString(R.string.edit_exclusion), ExclusionActivity.class));
+        menuItems.add(new MenuItem(getString(R.string.edit_equipment), EquipmentActivity.class));
         if (!accountType.equals(Constant.ACCOUNT_TYPE_TRIAL))
         {
-            settingsList = new String[] { getString(R.string.notifications, "(" + awardTotal + ")"),
-                                          getString(R.string.edit_exclusion),
-                                          getString(R.string.edit_equipment),
-                                          getString(R.string.change_password),
-                                          getString(R.string.title_about),
-                                          getString(R.string.title_terms),
-                                          getString(R.string.title_log_out)
-            };
+            menuItems.add(new MenuItem(getString(R.string.change_password), ChangePasswordActivity.class));
         }
-        else
-        {
-            settingsList = new String[] { getString(R.string.edit_equipment) };
-        }
+        menuItems.add(new MenuItem(logOutTitle, null));
+        menuItems.add(new MenuItem(getString(R.string.title_info), null));
+        menuItems.add(new MenuItem(getString(R.string.title_about), AboutActivity.class));
+        menuItems.add(new MenuItem(getString(R.string.title_terms), TermsActivity.class));
 
-        ArrayAdapter<String> settingsAdapter =
-                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, settingsList);
+        MenuAdapter settingsAdapter =
+                new MenuAdapter(this, R.layout.list_item_header, R.layout.list_item_standard, menuItems);
 
         ListView listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(settingsAdapter);
@@ -76,33 +78,17 @@ public class MenuActivity extends AppCompatActivity
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            // This directly correlates with the settingsList indices.
-            switch (position)
-            {
-                case 0: // Change exclusion clicked.
-                    startActivity(NotificationActivity.class);
-                    break;
+            MenuItem menuItem = menuItems.get(position);
 
-                case 1: // Change exclusion clicked.
-                    startActivity(ExclusionActivity.class);
-                    break;
-                case 2: // Change equipment clicked.
-                    startActivity(EquipmentActivity.class);
-                    break;
-                case 3: // Change Password clicked.
-                    startActivity(ChangePasswordActivity.class);
-                    break;
-                case 4: // About clicked.
-                    startActivity(AboutActivity.class);
-                    break;
-                case 5: // Terms clicked.
-                    startActivity(TermsActivity.class);
-                    break;
-                case 6: // Logout clicked.
-                    logOut();
-                    break;
-                default:
-                    break;
+            Class cls = menuItem.getCls();
+
+            if (cls != null)
+            {
+                startActivity(cls);
+            }
+            else if (menuItem.getTitle().equals(logOutTitle))
+            {
+                logOut();
             }
         }
     };
@@ -117,9 +103,18 @@ public class MenuActivity extends AppCompatActivity
         Intent intent = new Intent(this, cls);
         startActivity(intent);
     }
+    /**
+     * Dismisses the activity and tells the MainActivity to log out.
+     */
+    private void logOut()
+    {
+        setResult(Constant.REQUEST_CODE_LOG_OUT);
+        finish();
+    }
+
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem)
+    public boolean onOptionsItemSelected(android.view.MenuItem menuItem)
     {
         switch (menuItem.getItemId())
         {
@@ -129,14 +124,5 @@ public class MenuActivity extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
-    }
-
-    /**
-     * Dismisses the activity and tells the MainActivity to log out.
-     */
-    private void logOut()
-    {
-        setResult(Constant.REQUEST_CODE_LOG_OUT);
-        finish();
     }
 }

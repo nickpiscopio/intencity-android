@@ -15,9 +15,9 @@ import com.intencity.intencity.util.Constant;
 import java.util.ArrayList;
 
 /**
- * The custom ArrayAdapter for the ranking list.
+ * The custom ArrayAdapter for the notification list.
  *
- * Created by Nick Piscopio on 12/18/15.
+ * Created by Nick Piscopio on 1/26/16.
  */
 public class NotificationAdapter extends ArrayAdapter<AwardDialogContent>
 {
