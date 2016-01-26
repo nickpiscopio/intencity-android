@@ -207,8 +207,12 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         @Override
         public void onClick(View v)
         {
-            if (completedExerciseNum >= TOTAL_EXERCISE_NUM)
+            if (currentExercises.size() == allExercises.size())
             {
+                // We remove the exercises from the database here, so when we go back to
+                // the fitness log, it doesn't ask if we wnat to continue where we left off.
+                removeExercisesFromDatabase();
+
                 workoutFinished = true;
 
                 CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.badge_earned_title), context.getString(R.string.badged_earned_finisher), true);
@@ -363,7 +367,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         if (workoutFinished)
         {
             // Remove exercises from database since we are finished with the workout.
-            new SetExerciseTask(context).execute();
+            removeExercisesFromDatabase();
         }
         else
         {
@@ -390,6 +394,14 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             default:
                 break;
         }
+    }
+
+    /**
+     * Starts the asynctask to remove the exercises from the database.
+     */
+    private void removeExercisesFromDatabase()
+    {
+        new SetExerciseTask(context).execute();
     }
 
     /**
