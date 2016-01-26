@@ -210,7 +210,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             if (currentExercises.size() == allExercises.size())
             {
                 // We remove the exercises from the database here, so when we go back to
-                // the fitness log, it doesn't ask if we wnat to continue where we left off.
+                // the fitness log, it doesn't ask if we want to continue where we left off.
                 removeExercisesFromDatabase();
 
                 workoutFinished = true;

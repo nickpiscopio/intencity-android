@@ -293,8 +293,11 @@ public class StatActivity extends AppCompatActivity implements DialogListener
      */
     private void addSet()
     {
+        // Get the last set so we can set the weight and difficulty to it.
+        // This saves the user time from entering those if they weren't changed.
+        Set lastSet = sets.get(sets.size() - 1);
         Set set = new Set();
-        set.setWeight(Constant.CODE_FAILED);
+        set.setWeight(lastSet.getWeight());
 
         switch (durationType)
         {
@@ -310,7 +313,7 @@ public class StatActivity extends AppCompatActivity implements DialogListener
                 break;
         }
 
-        set.setDifficulty(10);
+        set.setDifficulty(lastSet.getDifficulty());
         set.setNotes(notes.getText().toString());
 
         sets.add(set);
