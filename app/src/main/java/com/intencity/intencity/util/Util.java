@@ -148,10 +148,11 @@ public class Util
     /**
      * Calls the service to grant points to the user.
      *
-     * @param email     The email of the user to grant points.
-     * @param points    The amount of points that will be granted.
+     * @param email         The email of the user to grant points.
+     * @param points        The amount of points that will be granted.
+     * @param description   The description of why points are being granted.
      */
-    public static void grantPointsToUser(Context context, String email, int points, String description)
+    public static void grantPointsToUser(String email, int points, String description)
     {
         new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(
@@ -167,8 +168,9 @@ public class Util
      *
      * @param email         The email of the user to grant points.
      * @param badgeName     The name of the badge that is being awarded.
+     * @param content       The content that will be displayed to the user.
      */
-    public static void grantBadgeToUser(Context context, String email, String badgeName, AwardDialogContent content)
+    public static void grantBadgeToUser(String email, String badgeName, AwardDialogContent content)
     {
         // We won't display the date anywhere, so we probably don't need this in local time.
         long now = new Date().getTime();

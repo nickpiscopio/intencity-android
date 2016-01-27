@@ -225,7 +225,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 // Grant the user the "Kept Swimming" badge if he or she didn't skip an exercise.
                 if (!securePreferences.getBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, false))
                 {
-                    Util.grantBadgeToUser(context, email, Badge.KEPT_SWIMMING,
+                    Util.grantBadgeToUser(email, Badge.KEPT_SWIMMING,
                                           new AwardDialogContent(R.mipmap.kept_swimming,
                                                                  context.getString(R.string.award_kept_swimming_description)));
                 }
@@ -261,8 +261,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     break;
             }
 
-            Util.grantPointsToUser(context, email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(R.string.award_completed_workout_description));
-            Util.grantBadgeToUser(context, email, Badge.FINISHER, null);
+            Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(R.string.award_completed_workout_description));
+            Util.grantBadgeToUser(email, Badge.FINISHER, null);
 
             // Start the fitness log over again.
             fitnessLogListener.onCompletedWorkout();
@@ -322,7 +322,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             editor.putLong(Constant.USER_LAST_EXERCISE_TIME, now);
             editor.apply();
 
-            Util.grantPointsToUser(context, email, Constant.POINTS_EXERCISE, context.getString(R.string.award_exercise_description));
+            Util.grantPointsToUser(email, Constant.POINTS_EXERCISE, context.getString(R.string.award_exercise_description));
         }
 
         completedExerciseNum++;
@@ -581,7 +581,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                         SecurePreferences securePreferences = new SecurePreferences(context);
                         String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
-                        Util.grantBadgeToUser(context, email, badge,
+                        Util.grantBadgeToUser(email, badge,
                                               new AwardDialogContent(R.mipmap.left_it_on_the_field,
                                                                      context.getString(R.string.award_left_it_on_the_field_description)));
 
@@ -669,7 +669,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         {
             // There will be no way we can know if they actually tweeted or not, so we will
             // Grant points to the user for at least opening up twitter and thinking about tweeting.
-            Util.grantPointsToUser(context, email, Constant.POINTS_SHARING, context.getString(R.string.award_sharing_description));
+            Util.grantPointsToUser(email, Constant.POINTS_SHARING, context.getString(R.string.award_sharing_description));
         }
     }
 
