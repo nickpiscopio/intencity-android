@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.dialog.AwardDialogContent;
+import com.intencity.intencity.notification.AwardDialogContent;
 import com.intencity.intencity.util.Constant;
 
 import java.util.ArrayList;

@@ -1,6 +1,8 @@
 package com.intencity.intencity.adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.listener.RankingListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.User;
 import com.intencity.intencity.task.ServiceTask;
@@ -17,6 +20,8 @@ import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * The custom ArrayAdapter for the ranking list.
@@ -27,11 +32,13 @@ public class RankingListAdapter extends ArrayAdapter<User>
 {
     private Context context;
 
+    private RankingListener listener;
+
     private int layoutResourceId;
 
     private ArrayList<User> objects;
 
-    private boolean addRankingLabel;
+    private boolean isSearch;
 
     private LayoutInflater inflater;
 
@@ -50,20 +57,24 @@ public class RankingListAdapter extends ArrayAdapter<User>
      * The constructor.
      *
      * @param context           The application context.
+     * @param listener          The listener to call back when we want to remove a user.
      * @param layoutResourceId  The resource id of the view we are inflating.
      * @param users             The list of users to populate the list.
+     * @param isSearch          A boolean value of whether or not we are searching for a user.
      */
-    public RankingListAdapter(Context context, int layoutResourceId, ArrayList<User> users, boolean addRankingLabel)
+    public RankingListAdapter(Context context, RankingListener listener, int layoutResourceId, ArrayList<User> users, boolean isSearch)
     {
         super(context, layoutResourceId, users);
 
         this.context = context;
 
+        this.listener = listener;
+
         this.layoutResourceId = layoutResourceId;
 
         this.objects = users;
 
-        this.addRankingLabel = addRankingLabel;
+        this.isSearch = isSearch;
 
         position = -1;
 
@@ -79,6 +90,7 @@ public class RankingListAdapter extends ArrayAdapter<User>
         if (this.position != position || convertView == null)
         {
             this.position = position;
+            final int arrayIndex = position;
 
             convertView = inflater.inflate(layoutResourceId, parent, false);
 
@@ -89,18 +101,67 @@ public class RankingListAdapter extends ArrayAdapter<User>
             holder.points = (TextView) convertView.findViewById(R.id.text_view_points);
             holder.totalBadgesTextView = (TextView) convertView.findViewById(R.id.total_badges);
 
-            if (addRankingLabel)
+            if (!isSearch)
             {
                 holder.rank = (TextView) convertView.findViewById(R.id.text_view_rank);
                 holder.rank.setText(String.valueOf(position + 1));
                 holder.rank.setVisibility(View.VISIBLE);
+                holder.name.setText(user.getFirstName() + " " + user.getLastName());
+                holder.points.setText(String.valueOf(user.getEarnedPoints()));
+
+                final int followingId = user.getFollowingId();
+
+                if (followingId > 0)
+                {
+                    // The remove user button.
+                    final TextView deleteButton = (TextView) convertView.findViewById(R.id.button_remove);
+
+                    final View view = convertView;
+
+                    // The long click listener for the ListView to remove followers.
+                    convertView.setOnLongClickListener(new View.OnLongClickListener()
+                    {
+                        @Override
+                        public boolean onLongClick(View v)
+                        {
+                            int timeOut = 4500;
+
+                            deleteButton.setVisibility(View.VISIBLE);
+                            deleteButton.setOnClickListener(new View.OnClickListener()
+
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    // Stop following a user.
+                                    listener.onRemoveUser(view, arrayIndex, followingId);
+                                }
+                            });
+
+                            // Dismiss the dialog after so many seconds.
+                            Timer timer = new Timer();
+                            timer.schedule(new TimerTask()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable()
+                                    {
+                                        @Override
+                                        public void run()
+                                        {
+                                            deleteButton.setVisibility(View.GONE);
+                                        }
+                                    });
+                                }
+                            }, timeOut);
+                            return false;
+                        }
+                    });
+                }
             }
 
-            holder.name.setText(user.getFirstName() + " " + user.getLastName());
-            holder.points.setText(String.valueOf(user.getEarnedPoints()));
-
             int totalBadges = user.getTotalBadges();
-
             if (totalBadges > 0)
             {
                 holder.totalBadgesTextView.setText(String.valueOf(totalBadges));
@@ -151,7 +212,7 @@ public class RankingListAdapter extends ArrayAdapter<User>
 
             // CODE_FAILED should get returned if the user isn't connected to the
             // person that was returned from the search term.
-            if (user.getFollowingId() == Constant.CODE_FAILED)
+            if (user.getFollowingId() == Constant.CODE_FAILED && isSearch)
             {
                 addButton.setVisibility(View.VISIBLE);
             }

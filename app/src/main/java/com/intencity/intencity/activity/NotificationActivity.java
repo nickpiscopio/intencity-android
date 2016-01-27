@@ -8,7 +8,7 @@ import android.widget.ListView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.NotificationAdapter;
-import com.intencity.intencity.dialog.AwardDialogContent;
+import com.intencity.intencity.notification.AwardDialogContent;
 import com.intencity.intencity.handler.NotificationHandler;
 
 import java.util.ArrayList;

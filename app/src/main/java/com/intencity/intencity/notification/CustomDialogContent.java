@@ -1,4 +1,4 @@
-package com.intencity.intencity.dialog;
+package com.intencity.intencity.notification;
 
 /**
  * This is the custom dialog entity.

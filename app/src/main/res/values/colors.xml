@@ -13,5 +13,7 @@
     <color name="shadow">#CECECE</color>
     <color name="shadow_dark">#4D5665</color>
     <color name="card_button_select">#F3F3F3</color>
+    <color name="card_button_delete_select">#FF0000</color>
+    <color name="card_button_delete_deselect">#ff3c3c</color>
 
 </resources>

@@ -113,6 +113,7 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY = "getExercisesForToday";
     public static final String STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP = "setCurrentMuscleGroup";
     public static final String STORED_PROCEDURE_GET_FOLLOWING = "getFollowing";
+    public static final String STORED_PROCEDURE_REMOVE_FROM_FOLLOWING = "removeFromFollowing";
     public static final String STORED_PROCEDURE_SEARCH_EXERCISES = "searchExercises";
     public static final String STORED_PROCEDURE_SEARCH_USERS = "searchUsers";
     public static final String STORED_PROCEDURE_FOLLOW_USER = "followUser";

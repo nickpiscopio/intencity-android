@@ -1,6 +1,6 @@
 package com.intencity.intencity.handler;
 
-import com.intencity.intencity.dialog.AwardDialogContent;
+import com.intencity.intencity.notification.AwardDialogContent;
 import com.intencity.intencity.listener.NotificationListener;
 
 import java.util.ArrayList;

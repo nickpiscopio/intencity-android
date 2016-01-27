@@ -8,6 +8,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -15,11 +17,13 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.activity.SearchActivity;
 import com.intencity.intencity.adapter.RankingListAdapter;
 import com.intencity.intencity.helper.doa.UserDao;
+import com.intencity.intencity.listener.RankingListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.User;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
+import com.intencity.intencity.util.Util;
 
 import java.util.ArrayList;
 
@@ -28,7 +32,8 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 12/12/15.
  */
-public class RankingFragment extends android.support.v4.app.Fragment implements ServiceListener
+public class RankingFragment extends android.support.v4.app.Fragment implements ServiceListener,
+                                                                                RankingListener
 {
     private Context context;
 
@@ -43,6 +48,12 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
     private String email;
 
     private ArrayList<User> users;
+
+    private RankingListAdapter arrayAdapter;
+
+    private Animation animation;
+
+    private int row;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -62,10 +73,10 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         ranking = (ListView) view.findViewById(R.id.list_view_ranking);
         ranking.addFooterView(footer, null, false);
 
-        followingMessage = (TextView) footer.findViewById(R.id.following_message);
+        animation = AnimationUtils.loadAnimation(context, R.anim.anim_slide_out_right);
+        animation.setAnimationListener(animationListener);
 
-//        LinearLayout searchUsers = (LinearLayout) footer.findViewById(R.id.searchUsers);
-//        searchUsers.setOnClickListener(searchUsersListener);
+        followingMessage = (TextView) footer.findViewById(R.id.following_message);
 
         SecurePreferences securePreferences = new SecurePreferences(context);
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
@@ -76,6 +87,23 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
 
         return view;
     }
+
+    /**
+     * The animation listener for removing a user from the following list.
+     */
+    private Animation.AnimationListener animationListener = new Animation.AnimationListener()
+    {
+        @Override public void onAnimationStart(Animation animation) { }
+
+        @Override public void onAnimationRepeat(Animation animation) { }
+
+        @Override
+        public void onAnimationEnd(Animation animation)
+        {
+            arrayAdapter.remove(arrayAdapter.getItem(row));
+            arrayAdapter.notifyDataSetChanged();
+        }
+    };
 
     /**
      * The refresh listener for the listview.
@@ -143,7 +171,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
      */
     private void populateRankingList()
     {
-        RankingListAdapter arrayAdapter = new RankingListAdapter(context, R.layout.list_item_ranking, users, true);
+        arrayAdapter = new RankingListAdapter(context, this, R.layout.list_item_ranking, users, false);
         ranking.setAdapter(arrayAdapter);
 
         // The size will be 1 if there are no followers because
@@ -166,5 +194,30 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(
                                               Constant.STORED_PROCEDURE_GET_FOLLOWING, email));
+    }
+
+    @Override
+    public void onRemoveUser(View view, int position, int webServerId)
+    {
+        final int pos = position;
+        final View v = view;
+
+        new ServiceTask(new ServiceListener()
+        {
+            @Override
+            public void onRetrievalSuccessful(String response)
+            {
+                row = pos;
+                v.startAnimation(animation);
+            }
+
+            @Override
+            public void onRetrievalFailed()
+            {
+                Util.showMessage(context, context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error));
+            }
+        }).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                      Constant.generateStoredProcedureParameters(
+                                              Constant.STORED_PROCEDURE_REMOVE_FROM_FOLLOWING, String.valueOf(webServerId)));
     }
 }

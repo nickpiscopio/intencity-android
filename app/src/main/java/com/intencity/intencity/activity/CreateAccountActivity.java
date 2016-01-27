@@ -20,8 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.dialog.CustomDialog;
-import com.intencity.intencity.dialog.CustomDialogContent;
+import com.intencity.intencity.notification.CustomDialog;
+import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;

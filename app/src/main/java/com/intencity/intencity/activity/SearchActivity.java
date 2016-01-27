@@ -196,7 +196,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             else
             {
                 ArrayList<User> users = new UserDao().parseJson(response);
-                arrayAdapter  = new RankingListAdapter(context, R.layout.list_item_ranking, users, false);
+                arrayAdapter  = new RankingListAdapter(context, null, R.layout.list_item_ranking, users, true);
             }
 
             listView.setAdapter(arrayAdapter);

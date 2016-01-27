@@ -4,4 +4,6 @@
     <string name="founders">Nick Piscopio\nChris Piscopio</string>
     <string name="contributors">Lisa Troncelliti\nHalen Dang\nChad Reynolds\nRandy Dang\nChristina Dang\nLaura D\'Alfonso\nKha Dang\nPhiladelphia University</string>
 
+    <string name="emdash">—</string>
+
 </resources>
