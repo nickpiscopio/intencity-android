@@ -20,6 +20,8 @@ import com.intencity.intencity.fragment.RankingFragment;
 import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.NotificationListener;
+import com.intencity.intencity.notification.CustomDialog;
+import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
@@ -158,6 +160,13 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
 
             editor.putLong(Constant.USER_LAST_LOGIN, now);
             editor.apply();
+        }
+
+        if (lastLogin == 0)
+        {
+            CustomDialogContent content = new CustomDialogContent(context.getString(R.string.welcome_title), context.getString(R.string.welcome_description), false);
+            content.setPositiveButtonStringRes(R.string.get_started);
+            new CustomDialog(MainActivity.this, null, content);
         }
     }
 

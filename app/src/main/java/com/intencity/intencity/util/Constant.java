@@ -45,6 +45,8 @@ public class Constant
     public static final String USER_ACCOUNT_TYPE = "com.intencity.intencity.user.account.type";
     public static final String USER_LAST_LOGIN = "com.intencity.intencity.user.last.login";
     public static final String USER_LAST_EXERCISE_TIME = "com.intencity.intencity.user.last.exercise.time";
+    //Tutorial SharedPreferences
+    public static final String TUTORIAL_SWIPE_TO_DISMISS = "com.intencity.intencity.tutorial.swipe.to.dismiss";
 
     // Request codes
     public static final int REQUEST_CODE_STAT = 10;

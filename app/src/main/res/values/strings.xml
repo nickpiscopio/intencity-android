@@ -2,6 +2,10 @@
     <string name="app_name">Intencity</string>
     <string name="copyright">&#169; Intencity 2016. All Rights Reserved.</string>
 
+    <string name="welcome_title">Welcome!</string>
+    <string name="welcome_description">Thank you for using Intencity; the fitness app designed to help you with your everyday fitness needs.\n\nPlease let us know of any issues or improvements you may have.\n\n—The Intencity Team</string>
+    <string name="get_started">Get Started</string>
+
     <string name="demo_description">A fitness app designed to help you achieve your fitness goals.</string>
     <string name="demo_fitness_guru_title">Fitness Guru</string>
     <string name="demo_fitness_guru_description">Take the guesswork out of your workout, and let Intencity decide your routines.</string>
