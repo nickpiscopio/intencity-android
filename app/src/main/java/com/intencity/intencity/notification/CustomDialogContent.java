@@ -1,5 +1,7 @@
 package com.intencity.intencity.notification;
 
+import java.util.ArrayList;
+
 /**
  * This is the custom dialog entity.
  *
@@ -12,7 +14,7 @@ public class CustomDialogContent
     private String[] buttons;
     private boolean includeNegativeButton;
 
-    private int imgRes;
+    private ArrayList<AwardDialogContent> awards;
     private int positiveButtonStringRes;
     private int negativeButtonStringRes;
 
@@ -58,14 +60,14 @@ public class CustomDialogContent
         return includeNegativeButton;
     }
 
-    public int getImgRes()
+    public ArrayList<AwardDialogContent> getAwards()
     {
-        return imgRes;
+        return awards;
     }
 
-    public void setImgRes(int imgRes)
+    public void setAwards(ArrayList<AwardDialogContent> awards)
     {
-        this.imgRes = imgRes;
+        this.awards = awards;
     }
 
     public int getPositiveButtonStringRes()

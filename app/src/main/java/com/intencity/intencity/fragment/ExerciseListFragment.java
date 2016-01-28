@@ -20,15 +20,16 @@ import com.intencity.intencity.activity.ExerciseSearchActivity;
 import com.intencity.intencity.activity.SearchActivity;
 import com.intencity.intencity.activity.StatActivity;
 import com.intencity.intencity.adapter.ExerciseAdapter;
-import com.intencity.intencity.notification.AwardDialogContent;
-import com.intencity.intencity.notification.CustomDialog;
-import com.intencity.intencity.notification.CustomDialogContent;
+import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.ExerciseListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
+import com.intencity.intencity.notification.AwardDialogContent;
+import com.intencity.intencity.notification.CustomDialog;
+import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.task.SetExerciseTask;
 import com.intencity.intencity.util.Badge;
@@ -215,25 +216,38 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
                 workoutFinished = true;
 
-                CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.badge_earned_title), context.getString(R.string.badged_earned_finisher), true);
-                dialog.setImgRes(R.mipmap.finisher);
-                dialog.setPositiveButtonStringRes(R.string.tweet_button);
-                dialog.setNegativeButtonStringRes(R.string.finish_button);
-
-                new CustomDialog(context, dialogListener, dialog);
-
                 // Grant the user the "Kept Swimming" badge if he or she didn't skip an exercise.
                 if (!securePreferences.getBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, false))
                 {
                     Util.grantBadgeToUser(email, Badge.KEPT_SWIMMING,
                                           new AwardDialogContent(R.mipmap.kept_swimming,
-                                                                 context.getString(R.string.award_kept_swimming_description)));
+                                                                 context.getString(R.string.award_kept_swimming_description)), true);
                 }
                 else
                 {
                     // Set the user has skipped an exercise to false for next time.
                     setExerciseSkipped(false);
                 }
+
+                String finisherDescription = context.getString(R.string.award_finisher_description);
+
+                NotificationHandler notificationHandler = NotificationHandler.getInstance(null);
+                ArrayList<AwardDialogContent> awards = notificationHandler.getAwards();
+
+                AwardDialogContent finisherAward = new AwardDialogContent(R.mipmap.finisher, finisherDescription);
+                if (!notificationHandler.hasAward(finisherAward))
+                {
+                    Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(
+                            R.string.award_completed_workout_description));
+                    Util.grantBadgeToUser(email, Badge.FINISHER, finisherAward, true);
+                }
+
+                CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.completed_workout_title), context.getString(R.string.award_workout_completed_award_description), true);
+                dialog.setAwards(awards);
+                dialog.setPositiveButtonStringRes(R.string.tweet_button);
+                dialog.setNegativeButtonStringRes(R.string.finish_button);
+
+                new CustomDialog(context, dialogListener, dialog);
             }
             else
             {
@@ -260,9 +274,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 default:
                     break;
             }
-
-            Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(R.string.award_completed_workout_description));
-            Util.grantBadgeToUser(email, Badge.FINISHER, null);
 
             // Start the fitness log over again.
             fitnessLogListener.onCompletedWorkout();
@@ -583,7 +594,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
                         Util.grantBadgeToUser(email, badge,
                                               new AwardDialogContent(R.mipmap.left_it_on_the_field,
-                                                                     context.getString(R.string.award_left_it_on_the_field_description)));
+                                                                     context.getString(R.string.award_left_it_on_the_field_description)), false);
 
                         awards.put(badge, exerciseName);
                     }

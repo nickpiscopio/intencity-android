@@ -142,17 +142,19 @@
     <string name="intencity_communication_error_email">There was either a problem communicating with Intencity\'s server or with the email you provided. Please check your email or try again later.</string>
     <string name="try_again">TRY AGAIN</string>
 
-    <string name="badge_earned_title">Badge earned!</string>
-    <string name="badged_earned_finisher">You\'ve earned the \"Finisher\" badge for completing your workout with Intencity!</string>
+
     <string name="finish_button">Finish</string>
     <string name="tweet_button">Tweet</string>
 
     <!-- Award Strings -->
+    <string name="completed_workout_title">You completed Intencity\'s workout!</string>
+    <string name="award_workout_completed_award_description">You\'ve earned the following awards while exercising. Good job!</string>
     <string name="award_login_description">Points for logging in.</string>
     <string name="award_exercise_description">Points for doing the next exercise.</string>
     <string name="award_completed_workout_description">Points for completing Intencity\'s workout!</string>
     <string name="award_sharing_description">Points for sharing your experience of Intencity!</string>
     <string name="award_left_it_on_the_field_description">You earned the \"Left it on the Field\" badge for doing an exercise with at least two sets of 10 or more reps.</string>
     <string name="award_kept_swimming_description">You earned the \"Kept Swimming\" badge for not skipping an exercise.</string>
+    <string name="award_finisher_description">You\'ve earned the \"Finisher\" badge for completing your workout with Intencity!</string>
 
 </resources>

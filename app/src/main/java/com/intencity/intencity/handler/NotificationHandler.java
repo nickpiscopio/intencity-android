@@ -57,9 +57,34 @@ public class NotificationHandler
 
     public void addAward(AwardDialogContent award)
     {
-        awards.add(award);
+        // Adds the award to the first index so we can display them in reverse order.
+        awards.add(0, award);
 
         listener.onNotificationAdded();
+    }
+
+    /**
+     * Checks to see if the award is already granted to the user.
+     *
+     * @param award     The award to check.
+     *
+     * @return  Boolean value if the user has already received a certain award.
+     */
+    public boolean hasAward(AwardDialogContent award)
+    {
+        String awardDescription = award.getDescription();
+
+        for (AwardDialogContent adc : awards)
+        {
+            String description = adc.getDescription();
+
+            if (awardDescription.equals(description))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void clearAwards()

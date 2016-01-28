@@ -9,11 +9,11 @@ import android.widget.ProgressBar;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.activity.MainActivity;
+import com.intencity.intencity.handler.NotificationHandler;
+import com.intencity.intencity.helper.DbHelper;
 import com.intencity.intencity.notification.AwardDialogContent;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
-import com.intencity.intencity.handler.NotificationHandler;
-import com.intencity.intencity.helper.DbHelper;
 import com.intencity.intencity.task.ServiceTask;
 
 import java.util.Date;
@@ -169,8 +169,34 @@ public class Util
      * @param email         The email of the user to grant points.
      * @param badgeName     The name of the badge that is being awarded.
      * @param content       The content that will be displayed to the user.
+     * @param onlyAllowOne  Boolean value to only allow one instance of a specifed badge.
      */
-    public static void grantBadgeToUser(String email, String badgeName, AwardDialogContent content)
+    public static void grantBadgeToUser(String email, String badgeName, AwardDialogContent content, boolean onlyAllowOne)
+    {
+        NotificationHandler notificationHandler = NotificationHandler.getInstance(null);
+
+        // Only grant the badge to the user if he or she doesn't have it
+        if (onlyAllowOne)
+        {
+            if (!notificationHandler.hasAward(content))
+            {
+                grantBadgeToUser(email, badgeName, content);
+            }
+        }
+        else
+        {
+            grantBadgeToUser(email, badgeName, content);
+        }
+    }
+
+    /**
+     * Calls the service to grant a badge to the user.
+     *
+     * @param email         The email of the user to grant points.
+     * @param badgeName     The name of the badge that is being awarded.
+     * @param content       The content that will be displayed to the user.
+     */
+    private static void grantBadgeToUser(String email, String badgeName, AwardDialogContent content)
     {
         // We won't display the date anywhere, so we probably don't need this in local time.
         long now = new Date().getTime();
@@ -178,12 +204,8 @@ public class Util
         new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GRANT_BADGE,
                                                                                  email, String.valueOf(now), badgeName));
-
-        if (content != null)
-        {
-            // Add an award to the notification handler.
-            NotificationHandler.getInstance(null).addAward(content);
-        }
+        // Add an award to the notification handler.
+        NotificationHandler.getInstance(null).addAward(content);
     }
 
     /**

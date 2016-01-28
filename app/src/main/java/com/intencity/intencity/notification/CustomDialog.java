@@ -6,12 +6,14 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.adapter.NotificationAdapter;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.util.Constant;
+
+import java.util.ArrayList;
 
 /**
  * This class creates a dialog to show to the user.
@@ -34,28 +36,27 @@ public class CustomDialog
 
         if (title != null && message != null)
         {
-            int imgRes = dialog.getImgRes();
-            if (imgRes != 0)
+            ArrayList<AwardDialogContent> awards = dialog.getAwards();
+            if (awards != null && awards.size() > 0)
             {
                 LayoutInflater factory = LayoutInflater.from(context);
 
                 View view = factory.inflate(R.layout.alert_badge_view, null);
 
-                ImageView imgView = (ImageView) view.findViewById(R.id.badge);
-                TextView textView = (TextView) view.findViewById(R.id.badge_description);
+                NotificationAdapter settingsAdapter =
+                        new NotificationAdapter(context, R.layout.list_item_award, awards);
 
-                imgView.setImageResource(imgRes);
-                textView.setText(message);
+                ListView listView = (ListView) view.findViewById(R.id.list_view_awards);
+                listView.setAdapter(settingsAdapter);
 
                 alertDialog.setView(view);
             }
-
-            alertDialog.setTitle(title);
-
-            if (imgRes == 0)
+            else
             {
                 alertDialog.setMessage(message);
             }
+
+            alertDialog.setTitle(title);
 
             int positiveButtonRes = dialog.getPositiveButtonStringRes();
             int negativeButtonRes = dialog.getNegativeButtonStringRes();
