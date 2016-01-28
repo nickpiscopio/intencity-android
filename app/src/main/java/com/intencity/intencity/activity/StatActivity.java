@@ -338,12 +338,19 @@ public class StatActivity extends AppCompatActivity implements DialogListener
     {
         if (notifyToRemoveLastSet)
         {
-            new CustomDialog(StatActivity.this, StatActivity.this,
-                             new CustomDialogContent(getString(R.string.title_add_set_error),
-                                        new String[] { getString(R.string.button_remove_set), getString(android.R.string.cancel) }));
+            CustomDialogContent dialogContent = new CustomDialogContent(getString(R.string.title_add_set_error),
+                                    getString(R.string.message_remove_last_set), true);
+            dialogContent.setPositiveButtonStringRes(android.R.string.cancel);
+            dialogContent.setNegativeButtonStringRes(R.string.button_remove_set);
+
+            // the dialog when going back to the exercise list.
+            new CustomDialog(StatActivity.this, StatActivity.this, dialogContent);
+
+
         }
         else
         {
+            // The dialog when added a set.
             new CustomDialog(StatActivity.this, StatActivity.this,
                              new CustomDialogContent(getString(R.string.title_add_set_error),
                                         getString(R.string.message_add_set_error), false));
@@ -383,7 +390,7 @@ public class StatActivity extends AppCompatActivity implements DialogListener
     public void onButtonPressed(int which)
     {
         // If removing the last set was clicked.
-        if (which == 0)
+        if (which == Constant.NEGATIVE_BUTTON)
         {
             if (sets.size() > 1)
             {

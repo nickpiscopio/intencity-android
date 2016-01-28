@@ -96,6 +96,7 @@
 
     <string name="title_add_set_error">Missing duration</string>
     <string name="message_add_set_error">Please enter reps or time in your last set.</string>
+    <string name="message_remove_last_set">Would you like to remove the last set?</string>
     <string name="button_remove_set">Remove last set</string>
 
     <!-- Buttons -->
