@@ -147,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
     private void rewardUserForUsingIntencity()
     {
         // Set the email and account type in the SecurePreferences.
-        SecurePreferences securePreferences = new SecurePreferences(context);
         long lastLogin = securePreferences.getLong(Constant.USER_LAST_LOGIN, 0);
         long now = new Date().getTime();
 
@@ -232,8 +231,12 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
      */
     private void logOut()
     {
+        // Clears everything except the last login time.
+        // We do this to stop the app from showing the welcome every time.
         SecurePreferences.Editor editor = securePreferences.edit();
-        editor.clear();
+        editor.putString(Constant.USER_ACCOUNT_EMAIL, "");
+        editor.putString(Constant.USER_ACCOUNT_TYPE, "");
+        editor.putLong(Constant.USER_LAST_EXERCISE_TIME, 0);
         editor.apply();
 
         showDemo(DemoActivity.LOG_IN);
