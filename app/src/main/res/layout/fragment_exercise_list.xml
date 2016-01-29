@@ -53,12 +53,17 @@
                 android:id="@+id/search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/next_exercise"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
                 android:padding="@dimen/card_button_padding"
                 android:background="@drawable/button_card_dark"
                 android:src="@mipmap/ic_magnify_white"/>
+
+            <ImageButton
+                android:id="@+id/info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/card_button_padding"
+                android:background="@drawable/button_card_dark"
+                android:src="@mipmap/ic_information_outline_white"/>
 
         </LinearLayout>
 

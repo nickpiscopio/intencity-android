@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/radio_group_fitness_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/layout_margin"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radio_button_gain"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingTop="@dimen/layout_margin_half"
+            android:paddingBottom="@dimen/layout_margin_half"
+            android:paddingLeft="@dimen/layout_margin_quarter"
+            android:paddingRight="@dimen/layout_margin_quarter"
+            android:textStyle="bold"
+            android:background="@drawable/radio_button"
+            android:button="@null"
+            android:text="@string/gain"
+            android:textSize="@dimen/card_title2_size"
+            android:textColor="@color/secondary_dark"/>
+
+        <RadioButton
+            android:id="@+id/radio_button_sustain"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingTop="@dimen/layout_margin_half"
+            android:paddingBottom="@dimen/layout_margin_half"
+            android:paddingLeft="@dimen/layout_margin_quarter"
+            android:paddingRight="@dimen/layout_margin_quarter"
+            android:background="@drawable/radio_button"
+            android:textStyle="bold"
+            android:button="@null"
+            android:text="@string/sustain"
+            android:textSize="@dimen/card_title2_size"
+            android:textColor="@color/secondary_dark"/>
+
+        <RadioButton
+            android:id="@+id/radio_button_lose"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingTop="@dimen/layout_margin_half"
+            android:paddingBottom="@dimen/layout_margin_half"
+            android:paddingLeft="@dimen/layout_margin_quarter"
+            android:paddingRight="@dimen/layout_margin_quarter"
+            android:background="@drawable/radio_button"
+            android:textStyle="bold"
+            android:button="@null"
+            android:text="@string/lose"
+            android:textSize="@dimen/card_title2_size"
+            android:textColor="@color/secondary_dark"/>
+
+        <RadioButton
+            android:id="@+id/radio_button_tone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingTop="@dimen/layout_margin_half"
+            android:paddingBottom="@dimen/layout_margin_half"
+            android:paddingLeft="@dimen/layout_margin_quarter"
+            android:paddingRight="@dimen/layout_margin_quarter"
+            android:background="@drawable/radio_button"
+            android:textStyle="bold"
+            android:button="@null"
+            android:text="@string/tone"
+            android:textSize="@dimen/card_title2_size"
+            android:textColor="@color/secondary_dark"/>
+
+    </RadioGroup>
+
+    <include layout="@layout/divider"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/recommendations"
+        android:paddingTop="@dimen/layout_margin"
+        android:paddingRight="@dimen/layout_margin"
+        android:paddingLeft="@dimen/layout_margin"
+        android:textStyle="bold"
+        android:textColor="@color/secondary_light"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/layout_margin_quarter"
+        android:layout_marginLeft="@dimen/layout_margin"
+        android:paddingLeft="@dimen/layout_margin"
+        android:paddingRight="@dimen/layout_margin"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_weight"
+                android:textSize="@dimen/card_title2_size"
+                android:textStyle="bold"
+                android:textColor="@color/secondary_dark"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/asterisk"
+                android:textSize="@dimen/card_title2_size"
+                android:textStyle="bold"
+                android:textColor="@color/card_button_delete_select"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_view_recommended_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/weight_gain"
+            android:textColor="@color/secondary_dark"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_duration"
+            android:layout_marginTop="@dimen/layout_margin_half"
+            android:textSize="@dimen/card_title2_size"
+            android:textStyle="bold"
+            android:textColor="@color/secondary_dark"/>
+
+        <TextView
+            android:id="@+id/text_view_recommended_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/duration_gain"
+            android:textColor="@color/secondary_dark"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rest_title"
+            android:layout_marginTop="@dimen/layout_margin_half"
+            android:textSize="@dimen/card_title2_size"
+            android:textStyle="bold"
+            android:textColor="@color/secondary_dark"/>
+
+        <TextView
+            android:id="@+id/text_view_recommended_rest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rest_gain"
+            android:textColor="@color/secondary_dark"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cardio_day_title"
+            android:layout_marginTop="@dimen/layout_margin_half"
+            android:textSize="@dimen/card_title2_size"
+            android:textStyle="bold"
+            android:textColor="@color/secondary_dark"/>
+
+        <TextView
+            android:id="@+id/text_view_recommended_cardio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cardio_day_gain"
+            android:textColor="@color/secondary_dark"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/layout_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/asterisk"
+            android:textSize="@dimen/card_title3_size"
+            android:textStyle="bold"
+            android:textColor="@color/card_button_delete_select"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/weight_description"
+            android:textSize="@dimen/card_title3_size"
+            android:textColor="@color/secondary_light"/>
+
+    </LinearLayout>
+
+</LinearLayout>

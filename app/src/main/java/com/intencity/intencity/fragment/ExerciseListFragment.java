@@ -30,6 +30,7 @@ import com.intencity.intencity.model.Set;
 import com.intencity.intencity.notification.AwardDialogContent;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
+import com.intencity.intencity.notification.WorkoutInfoDialog;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.task.SetExerciseTask;
 import com.intencity.intencity.util.Badge;
@@ -58,11 +59,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private TextView routineProgress;
     private TextView routine;
 
-    private ImageButton search;
-
     private RecyclerView recyclerView;
-
-    private FloatingActionButton nextExercise;
 
     private ExerciseAdapter adapter;
 
@@ -90,8 +87,10 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         View view = inflater.inflate(R.layout.fragment_exercise_list, container, false);
 
-        search = (ImageButton) view.findViewById(R.id.search);
-        nextExercise = (FloatingActionButton) view.findViewById(R.id.button_next);
+        ImageButton search = (ImageButton)view.findViewById(R.id.search);
+        ImageButton info = (ImageButton)view.findViewById(R.id.info);
+        FloatingActionButton nextExercise =
+                (FloatingActionButton)view.findViewById(R.id.button_next);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
@@ -99,6 +98,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         routine = (TextView) view.findViewById(R.id.text_view_routine);
 
         search.setOnClickListener(searchClickListener);
+        info.setOnClickListener(infoClickListener);
         nextExercise.setOnClickListener(nextExerciseClickListener);
 
         Bundle bundle = getArguments();
@@ -183,7 +183,21 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     };
 
     /**
-     * The next exercise click listener.
+     * The info click listener.
+     *
+     * This is where we display how to workout with Intencity
+     */
+    private View.OnClickListener infoClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            new WorkoutInfoDialog(context);
+        }
+    };
+
+    /**
+     * The search exercise click listener.
      */
     private View.OnClickListener searchClickListener = new View.OnClickListener()
     {

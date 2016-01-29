@@ -78,6 +78,39 @@
     <string name="title_routine">What routine would you like to do?</string>
     <string name="routine_continue">Continue where I left off</string>
 
+    <!-- Exercise List Strings -->
+    <string name="how_to_workout_title">What is your fitness goal?</string>
+    <string name="gain">GAIN</string>
+    <string name="sustain">SUSTAIN</string>
+    <string name="lose">LOSE</string>
+    <string name="tone">TONE</string>
+    <string name="recommendations">FITNESS RECOMMENDATIONS</string>
+    <string name="weight_title">Weight:</string>
+    <string name="asterisk">*</string>
+    <string name="weight_description">The difficulty of weight is relative to each person. Someone lifting low weight might be heavy for someone else. Choose your weight carefully.</string>
+    <string name="rest_title">REST BETWEEN EXERCISES</string>
+    <string name="cardio_day_title">CARDIO DAY</string>
+
+    <string name="weight_gain">medium—high</string>
+    <string name="duration_gain">3—5 reps or 30 seconds</string>
+    <string name="rest_gain">2—2.5 minutes</string>
+    <string name="cardio_day_gain">~25 minutes total</string>
+
+    <string name="weight_sustain">medium</string>
+    <string name="duration_sustain">8—10 reps or 45 seconds</string>
+    <string name="rest_sustain">1.5—2 minutes</string>
+    <string name="cardio_day_sustain">~30 minutes total</string>
+
+    <string name="weight_lose">low—medium</string>
+    <string name="duration_lose">8—12 reps or 1 minute</string>
+    <string name="rest_lose">45 seconds—1 minute</string>
+    <string name="cardio_day_lose">~35 minutes total</string>
+
+    <string name="weight_tone">low—medium</string>
+    <string name="duration_tone">8—12 reps or 1 minute</string>
+    <string name="rest_tone">20—30 seconds</string>
+    <string name="cardio_day_tone">~45 minutes total</string>
+
     <!-- Exercise Strings -->
     <string name="title_weight">WEIGHT</string>
     <string name="title_lbs">LBS</string>
@@ -146,7 +179,6 @@
     <string name="intencity_communication_error">There was a problem communicating with Intencity\'s server. Please try again later.</string>
     <string name="intencity_communication_error_email">There was either a problem communicating with Intencity\'s server or with the email you provided. Please check your email or try again later.</string>
     <string name="try_again">TRY AGAIN</string>
-
 
     <string name="finish_button">Finish</string>
     <string name="tweet_button">Tweet</string>
