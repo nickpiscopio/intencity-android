@@ -4,13 +4,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_background"
+    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
-    <fragment
-        android:name="com.google.android.youtube.player.YouTubePlayerFragment"
-        android:id="@+id/youtube_view"
+    <RelativeLayout
+        android:id="@+id/youtube_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <fragment
+            android:name="com.google.android.youtube.player.YouTubePlayerFragment"
+            android:id="@+id/youtube_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/no_video_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/layout_margin"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_video_off"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/youtube_communication_error"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/text_view_submitted_by"

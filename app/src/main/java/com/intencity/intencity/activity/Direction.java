@@ -6,7 +6,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -14,10 +17,12 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.DirectionListAdapter;
+import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.notification.CustomDialog;
+import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,11 +35,15 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 12/28/15.
  */
-public class Direction extends AppCompatActivity implements ServiceListener, YouTubePlayer.OnInitializedListener
+public class Direction extends AppCompatActivity implements ServiceListener, YouTubePlayer.OnInitializedListener,
+                                                            DialogListener
 {
     private String API_KEY = "AIzaSyC8GgBP0oBCNUS3JQrDsnOlDu5fTJG37XE";
 
     private String videoUrl = "";
+
+    private RelativeLayout youTubeLayout;
+    private LinearLayout noVideoLayout;
 
     private Context context;
 
@@ -45,6 +54,9 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
         setContentView(R.layout.activity_direction);
 
         ActionBar actionBar = getSupportActionBar();
+
+        youTubeLayout = (RelativeLayout) findViewById(R.id.youtube_layout);
+        noVideoLayout = (LinearLayout) findViewById(R.id.no_video_layout);
 
         context = getApplicationContext();
 
@@ -88,9 +100,9 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
     private void searchForDirections(String exerciseName)
     {
         new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                         Constant.generateStoredProcedureParameters(
-                                                                 Constant.STORED_PROCEDURE_GET_EXERCISE_DIRECTION,
-                                                                 exerciseName));
+                                      Constant.generateStoredProcedureParameters(
+                                              Constant.STORED_PROCEDURE_GET_EXERCISE_DIRECTION,
+                                              exerciseName));
     }
 
     /**
@@ -104,10 +116,21 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
     {
         this.videoUrl = videoUrl;
 
-        // Initializing YouTube player view to search for the video.
-        YouTubePlayerFragment youTubePlayerFragment = (YouTubePlayerFragment)getFragmentManager()
-                .findFragmentById(R.id.youtube_view);
-        youTubePlayerFragment.initialize(API_KEY, this);
+        try
+        {
+            // Initializing YouTube player view to search for the video.
+            YouTubePlayerFragment youTubePlayerFragment = (YouTubePlayerFragment)getFragmentManager()
+                    .findFragmentById(R.id.youtube_view);
+
+            youTubePlayerFragment.initialize(API_KEY, this);
+        }
+        catch (Exception e)
+        {
+            // Remove the youtube layout because it cannot be loaded.
+            youTubeLayout.setVisibility(View.GONE);
+            noVideoLayout.setVisibility(View.VISIBLE);
+        }
+
 
         ListView directionsListView = (ListView) findViewById(R.id.list_view_directions);
 
@@ -126,7 +149,9 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
      */
     private void showMessage(String message)
     {
-        Util.showMessage(Direction.this, context.getString(R.string.generic_error), message);
+        CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), message, false);
+
+        new CustomDialog(Direction.this, this, dialog);
     }
 
     @Override
@@ -192,7 +217,9 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
     onInitializationFailure(YouTubePlayer.Provider provider,
                                                   YouTubeInitializationResult youTubeInitializationResult)
     {
-        showMessage(context.getString(R.string.intencity_communication_error));
+        // Remove the youtube layout because it cannot be loaded.
+        youTubeLayout.setVisibility(View.GONE);
+        noVideoLayout.setVisibility(View.VISIBLE);
     }
 
     private YouTubePlayer.PlaybackEventListener playbackEventListener = new YouTubePlayer.PlaybackEventListener()
@@ -233,4 +260,11 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
         @Override
         public void onVideoStarted()  { }
     };
+
+    @Override
+    public void onButtonPressed(int which)
+    {
+        // There is only 1 buttons so we are going to ignore the switch.
+        finish();
+    }
 }
