@@ -1,5 +1,7 @@
 package com.intencity.intencity.util;
 
+import com.intencity.intencity.BuildType;
+
 import java.util.ArrayList;
 
 /**
@@ -78,8 +80,7 @@ public class Constant
 
     // Service Endpoint
     private static final String ENDPOINT = "http://www.intencityapp.com/";
-    //TODO: Change this when creating release build.
-    private static final String SERVICE_FOLDER = ENDPOINT + "dev/services/";
+    private static final String SERVICE_FOLDER = ENDPOINT + ((BuildType.type == Build.Type.DEBUG) ? "dev/" : "") + "services/";
     private static final String SERVICE_FOLDER_MOBILE = SERVICE_FOLDER + "mobile/";
 
     // Services
