@@ -265,7 +265,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
 
                             if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
                             {
-                                Util.loadIntencity(LoginFragment.this.getActivity(), email, Constant.ACCOUNT_TYPE_TRIAL);
+                                Util.loadIntencity(LoginFragment.this.getActivity(), email, Constant.ACCOUNT_TYPE_MOBILE_TRIAL);
                             }
                             else
                             {
@@ -279,7 +279,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
                         public void onRetrievalFailed() { }
                     }).execute(Constant.SERVICE_CREATE_ACCOUNT,
                                Constant.getAccountParameters(firstName, lastName, email, password,
-                                                             Constant.ACCOUNT_TYPE_TRIAL));
+                                                             Constant.ACCOUNT_TYPE_MOBILE_TRIAL));
                     break;
                 default:
                     break;

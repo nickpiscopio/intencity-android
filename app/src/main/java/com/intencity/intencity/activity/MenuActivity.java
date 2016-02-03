@@ -53,7 +53,7 @@ public class MenuActivity extends AppCompatActivity
         menuItems.add(new MenuItem(getString(R.string.title_settings), null));
         menuItems.add(new MenuItem(getString(R.string.edit_exclusion), ExclusionActivity.class));
         menuItems.add(new MenuItem(getString(R.string.edit_equipment), EquipmentActivity.class));
-        if (!accountType.equals(Constant.ACCOUNT_TYPE_TRIAL))
+        if (!accountType.equals(Constant.ACCOUNT_TYPE_MOBILE_TRIAL))
         {
             menuItems.add(new MenuItem(getString(R.string.change_password), ChangePasswordActivity.class));
         }
@@ -61,6 +61,8 @@ public class MenuActivity extends AppCompatActivity
         menuItems.add(new MenuItem(getString(R.string.title_info), null));
         menuItems.add(new MenuItem(getString(R.string.title_about), AboutActivity.class));
         menuItems.add(new MenuItem(getString(R.string.title_terms), TermsActivity.class));
+        menuItems.add(new MenuItem(getString(R.string.title_account_settings), null));
+        menuItems.add(new MenuItem(getString(R.string.title_delete_account), DeleteAccountActivity.class));
 
         MenuAdapter settingsAdapter =
                 new MenuAdapter(this, R.layout.list_item_header, R.layout.list_item_standard, menuItems);
@@ -101,7 +103,15 @@ public class MenuActivity extends AppCompatActivity
     private void startActivity(Class<?> cls)
     {
         Intent intent = new Intent(this, cls);
-        startActivity(intent);
+        if (cls == DeleteAccountActivity.class)
+        {
+            startActivityForResult(intent, Constant.REQUEST_CODE_LOG_OUT);
+        }
+        else
+        {
+            startActivity(intent);
+        }
+
     }
     /**
      * Dismisses the activity and tells the MainActivity to log out.
@@ -112,6 +122,16 @@ public class MenuActivity extends AppCompatActivity
         finish();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Constant.REQUEST_CODE_LOG_OUT)
+        {
+            logOut();
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem menuItem)

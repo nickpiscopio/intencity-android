@@ -95,6 +95,12 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".activity.DeleteAccountActivity"
+            android:theme="@style/AppTheme.Base"
+            android:label="@string/change_password"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.ExerciseSearchActivity"
             android:theme="@style/AppTheme.Base"
             android:screenOrientation="portrait" />

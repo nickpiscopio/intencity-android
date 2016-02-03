@@ -38,6 +38,7 @@ public class Constant
 
     public static final String SUCCESS = "SUCCESS";
     public static final String EMAIL_EXISTS = "Email already exists";
+    public static final String COULD_NOT_FIND_EMAIL = "Could not find email";
     public static final String INVALID_PASSWORD = "Invalid password";
     public static final String ACCOUNT_CREATED = "Account created";
 
@@ -127,12 +128,14 @@ public class Constant
     public static final String STORED_PROCEDURE_GRANT_BADGE = "grantBadgeToUser";
     public static final String STORED_PROCEDURE_GET_INJURY_PREVENTION_WORKOUTS = "getInjuryPreventionWorkouts";
     public static final String STORED_PROCEDURE_EXCLUDE_EXERCISE = "excludeExercise";
+    public static final String STORED_PROCEDURE_REMOVE_ACCOUNT = "removeAccount";
 
     // Column Values
     public static final String ACCOUNT_TYPE_ADMIN = "A";
     public static final String ACCOUNT_TYPE_BETA = "B";
     public static final String ACCOUNT_TYPE_NORMAL = "N";
     public static final String ACCOUNT_TYPE_TRIAL = "T";
+    public static final String ACCOUNT_TYPE_MOBILE_TRIAL = "M";
 
     // Exercise Type Values
     public static final String EXERCISE_TYPE_WARM_UP = "W";
