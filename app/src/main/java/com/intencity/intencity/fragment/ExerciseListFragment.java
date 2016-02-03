@@ -178,7 +178,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                                                context.getString(R.string.hide_forever),
                                                context.getString(android.R.string.cancel)};
 
-            new CustomDialog(context, ExerciseListFragment.this, new CustomDialogContent("", buttonText));
+            new CustomDialog(context, ExerciseListFragment.this, new CustomDialogContent("", buttonText), true);
         }
     };
 
@@ -261,7 +261,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 dialog.setPositiveButtonStringRes(R.string.tweet_button);
                 dialog.setNegativeButtonStringRes(R.string.finish_button);
 
-                new CustomDialog(context, dialogListener, dialog);
+                new CustomDialog(context, dialogListener, dialog, true);
             }
             else
             {

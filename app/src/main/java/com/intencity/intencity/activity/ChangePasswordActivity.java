@@ -165,7 +165,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
                                                          context.getString(R.string.password_changed),
                                                          false);
 
-            new CustomDialog(ChangePasswordActivity.this, ChangePasswordActivity.this, dialog);
+            new CustomDialog(ChangePasswordActivity.this, ChangePasswordActivity.this, dialog, true);
         }
         else
         {

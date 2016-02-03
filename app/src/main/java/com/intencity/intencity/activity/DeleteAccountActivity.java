@@ -106,7 +106,7 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
                 dialog.setNegativeButtonStringRes(R.string.title_delete_account);
                 dialog.setPositiveButtonStringRes(android.R.string.cancel);
 
-                new CustomDialog(DeleteAccountActivity.this, DeleteAccountActivity.this, dialog);
+                new CustomDialog(DeleteAccountActivity.this, DeleteAccountActivity.this, dialog, true);
             }
         }
     };

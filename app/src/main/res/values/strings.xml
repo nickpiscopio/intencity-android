@@ -204,4 +204,8 @@
 
     <string name="delete_account_dialog_message">Are you sure you want to delete your account?</string>
 
+    <!--Trial acccount done-->
+    <string name="trial_account_done_title">Trial ended</string>
+    <string name="trial_account_done_message">Thank you for trying Intencity!\n\nUnfortunately, your trial has ended, but you can still use Intencity for free; just sign up. If you\'re not ready to commit, just click the \"TRY INTENCITY\" button again. We\'re fine with that too.</string>
+
 </resources>

@@ -344,7 +344,7 @@ public class StatActivity extends AppCompatActivity implements DialogListener
             dialogContent.setNegativeButtonStringRes(R.string.button_remove_set);
 
             // the dialog when going back to the exercise list.
-            new CustomDialog(StatActivity.this, StatActivity.this, dialogContent);
+            new CustomDialog(StatActivity.this, StatActivity.this, dialogContent, true);
 
 
         }
@@ -353,7 +353,7 @@ public class StatActivity extends AppCompatActivity implements DialogListener
             // The dialog when added a set.
             new CustomDialog(StatActivity.this, StatActivity.this,
                              new CustomDialogContent(getString(R.string.title_add_set_error),
-                                        getString(R.string.message_add_set_error), false));
+                                        getString(R.string.message_add_set_error), false), true);
         }
 
     }

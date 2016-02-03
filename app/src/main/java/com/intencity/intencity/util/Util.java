@@ -80,10 +80,11 @@ public class Util
     /**
      * Saves the login information for Intencity.
      *
-     * @param email         The email of the user.
-     * @param accountType   The account type of the user.
+     * @param email                 The email of the user.
+     * @param accountType           The account type of the user.
+     * @param trialCreatedDate      The long value of the date the trial account was created.
      */
-    public static void loadIntencity(Activity activity, String email, String accountType)
+    public static void loadIntencity(Activity activity, String email, String accountType, long trialCreatedDate)
     {
         Context context = activity.getApplicationContext();
 
@@ -98,6 +99,10 @@ public class Util
 
         editor.putString(Constant.USER_ACCOUNT_EMAIL, email);
         editor.putString(Constant.USER_ACCOUNT_TYPE, accountType);
+        if (trialCreatedDate > 0)
+        {
+            editor.putLong(Constant.USER_TRIAL_CREATED_DATE, trialCreatedDate);
+        }
         editor.apply();
 
         Intent intent = new Intent(context, MainActivity.class);
@@ -142,7 +147,7 @@ public class Util
     {
         CustomDialogContent dialog = new CustomDialogContent(title, message, false);
 
-        new CustomDialog(context, null, dialog);
+        new CustomDialog(context, null, dialog, true);
     }
 
     /**

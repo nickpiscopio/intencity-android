@@ -135,7 +135,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         {
             if (termsCheckBox.isChecked())
             {
-                new CustomDialog(context, trialDialogListener, new CustomDialogContent(getString(R.string.trial_account_title), getString(R.string.trial_account_message), true));
+                new CustomDialog(context, trialDialogListener, new CustomDialogContent(getString(R.string.trial_account_title), getString(R.string.trial_account_message), true), true);
             }
             else
             {
@@ -213,7 +213,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
             String email = json.getString(Constant.COLUMN_EMAIL);
             String accountType = json.getString(Constant.COLUMN_ACCOUNT_TYPE);
 
-            Util.loadIntencity(LoginFragment.this.getActivity(), email, accountType);
+            Util.loadIntencity(LoginFragment.this.getActivity(), email, accountType, 0);
         }
         catch (JSONException e)
         {
@@ -247,12 +247,12 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
             switch (which)
             {
                 case Constant.POSITIVE_BUTTON: // Create Trial Account
-                    long uniqueNumber = new Date().getTime();
+                    final long createdDate = new Date().getTime();
 
                     String firstName = "Anonymous";
                     String lastName = "User";
-                    final String email = lastName + uniqueNumber + "@intencityapp.com";
-                    String password = String.valueOf(uniqueNumber);
+                    final String email = lastName + createdDate + "@intencityapp.com";
+                    String password = String.valueOf(createdDate);
 
                     loadingProgressBar.setVisibility(View.VISIBLE);
                     loginForm.setVisibility(View.GONE);
@@ -265,7 +265,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
 
                             if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
                             {
-                                Util.loadIntencity(LoginFragment.this.getActivity(), email, Constant.ACCOUNT_TYPE_MOBILE_TRIAL);
+                                Util.loadIntencity(LoginFragment.this.getActivity(), email, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
                             }
                             else
                             {

@@ -151,7 +151,7 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
     {
         CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), message, false);
 
-        new CustomDialog(Direction.this, this, dialog);
+        new CustomDialog(Direction.this, this, dialog, false);
     }
 
     @Override

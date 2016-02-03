@@ -165,7 +165,7 @@ public class ExclusionActivity extends AppCompatActivity
         {
             CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 
-            new CustomDialog(ExclusionActivity.this, dialogListener, dialog);
+            new CustomDialog(ExclusionActivity.this, dialogListener, dialog, false);
         }
     };
 

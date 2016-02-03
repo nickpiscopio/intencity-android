@@ -18,6 +18,7 @@ import com.intencity.intencity.adapter.ViewPagerAdapter;
 import com.intencity.intencity.fragment.FitnessLogFragment;
 import com.intencity.intencity.fragment.RankingFragment;
 import com.intencity.intencity.handler.NotificationHandler;
+import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.NotificationListener;
 import com.intencity.intencity.notification.CustomDialog;
@@ -34,7 +35,7 @@ import java.util.Date;
  * Created by Nick Piscopio on 12/9/15.
  */
 public class MainActivity extends AppCompatActivity implements ExerciseListListener,
-                                                               NotificationListener
+                                                               NotificationListener, DialogListener
 {
     private final int MENU_ID = R.id.menu;
 
@@ -69,9 +70,9 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String nullString = "";
-
         context = getApplicationContext();
+
+        String nullString = "";
 
         securePreferences = new SecurePreferences(context);
         if (securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, nullString).equals(nullString))
@@ -95,7 +96,21 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
 
         if (userHasLoggedIn)
         {
-            rewardUserForUsingIntencity();
+            long now = new Date().getTime();
+
+            long trialAccountCreatedDate = securePreferences.getLong(Constant.USER_TRIAL_CREATED_DATE, 0);
+            if (trialAccountCreatedDate > 0 && ((now - trialAccountCreatedDate) >= Constant.TRIAL_ACCOUNT_THRESHOLD))
+            {
+                CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.trial_account_done_title),
+                                                                     context.getString(R.string.trial_account_done_message),
+                                                                     false);
+
+                new CustomDialog(MainActivity.this, MainActivity.this, dialog, false);
+            }
+            else
+            {
+                rewardUserForUsingIntencity(now);
+            }
         }
     }
 
@@ -143,12 +158,12 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
      *
      * This is not in UTC, but I don't believe we need to be that specific for this.
      * We grant users points in a relaxed way.
+     *
+     * @param now   The current long time in UTC.
      */
-    private void rewardUserForUsingIntencity()
+    private void rewardUserForUsingIntencity(long now)
     {
-        // Set the email and account type in the SecurePreferences.
         long lastLogin = securePreferences.getLong(Constant.USER_LAST_LOGIN, 0);
-        long now = new Date().getTime();
 
         SecurePreferences.Editor editor = securePreferences.edit();
 
@@ -165,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         {
             CustomDialogContent content = new CustomDialogContent(context.getString(R.string.welcome_title), context.getString(R.string.welcome_description), false);
             content.setPositiveButtonStringRes(R.string.get_started);
-            new CustomDialog(MainActivity.this, null, content);
+            new CustomDialog(MainActivity.this, null, content, true);
         }
     }
 
@@ -237,6 +252,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         editor.putString(Constant.USER_ACCOUNT_EMAIL, "");
         editor.putString(Constant.USER_ACCOUNT_TYPE, "");
         editor.putLong(Constant.USER_LAST_EXERCISE_TIME, 0);
+        editor.putLong(Constant.USER_TRIAL_CREATED_DATE, 0);
         editor.apply();
 
         showDemo(DemoActivity.LOG_IN);
@@ -268,5 +284,13 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
 
             ((AnimationDrawable)menuItem.getIcon()).start();
         }
+    }
+
+    @Override
+    public void onButtonPressed(int which)
+    {
+        // There is only one button we have in the trial dialog,
+        // so we don't care which button is pressed.
+        logOut();
     }
 }

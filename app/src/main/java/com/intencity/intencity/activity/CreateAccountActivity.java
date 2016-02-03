@@ -20,10 +20,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
-import com.intencity.intencity.listener.DialogListener;
-import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
@@ -33,8 +32,7 @@ import com.intencity.intencity.util.Util;
  *
  * Created by Nick Piscopio on 1/11/16.
  */
-public class CreateAccountActivity extends AppCompatActivity implements DialogListener,
-                                                                        ServiceListener
+public class CreateAccountActivity extends AppCompatActivity implements ServiceListener
 {
     private LinearLayout loadingLayout;
     private LinearLayout formLayout;
@@ -209,7 +207,7 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
         CustomDialogContent
                 dialog = new CustomDialogContent(context.getString(R.string.generic_error), message, false);
 
-        new CustomDialog(CreateAccountActivity.this, this, dialog);
+        new CustomDialog(CreateAccountActivity.this, null, dialog, true);
     }
 
 
@@ -226,8 +224,6 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
         }
     }
 
-    @Override public void onButtonPressed(int which){ }
-
     @Override
     public void onRetrievalSuccessful(String response)
     {
@@ -242,7 +238,7 @@ public class CreateAccountActivity extends AppCompatActivity implements DialogLi
         }
         else if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
         {
-            Util.loadIntencity(this, emailEditText.getText().toString(), Constant.ACCOUNT_TYPE_NORMAL);
+            Util.loadIntencity(this, emailEditText.getText().toString(), Constant.ACCOUNT_TYPE_NORMAL, 0);
         }
         else
         {

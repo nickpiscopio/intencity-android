@@ -22,7 +22,7 @@ import java.util.ArrayList;
  */
 public class CustomDialog
 {
-    public CustomDialog(Context context, final DialogListener dialogListener, CustomDialogContent dialog)
+    public CustomDialog(Context context, final DialogListener dialogListener, CustomDialogContent dialog, boolean dismissOnBack)
     {
         int style = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) ?
                 android.R.style.Theme_DeviceDefault_Light_Dialog_Alert :
@@ -105,6 +105,7 @@ public class CustomDialog
             });
         }
 
+        alertDialog.setCancelable(dismissOnBack);
         alertDialog.show();
     }
 }

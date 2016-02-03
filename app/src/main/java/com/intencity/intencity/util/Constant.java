@@ -18,6 +18,7 @@ public class Constant
 
     public static final int REQUIRED_PASSWORD_LENGTH = 8;
 
+    public static final int TRIAL_ACCOUNT_THRESHOLD = 604800000;
     public static final int LOGIN_POINTS_THRESHOLD = 43200000;
     public static final int EXERCISE_POINTS_THRESHOLD = 60000;
 
@@ -46,6 +47,7 @@ public class Constant
     // Stored in SecurePreferences
     public static final String USER_ACCOUNT_EMAIL = "com.intencity.intencity.user.email";
     public static final String USER_ACCOUNT_TYPE = "com.intencity.intencity.user.account.type";
+    public static final String USER_TRIAL_CREATED_DATE = "com.intencity.intencity.user.trial.created.date";
     public static final String USER_LAST_LOGIN = "com.intencity.intencity.user.last.login";
     public static final String USER_LAST_EXERCISE_TIME = "com.intencity.intencity.user.last.exercise.time";
     //Tutorial SharedPreferences
