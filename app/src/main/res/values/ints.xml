@@ -2,10 +2,10 @@
 <resources>
     <integer name="weight_characters">3</integer>
     <integer name="time_characters">6</integer>
-    <integer name="time_characters_total">8</integer>
+    <integer name="duration_characters">8</integer>
     <integer name="weight_set">12</integer>
     <integer name="weight_edit_text">100</integer>
-    <integer name="weight_intensity">57</integer>
+    <integer name="weight_intensity">60</integer>
     <integer name="name_length">30</integer>
     <integer name="email_length">75</integer>
     <integer name="password_length">75</integer>

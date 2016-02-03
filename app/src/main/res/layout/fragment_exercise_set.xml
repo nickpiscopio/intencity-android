@@ -83,6 +83,7 @@
                 android:paddingRight="@dimen/layout_margin"
                 android:paddingBottom="@dimen/layout_margin_quarter"
                 android:inputType="number"
+                android:maxLength="@integer/duration_characters"
                 android:background="@null"/>
 
             <include layout="@layout/divider_edit_text" />
