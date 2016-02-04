@@ -91,24 +91,24 @@
     <string name="rest_title">REST BETWEEN EXERCISES</string>
     <string name="cardio_day_title">CARDIO DAY</string>
 
-    <string name="weight_gain">medium—high</string>
-    <string name="duration_gain">3—5 reps or 30 seconds</string>
-    <string name="rest_gain">2—2.5 minutes</string>
+    <string name="weight_gain">medium–high</string>
+    <string name="duration_gain">3–5 reps or 30 seconds</string>
+    <string name="rest_gain">2–2.5 minutes</string>
     <string name="cardio_day_gain">~25 minutes total</string>
 
     <string name="weight_sustain">medium</string>
-    <string name="duration_sustain">8—10 reps or 45 seconds</string>
-    <string name="rest_sustain">1.5—2 minutes</string>
+    <string name="duration_sustain">8–10 reps or 45 seconds</string>
+    <string name="rest_sustain">1.5–2 minutes</string>
     <string name="cardio_day_sustain">~30 minutes total</string>
 
-    <string name="weight_lose">low—medium</string>
-    <string name="duration_lose">8—12 reps or 1 minute</string>
-    <string name="rest_lose">45 seconds—1 minute</string>
+    <string name="weight_lose">low–medium</string>
+    <string name="duration_lose">8–12 reps or 1 minute</string>
+    <string name="rest_lose">45 seconds–1 minute</string>
     <string name="cardio_day_lose">~35 minutes total</string>
 
-    <string name="weight_tone">low—medium</string>
-    <string name="duration_tone">8—12 reps or 1 minute</string>
-    <string name="rest_tone">20—30 seconds</string>
+    <string name="weight_tone">low–medium</string>
+    <string name="duration_tone">8–12 reps or 1 minute</string>
+    <string name="rest_tone">20–30 seconds</string>
     <string name="cardio_day_tone">~45 minutes total</string>
 
     <!-- Exercise Strings -->
@@ -121,7 +121,7 @@
     <string name="note_hint">Notes&#8230;</string>
     <string name="edit">EDIT</string>
     <string name="warm_up">WARM-UP</string>
-    <string name="warm_up_description">Performing a moderate activity for 3—5 minutes or until warm. This activity can be a light jog, riding a bike, jumping jacks, etc.</string>
+    <string name="warm_up_description">Perform a moderate activity for 3–5 minutes or until warm. This activity can be a light jog, riding a bike, jumping jacks, etc.</string>
     <string name="stretch">STRETCH</string>
     <string name="stretch_description">To combat soreness and encourage muscle development, stretch the muscles that were exercised in this workout.</string>
 
