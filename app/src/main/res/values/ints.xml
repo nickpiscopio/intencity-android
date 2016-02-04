@@ -2,7 +2,7 @@
 <resources>
     <integer name="weight_characters">3</integer>
     <integer name="time_characters">6</integer>
-    <integer name="duration_characters">8</integer>
+    <integer name="duration_characters">9</integer>
     <integer name="weight_set">12</integer>
     <integer name="weight_edit_text">100</integer>
     <integer name="weight_intensity">60</integer>
