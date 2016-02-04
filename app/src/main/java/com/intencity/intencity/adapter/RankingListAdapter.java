@@ -100,7 +100,7 @@ public class RankingListAdapter extends ArrayAdapter<User>
             holder.name = (TextView) convertView.findViewById(R.id.text_view_name);
             holder.points = (TextView) convertView.findViewById(R.id.text_view_points);
             holder.totalBadgesTextView = (TextView) convertView.findViewById(R.id.total_badges);
-            
+
             holder.name.setText(user.getFirstName() + " " + user.getLastName());
             holder.points.setText(String.valueOf(user.getEarnedPoints()));
 
