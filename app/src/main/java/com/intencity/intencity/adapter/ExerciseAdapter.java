@@ -66,11 +66,13 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         String reps = String.valueOf(set.getReps());
         String duration = set.getDuration();
         exerciseHolder.setDuration(duration == null || duration.equals(Constant.RETURN_NULL) ? reps : duration);
-
         exerciseHolder.showEditLayout();
 
+        View view = exerciseHolder.getView();
+        exercise.setView(view);
+
         // Here you apply the animation when the view is bound
-        setAnimation(exerciseHolder.getView(), position);
+        setAnimation(view, position);
     }
 
     @Override
@@ -99,6 +101,40 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     /**
+     * Animates an item being removed from the adapter.
+     *
+     * @param pos   The position of teh item being removed.
+     */
+    public void animateRemoveItem(int pos)
+    {
+        Exercise exercise = exercises.get(pos);
+
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.anim_slide_out_right);
+        animation.setAnimationListener(animationListener);
+        exercise.getView().startAnimation(animation);
+
+        lastPosition--;
+
+        exercises.remove(exercise);
+    }
+
+    /**
+     * The animation listener for removing a user from the following list.
+     */
+    private Animation.AnimationListener animationListener = new Animation.AnimationListener()
+    {
+        @Override public void onAnimationStart(Animation animation) { }
+
+        @Override public void onAnimationRepeat(Animation animation) { }
+
+        @Override
+        public void onAnimationEnd(Animation animation)
+        {
+            notifyDataSetChanged();
+        }
+    };
+
+    /**
      * Gets the last position of the recycler view.
      *
      * @return  The last position of the recycler view.
@@ -116,5 +152,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void setLastPosition(int lastPosition)
     {
         this.lastPosition = lastPosition;
+
+
     }
 }

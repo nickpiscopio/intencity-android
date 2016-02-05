@@ -176,9 +176,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
             String[] buttonText = new String[]{context.getString(R.string.hide_for_now),
                                                context.getString(R.string.hide_forever),
-                                               context.getString(android.R.string.cancel)};
+                                               context.getString(R.string.do_not_hide)};
 
-            new CustomDialog(context, ExerciseListFragment.this, new CustomDialogContent("", buttonText), true);
+            new CustomDialog(context, ExerciseListFragment.this, new CustomDialogContent(context.getString(R.string.hide_exercise_title), buttonText), false);
         }
     };
 
@@ -306,7 +306,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         // Remove all the whitespace so the hashtags are proper.
         // Replace the ampersand with its equivalent url code and add a hashtag.
-        String routine = routineName.replaceAll(" ", "").replace(Constant.PARAMETER_AMPERSAND, " %26 %23");
+        String routine = routineName.replaceAll(" ", "").replace(Constant.PARAMETER_AMPERSAND,
+                                                                 " %26 %23");
 
         String twitterUrl = "https://twitter.com/intent/tweet?text=";
         String[] tweetText = { "I %23dominated my %23workout with %23Intencity! %23WOD %23Fitness",
@@ -350,12 +351,25 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             Util.grantPointsToUser(email, Constant.POINTS_EXERCISE, context.getString(R.string.award_exercise_description));
         }
 
-        completedExerciseNum++;
-        updateRoutineName(completedExerciseNum);
+        int position = currentExercises.size() - 1;
 
-        currentExercises.add(allExercises.get(autoFillTo++));
+        Exercise lastCurrentExercise = currentExercises.get(position);
 
-        adapter.notifyDataSetChanged();
+        if (addingExerciseFromSearch && lastCurrentExercise.getName().equalsIgnoreCase(stretchExerciseName))
+        {
+            allExercises.remove(position);
+            adapter.animateRemoveItem(position);
+            currentExercises.add(allExercises.get(autoFillTo - 1));
+            allExercises.add(lastCurrentExercise);
+        }
+        else
+        {
+            completedExerciseNum++;
+            updateRoutineName(completedExerciseNum);
+            currentExercises.add(allExercises.get(autoFillTo++));
+
+            adapter.notifyDataSetChanged();
+        }
 
         // Scroll to the bottom of the list.
         recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
@@ -464,7 +478,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             adapter.notifyDataSetChanged();
 
         }
-        else if (position == currentExerciseSize)
+        else if (position <= currentExerciseSize)
         {
             updateTotalExercises();
 
@@ -475,6 +489,13 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             else
             {
                 updateRoutineName(completedExerciseNum);
+
+                // If the last exercise is "Stretch" then we have completed the exercise,
+                // so any exercise removed at this point should notifyDataSetChanged().
+                if (currentExercises.get(currentExercises.size() - 1).getName().equalsIgnoreCase(stretchExerciseName))
+                {
+                    adapter.notifyDataSetChanged();
+                }
             }
         }
         else

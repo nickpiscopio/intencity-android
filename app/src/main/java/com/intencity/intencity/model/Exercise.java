@@ -2,6 +2,7 @@ package com.intencity.intencity.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -12,6 +13,8 @@ import java.util.ArrayList;
  */
 public class Exercise implements Parcelable
 {
+    private View view;
+
     private String name;
     private String description;
 
@@ -65,6 +68,16 @@ public class Exercise implements Parcelable
     /**
      * Getters and setters for the exercise model.
      */
+    public View getView()
+    {
+        return view;
+    }
+
+    public void setView(View view)
+    {
+        this.view = view;
+    }
+
     public String getName()
     {
         return name;

@@ -128,8 +128,10 @@
     <string name="stretches_title"> Stretches</string>
     <string name="warm_ups_title"> Warm-Ups</string>
 
-    <string name="hide_forever">Hide forever</string>
+    <string name="hide_exercise_title">Hide exercise</string>
     <string name="hide_for_now">Hide for now</string>
+    <string name="hide_forever">Hide forever</string>
+    <string name="do_not_hide">Don\'t hide</string>
 
     <string name="title_add_set_error">Missing duration</string>
     <string name="message_add_set_error">Please enter reps or time in your last set.</string>
