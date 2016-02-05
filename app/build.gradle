@@ -7,8 +7,8 @@ android {
         applicationId "com.intencity.intencity"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 27
-        versionName "2.0.2"
+        versionCode 28
+        versionName "2.0.3"
     }
     buildTypes {
         release {
