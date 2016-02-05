@@ -45,7 +45,7 @@ public class UserDao
                 if (object.has(Constant.COLUMN_FOLLOWING_ID))
                 {
                     String followingId = object.getString(Constant.COLUMN_FOLLOWING_ID);
-                    user.setFollowingId(followingId.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
+                    user.setFollowingId(followingId.equalsIgnoreCase(Constant.RETURN_NULL) ? (int) Constant.CODE_FAILED :
                                                 Integer.valueOf(followingId));
                 }
 

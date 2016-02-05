@@ -184,11 +184,11 @@ public class RoutineFragment extends android.support.v4.app.Fragment
     private Exercise getNewExercise(String name, String weight, String reps, String duration, String difficulty)
     {
         Set set = new Set();
-        set.setWeight(weight.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
+        set.setWeight(weight.equalsIgnoreCase(Constant.RETURN_NULL) ? (int) Constant.CODE_FAILED :
                               Float.valueOf(weight));
         set.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ? 0 : Integer.valueOf(reps));
         set.setDuration(duration);
-        set.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
+        set.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ? (int) Constant.CODE_FAILED :
                                   Integer.valueOf(difficulty));
 
         ArrayList<Set> sets = new ArrayList<>();

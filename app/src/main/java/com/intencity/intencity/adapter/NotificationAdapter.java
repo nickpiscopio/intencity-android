@@ -55,7 +55,7 @@ public class NotificationAdapter extends ArrayAdapter<AwardDialogContent>
 
         this.objects = awards;
 
-        position = Constant.CODE_FAILED;
+        position = (int) Constant.CODE_FAILED;
 
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }

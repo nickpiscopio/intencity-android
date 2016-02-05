@@ -55,7 +55,7 @@ public class MenuAdapter extends ArrayAdapter<MenuItem>
 
         this.objects = awards;
 
-        position = Constant.CODE_FAILED;
+        position = (int) Constant.CODE_FAILED;
 
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }

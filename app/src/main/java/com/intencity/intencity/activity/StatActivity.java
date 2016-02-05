@@ -272,7 +272,7 @@ public class StatActivity extends AppCompatActivity implements DialogListener
             String padded = String.format("%0" + timeLength + "d", reps);
             String duration = padded.replaceAll("..(?!$)", "$0:");
             set.setDuration(duration);
-            set.setReps(Constant.CODE_FAILED);
+            set.setReps((int) Constant.CODE_FAILED);
         }
 
         adapter.notifyDataSetChanged();
@@ -306,7 +306,7 @@ public class StatActivity extends AppCompatActivity implements DialogListener
                 set.setDuration(null);
                 break;
             case TIME: // Time selected.
-                set.setReps(Constant.CODE_FAILED);
+                set.setReps((int) Constant.CODE_FAILED);
                 set.setDuration(Constant.DURATION_0);
                 break;
             default:

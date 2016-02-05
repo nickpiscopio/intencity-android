@@ -171,14 +171,14 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                 Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
 
                 onFinishedLoading(
-                        pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : Constant.CODE_FAILED);
+                        pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : (int) Constant.CODE_FAILED);
             }
         }
 
         @Override
         public void onRetrievalFailed()
         {
-            onFinishedLoading(pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : Constant.CODE_FAILED);
+            onFinishedLoading(pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : (int) Constant.CODE_FAILED);
         }
     };
 
@@ -314,7 +314,7 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                 connectionIssue.setVisibility(View.VISIBLE);
                 checkPreviousExercises(true);
                 break;
-            case Constant.CODE_FAILED:
+            case (int) Constant.CODE_FAILED:
                 connectionIssue.setVisibility(View.VISIBLE);
                 checkPreviousExercises(false);
                 break;

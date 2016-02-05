@@ -13,7 +13,7 @@ public class Constant
 {
     public static final String TAG = "Intencity";
 
-    public static final int CODE_FAILED = -1;
+    public static final double CODE_FAILED = -1.0;
     public static final int CODE_FAILED_REPOPULATE = -2;
 
     public static final int REQUIRED_PASSWORD_LENGTH = 8;
