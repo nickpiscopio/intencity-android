@@ -54,6 +54,7 @@ public class GenericTextWatcher implements TextWatcher
     public void afterTextChanged(Editable s)
     {
         String value = String.valueOf(s);
+        value = (value.equals(".")) ? "0." : value;
 
         if (!beforeText.equals(value))
         {
@@ -61,7 +62,7 @@ public class GenericTextWatcher implements TextWatcher
             switch (viewId)
             {
                 case ExerciseSetAdapter.WEIGHT:
-                    listener.onTextChanged(value.equals("") ? 0 : Integer.parseInt(value), position, viewId);
+                    listener.onTextChanged(value.equals("") ? 0 : Float.parseFloat(value), position, viewId);
                     break;
                 case ExerciseSetAdapter.DURATION:
                     if (value.contains(":"))
@@ -70,7 +71,7 @@ public class GenericTextWatcher implements TextWatcher
                     }
                     else
                     {
-                        listener.onTextChanged(value.equals("") ? 0 : Integer.parseInt(value), position, viewId);
+                        listener.onTextChanged(value.equals("") ? 0 : Float.parseFloat(value), position, viewId);
                     }
                     break;
                 default:

@@ -10,6 +10,6 @@ import android.widget.EditText;
 public interface ViewChangeListener
 {
     void onTextChanged(String value, int position, EditText editText);
-    void onTextChanged(int value, int position, int viewId);
+    void onTextChanged(float value, int position, int viewId);
     void onSpinnerItemSelected(int spinnerPosition, int position);
 }

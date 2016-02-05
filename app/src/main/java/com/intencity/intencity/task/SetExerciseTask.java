@@ -77,7 +77,7 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
                     values.put(ExerciseTable.COLUMN_DESCRIPTION, exercise.getDescription());
 
                     int webId = set.getWebId();
-                    int weight = set.getWeight();
+                    float weight = set.getWeight();
                     int reps = set.getReps();
                     int difficulty = set.getDifficulty();
                     String duration = set.getDuration();

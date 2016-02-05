@@ -129,7 +129,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
      *
      * @param weight    The string to set in the TextView.
      */
-    public void setWeight(int weight)
+    public void setWeight(float weight)
     {
         if (weight <= 0)
         {

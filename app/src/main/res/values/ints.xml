@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="weight_characters">3</integer>
     <integer name="time_characters">6</integer>
     <integer name="duration_characters">9</integer>
     <integer name="weight_set">12</integer>

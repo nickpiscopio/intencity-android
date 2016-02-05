@@ -103,7 +103,7 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
                 String duration = cursor.getString(
                         cursor.getColumnIndex(ExerciseTable.COLUMN_DURATION));
                 int webId = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_WEB_ID));
-                int weight  = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_WEIGHT));
+                float weight = cursor.getFloat(cursor.getColumnIndex(ExerciseTable.COLUMN_WEIGHT));
                 int reps = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_REP));
                 int difficulty = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_DIFFICULTY));
                 String notes = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_NOTES));

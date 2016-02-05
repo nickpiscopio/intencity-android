@@ -21,6 +21,7 @@ public class DbHelper extends SQLiteOpenHelper
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
+    private static final String REAL_TYPE = " REAL";
     private static final String NOT_NULL = " NOT NULL";
     private static final String COMMA_SEP = ",";
 
@@ -31,7 +32,7 @@ public class DbHelper extends SQLiteOpenHelper
             ExerciseTable.COLUMN_WEB_ID + INTEGER_TYPE + COMMA_SEP +
             ExerciseTable.COLUMN_NAME + TEXT_TYPE + NOT_NULL + COMMA_SEP +
             ExerciseTable.COLUMN_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-            ExerciseTable.COLUMN_WEIGHT + INTEGER_TYPE + COMMA_SEP +
+            ExerciseTable.COLUMN_WEIGHT + REAL_TYPE + COMMA_SEP +
             ExerciseTable.COLUMN_REP + INTEGER_TYPE + COMMA_SEP +
             ExerciseTable.COLUMN_DURATION + TEXT_TYPE + COMMA_SEP +
             ExerciseTable.COLUMN_DIFFICULTY + INTEGER_TYPE + COMMA_SEP +

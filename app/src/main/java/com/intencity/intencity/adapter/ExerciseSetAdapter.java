@@ -1,6 +1,7 @@
 package com.intencity.intencity.adapter;
 
 import android.content.Context;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.listener.ViewChangeListener;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.DecimalDigitsInputFilter;
 import com.intencity.intencity.util.GenericItemSelectionListener;
 import com.intencity.intencity.util.GenericTextWatcher;
 import com.intencity.intencity.util.Util;
@@ -106,6 +108,7 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
 
             // Add the values to each list item.
             holder.weightEditText.setText(weight.equals(codeFailed) ? "" : weight);
+            holder.weightEditText.setFilters(new InputFilter[] { new DecimalDigitsInputFilter(4, 1)});
 
             if (time.equals(Constant.RETURN_NULL))
             {
@@ -164,7 +167,7 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
     }
 
     @Override
-    public void onTextChanged(int value, int position, int viewId)
+    public void onTextChanged(float value, int position, int viewId)
     {
         Set set = sets.get(position);
 
@@ -174,7 +177,7 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
                 set.setWeight(value);
                 break;
             case DURATION:
-                set.setReps(value);
+                set.setReps((int) value);
                 break;
             default:
                 break;

@@ -60,9 +60,8 @@ public class ExerciseDao
                 String notes = object.getString(Constant.COLUMN_NOTES);
 
                 Set set = new Set();
-                set.setWeight(
-                        weight.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
-                                Integer.valueOf(weight));
+                set.setWeight(weight.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
+                                      Float.valueOf(weight));
                 set.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ? 0 :
                                     Integer.valueOf(reps));
                 set.setDuration(duration);

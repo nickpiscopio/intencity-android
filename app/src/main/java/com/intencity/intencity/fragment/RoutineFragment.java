@@ -185,7 +185,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment
     {
         Set set = new Set();
         set.setWeight(weight.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :
-                              Integer.valueOf(weight));
+                              Float.valueOf(weight));
         set.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ? 0 : Integer.valueOf(reps));
         set.setDuration(duration);
         set.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ? Constant.CODE_FAILED :

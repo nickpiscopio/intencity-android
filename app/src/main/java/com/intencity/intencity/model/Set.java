@@ -12,7 +12,7 @@ public class Set implements Parcelable
 {
     // This is the auto generated webId set when inserting a record in the web database.
     private int webId;
-    private int weight;
+    private float weight;
     private int reps;
 
     // This will need to be converted to a long later to accept times.
@@ -26,7 +26,7 @@ public class Set implements Parcelable
     private Set(Parcel in)
     {
         webId = in.readInt();
-        weight = in.readInt();
+        weight = in.readFloat();
         reps = in.readInt();
         duration = in.readString();
         difficulty = in.readInt();
@@ -58,7 +58,7 @@ public class Set implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeInt(webId);
-        dest.writeInt(weight);
+        dest.writeFloat(weight);
         dest.writeInt(reps);
         dest.writeString(duration);
         dest.writeInt(difficulty);
@@ -78,12 +78,12 @@ public class Set implements Parcelable
         this.webId = webId;
     }
 
-    public int getWeight()
+    public float getWeight()
     {
         return weight;
     }
 
-    public void setWeight(int weight)
+    public void setWeight(float weight)
     {
         this.weight = weight;
     }

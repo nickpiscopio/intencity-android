@@ -713,7 +713,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         String whereParam = "where";
         String nullString = "NULL";
 
-        int weight = set.getWeight();
+        float weight = set.getWeight();
         String duration = set.getDuration();
         String notes = set.getNotes();
         boolean hasWeight = weight > 0;
@@ -755,7 +755,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         String curDate = "CURDATE()";
         String now = "NOW()";
 
-        int weight = set.getWeight();
+        float weight = set.getWeight();
         String duration = set.getDuration();
         boolean hasWeight = weight > 0;
         boolean isDuration = duration != null && duration.contains(":");
