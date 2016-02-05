@@ -60,14 +60,18 @@ public class ExerciseDao
                 String notes = object.getString(Constant.COLUMN_NOTES);
 
                 Set set = new Set();
-                set.setWeight(weight.equalsIgnoreCase(Constant.RETURN_NULL) ? (int) Constant.CODE_FAILED :
-                                      Float.valueOf(weight));
-                set.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ? 0 :
-                                    Integer.valueOf(reps));
+                set.setWeight(
+                        weight.equalsIgnoreCase(Constant.RETURN_NULL) ? (int)Constant.CODE_FAILED :
+                                Float.valueOf(weight));
+                set.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ? 0 : Integer.valueOf(reps));
                 set.setDuration(duration);
                 set.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ?
-                                          (int) Constant.CODE_FAILED : Integer.valueOf(difficulty));
-                set.setNotes(notes);
+                                          (int)Constant.CODE_FAILED : Integer.valueOf(difficulty));
+
+                if (!notes.equalsIgnoreCase(Constant.RETURN_NULL))
+                {
+                    set.setNotes(notes);
+                }
 
                 ArrayList<Set> sets = new ArrayList<>();
                 sets.add(set);
