@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.activity.SearchActivity;
@@ -25,7 +27,11 @@ import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * The Ranking Fragment for Intencity.
@@ -117,6 +123,25 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
             // Make sure you call swipeContainer.setRefreshing(false)
             // once the network request has completed successfully.
             getFollowing();
+
+            Calendar cal = Calendar.getInstance();
+            // We set the timezone to New York because this is where the server is located.
+            cal.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+
+            int today = cal.get(Calendar.DAY_OF_WEEK);
+
+            cal.add(Calendar.DAY_OF_MONTH, 7 - today + Calendar.MONDAY);
+
+            boolean is24HourFormat = DateFormat.is24HourFormat(context);
+            SimpleDateFormat format = new SimpleDateFormat("EEE, MMM d " + (is24HourFormat ? "HH:mm" : "h:mm a"), Locale.getDefault());
+
+            String date = format.format(cal.getTime());
+            Toast.makeText(context, context.getString(R.string.rankings_updated, date),
+                               Toast.LENGTH_LONG).show();
         }
     };
 
