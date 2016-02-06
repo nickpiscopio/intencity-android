@@ -121,17 +121,14 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
         // Get all the users from the database with the search query minus the spaces.
-        // Need to add % before and after the search term, so we can get back the proper
-        // values from the database.
         query = searchExercises ? query : query.replaceAll(Constant.SPACE_REGEX, "");
-        String searchTerm = Constant.LIKE_OPERATOR + query + Constant.LIKE_OPERATOR;
 
         // Get the stored procedure depending upon what we are searching.
         String urlParameters = searchExercises ?
                 Constant.generateStoredProcedureParameters(
-                        Constant.STORED_PROCEDURE_SEARCH_EXERCISES, email, searchTerm) :
+                        Constant.STORED_PROCEDURE_SEARCH_EXERCISES, email, query) :
                 Constant.generateStoredProcedureParameters(
-                        Constant.STORED_PROCEDURE_SEARCH_USERS, email, searchTerm);
+                        Constant.STORED_PROCEDURE_SEARCH_USERS, email, query);
 
         new ServiceTask(searchListener).execute(Constant.SERVICE_STORED_PROCEDURE, urlParameters);
 

@@ -98,7 +98,6 @@ public class Constant
     public static final String SERVICE_FORGOT_PASSWORD = SERVICE_FOLDER + "forgot_password.php";
 
     // Parameters
-    public static final String LIKE_OPERATOR = "%";
     public static final String PARAMETER_AMPERSAND = "&";
     public static final String PARAMETER_DELIMITER = ",";
     // This does not have "=" because it usually has a number followed by it.
