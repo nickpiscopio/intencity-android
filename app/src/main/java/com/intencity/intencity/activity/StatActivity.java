@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,12 +21,13 @@ import android.widget.Spinner;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ExerciseSetAdapter;
-import com.intencity.intencity.notification.CustomDialog;
-import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
+import com.intencity.intencity.notification.CustomDialog;
+import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.NotesInputFilter;
 import com.intencity.intencity.util.Util;
 
 import java.util.ArrayList;
@@ -67,6 +69,9 @@ public class StatActivity extends AppCompatActivity implements DialogListener
         add = (FloatingActionButton) findViewById(R.id.add);
         Spinner durationSpinner = (Spinner) findViewById(R.id.spinner_duration);
 
+        context = getApplicationContext();
+
+        notes.setFilters(new InputFilter[] { new NotesInputFilter(context) });
         notes.addTextChangedListener(textChangeListener);
         add.setOnClickListener(addListener);
 
@@ -92,8 +97,6 @@ public class StatActivity extends AppCompatActivity implements DialogListener
                 actionBar.setTitle(exerciseName);
             }
         }
-
-        context = getApplicationContext();
 
         // Initialize the set adapter with the sets.
         initializeExerciseSetAdapter();

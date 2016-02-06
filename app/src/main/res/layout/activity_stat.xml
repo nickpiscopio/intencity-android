@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/note_hint"
             android:maxLength="@integer/exercise_notes_length"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textNoSuggestions"
             android:textColor="@color/secondary_dark"
             android:layout_marginBottom="@dimen/layout_margin"
             android:padding="@dimen/layout_margin"

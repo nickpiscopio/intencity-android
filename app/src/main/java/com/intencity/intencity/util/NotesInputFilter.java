@@ -1,7 +1,10 @@
 package com.intencity.intencity.util;
 
+import android.content.Context;
 import android.text.InputFilter;
 import android.text.Spanned;
+
+import com.intencity.intencity.R;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,20 +14,24 @@ import java.util.regex.Pattern;
  *
  * Created by Nick Piscopio on 2/5/16.
  */
-public class DecimalDigitsInputFilter implements InputFilter
+public class NotesInputFilter implements InputFilter
 {
     private Pattern pattern;
 
-    public DecimalDigitsInputFilter(int digitsBeforeZero, int digitsAfterZero)
+    private Context context;
+
+    public NotesInputFilter(Context context)
     {
-        pattern = Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?");
+        this.context = context;
+
+        pattern = Pattern.compile("[0-9a-zA-z\\.\\-_~\\s\\n]*");
     }
 
     @Override
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend)
     {
-        Matcher matcher = pattern.matcher(dest);
-        if(!matcher.matches())
+        Matcher matcher = pattern.matcher(source);
+        if(!matcher.matches() || dend >= context.getResources().getInteger(R.integer.exercise_notes_length))
         {
             return "";
         }
