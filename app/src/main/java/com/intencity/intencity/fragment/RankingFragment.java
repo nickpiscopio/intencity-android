@@ -79,7 +79,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         ranking = (ListView) view.findViewById(R.id.list_view_ranking);
         ranking.addFooterView(footer, null, false);
 
-        animation = AnimationUtils.loadAnimation(context, R.anim.anim_slide_out_right_fast);
+        animation = AnimationUtils.loadAnimation(context, R.anim.anim_slide_out_right);
         animation.setAnimationListener(animationListener);
 
         followingMessage = (TextView) footer.findViewById(R.id.following_message);

@@ -1,10 +1,13 @@
 package com.intencity.intencity.adapter;
 
 import android.content.Context;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -44,6 +47,8 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
 
     private int position;
 
+    private InputMethodManager imm;
+
     static class SetHolder
     {
         TextView setNumber;
@@ -62,6 +67,8 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
         position = -1;
 
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -79,6 +86,9 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
             holder.weightEditText = (EditText)convertView.findViewById(WEIGHT);
             holder.durationEditText = (EditText)convertView.findViewById(DURATION);
             holder.intensitySpinner = (Spinner)convertView.findViewById(INTENSITY);
+
+            holder.weightEditText.setOnTouchListener(clearClickLister);
+            holder.durationEditText.setOnTouchListener(clearClickLister);
 
             ArrayAdapter<Integer> adapter =
                     new ArrayAdapter<>(context, R.layout.spinner, INTENSITY_VALUES);
@@ -108,7 +118,9 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
 
             // Add the values to each list item.
             holder.weightEditText.setText(weight.equals(codeFailed) ? "" : weight);
-            holder.weightEditText.setFilters(new InputFilter[] { new DecimalDigitsInputFilter(4, 1)});
+            holder.weightEditText.setFilters(
+                    new InputFilter[] { new DecimalDigitsInputFilter(4, 1) });
+
 
             if (time.equals(Constant.RETURN_NULL))
             {
@@ -128,6 +140,41 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
 
         return convertView;
     }
+
+    /**
+     * The click listener that clears the edit text if first selected.
+     */
+    private View.OnTouchListener clearClickLister = new View.OnTouchListener()
+    {
+        @Override
+        public boolean onTouch(View v, MotionEvent event)
+        {
+            EditText editText = (EditText)v;
+
+            Editable text = editText.getText();
+
+            if (!editText.isFocused())
+            {
+                if (text.toString().contains(":"))
+                {
+                    editText.setText(Constant.DURATION_0);
+                    editText.setSelection(text.length());
+
+                    imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+                }
+                else
+                {
+                    text.clear();
+                }
+            }
+            else if (editText.getId() == WEIGHT)
+            {
+                text.clear();
+            }
+
+            return false;
+        }
+    };
 
     /**
      * Gets the time format of an input.

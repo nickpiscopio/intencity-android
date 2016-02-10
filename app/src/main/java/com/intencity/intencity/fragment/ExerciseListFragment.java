@@ -127,8 +127,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         context = getContext();
 
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(mLayoutManager);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(
                 new HeaderDecoration(context, recyclerView, R.layout.recycler_view_header));
 
@@ -593,6 +593,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             String exerciseName = currentExercise.getName();
             allExercises.get(position).setSets(sets);
 
+            // We notify the data set changed just in case something changed in the stat activity.
+            // This will update the last set the user did.
             adapter.notifyDataSetChanged();
 
             int setSize = sets.size();
@@ -737,10 +739,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         float weight = set.getWeight();
         String duration = set.getDuration();
         String notes = set.getNotes();
-        boolean hasWeight = weight > 0;
         boolean isDuration = duration != null && duration.contains(":");
 
-        String weightParam = hasWeight ? Constant.COLUMN_EXERCISE_WEIGHT + equals + weight + Constant.PARAMETER_DELIMITER : "";
+        String weightParam = Constant.COLUMN_EXERCISE_WEIGHT + equals + weight + Constant.PARAMETER_DELIMITER;
         // Choose whether we are inserting reps or duration.
         String durationParam = isDuration ?
                 Constant.COLUMN_EXERCISE_DURATION + equals + "'" + duration + "'" + Constant.PARAMETER_DELIMITER

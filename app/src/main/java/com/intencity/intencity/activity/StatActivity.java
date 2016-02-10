@@ -348,8 +348,6 @@ public class StatActivity extends AppCompatActivity implements DialogListener
 
             // the dialog when going back to the exercise list.
             new CustomDialog(StatActivity.this, StatActivity.this, dialogContent, true);
-
-
         }
         else
         {
@@ -358,7 +356,6 @@ public class StatActivity extends AppCompatActivity implements DialogListener
                              new CustomDialogContent(getString(R.string.title_add_set_error),
                                         getString(R.string.message_add_set_error), false), true);
         }
-
     }
 
     /**

@@ -105,34 +105,16 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      *
      * @param pos   The position of teh item being removed.
      */
-    public void animateRemoveItem(int pos)
+    public void animateRemoveItem(final int pos)
     {
         Exercise exercise = exercises.get(pos);
-
-        Animation animation = AnimationUtils.loadAnimation(context, R.anim.anim_slide_out_right);
-        animation.setAnimationListener(animationListener);
-        exercise.getView().startAnimation(animation);
 
         lastPosition--;
 
         exercises.remove(exercise);
+
+        notifyItemRemoved(pos);
     }
-
-    /**
-     * The animation listener for removing a user from the following list.
-     */
-    private Animation.AnimationListener animationListener = new Animation.AnimationListener()
-    {
-        @Override public void onAnimationStart(Animation animation) { }
-
-        @Override public void onAnimationRepeat(Animation animation) { }
-
-        @Override
-        public void onAnimationEnd(Animation animation)
-        {
-            notifyDataSetChanged();
-        }
-    };
 
     /**
      * Gets the last position of the recycler view.
@@ -152,7 +134,5 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void setLastPosition(int lastPosition)
     {
         this.lastPosition = lastPosition;
-
-
     }
 }
