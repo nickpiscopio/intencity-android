@@ -251,7 +251,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
 
                     String firstName = "Anonymous";
                     String lastName = "User";
-                    final String email = lastName + createdDate + "@intencityapp.com";
+                    final String email = lastName + createdDate + "@intencity.fit";
                     String password = String.valueOf(createdDate);
 
                     loadingProgressBar.setVisibility(View.VISIBLE);
