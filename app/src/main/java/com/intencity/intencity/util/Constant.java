@@ -22,6 +22,8 @@ public class Constant
     public static final int LOGIN_POINTS_THRESHOLD = 43200000;
     public static final int EXERCISE_POINTS_THRESHOLD = 60000;
 
+    public static final String FRAGMENT_ROUTINE = "fragment.routine";
+
     public static final int POINTS_LOGIN = 5;
     public static final int POINTS_EXERCISE = 5;
     public static final int POINTS_COMPLETING_WORKOUT = 10;

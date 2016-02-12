@@ -217,7 +217,7 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         // Pushes the routine fragment onto the stack when everything has finished loading.
         FragmentManager manager = getFragmentManager();
         FragmentHandler fragmentHandler = FragmentHandler.getInstance();
-        fragmentHandler.pushFragment(manager, R.id.layout_fitness_log, routineFragment, "", false,
+        fragmentHandler.pushFragment(manager, R.id.layout_fitness_log, routineFragment, Constant.FRAGMENT_ROUTINE, false,
                                      bundle, false);
 
         stopLoading();

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.util.Constant;
 
 import java.util.List;
 
@@ -68,6 +69,16 @@ public class FragmentHandler
         if (bundle != null)
         {
             fragmentToAdd.setArguments(bundle);
+        }
+
+        // Remove the routine fragment if it already exists.
+        if (tag.equalsIgnoreCase(Constant.FRAGMENT_ROUTINE))
+        {
+            Fragment fragment = manager.findFragmentByTag(tag);
+            if (fragment != null)
+            {
+                transaction.remove(fragment);
+            }
         }
 
         transaction.add(parent, fragmentToAdd, tag);
