@@ -87,7 +87,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            listener.onStartLoading();
             new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                              Constant.generateStoredProcedureParameters(
                                                                      Constant.STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY,
@@ -237,6 +236,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment
                 String routine = String.valueOf(spinnerPosition + 1);
                 String storedProcedureParameters = Constant.generateStoredProcedureParameters(
                         Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);
+
+                listener.onStartLoading();
 
                 new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                                 storedProcedureParameters);
