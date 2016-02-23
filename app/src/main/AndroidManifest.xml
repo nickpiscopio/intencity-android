@@ -97,7 +97,7 @@
         <activity
             android:name=".activity.DeleteAccountActivity"
             android:theme="@style/AppTheme.Base"
-            android:label="@string/change_password"
+            android:label="@string/title_delete_account"
             android:screenOrientation="portrait" />
 
         <activity
