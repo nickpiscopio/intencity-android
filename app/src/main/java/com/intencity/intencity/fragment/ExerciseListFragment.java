@@ -163,6 +163,12 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT)
     {
         @Override
+        public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+        {
+            return viewHolder.getAdapterPosition() > 0 ? super.getSwipeDirs(recyclerView, viewHolder) : 0;
+        }
+
+        @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                               RecyclerView.ViewHolder target)
         {
