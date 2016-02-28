@@ -145,6 +145,8 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
         @Override
         public void onRetrievalFailed()
         {
+            loadingProgressBar.setVisibility(View.GONE);
+            
             showMessage(context.getString(R.string.generic_error),
                         context.getString(R.string.intencity_communication_error));
         }
