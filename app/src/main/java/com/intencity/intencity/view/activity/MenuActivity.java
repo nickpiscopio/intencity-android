@@ -1,4 +1,4 @@
-package com.intencity.intencity.activity;
+package com.intencity.intencity.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

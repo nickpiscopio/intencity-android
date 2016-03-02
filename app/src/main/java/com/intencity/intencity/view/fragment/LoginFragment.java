@@ -1,4 +1,4 @@
-package com.intencity.intencity.fragment;
+package com.intencity.intencity.view.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,9 +20,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.activity.CreateAccountActivity;
-import com.intencity.intencity.activity.ForgotPasswordActivity;
-import com.intencity.intencity.activity.TermsActivity;
+import com.intencity.intencity.view.activity.CreateAccountActivity;
+import com.intencity.intencity.view.activity.ForgotPasswordActivity;
+import com.intencity.intencity.view.activity.TermsActivity;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.listener.DialogListener;

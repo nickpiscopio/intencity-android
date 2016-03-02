@@ -1,4 +1,4 @@
-package com.intencity.intencity.activity;
+package com.intencity.intencity.view.activity;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 1/17/15.
  */
-public class EquipmentActivity extends AppCompatActivity
+public class ExclusionActivity extends AppCompatActivity
 {
     private LinearLayout connectionIssue;
 
@@ -48,8 +48,8 @@ public class EquipmentActivity extends AppCompatActivity
 
     private String email;
 
-    private ArrayList<String> equipmentList;
-    private ArrayList<String> userEquipment;
+    private ArrayList<String> exclusionList;
+    private ArrayList<String> newExclusionList;
 
     private Context context;
 
@@ -80,8 +80,8 @@ public class EquipmentActivity extends AppCompatActivity
         SecurePreferences securePreferences = new SecurePreferences(context);
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
-        new ServiceTask(getEquipmentServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EQUIPMENT, email));
+        new ServiceTask(getExclusionService).execute(Constant.SERVICE_STORED_PROCEDURE,
+                Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EXCLUSION, email));
     }
 
     @Override
@@ -100,43 +100,37 @@ public class EquipmentActivity extends AppCompatActivity
     /**
      * The ServiceListener for getting the user's equipment.
      */
-    private ServiceListener getEquipmentServiceListener =  new ServiceListener()
+    private ServiceListener getExclusionService =  new ServiceListener()
     {
         @Override
         public void onRetrievalSuccessful(String response)
         {
             try
             {
-                equipmentList = new ArrayList<>();
-                ArrayList<Integer> userEquipment = new ArrayList<>();
+                exclusionList = new ArrayList<>();
 
-                JSONArray array = new JSONArray(response);
-
-                int length = array.length();
-
-                for (int i = 0; i < length; i++)
+                if (!response.equals(Constant.RETURN_NULL))
                 {
-                    JSONObject object = array.getJSONObject(i);
+                    JSONArray array = new JSONArray(response);
 
-                    String equipmentName = object.getString(Constant.COLUMN_EQUIPMENT_NAME);
-                    boolean hasEquipment = object.getString(Constant.COLUMN_HAS_EQUIPMENT).equalsIgnoreCase(Constant.TRUE);
+                    int length = array.length();
 
-                    // Add all the equipment to the array.
-                    equipmentList.add(equipmentName);
-
-                    // Add all the equipment to the user's equipment list
-                    // if it is returned from the web database. from the database.
-                    if (hasEquipment)
+                    for (int i = 0; i < length; i++)
                     {
-                        userEquipment.add(i);
+                        JSONObject object = array.getJSONObject(i);
+
+                        String exerciseName = object.getString(Constant.COLUMN_EXCLUSION_NAME);
+
+                        // Add all the excluded exercises to the array.
+                        exclusionList.add(exerciseName);
                     }
                 }
 
-                populateEquipmentListView(userEquipment);
+                populateExclusionListView();
             }
             catch (JSONException exception)
             {
-                Log.e(Constant.TAG, "Couldn't parse equipment " + exception.toString());
+                Log.e(Constant.TAG, "Couldn't parse exclusion list " + exception.toString());
 
                 connectionIssue.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
@@ -158,7 +152,7 @@ public class EquipmentActivity extends AppCompatActivity
     /**
      * The ServiceListener for updating the user's equipment.
      */
-    private ServiceListener updateEquipmentServiceListener =  new ServiceListener()
+    private ServiceListener updateExclusionServiceListener =  new ServiceListener()
     {
         @Override
         public void onRetrievalSuccessful(String response)
@@ -171,16 +165,16 @@ public class EquipmentActivity extends AppCompatActivity
         {
             CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 
-            new CustomDialog(EquipmentActivity.this, dialogListener, dialog, false);
+            new CustomDialog(ExclusionActivity.this, dialogListener, dialog, false);
         }
     };
 
     @Override
     public void onBackPressed()
     {
-        if (userEquipment != null)
+        if (newExclusionList != null)
         {
-            updateEquipment();
+            updateExclusion();
         }
         else
         {
@@ -191,24 +185,22 @@ public class EquipmentActivity extends AppCompatActivity
 
     /**
      * Populates the equipment list.
-     *
-     * @param userEquipment     ArrayList of indices the current equipment the user has.
-     *                          This directly correlates to the equipmentList indices.
      */
-    private void populateEquipmentListView(ArrayList<Integer> userEquipment)
+    private void populateExclusionListView()
     {
-        this.userEquipment = new ArrayList<>();
+        newExclusionList = new ArrayList<>();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, equipmentList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, exclusionList);
 
         listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
+        listView.setEmptyView(findViewById(R.id.text_view_hidden_exercises));
 
-        for (int equipmentIndex : userEquipment)
+        for (String exerciseName : exclusionList)
         {
-            listView.setItemChecked(equipmentIndex, true);
+            listView.setItemChecked(exclusionList.indexOf(exerciseName), true);
 
-            this.userEquipment.add(equipmentList.get(equipmentIndex));
+            newExclusionList.add(exerciseName);
         }
 
         listView.setOnItemClickListener(settingClicked);
@@ -219,17 +211,17 @@ public class EquipmentActivity extends AppCompatActivity
     }
 
     /**
-     * Calls the service to update the user's equipment.
+     * Calls the service to update the user's exclusion list.
      */
-    private void updateEquipment()
+    private void updateExclusion()
     {
-        new ServiceTask(updateEquipmentServiceListener).execute(Constant.SERVICE_UPDATE_EQUIPMENT,
+        new ServiceTask(updateExclusionServiceListener).execute(Constant.SERVICE_UPDATE_EXCLUSION,
                                                                 Constant.generateListVariables(
-                                                                        email, userEquipment));
+                                                                        email, newExclusionList));
     }
 
     /**
-     * The click listener for each item clicked in the settings list.
+     * The click listener for each item clicked in the list.
      */
     private AdapterView.OnItemClickListener settingClicked = new AdapterView.OnItemClickListener()
     {
@@ -238,14 +230,14 @@ public class EquipmentActivity extends AppCompatActivity
         {
             // Add or remove equipment from the user's list of equipment
             // if he or she clicks on a list item.
-            String equipment = equipmentList.get(position);
-            if (userEquipment.contains(equipment))
+            String equipment = exclusionList.get(position);
+            if (newExclusionList.contains(equipment))
             {
-                userEquipment.remove(equipment);
+                newExclusionList.remove(equipment);
             }
             else
             {
-                userEquipment.add(equipment);
+                newExclusionList.add(equipment);
             }
         }
     };

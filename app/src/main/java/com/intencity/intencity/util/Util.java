@@ -8,7 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.widget.ProgressBar;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.activity.MainActivity;
+import com.intencity.intencity.view.activity.MainActivity;
 import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.helper.DbHelper;
 import com.intencity.intencity.notification.AwardDialogContent;

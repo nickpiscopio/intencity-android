@@ -10,7 +10,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.activity.Direction;
+import com.intencity.intencity.view.activity.Direction;
 import com.intencity.intencity.listener.SearchListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.util.Constant;

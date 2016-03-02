@@ -1,4 +1,4 @@
-package com.intencity.intencity.fragment;
+package com.intencity.intencity.view.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

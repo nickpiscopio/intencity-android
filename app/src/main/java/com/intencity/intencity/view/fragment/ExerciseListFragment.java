@@ -1,4 +1,4 @@
-package com.intencity.intencity.fragment;
+package com.intencity.intencity.view.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,10 +15,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.activity.Direction;
-import com.intencity.intencity.activity.ExerciseSearchActivity;
-import com.intencity.intencity.activity.SearchActivity;
-import com.intencity.intencity.activity.StatActivity;
+import com.intencity.intencity.view.activity.Direction;
+import com.intencity.intencity.view.activity.ExerciseSearchActivity;
+import com.intencity.intencity.view.activity.SearchActivity;
+import com.intencity.intencity.view.activity.StatActivity;
 import com.intencity.intencity.adapter.ExerciseAdapter;
 import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.listener.DialogListener;
@@ -470,7 +470,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         autoFillTo--;
         completedExerciseNum--;
 
-        // Remove 1 from the last position so we can se the animation
+        // Remove 1 from the last position so we can see the animation
         // for the next exercise that will be added.
         adapter.setLastPosition(adapter.getLastPosition() - 1);
 

@@ -1,4 +1,4 @@
-package com.intencity.intencity.fragment;
+package com.intencity.intencity.view.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.activity.DemoActivity;
+import com.intencity.intencity.view.activity.DemoActivity;
 
 /**
  * Fragment class for the PagerFragment.

@@ -1,4 +1,4 @@
-package com.intencity.intencity.fragment;
+package com.intencity.intencity.view.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.activity.SearchActivity;
+import com.intencity.intencity.view.activity.SearchActivity;
 import com.intencity.intencity.adapter.RankingListAdapter;
 import com.intencity.intencity.helper.doa.UserDao;
 import com.intencity.intencity.listener.RankingListener;

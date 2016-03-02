@@ -1,4 +1,4 @@
-package com.intencity.intencity.activity;
+package com.intencity.intencity.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +15,8 @@ import android.view.MenuItem;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ViewPagerAdapter;
-import com.intencity.intencity.fragment.FitnessLogFragment;
-import com.intencity.intencity.fragment.RankingFragment;
+import com.intencity.intencity.view.fragment.FitnessLogFragment;
+import com.intencity.intencity.view.fragment.RankingFragment;
 import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ExerciseListListener;

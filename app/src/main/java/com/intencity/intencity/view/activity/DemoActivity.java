@@ -1,4 +1,4 @@
-package com.intencity.intencity.activity;
+package com.intencity.intencity.view.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -10,8 +10,8 @@ import android.widget.RelativeLayout;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ViewPagerAdapter;
-import com.intencity.intencity.fragment.LoginFragment;
-import com.intencity.intencity.fragment.PagerFragment;
+import com.intencity.intencity.view.fragment.LoginFragment;
+import com.intencity.intencity.view.fragment.PagerFragment;
 import com.intencity.intencity.util.Constant;
 
 /**

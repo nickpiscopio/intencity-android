@@ -10,7 +10,7 @@
         android:label="@string/app_name">
 
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".view.activity.MainActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -21,87 +21,87 @@
         </activity>
 
         <activity
-            android:name=".activity.DemoActivity"
+            android:name=".view.activity.DemoActivity"
             android:theme="@style/AppTheme.Base"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".activity.CreateAccountActivity"
+            android:name=".view.activity.CreateAccountActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/title_create_account"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.ForgotPasswordActivity"
+            android:name=".view.activity.ForgotPasswordActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/title_forgot_password"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.TermsActivity"
+            android:name=".view.activity.TermsActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/title_terms"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.StatActivity"
+            android:name=".view.activity.StatActivity"
             android:theme="@style/AppTheme.Base"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.Direction"
+            android:name=".view.activity.Direction"
             android:theme="@style/AppTheme.Base"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.SearchActivity"
+            android:name=".view.activity.SearchActivity"
             android:theme="@style/AppTheme.Base"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.AboutActivity"
+            android:name=".view.activity.AboutActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/title_about"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.NotificationActivity"
+            android:name=".view.activity.NotificationActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/title_notifications"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.MenuActivity"
+            android:name=".view.activity.MenuActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/title_menu"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.ExclusionActivity"
+            android:name=".view.activity.ExclusionActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/edit_exclusion"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.EquipmentActivity"
+            android:name=".view.activity.EquipmentActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/edit_equipment"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.ChangePasswordActivity"
+            android:name=".view.activity.ChangePasswordActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/change_password"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.DeleteAccountActivity"
+            android:name=".view.activity.DeleteAccountActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/title_delete_account"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.ExerciseSearchActivity"
+            android:name=".view.activity.ExerciseSearchActivity"
             android:theme="@style/AppTheme.Base"
             android:screenOrientation="portrait" />
 
