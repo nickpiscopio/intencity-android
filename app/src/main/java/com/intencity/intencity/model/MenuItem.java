@@ -1,5 +1,7 @@
 package com.intencity.intencity.model;
 
+import android.os.Bundle;
+
 /**
  * The model class for the MenuItems in the menu ListView
  *
@@ -9,11 +11,19 @@ public class MenuItem
 {
     private String title;
     private Class cls;
+    private Bundle bundle;
 
     public MenuItem(String title, Class cls)
     {
         this.title = title;
         this.cls = cls;
+    }
+
+    public MenuItem(String title, Class cls, Bundle bundle)
+    {
+        this.title = title;
+        this.cls = cls;
+        this.bundle = bundle;
     }
 
     /**
@@ -27,5 +37,10 @@ public class MenuItem
     public Class getCls()
     {
         return cls;
+    }
+
+    public Bundle getBundle()
+    {
+        return bundle;
     }
 }

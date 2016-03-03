@@ -40,7 +40,6 @@
         <activity
             android:name=".view.activity.TermsActivity"
             android:theme="@style/AppTheme.Base"
-            android:label="@string/title_terms"
             android:screenOrientation="portrait" />
 
         <activity

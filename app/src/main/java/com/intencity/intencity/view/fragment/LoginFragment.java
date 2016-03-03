@@ -88,17 +88,28 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
         String[] checkBoxString = termsCheckBox.getText().toString().split("@");
-        String termsString = checkBoxString[1];
-        SpannableString redSpannable = new SpannableString(termsString);
-        redSpannable
-                .setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.primary)),
-                         0, termsString.length(), 0);
-        builder.append(checkBoxString[0]);
-        builder.append(redSpannable);
-        builder.append(checkBoxString[2]);
+        int termsStringLength = checkBoxString.length;
 
-        termsCheckBox.setText(builder, TextView.BufferType.SPANNABLE);
-        termsCheckBox.setOnClickListener(termsClickListener);
+        for (int i = 0; i < termsStringLength; i++)
+        {
+            if (i % 2 != 0)
+            {
+                String termsSnippet = checkBoxString[i];
+
+                SpannableString spannable = new SpannableString(termsSnippet);
+                spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.primary)),
+                                  0, termsSnippet.length(), 0);
+
+                builder.append(spannable);
+            }
+            else
+            {
+                builder.append(checkBoxString[i]);
+            }
+
+            termsCheckBox.setText(builder, TextView.BufferType.SPANNABLE);
+            termsCheckBox.setOnClickListener(termsClickListener);
+        }
 
         return view;
     }
@@ -174,7 +185,10 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
             // so we want to start the TermsActivity only if the checkbox is checked.
             if (termsCheckBox.isChecked())
             {
-                startActivity(new Intent(LoginFragment.this.getContext(), TermsActivity.class));
+                Intent intent = new Intent(context, TermsActivity.class);
+                intent.putExtra(TermsActivity.IS_TERMS, true);
+                intent.putExtra(TermsActivity.SHOW_PRIVACY_POLICY, true);
+                startActivity(intent);
             }
         }
     };

@@ -60,9 +60,14 @@ public class MenuActivity extends AppCompatActivity
         menuItems.add(new MenuItem(logOutTitle, null));
         menuItems.add(new MenuItem(getString(R.string.title_info), null));
         menuItems.add(new MenuItem(getString(R.string.title_about), AboutActivity.class));
-        menuItems.add(new MenuItem(getString(R.string.title_terms), TermsActivity.class));
-        menuItems.add(new MenuItem(getString(R.string.title_account_settings), null));
-        menuItems.add(new MenuItem(getString(R.string.title_delete_account), DeleteAccountActivity.class));
+        menuItems.add(new MenuItem(getString(R.string.title_terms), TermsActivity.class, getTermsBundle(true)));
+        menuItems.add(new MenuItem(getString(R.string.title_privacy_policy), TermsActivity.class, getTermsBundle(false)));
+
+        if (!accountType.equals(Constant.ACCOUNT_TYPE_MOBILE_TRIAL))
+        {
+            menuItems.add(new MenuItem(getString(R.string.title_account_settings), null));
+            menuItems.add(new MenuItem(getString(R.string.title_delete_account), DeleteAccountActivity.class));
+        }
 
         MenuAdapter settingsAdapter =
                 new MenuAdapter(this, R.layout.list_item_header, R.layout.list_item_standard, menuItems);
@@ -86,7 +91,7 @@ public class MenuActivity extends AppCompatActivity
 
             if (cls != null)
             {
-                startActivity(cls);
+                startActivity(cls, menuItem.getBundle());
             }
             else if (menuItem.getTitle().equals(logOutTitle))
             {
@@ -98,11 +103,18 @@ public class MenuActivity extends AppCompatActivity
     /**
      * Starts an activity.
      *
-     * @param cls   The class to start.
+     * @param cls       The class to start.
+     * @param bundle    The bundle that is included with the intent if there is one.
      */
-    private void startActivity(Class<?> cls)
+    private void startActivity(Class<?> cls, Bundle bundle)
     {
         Intent intent = new Intent(this, cls);
+
+        if (bundle != null)
+        {
+            intent.putExtras(bundle);
+        }
+
         if (cls == DeleteAccountActivity.class)
         {
             startActivityForResult(intent, Constant.REQUEST_CODE_LOG_OUT);
@@ -111,8 +123,23 @@ public class MenuActivity extends AppCompatActivity
         {
             startActivity(intent);
         }
-
     }
+
+    /**
+     * Gets the bundle for the terms activity.
+     *
+     * @param isTerms   Boolean value of whether the activity should show the terms or privacy policy.
+     *
+     * @return  The bundle.
+     */
+    private Bundle getTermsBundle(boolean isTerms)
+    {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(TermsActivity.IS_TERMS, isTerms);
+        bundle.putBoolean(TermsActivity.SHOW_PRIVACY_POLICY, false);
+        return bundle;
+    }
+
     /**
      * Dismisses the activity and tells the MainActivity to log out.
      */
