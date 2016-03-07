@@ -88,7 +88,7 @@
     <string name="recommendations">FITNESS RECOMMENDATIONS</string>
     <string name="weight_title">Weight:</string>
     <string name="asterisk">*</string>
-    <string name="weight_description">The difficulty of weight is relative to each person. Someone lifting low weight might be heavy for someone else. Choose your weight carefully.</string>
+    <string name="weight_description">The difficulty of weight is relative to each person. Low weight for one person might be heavy weight for another person. Choose your weight carefully.</string>
     <string name="rest_title">REST BETWEEN EXERCISES</string>
     <string name="cardio_day_title">CARDIO DAY</string>
 
@@ -126,8 +126,8 @@
     <string name="stretch">STRETCH</string>
     <string name="stretch_description">To combat soreness and encourage muscle development, stretch the muscles that were exercised in this workout.</string>
 
-    <string name="stretches_title"> Stretches</string>
-    <string name="warm_ups_title"> Warm-Ups</string>
+    <string name="stretches_title">Stretches for %1$s</string>
+    <string name="warm_ups_title">Warm-Ups for %1$s</string>
 
     <string name="hide_exercise_title">Hide exercise</string>
     <string name="hide_for_now">Hide for now</string>

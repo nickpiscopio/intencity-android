@@ -88,14 +88,14 @@ public class ExerciseSearchActivity extends AppCompatActivity implements Service
             String title = "";
             if (type != null && type.equalsIgnoreCase(Constant.EXERCISE_TYPE_WARM_UP))
             {
-                title += context.getString(R.string.warm_ups_title);
+                title = context.getString(R.string.warm_ups_title, displayMuscleGroup);
             }
             else
             {
-                title += context.getString(R.string.stretches_title);
+                title = context.getString(R.string.stretches_title, displayMuscleGroup);
             }
 
-            actionBar.setTitle(title + " for " + displayMuscleGroup);
+            actionBar.setTitle(title);
         }
     }
 
