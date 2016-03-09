@@ -1,5 +1,5 @@
 <resources>
-    <string name="name_characters">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\'</string>
+    <string name="name_characters">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\'-.\u0020</string>
 
     <string name="founders">Nick Piscopio\nChris Piscopio</string>
     <string name="contributors">Lisa Troncelliti\nHalen Dang\nChad Reynolds\nRandy Dang\nChristina Dang\nLaura D\'Alfonso\nKha Dang\nPhiladelphia University</string>
