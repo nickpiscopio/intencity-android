@@ -252,7 +252,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
         }
         else if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
         {
-            Util.loadIntencity(this, emailEditText.getText().toString(), Constant.ACCOUNT_TYPE_NORMAL, 0);
+            Util.loadIntencity(CreateAccountActivity.this, emailEditText.getText().toString(), Constant.ACCOUNT_TYPE_NORMAL, 0);
         }
         else
         {
