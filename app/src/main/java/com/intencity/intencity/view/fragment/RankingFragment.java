@@ -132,9 +132,15 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
             cal.set(Calendar.SECOND, 0);
             cal.set(Calendar.MILLISECOND, 0);
 
+            int daysInWeek = 7;
             int today = cal.get(Calendar.DAY_OF_WEEK);
 
-            cal.add(Calendar.DAY_OF_MONTH, 7 - today + Calendar.MONDAY);
+            // If Sunday,
+            // Subtract the current numerical day of the week to get the number of days needed to get to Monday.
+            // Else
+            // Subtract today's date from the number of days in the week (7), then add Monday (2).
+            // This gets us how many days we need to add to get to monday.
+            cal.add(Calendar.DAY_OF_MONTH, today < Calendar.MONDAY ? Calendar.MONDAY - today : daysInWeek - today + Calendar.MONDAY);
 
             boolean is24HourFormat = DateFormat.is24HourFormat(context);
             SimpleDateFormat format = new SimpleDateFormat("EEE, MMM d " + (is24HourFormat ? "HH:mm" : "h:mm a"), Locale.getDefault());

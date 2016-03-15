@@ -525,8 +525,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         }
     }
 
-
-
     /**
      * Sets whether the user has skipped an exercise for today.
      *

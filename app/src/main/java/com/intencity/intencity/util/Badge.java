@@ -1,7 +1,7 @@
 package com.intencity.intencity.util;
 
 /**
- * A class to hold the Constants for Intencity.
+ * A class to hold the Badge constants for Intencity.
  *
  * Created by Nick Piscopio on 12/9/15.
  */
