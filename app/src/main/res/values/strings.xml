@@ -39,7 +39,7 @@
     <string name="create_trial">Create trial account</string>
 
     <string name="title_create_account">Create Account</string>
-    <string name="create_account_description">Sign up below for the best possible experience with Intencity.\n\nWe promise we won\'t send you spam.</string>
+    <string name="create_account_description">Sign up below for the best possible experience with Intencity.</string>
     <string name="create_account_promise">We promise we won\'t send you spam.</string>
     <string name="title_terms">Terms of Use</string>
     <string name="title_privacy_policy">Privacy Policy</string>
