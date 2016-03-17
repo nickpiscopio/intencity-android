@@ -238,4 +238,17 @@ public class Util
     {
         return text.replaceAll("\\+", "%2B");
     }
+
+    /**
+     * Replaces the apostrophe character in a String of text.
+     * This is so we can create an account on the server with an email that has a '+' in it.
+     *
+     * @param text  The text to search.
+     *
+     * @return  The new String with its replaced character.
+     */
+    public static String replaceApostrophe(String text)
+    {
+        return text.replaceAll("'", "%27");
+    }
 }

@@ -195,7 +195,8 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
 
                 new ServiceTask(CreateAccountActivity.this).execute(
                         Constant.SERVICE_CREATE_ACCOUNT,
-                        Constant.getAccountParameters(firstName, lastName, Util.replacePlus(email), password, Constant.ACCOUNT_TYPE_NORMAL));
+                        Constant.getAccountParameters(Util.replaceApostrophe(firstName), Util.replaceApostrophe(
+                                lastName), Util.replacePlus(email), Util.replaceApostrophe(password), Constant.ACCOUNT_TYPE_NORMAL));
             }
         }
     };

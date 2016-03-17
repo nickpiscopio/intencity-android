@@ -206,7 +206,7 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
             new ServiceTask(userCredentialsListener).execute(
                     Constant.SERVICE_VALIDATE_USER_CREDENTIALS,
                     Constant.getValidateUserCredentialsServiceParameters(email,
-                                                                         currentPassword));
+                                                                         Util.replaceApostrophe(currentPassword)));
         }
     }
 }

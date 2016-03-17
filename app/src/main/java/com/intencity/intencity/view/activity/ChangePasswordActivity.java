@@ -143,8 +143,8 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
                 new ServiceTask(ChangePasswordActivity.this).execute(
                         Constant.SERVICE_CHANGE_PASSWORD,
                         Constant.generateChangePasswordVariables(email,
-                                                                 currentPassword,
-                                                                 newPassword));
+                                                                 Util.replaceApostrophe(currentPassword),
+                                                                 Util.replaceApostrophe(newPassword)));
             }
         }
     };

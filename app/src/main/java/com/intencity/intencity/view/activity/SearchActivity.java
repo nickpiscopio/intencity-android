@@ -28,6 +28,7 @@ import com.intencity.intencity.model.User;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
+import com.intencity.intencity.util.Util;
 
 import java.util.ArrayList;
 
@@ -122,6 +123,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
         // Get all the users from the database with the search query minus the spaces.
         query = searchExercises ? query : query.replaceAll(Constant.SPACE_REGEX, "");
+
+        query = Util.replaceApostrophe(query);
 
         // Get the stored procedure depending upon what we are searching.
         String urlParameters = searchExercises ?
