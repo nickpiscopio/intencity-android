@@ -163,7 +163,7 @@
     <string name="no_items">No hidden exercises found.</string>
     <string name="no_notifications">No notifications found.</string>
 
-    <string name="invalid_password">The password you entered in the \"Current password\" field isn\'t correct. Please try again.</string>
+    <string name="invalid_password">The password you entered as your current password isn\'t correct. Please try again.</string>
     <string name="password_changed_title">Password changed</string>
     <string name="password_changed">Your password has been changed.</string>
 
