@@ -203,7 +203,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
 
         new ServiceTask(this).execute(Constant.SERVICE_VALIDATE_USER_CREDENTIALS,
                                       Constant.getValidateUserCredentialsServiceParameters(
-                                              email, password));
+                                              Util.replacePlus(email), password));
     }
 
     /**

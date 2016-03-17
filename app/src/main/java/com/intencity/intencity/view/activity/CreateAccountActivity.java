@@ -195,23 +195,10 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
 
                 new ServiceTask(CreateAccountActivity.this).execute(
                         Constant.SERVICE_CREATE_ACCOUNT,
-                        Constant.getAccountParameters(firstName, lastName, replacePlus(email), password, Constant.ACCOUNT_TYPE_NORMAL));
+                        Constant.getAccountParameters(firstName, lastName, Util.replacePlus(email), password, Constant.ACCOUNT_TYPE_NORMAL));
             }
         }
     };
-
-    /**
-     * Replaces the '+' character in a String of text.
-     * This is so we can create an account on the server with an email that has a '+' in it.
-     *
-     * @param text  The text to search.
-     *
-     * @return  The new String with its replaced character.
-     */
-    private String replacePlus(String text)
-    {
-        return text.replaceAll("\\+", "%2B");
-    }
 
     /**
      * Displays the login error to the user.

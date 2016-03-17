@@ -97,7 +97,7 @@ public class Util
         SecurePreferences securePreferences = new SecurePreferences(context);
         SecurePreferences.Editor editor = securePreferences.edit();
 
-        editor.putString(Constant.USER_ACCOUNT_EMAIL, email);
+        editor.putString(Constant.USER_ACCOUNT_EMAIL, Util.replacePlus(email));
         editor.putString(Constant.USER_ACCOUNT_TYPE, accountType);
         if (trialCreatedDate > 0)
         {
@@ -224,5 +224,18 @@ public class Util
     public static boolean checkStringLength(String text, int length)
     {
         return text.length() >= length;
+    }
+
+    /**
+     * Replaces the '+' character in a String of text.
+     * This is so we can create an account on the server with an email that has a '+' in it.
+     *
+     * @param text  The text to search.
+     *
+     * @return  The new String with its replaced character.
+     */
+    public static String replacePlus(String text)
+    {
+        return text.replaceAll("\\+", "%2B");
     }
 }

@@ -76,9 +76,11 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 form.setVisibility(View.GONE);
 
+                String emailString = Util.replacePlus(email.getText().toString());
+
                 new ServiceTask(ForgotPasswordActivity.this).execute(
                         Constant.SERVICE_FORGOT_PASSWORD,
-                        Constant.getForgotPasswordParameter(email.getText().toString()));
+                        Constant.getForgotPasswordParameter(emailString));
             }
             else
             {
