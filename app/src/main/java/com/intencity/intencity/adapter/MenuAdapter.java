@@ -73,7 +73,8 @@ public class MenuAdapter extends ArrayAdapter<MenuItem>
             MenuItem item = objects.get(position);
 
             convertView = inflater.inflate((item.getCls() == null && !item.getTitle().equals(context.getString(
-                    R.string.title_log_out))) ? headerResId : listItemResId, parent, false);
+                    R.string.title_log_out))) && !item.getTitle().equals(context.getString(
+                    R.string.title_rate_intencity)) ? headerResId : listItemResId, parent, false);
 
             holder.title = (TextView) convertView.findViewById(R.id.text_view);
             holder.title.setText(item.getTitle());

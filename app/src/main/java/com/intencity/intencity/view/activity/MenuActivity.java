@@ -1,6 +1,8 @@
 package com.intencity.intencity.view.activity;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +29,7 @@ public class MenuActivity extends AppCompatActivity
     private ArrayList<MenuItem> menuItems;
 
     private String logOutTitle;
+    private String rateTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -47,6 +50,7 @@ public class MenuActivity extends AppCompatActivity
         int awardTotal = NotificationHandler.getInstance(null).getAwardCount();
 
         logOutTitle = getString(R.string.title_log_out);
+        rateTitle = getString(R.string.title_rate_intencity);
 
         menuItems = new ArrayList<>();
         menuItems.add(new MenuItem(getString(R.string.notifications, "(" + awardTotal + ")"), NotificationActivity.class));
@@ -58,10 +62,11 @@ public class MenuActivity extends AppCompatActivity
             menuItems.add(new MenuItem(getString(R.string.change_password), ChangePasswordActivity.class));
         }
         menuItems.add(new MenuItem(logOutTitle, null));
-        menuItems.add(new MenuItem(getString(R.string.title_info), null));
+        menuItems.add(new MenuItem(getString(R.string.title_app), null));
         menuItems.add(new MenuItem(getString(R.string.title_about), AboutActivity.class));
         menuItems.add(new MenuItem(getString(R.string.title_terms), TermsActivity.class, getTermsBundle(true)));
         menuItems.add(new MenuItem(getString(R.string.title_privacy_policy), TermsActivity.class, getTermsBundle(false)));
+        menuItems.add(new MenuItem(rateTitle, null));
 
         if (!accountType.equals(Constant.ACCOUNT_TYPE_MOBILE_TRIAL))
         {
@@ -96,6 +101,20 @@ public class MenuActivity extends AppCompatActivity
             else if (menuItem.getTitle().equals(logOutTitle))
             {
                 logOut();
+            }
+            else if (menuItem.getTitle().equals(rateTitle))
+            {
+                String packageName = getApplicationContext().getPackageName();
+
+                try
+                {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
+                }
+                catch (ActivityNotFoundException e)
+                {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                                             Uri.parse("http://play.google.com/store/apps/details?id=" + packageName)));
+                }
             }
         }
     };
