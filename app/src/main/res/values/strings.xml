@@ -82,6 +82,8 @@
     <string name="routine_continue">Continue where I left off</string>
 
     <!-- Exercise List Strings -->
+    <string name="more_priority_string">You will see %1$s more.</string>
+    <string name="less_priority_string">You will see %1$s less.</string>
     <string name="how_to_workout_title">What is your fitness goal?</string>
     <string name="gain">GAIN</string>
     <string name="sustain">SUSTAIN</string>

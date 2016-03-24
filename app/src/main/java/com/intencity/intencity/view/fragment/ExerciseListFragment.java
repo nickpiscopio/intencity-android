@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ExerciseAdapter;
@@ -400,7 +401,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      * @param position      The position in the list to remove.
      * @param fromSearch    A boolean value of whether or not we are coming from the search.
      */
-    private void animateRemoveItem(int position, Boolean fromSearch)
+    private void animateRemoveItem(int position, boolean fromSearch)
     {
         allExercises.remove(position);
         adapter.animateRemoveItem(position);
@@ -552,6 +553,29 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         this.position = position;
 
         animateRemoveItem(this.position, false);
+    }
+
+    @Override
+    public void onSetExercisePriority(int position, boolean increasing)
+    {
+        this.position = position;
+
+        String exerciseName = currentExercises.get(position).getName();
+
+        // Set the exercise priority on the web server.
+        // The ServiceListener is null because we don't care if it reached the server.
+        // The worst that will happen is a user will have to click the exercise priority again.
+        new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                      Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_SET_EXERCISE_PRIORITY,
+                                                                                 email, exerciseName, increasing ? "1" : "0"));
+
+        if (!increasing)
+        {
+            animateRemoveItem(this.position, false);
+        }
+
+        // Displays a toast to the user telling them they will see an exercise more or less.
+        Toast.makeText(context, context.getString(increasing ? R.string.more_priority_string : R.string.less_priority_string, exerciseName), Toast.LENGTH_LONG).show();
     }
 
     @Override

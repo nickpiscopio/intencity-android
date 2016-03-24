@@ -119,6 +119,7 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS = "getAllDisplayMuscleGroups";
     public static final String STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY = "getExercisesForToday";
     public static final String STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP = "setCurrentMuscleGroup";
+    public static final String STORED_PROCEDURE_SET_EXERCISE_PRIORITY = "setExercisePriority";
     public static final String STORED_PROCEDURE_GET_FOLLOWING = "getFollowing";
     public static final String STORED_PROCEDURE_REMOVE_FROM_FOLLOWING = "removeFromFollowing";
     public static final String STORED_PROCEDURE_SEARCH_EXERCISES = "searchExercises";
@@ -127,6 +128,7 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_EXERCISE_DIRECTION = "getDirection";
     public static final String STORED_PROCEDURE_GET_EQUIPMENT = "getEquipment";
     public static final String STORED_PROCEDURE_GET_EXCLUSION = "getExclusionList";
+    public static final String STORED_PROCEDURE_GET_EXERCISE_PRIORITIES = "getExercisePriority";
     public static final String STORED_PROCEDURE_GRANT_POINTS = "grantPointsToUser";
     public static final String STORED_PROCEDURE_GRANT_BADGE = "grantBadgeToUser";
     public static final String STORED_PROCEDURE_GET_INJURY_PREVENTION_WORKOUTS = "getInjuryPreventionWorkouts";

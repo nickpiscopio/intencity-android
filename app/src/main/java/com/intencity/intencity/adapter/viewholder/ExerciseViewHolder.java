@@ -35,6 +35,8 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
     private TextView edit;
     private TextView description;
     private ImageButton hide;
+    private ImageButton morePriority;
+    private ImageButton lessPriority;
 
     private ExerciseListener listener;
 
@@ -63,10 +65,14 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         edit = (TextView) view.findViewById(R.id.edit);
         description = (TextView) view.findViewById(R.id.description);
         hide = (ImageButton) view.findViewById(R.id.button_hide);
+        morePriority = (ImageButton) view.findViewById(R.id.button_more_priority);
+        lessPriority = (ImageButton) view.findViewById(R.id.button_less_priority);
 
         exerciseLayout.setOnClickListener(exerciseClickListener);
         lastSetLayout.setOnClickListener(setClickListener);
         hide.setOnClickListener(hideClicked);
+        morePriority.setOnClickListener(morePriorityClicked);
+        lessPriority.setOnClickListener(LessPriorityClicked);
     }
 
     /**
@@ -102,6 +108,30 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         public void onClick(View v)
         {
             listener.onHideClicked(position);
+        }
+    };
+
+    /**
+     * The click listener to increase an exercise priority.
+     */
+    private View.OnClickListener morePriorityClicked = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            listener.onSetExercisePriority(position, true);
+        }
+    };
+
+    /**
+     * The click listener to decrease an exercise priority.
+     */
+    private View.OnClickListener LessPriorityClicked = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            listener.onSetExercisePriority(position, false);
         }
     };
 
