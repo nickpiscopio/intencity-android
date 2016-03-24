@@ -156,7 +156,15 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                 if (pushedTryAgain)
                 {
                     // Repopulate the spinner if the user gets their connection back
-                    repopulateSpinner(displayMuscleGroups);
+                    try
+                    {
+                        repopulateSpinner(displayMuscleGroups);
+                    }
+                    catch (Exception e)
+                    {
+                        // Only add the saved exercises to the spinner because of the network issue.
+                        pushRoutineFragment(displayMuscleGroups);
+                    }
 
                     removeConnectionIssueMessage();
                     stopLoading();

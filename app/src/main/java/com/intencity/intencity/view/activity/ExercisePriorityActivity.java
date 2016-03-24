@@ -181,7 +181,14 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
     @Override
     public void onBackPressed()
     {
-        updateExercisePriorities();
+        if (exerciseNames != null && exerciseNames.size() > 0)
+        {
+            updateExercisePriorities();
+        }
+        else
+        {
+            super.onBackPressed();
+        }
     }
 
     /**
