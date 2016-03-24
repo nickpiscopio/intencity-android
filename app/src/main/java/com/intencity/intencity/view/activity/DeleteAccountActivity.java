@@ -1,6 +1,7 @@
 package com.intencity.intencity.view.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.DialogListener;
@@ -29,6 +31,8 @@ import com.intencity.intencity.util.Util;
 public class DeleteAccountActivity extends AppCompatActivity implements DialogListener
 {
     private EditText password;
+
+    private TextView forgotPassword;
 
     private Button deleteAccount;
 
@@ -57,6 +61,9 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
 
         password = (EditText) findViewById(R.id.edit_text_current_password);
 
+        forgotPassword = (TextView) findViewById(R.id.forgot_password);
+        forgotPassword.setOnClickListener(forgotPasswordListener);
+
         deleteAccount = (Button) findViewById(R.id.btn_change_password);
         deleteAccount.setOnClickListener(deleteAccountListener);
 
@@ -81,6 +88,18 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
                 return super.onOptionsItemSelected(menuItem);
         }
     }
+
+    /**
+     * The click listener for forgot password.
+     */
+    private View.OnClickListener forgotPasswordListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            startActivity(new Intent(context, ForgotPasswordActivity.class));
+        }
+    };
 
     /**
      * The click listener for the change password button.

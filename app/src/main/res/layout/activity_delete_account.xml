@@ -23,14 +23,13 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/forgot_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/delete_account_message"
             android:background="@drawable/button_card"
             android:textColor="@color/secondary_light"
             android:layout_marginBottom="@dimen/layout_margin_half"
-            android:layout_gravity="start"/>
+            android:gravity="center"/>
 
         <EditText
             android:id="@+id/edit_text_current_password"
@@ -44,6 +43,18 @@
             android:textCursorDrawable="@drawable/cursor"
             android:padding="@dimen/element_margin"/>
 
+        <TextView
+            android:id="@+id/forgot_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forgot_password"
+            android:background="@drawable/button_card"
+            android:padding="@dimen/card_button_padding"
+            android:textSize="@dimen/card_title2_size"
+            android:textColor="@color/primary"
+            android:layout_marginBottom="@dimen/layout_margin_half"
+            android:layout_gravity="start"/>
+
 
         <Button
             android:id="@+id/btn_change_password"
@@ -52,7 +63,6 @@
             android:text="@string/delete_account_button"
             android:background="@drawable/button_full"
             android:textColor="@color/page_background"
-            android:layout_marginTop="@dimen/layout_margin"
             android:layout_marginBottom="@dimen/layout_margin"
             android:padding="@dimen/element_margin"/>
 
