@@ -36,6 +36,7 @@ import java.util.ArrayList;
  */
 public class EquipmentActivity extends AppCompatActivity
 {
+    private LinearLayout description;
     private LinearLayout connectionIssue;
 
     private TextView tryAgain;
@@ -67,6 +68,7 @@ public class EquipmentActivity extends AppCompatActivity
         }
 
         divider = findViewById(R.id.divider);
+        description = (LinearLayout) findViewById(R.id.layout_description);
 
         connectionIssue = (LinearLayout) findViewById(R.id.image_view_connection_issue);
         tryAgain = (TextView) findViewById(R.id.btn_try_again);
@@ -142,6 +144,7 @@ public class EquipmentActivity extends AppCompatActivity
                 progressBar.setVisibility(View.GONE);
 
                 divider.setVisibility(View.GONE);
+                description.setVisibility(View.GONE);
             }
         }
 
@@ -152,6 +155,7 @@ public class EquipmentActivity extends AppCompatActivity
             progressBar.setVisibility(View.GONE);
 
             divider.setVisibility(View.GONE);
+            description.setVisibility(View.GONE);
         }
     };
 
@@ -216,6 +220,7 @@ public class EquipmentActivity extends AppCompatActivity
         progressBar.setVisibility(View.GONE);
 
         divider.setVisibility(View.VISIBLE);
+        description.setVisibility(View.VISIBLE);
     }
 
     /**

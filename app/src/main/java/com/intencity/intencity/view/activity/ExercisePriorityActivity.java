@@ -41,6 +41,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
     public static final int PRIORITY_LIMIT_LOWER = 0;
     public static final int INCREMENTAL_VALUE = 25;
 
+    private LinearLayout description;
     private LinearLayout connectionIssue;
 
     private TextView tryAgain;
@@ -75,6 +76,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
 
         divider = findViewById(R.id.divider);
 
+        description = (LinearLayout) findViewById(R.id.layout_description);
         connectionIssue = (LinearLayout) findViewById(R.id.image_view_connection_issue);
         tryAgain = (TextView) findViewById(R.id.btn_try_again);
         tryAgain.setVisibility(View.GONE);
@@ -145,6 +147,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
                 progressBar.setVisibility(View.GONE);
 
                 divider.setVisibility(View.GONE);
+                description.setVisibility(View.GONE);
             }
         }
 
@@ -155,6 +158,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
             progressBar.setVisibility(View.GONE);
 
             divider.setVisibility(View.GONE);
+            description.setVisibility(View.GONE);
         }
     };
 
@@ -205,6 +209,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
         progressBar.setVisibility(View.GONE);
 
         divider.setVisibility(View.VISIBLE);
+        description.setVisibility(exerciseNames.size() > 0 ? View.VISIBLE : View.GONE);
     }
 
     /**

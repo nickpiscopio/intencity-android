@@ -87,7 +87,7 @@ public class PriorityListAdapter extends ArrayAdapter<String>
                                             new PriorityListHolder() :
                                             (PriorityListHolder)convertView.getTag();
 
-        if (this.position != position || convertView == null)
+        if (this.position != position || convertView == null || position == 0)
         {
             this.position = position;
 
@@ -103,7 +103,26 @@ public class PriorityListAdapter extends ArrayAdapter<String>
 
             holder.name.setText(exerciseName);
 
-            setExercisePriority(holder.priority, Integer.valueOf(priority));
+            switch(priority)
+            {
+                case ExercisePriorityActivity.PRIORITY_LIMIT_UPPER:
+                    holder.priority.setTextColor(ContextCompat.getColor(context, R.color.primary));
+                    holder.priority.setText(HIGH_PRIORITY);
+                    break;
+                case ExercisePriorityActivity.INCREMENTAL_VALUE:
+                    holder.priority.setTextColor(ContextCompat.getColor(context, R.color.secondary_dark));
+                    holder.priority.setText(MEDIUM_PRIORITY);
+                    break;
+                case ExercisePriorityActivity.PRIORITY_LIMIT_LOWER:
+                    holder.priority.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
+                    holder.priority.setText(NORMAL_PRIORITY);
+                    break;
+                default:
+                    holder.priority.setTextColor(
+                            ContextCompat.getColor(context, R.color.card_button_delete_select));
+                    holder.priority.setText(HIDDEN);
+                    break;
+            }
 
             holder.morePriority.setOnClickListener(new View.OnClickListener()
             {
@@ -127,32 +146,5 @@ public class PriorityListAdapter extends ArrayAdapter<String>
         }
 
         return convertView;
-    }
-
-    /**
-     * Sets the priority for the exercise.
-     */
-    private void setExercisePriority(TextView priorityTextView, int priority)
-    {
-        switch(priority)
-        {
-            case ExercisePriorityActivity.PRIORITY_LIMIT_UPPER:
-                priorityTextView.setTextColor(ContextCompat.getColor(context, R.color.primary));
-                priorityTextView.setText(HIGH_PRIORITY);
-                break;
-            case ExercisePriorityActivity.INCREMENTAL_VALUE:
-                priorityTextView.setTextColor(ContextCompat.getColor(context, R.color.secondary_dark));
-                priorityTextView.setText(MEDIUM_PRIORITY);
-                break;
-            case ExercisePriorityActivity.PRIORITY_LIMIT_LOWER:
-                priorityTextView.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
-                priorityTextView.setText(NORMAL_PRIORITY);
-                break;
-            default:
-                priorityTextView.setTextColor(
-                        ContextCompat.getColor(context, R.color.card_button_delete_select));
-                priorityTextView.setText(HIDDEN);
-                break;
-        }
     }
 }
