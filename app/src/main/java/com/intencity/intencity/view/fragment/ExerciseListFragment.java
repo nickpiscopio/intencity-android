@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +14,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.view.activity.Direction;
-import com.intencity.intencity.view.activity.ExerciseSearchActivity;
-import com.intencity.intencity.view.activity.SearchActivity;
-import com.intencity.intencity.view.activity.StatActivity;
 import com.intencity.intencity.adapter.ExerciseAdapter;
 import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.listener.DialogListener;
@@ -37,6 +32,10 @@ import com.intencity.intencity.util.Badge;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
+import com.intencity.intencity.view.activity.Direction;
+import com.intencity.intencity.view.activity.ExerciseSearchActivity;
+import com.intencity.intencity.view.activity.SearchActivity;
+import com.intencity.intencity.view.activity.StatActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,8 +47,7 @@ import java.util.HashMap;
  *
  * Created by Nick Piscopio on 12/12/15.
  */
-public class ExerciseListFragment extends android.support.v4.app.Fragment implements DialogListener,
-                                                                                     ExerciseListener
+public class ExerciseListFragment extends android.support.v4.app.Fragment implements ExerciseListener
 {
     private int TOTAL_EXERCISE_NUM = 7;
 
@@ -135,9 +133,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         adapter = new ExerciseAdapter(context, currentExercises, this);
         recyclerView.setAdapter(adapter);
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-
         securePreferences = new SecurePreferences(context);
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
@@ -157,36 +152,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             TOTAL_EXERCISE_NUM = allExercises.size();
         }
     }
-    /**
-     * The swipe listener for the recycler view.
-     */
-    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT)
-    {
-        @Override
-        public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-        {
-            return viewHolder.getAdapterPosition() > 0 ? super.getSwipeDirs(recyclerView, viewHolder) : 0;
-        }
-
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                              RecyclerView.ViewHolder target)
-        {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir)
-        {
-            position = viewHolder.getAdapterPosition();
-
-            String[] buttonText = new String[]{context.getString(R.string.hide_for_now),
-                                               context.getString(R.string.hide_forever),
-                                               context.getString(R.string.do_not_hide)};
-
-            new CustomDialog(context, ExerciseListFragment.this, new CustomDialogContent(context.getString(R.string.hide_exercise_title), buttonText), false);
-        }
-    };
 
     /**
      * The info click listener.
@@ -364,9 +329,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         if (addingExerciseFromSearch && lastCurrentExercise.getName().equalsIgnoreCase(stretchExerciseName))
         {
-            allExercises.remove(position);
-            adapter.animateRemoveItem(position);
-            currentExercises.add(allExercises.get(autoFillTo - 1));
+            animateRemoveItem(position, true);
             allExercises.add(lastCurrentExercise);
         }
         else
@@ -423,31 +386,33 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         }
     }
 
-    @Override
-    public void onButtonPressed(int which)
-    {
-        switch (which)
-        {
-            case 0: // Hide for today was clicked.
-                hideExercise(false);
-                break;
-            case 1: // Hide forever was clicked.
-                hideExercise(true);
-                break;
-            case 2: // Cancel was clicked.
-                adapter.notifyDataSetChanged();
-                break;
-            default:
-                break;
-        }
-    }
-
     /**
      * Starts the asynctask to remove the exercises from the database.
      */
     private void removeExercisesFromDatabase()
     {
         new SetExerciseTask(context).execute();
+    }
+
+    /**
+     * Animates the removal of an item from the exercise list.
+     *
+     * @param position      The position in the list to remove.
+     * @param fromSearch    A boolean value of whether or not we are coming from the search.
+     */
+    private void animateRemoveItem(int position, Boolean fromSearch)
+    {
+        allExercises.remove(position);
+        adapter.animateRemoveItem(position);
+
+        if (fromSearch || currentExercises.size() < allExercises.size())
+        {
+            currentExercises.add(allExercises.get(autoFillTo - 1));
+        }
+        else
+        {
+            autoFillTo--;
+        }
     }
 
     /**
@@ -579,6 +544,14 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         intent.putExtra(Constant.BUNDLE_EXERCISE_POSITION, position);
         intent.putExtra(Constant.BUNDLE_EXERCISE, currentExercises.get(position));
         startActivityForResult(intent, Constant.REQUEST_CODE_STAT);
+    }
+
+    @Override
+    public void onHideClicked(int position)
+    {
+        this.position = position;
+
+        animateRemoveItem(this.position, false);
     }
 
     @Override

@@ -11,4 +11,5 @@ public interface ExerciseListener extends Serializable
 {
     void onExerciseClicked(int position);
     void onStatClicked(int position);
+    void onHideClicked(int position);
 }

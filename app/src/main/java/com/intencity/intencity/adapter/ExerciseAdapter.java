@@ -114,6 +114,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         exercises.remove(exercise);
 
         notifyItemRemoved(pos);
+        notifyItemRangeChanged(pos, getItemCount() - pos);
     }
 
     /**

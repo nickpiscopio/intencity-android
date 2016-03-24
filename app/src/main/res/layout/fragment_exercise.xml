@@ -13,84 +13,143 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/exercise"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Bicep Curls"
-            android:padding="@dimen/card_button_padding"
-            android:layout_margin="@dimen/card_button_margin"
-            android:textSize="@dimen/card_title_size"
-            android:textColor="@color/primary"
-            android:textStyle="bold"
-            android:background="@drawable/button_card"/>
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/layout_last_set"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/card_button_padding"
-            android:layout_margin="@dimen/card_button_margin"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/button_card">
+            android:layout_marginTop="@dimen/card_button_margin"
+            android:layout_marginLeft="@dimen/card_button_margin"
+            android:layout_marginRight="@dimen/card_button_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/exercise"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Bicep Curls"
+                android:padding="@dimen/card_button_padding"
+                android:textSize="@dimen/card_title_size"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:background="@drawable/button_card"/>
+
+            <ImageButton
+                android:id="@+id/button_hide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/card_button_padding"
+                android:layout_marginLeft="@dimen/card_button_margin"
+                android:background="@drawable/button_card"
+                android:src="@mipmap/hide"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_exercise_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/card_button_margin"
+            android:layout_marginRight="@dimen/card_button_margin"
+            android:layout_marginBottom="@dimen/card_button_margin">
 
             <LinearLayout
-                android:id="@+id/last_set"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:id="@+id/layout_last_set"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/card_button_padding"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/button_card">
 
-                <TextView
-                    android:id="@+id/weight"
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="45"
-                    android:layout_marginLeft="@dimen/layout_margin_quarter"
-                    android:textStyle="bold"/>
+                    android:layout_gravity="center_vertical"
+                    android:src="@mipmap/edit"/>
+
+                <LinearLayout
+                    android:id="@+id/last_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="45"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/weight_suffix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_lbs"
+                        android:layout_marginLeft="@dimen/layout_margin_quarter"
+                        android:textSize="@dimen/card_title2_size"/>
+
+                    <TextView
+                        android:id="@+id/slash"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="/"
+                        android:layout_marginRight="@dimen/layout_margin_quarter"
+                        android:layout_marginLeft="@dimen/layout_margin_quarter"
+                        android:textSize="@dimen/card_title_size"/>
+
+                    <TextView
+                        android:id="@+id/duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/suffix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_reps"
+                        android:layout_marginLeft="@dimen/layout_margin_quarter"
+                        android:textSize="@dimen/card_title2_size"/>
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/weight_suffix"
+                    android:id="@+id/edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/title_lbs"
-                    android:layout_marginLeft="@dimen/layout_margin_quarter"
-                    android:textSize="@dimen/card_title2_size"/>
-
-                <TextView
-                    android:id="@+id/slash"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="/"
-                    android:layout_marginRight="@dimen/layout_margin_quarter"
-                    android:layout_marginLeft="@dimen/layout_margin_quarter"
-                    android:textSize="@dimen/card_title_size"/>
-
-                <TextView
-                    android:id="@+id/duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="10"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/suffix"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/title_reps"
-                    android:layout_marginLeft="@dimen/layout_margin_quarter"
-                    android:textSize="@dimen/card_title2_size"/>
+                    android:textStyle="bold"
+                    android:text="@string/edit"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/edit"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:text="@string/edit"
-                android:visibility="gone"/>
+                android:layout_marginLeft="@dimen/card_button_margin"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/button_more_priority"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/card_button_padding"
+                    android:layout_marginRight="@dimen/card_button_margin"
+                    android:src="@mipmap/thumb_up"
+                    android:background="@drawable/button_card"/>
+
+                <ImageButton
+                    android:id="@+id/button_less_priority"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/card_button_padding"
+                    android:src="@mipmap/thumb_down"
+                    android:background="@drawable/button_card"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

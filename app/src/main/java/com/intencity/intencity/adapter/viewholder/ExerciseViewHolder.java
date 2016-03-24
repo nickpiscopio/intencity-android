@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
     private View view;
 
     private LinearLayout exerciseLayout;
+    private LinearLayout exerciseEditLayout;
     private LinearLayout lastSetLayout;
     private LinearLayout lastSet;
     private TextView exercise;
@@ -32,6 +34,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
     private TextView repsTextView;
     private TextView edit;
     private TextView description;
+    private ImageButton hide;
 
     private ExerciseListener listener;
 
@@ -48,6 +51,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         this.listener = listener;
 
         exerciseLayout = (LinearLayout) view.findViewById(R.id.layout_exercise);
+        exerciseEditLayout = (LinearLayout) view.findViewById(R.id.layout_exercise_edit);
         lastSetLayout = (LinearLayout) view.findViewById(R.id.layout_last_set);
         lastSet = (LinearLayout) view.findViewById(R.id.last_set);
         exercise = (TextView) view.findViewById(R.id.exercise);
@@ -58,9 +62,11 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         repsTextView = (TextView) view.findViewById(R.id.suffix);
         edit = (TextView) view.findViewById(R.id.edit);
         description = (TextView) view.findViewById(R.id.description);
+        hide = (ImageButton) view.findViewById(R.id.button_hide);
 
         exerciseLayout.setOnClickListener(exerciseClickListener);
         lastSetLayout.setOnClickListener(setClickListener);
+        hide.setOnClickListener(hideClicked);
     }
 
     /**
@@ -84,6 +90,18 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         public void onClick(View v)
         {
             listener.onStatClicked(position);
+        }
+    };
+
+    /**
+     * The click listener to hide an exercise.
+     */
+    private View.OnClickListener hideClicked = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            listener.onHideClicked(position);
         }
     };
 
@@ -158,14 +176,16 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         {
             this.description.setText(description);
             this.description.setVisibility(View.VISIBLE);
-            this.lastSetLayout.setVisibility(View.GONE);
+            this.exerciseEditLayout.setVisibility(View.GONE);
+            this.hide.setVisibility(View.GONE);
 
             this.exercise.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
         }
         else
         {
             this.description.setVisibility(View.GONE);
-            this.lastSetLayout.setVisibility(View.VISIBLE);
+            this.exerciseEditLayout.setVisibility(View.VISIBLE);
+            this.hide.setVisibility(View.VISIBLE);
 
             this.exercise.setTextColor(ContextCompat.getColor(context, R.color.primary));
         }
