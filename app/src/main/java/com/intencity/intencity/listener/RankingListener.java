@@ -3,7 +3,7 @@ package com.intencity.intencity.listener;
 import android.view.View;
 
 /**
- * A listener to for the ranking list..
+ * A listener to for the ranking list.
  *
  * Created by Nick Piscopio on 1/27/16.
  */

@@ -55,7 +55,7 @@ public class MenuActivity extends AppCompatActivity
         menuItems = new ArrayList<>();
         menuItems.add(new MenuItem(getString(R.string.notifications, "(" + awardTotal + ")"), NotificationActivity.class));
         menuItems.add(new MenuItem(getString(R.string.title_settings), null));
-        menuItems.add(new MenuItem(getString(R.string.edit_exclusion), ExclusionActivity.class));
+        menuItems.add(new MenuItem(getString(R.string.edit_priority), ExercisePriorityActivity.class));
         menuItems.add(new MenuItem(getString(R.string.edit_equipment), EquipmentActivity.class));
         if (!accountType.equals(Constant.ACCOUNT_TYPE_MOBILE_TRIAL))
         {

@@ -57,7 +57,7 @@ public class EquipmentActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_checked_items);
+        setContentView(R.layout.activity_equipment);
 
         // Add the back button to the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -224,7 +224,7 @@ public class EquipmentActivity extends AppCompatActivity
     private void updateEquipment()
     {
         new ServiceTask(updateEquipmentServiceListener).execute(Constant.SERVICE_UPDATE_EQUIPMENT,
-                                                                Constant.generateListVariables(
+                                                                Constant.generateEquipmentListVariables(
                                                                         email, userEquipment));
     }
 

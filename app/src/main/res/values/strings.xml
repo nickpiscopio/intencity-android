@@ -153,13 +153,24 @@
     <string name="title_delete_account">Delete Account</string>
 
     <!-- Settings Strings -->
-    <string name="edit_exclusion">Edit Hidden Exercises</string>
+    <string name="edit_priority">Edit Exercise Priorities</string>
     <string name="edit_equipment">Edit Equipment</string>
+
+    <string name="edit_priority_title">Change the priority for each exercise to fit your needs.</string>
+    <string name="edit_priority_description">Priorities change the frequency at which an exercise occurs during a workout. This helps Intencity generate exercises to fit your needs.</string>
+    <string name="edit_equipment_title">Select your current equipment.</string>
+    <string name="edit_equipment_description">This helps Intencity generate exercises to fit your needs.</string>
+
     <string name="change_password">Change Password</string>
 
     <string name="title_rate_intencity">Rate Intencity</string>
 
-    <string name="no_items">No hidden exercises found.</string>
+    <string name="high_priority">HIGH PRIORITY</string>
+    <string name="medium_priority">MEDIUM PRIORITY</string>
+    <string name="normal_priority">NORMAL PRIORITY</string>
+    <string name="hidden_exercise">EXERCISE HIDDEN</string>
+    <string name="no_priorities">Priorities have not been set for any exercises.</string>
+
     <string name="no_notifications">No notifications found.</string>
 
     <string name="invalid_password">The password you entered as your current password isn\'t correct. Please try again.</string>

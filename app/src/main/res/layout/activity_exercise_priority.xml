@@ -31,11 +31,11 @@
         android:visibility="gone"/>
 
     <TextView
-        android:id="@+id/text_view_hidden_exercises"
+        android:id="@+id/text_view_no_priorities"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/layout_margin"
-        android:text="@string/no_items"
+        android:text="@string/no_priorities"
         android:visibility="gone"/>
 
 </LinearLayout>

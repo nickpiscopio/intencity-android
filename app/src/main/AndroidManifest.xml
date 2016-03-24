@@ -76,9 +76,9 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".view.activity.ExclusionActivity"
+            android:name=".view.activity.ExercisePriorityActivity"
             android:theme="@style/AppTheme.Base"
-            android:label="@string/edit_exclusion"
+            android:label="@string/edit_priority"
             android:screenOrientation="portrait" />
 
         <activity

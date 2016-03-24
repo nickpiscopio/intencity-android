@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -15,10 +14,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.adapter.PriorityListAdapter;
+import com.intencity.intencity.listener.DialogListener;
+import com.intencity.intencity.listener.ExercisePriorityListener;
+import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
-import com.intencity.intencity.listener.DialogListener;
-import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
@@ -34,8 +35,12 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 1/17/15.
  */
-public class ExclusionActivity extends AppCompatActivity
+public class ExercisePriorityActivity extends AppCompatActivity implements ExercisePriorityListener
 {
+    public static final int PRIORITY_LIMIT_UPPER = 50;
+    public static final int PRIORITY_LIMIT_LOWER = 0;
+    public static final int INCREMENTAL_VALUE = 25;
+
     private LinearLayout connectionIssue;
 
     private TextView tryAgain;
@@ -48,16 +53,18 @@ public class ExclusionActivity extends AppCompatActivity
 
     private String email;
 
-    private ArrayList<String> exclusionList;
-    private ArrayList<String> newExclusionList;
+    private ArrayList<String> exerciseNames;
+    private ArrayList<String> exercisePriorities;
 
     private Context context;
+
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_checked_items);
+        setContentView(R.layout.activity_exercise_priority);
 
         // Add the back button to the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -81,7 +88,7 @@ public class ExclusionActivity extends AppCompatActivity
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
         new ServiceTask(getExclusionService).execute(Constant.SERVICE_STORED_PROCEDURE,
-                Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EXCLUSION, email));
+                Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EXERCISE_PRIORITIES, email));
     }
 
     @Override
@@ -107,7 +114,8 @@ public class ExclusionActivity extends AppCompatActivity
         {
             try
             {
-                exclusionList = new ArrayList<>();
+                exerciseNames = new ArrayList<>();
+                exercisePriorities = new ArrayList<>();
 
                 if (!response.equals(Constant.RETURN_NULL))
                 {
@@ -119,18 +127,19 @@ public class ExclusionActivity extends AppCompatActivity
                     {
                         JSONObject object = array.getJSONObject(i);
 
-                        String exerciseName = object.getString(Constant.COLUMN_EXCLUSION_NAME);
+                        String exerciseName = object.getString(Constant.COLUMN_EXERCISE_NAME);
+                        String priority = object.getString(Constant.COLUMN_PRIORITY);
 
-                        // Add all the excluded exercises to the array.
-                        exclusionList.add(exerciseName);
+                        exerciseNames.add(exerciseName);
+                        exercisePriorities.add(priority);
                     }
                 }
 
-                populateExclusionListView();
+                populatePriorityListView();
             }
             catch (JSONException exception)
             {
-                Log.e(Constant.TAG, "Couldn't parse exclusion list " + exception.toString());
+                Log.e(Constant.TAG, "Couldn't parse priority list " + exception.toString());
 
                 connectionIssue.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
@@ -150,7 +159,7 @@ public class ExclusionActivity extends AppCompatActivity
     };
 
     /**
-     * The ServiceListener for updating the user's equipment.
+     * The ServiceListener for updating the user's exercise priorities.
      */
     private ServiceListener updateExclusionServiceListener =  new ServiceListener()
     {
@@ -165,45 +174,26 @@ public class ExclusionActivity extends AppCompatActivity
         {
             CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 
-            new CustomDialog(ExclusionActivity.this, dialogListener, dialog, false);
+            new CustomDialog(ExercisePriorityActivity.this, dialogListener, dialog, false);
         }
     };
 
     @Override
     public void onBackPressed()
     {
-        if (newExclusionList != null)
-        {
-            updateExclusion();
-        }
-        else
-        {
-            // We finish the activity manually if we have equipment to update.
-            super.onBackPressed();
-        }
+        updateExercisePriorities();
     }
 
     /**
-     * Populates the equipment list.
+     * Populates the exercise priority list.
      */
-    private void populateExclusionListView()
+    private void populatePriorityListView()
     {
-        newExclusionList = new ArrayList<>();
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, exclusionList);
+        adapter = new PriorityListAdapter(context, this, R.layout.list_item_exercise_priority, exerciseNames, exercisePriorities);
 
         listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
-        listView.setEmptyView(findViewById(R.id.text_view_hidden_exercises));
-
-        for (String exerciseName : exclusionList)
-        {
-            listView.setItemChecked(exclusionList.indexOf(exerciseName), true);
-
-            newExclusionList.add(exerciseName);
-        }
-
-        listView.setOnItemClickListener(settingClicked);
+        listView.setEmptyView(findViewById(R.id.text_view_no_priorities));
 
         progressBar.setVisibility(View.GONE);
 
@@ -211,36 +201,14 @@ public class ExclusionActivity extends AppCompatActivity
     }
 
     /**
-     * Calls the service to update the user's exclusion list.
+     * Calls the service to update the user's exercise priorities.
      */
-    private void updateExclusion()
+    private void updateExercisePriorities()
     {
-        new ServiceTask(updateExclusionServiceListener).execute(Constant.SERVICE_UPDATE_EXCLUSION,
-                                                                Constant.generateListVariables(
-                                                                        email, newExclusionList));
+        new ServiceTask(updateExclusionServiceListener).execute(Constant.SERVICE_UPDATE_EXERCISE_PRIORITY,
+                                                                Constant.generateExercisePriorityListVariables(
+                                                                        email, exerciseNames, exercisePriorities));
     }
-
-    /**
-     * The click listener for each item clicked in the list.
-     */
-    private AdapterView.OnItemClickListener settingClicked = new AdapterView.OnItemClickListener()
-    {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-        {
-            // Add or remove equipment from the user's list of equipment
-            // if he or she clicks on a list item.
-            String equipment = exclusionList.get(position);
-            if (newExclusionList.contains(equipment))
-            {
-                newExclusionList.remove(equipment);
-            }
-            else
-            {
-                newExclusionList.add(equipment);
-            }
-        }
-    };
 
     /**
      * The dialog listener for when the connection to Intencity fails.
@@ -254,4 +222,21 @@ public class ExclusionActivity extends AppCompatActivity
             finish();
         }
     };
+
+    @Override
+    public void onSetExercisePriority(int position, int priority, boolean increment)
+    {
+        if (priority < PRIORITY_LIMIT_UPPER && increment)
+        {
+            priority += INCREMENTAL_VALUE;
+        }
+        else if (priority >= PRIORITY_LIMIT_LOWER && !increment)
+        {
+            priority -= INCREMENTAL_VALUE;
+        }
+
+        exercisePriorities.set(position, String.valueOf(priority));
+
+        adapter.notifyDataSetChanged();
+    }
 }
