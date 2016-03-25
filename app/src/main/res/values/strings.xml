@@ -208,7 +208,7 @@
     <string name="award_exercise_description">Points for doing the next exercise.</string>
     <string name="award_completed_workout_description">Points for completing Intencity\'s workout!</string>
     <string name="award_sharing_description">Points for sharing your experience of Intencity!</string>
-    <string name="award_left_it_on_the_field_description">You earned the \"Left it on the Field\" badge for doing an exercise with at least two sets of 10 or more reps.</string>
+    <string name="award_left_it_on_the_field_description">You earned the \"Left it on the Field\" badge for doing an exercise with at least two sets of 10 or more reps or a duration of greater than 1 minute.</string>
     <string name="award_kept_swimming_description">You earned the \"Kept Swimming\" badge for not skipping an exercise.</string>
     <string name="award_finisher_description">You\'ve earned the \"Finisher\" badge for completing your workout with Intencity!</string>
 

@@ -41,7 +41,6 @@ import com.intencity.intencity.view.activity.StatActivity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 
 /**
  * The Exercise List Fragment for Intencity.
@@ -79,7 +78,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private String warmUphExerciseName;
     private String stretchExerciseName;
 
-    private HashMap<String, String> awards = new HashMap<>();
+    private ArrayList<String> awards = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -622,7 +621,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 Set set = sets.get(i);
 
                 // Checks to see if the user deserves the "Left it on the Field" badge.
-                if (!awards.containsKey(badge) && set.getReps() >= 10)
+                if (!awards.contains(badge + exerciseName) && (set.getReps() >= 10 || Integer.valueOf(Util.getRepFormat(set.getDuration())) >= 100))
                 {
                     setsWithRepsGreaterThan10++;
 
@@ -635,7 +634,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                                               new AwardDialogContent(R.mipmap.left_it_on_the_field,
                                                                      context.getString(R.string.award_left_it_on_the_field_description)), false);
 
-                        awards.put(badge, exerciseName);
+                        awards.add(badge + exerciseName);
                     }
                 }
 
