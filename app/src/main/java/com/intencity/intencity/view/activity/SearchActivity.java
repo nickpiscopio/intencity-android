@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -55,6 +56,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     private boolean searchExercises;
 
+    private ArrayList<User> users;
+
     // This is the list of exercises that the user has already completed.
     private ArrayList<Exercise> exercises;
 
@@ -80,6 +83,11 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         Bundle bundle = getIntent().getExtras();
         searchExercises = bundle.getBoolean(Constant.BUNDLE_SEARCH_EXERCISES);
         exercises = bundle.getParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST);
+
+        if (!searchExercises)
+        {
+            listView.setOnItemClickListener(userClickListener);
+        }
     }
 
     @Override
@@ -175,6 +183,23 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     /**
+     * The click listener for each user clicked in the listview.
+     */
+    private AdapterView.OnItemClickListener userClickListener = new AdapterView.OnItemClickListener()
+    {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        {
+            User user  = users.get(position);
+
+            Intent intent = new Intent(context, ProfileActivity.class);
+            intent.putExtra(Constant.BUNDLE_USER, user);
+
+            startActivity(intent);
+        }
+    };
+
+    /**
      * Service listener for searching for a user.
      */
     ServiceListener searchListener = new ServiceListener()
@@ -195,7 +220,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             }
             else
             {
-                ArrayList<User> users = new UserDao().parseJson(response);
+                users = new UserDao().parseJson(response);
                 arrayAdapter  = new RankingListAdapter(context, null, R.layout.list_item_ranking, users, true);
             }
 

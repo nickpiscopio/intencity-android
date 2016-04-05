@@ -1,27 +1,18 @@
 package com.intencity.intencity.adapter;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.RankingListener;
-import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.User;
-import com.intencity.intencity.task.ServiceTask;
-import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.SecurePreferences;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * The custom ArrayAdapter for the ranking list.
@@ -90,7 +81,6 @@ public class RankingListAdapter extends ArrayAdapter<User>
         if (this.position != position || convertView == null)
         {
             this.position = position;
-            final int arrayIndex = position;
 
             convertView = inflater.inflate(layoutResourceId, parent, false);
 
@@ -109,57 +99,6 @@ public class RankingListAdapter extends ArrayAdapter<User>
                 holder.rank = (TextView) convertView.findViewById(R.id.text_view_rank);
                 holder.rank.setText(String.valueOf(position + 1));
                 holder.rank.setVisibility(View.VISIBLE);
-
-                final int followingId = user.getFollowingId();
-
-                if (followingId > 0)
-                {
-                    // The remove user button.
-                    final TextView deleteButton = (TextView) convertView.findViewById(R.id.button_remove);
-
-                    final View view = convertView;
-
-                    // The long click listener for the ListView to remove followers.
-                    convertView.setOnLongClickListener(new View.OnLongClickListener()
-                    {
-                        @Override
-                        public boolean onLongClick(View v)
-                        {
-                            int timeOut = 4500;
-
-                            deleteButton.setVisibility(View.VISIBLE);
-                            deleteButton.setOnClickListener(new View.OnClickListener()
-
-                            {
-                                @Override
-                                public void onClick(View v)
-                                {
-                                    // Stop following a user.
-                                    listener.onRemoveUser(view, arrayIndex, followingId);
-                                }
-                            });
-
-                            // Dismiss the dialog after so many seconds.
-                            Timer timer = new Timer();
-                            timer.schedule(new TimerTask()
-                            {
-                                @Override
-                                public void run()
-                                {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable()
-                                    {
-                                        @Override
-                                        public void run()
-                                        {
-                                            deleteButton.setVisibility(View.GONE);
-                                        }
-                                    });
-                                }
-                            }, timeOut);
-                            return false;
-                        }
-                    });
-                }
             }
 
             int totalBadges = user.getTotalBadges();
@@ -172,55 +111,6 @@ public class RankingListAdapter extends ArrayAdapter<User>
             else
             {
                 holder.badgesLayout.setVisibility(View.GONE);
-            }
-
-            final int id = user.getId();
-
-            // This isn't in the holder because when we set it to invisible, it can't see it.
-            final ImageButton addButton = (ImageButton) convertView.findViewById(R.id.button_add);
-
-            // Needed to add the click listener in getView because the id was
-            // getting overwritten by the last id in the list.
-            addButton.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    SecurePreferences securePreferences = new SecurePreferences(context);
-                    String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
-
-                    // Needed to add the service listener in the parameter because the ImageButton was
-                    // getting overwritten by the last ImageButton in the list.
-                    new ServiceTask(new ServiceListener()
-                    {
-                        @Override
-                        public void onRetrievalSuccessful(String response)
-                        {
-                            // Set the following ID to 0, so when this view is recreated,
-                            // we don't get the button back.
-                            user.setFollowingId(0);
-                            // Remove the ability to add a user since said user was just added to follow.
-                            addButton.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onRetrievalFailed() { }
-                    }).execute(Constant.SERVICE_STORED_PROCEDURE,
-                               Constant.generateStoredProcedureParameters(
-                                       Constant.STORED_PROCEDURE_FOLLOW_USER, email, String.valueOf(id)));
-                }
-            });
-
-            // CODE_FAILED should get returned if the user isn't connected to the
-            // person that was returned from the search term.
-            if (user.getFollowingId() == Constant.CODE_FAILED && isSearch)
-            {
-                addButton.setVisibility(View.VISIBLE);
-            }
-            else
-            {
-                // Remove the ability to add a user if he or she is already connected to the user.
-                addButton.setVisibility(View.GONE);
             }
 
             convertView.setTag(holder);

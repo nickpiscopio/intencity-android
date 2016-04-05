@@ -41,7 +41,7 @@
                     android:id="@+id/text_view_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/layout_margin_half"
+                    android:paddingBottom="@dimen/layout_margin_quarter"
                     android:textSize="@dimen/card_title_size"
                     android:textColor="@color/secondary_dark"
                     android:text="Nick Piscopio"/>
@@ -103,28 +103,6 @@
                 android:textColor="@color/secondary_light"/>
 
         </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/button_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/card_button_padding"
-            android:layout_marginRight="@dimen/card_button_margin"
-            android:src="@mipmap/ic_account_plus_grey"
-            android:background="@drawable/button_card"/>
-
-        <TextView
-            android:id="@+id/button_remove"
-            android:layout_width="@dimen/ranking_badge_size"
-            android:layout_height="@dimen/ranking_badge_size"
-            android:gravity="center"
-            android:src="@mipmap/ic_account_plus_grey"
-            android:background="@drawable/button_card_delete"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:text="@string/emdash"
-            android:layout_marginRight="@dimen/layout_margin"
-            android:visibility="gone"/>
 
     </LinearLayout>
 

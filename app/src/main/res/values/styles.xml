@@ -15,6 +15,15 @@
         <item name="windowActionBar">false</item>
     </style>
 
+    <style name="Overlay" parent="AppTheme.Base">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowActionBarOverlay">true</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@android:color/transparent</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
     <style name="demo_text" parent="AppTheme">
         <item name="android:textSize">@dimen/demo_text_size</item>
         <item name="android:textColor">@color/page_background</item>
@@ -28,6 +37,14 @@
         <item name="android:textSize">@dimen/demo_title_size</item>
         <item name="android:layout_marginBottom">@dimen/related_item_margin</item>
         <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="profile_text_view">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:shadowColor">@color/shadow</item>
+        <item name="android:shadowDx">@integer/shadow</item>
+        <item name="android:shadowDy">@integer/shadow</item>
+        <item name="android:shadowRadius">@integer/shadow</item>
     </style>
 
 </resources>

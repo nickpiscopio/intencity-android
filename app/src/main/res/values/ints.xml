@@ -10,4 +10,5 @@
     <integer name="password_length">40</integer>
     <integer name="exercise_notes_length">255</integer>
     <integer name="menu_animation_duration">30</integer>
+    <integer name="shadow">2</integer>
 </resources>

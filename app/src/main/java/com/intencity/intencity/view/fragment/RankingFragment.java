@@ -11,12 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.view.activity.SearchActivity;
 import com.intencity.intencity.adapter.RankingListAdapter;
 import com.intencity.intencity.helper.doa.UserDao;
 import com.intencity.intencity.listener.RankingListener;
@@ -26,6 +26,8 @@ import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
+import com.intencity.intencity.view.activity.ProfileActivity;
+import com.intencity.intencity.view.activity.SearchActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,6 +80,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
 
         ranking = (ListView) view.findViewById(R.id.list_view_ranking);
         ranking.addFooterView(footer, null, false);
+        ranking.setOnItemClickListener(userClickListener);
 
         animation = AnimationUtils.loadAnimation(context, R.anim.anim_slide_out_right);
         animation.setAnimationListener(animationListener);
@@ -226,6 +229,23 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
                                       Constant.generateStoredProcedureParameters(
                                               Constant.STORED_PROCEDURE_GET_FOLLOWING, email));
     }
+
+    /**
+     * The click listener for each user clicked in the listview.
+     */
+    private AdapterView.OnItemClickListener userClickListener = new AdapterView.OnItemClickListener()
+    {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        {
+            User user  = users.get(position);
+
+            Intent intent = new Intent(context, ProfileActivity.class);
+            intent.putExtra(Constant.BUNDLE_USER, user);
+
+            startActivity(intent);
+        }
+    };
 
     @Override
     public void onRemoveUser(View view, int position, int webServerId)

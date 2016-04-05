@@ -104,6 +104,11 @@
             android:theme="@style/AppTheme.Base"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".view.activity.ProfileActivity"
+            android:theme="@style/Overlay"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

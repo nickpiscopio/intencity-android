@@ -52,8 +52,6 @@ public class Constant
     public static final String USER_TRIAL_CREATED_DATE = "com.intencity.intencity.user.trial.created.date";
     public static final String USER_LAST_LOGIN = "com.intencity.intencity.user.last.login";
     public static final String USER_LAST_EXERCISE_TIME = "com.intencity.intencity.user.last.exercise.time";
-    //Tutorial SharedPreferences
-    public static final String TUTORIAL_SWIPE_TO_DISMISS = "com.intencity.intencity.tutorial.swipe.to.dismiss";
 
     // Request codes
     public static final int REQUEST_CODE_STAT = 10;
@@ -82,10 +80,13 @@ public class Constant
     public static final String BUNDLE_ID = "com.intencity.intencity.bundle.id";
     public static final String BUNDLE_EXERCISE_TYPE = "com.intencity.intencity.exercise.type";
     public static final String BUNDLE_EXERCISE_SKIPPED = "com.intencity.intencity.exercise.skipped";
+    public static final String BUNDLE_USER = "com.intencity.intencity.user";
 
     // Service Endpoint
     private static final String ENDPOINT = "http://www.intencityapp.com/";
-    private static final String SERVICE_FOLDER = ENDPOINT + ((BuildType.type == Build.Type.DEBUG) ? "dev/" : "") + "services/";
+    private static final String BUILD_TYPE = ((BuildType.type == Build.Type.DEBUG) ? "dev/" : "");
+    private static final String UPLOADS_FOLDER = ENDPOINT + BUILD_TYPE + "uploads/";
+    private static final String SERVICE_FOLDER = ENDPOINT + BUILD_TYPE + "services/";
     private static final String SERVICE_FOLDER_MOBILE = SERVICE_FOLDER + "mobile/";
 
     // Services
