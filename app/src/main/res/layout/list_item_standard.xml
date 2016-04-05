@@ -3,16 +3,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/layout_margin"
-    android:orientation="horizontal">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_view"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/card_title_size"
-        android:paddingLeft="@dimen/layout_margin_half"
-        android:text="Standard list item."
-        android:textColor="@color/secondary_dark"/>
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="@dimen/layout_margin">
+
+        <TextView
+            android:id="@+id/text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/card_title_size"
+            android:paddingLeft="@dimen/layout_margin_half"
+            android:textColor="@color/secondary_dark"/>
+
+    </FrameLayout>
+
+    <include layout="@layout/divider"/>
 
 </LinearLayout>

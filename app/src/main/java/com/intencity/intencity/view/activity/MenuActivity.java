@@ -1,6 +1,7 @@
 package com.intencity.intencity.view.activity;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +32,8 @@ public class MenuActivity extends AppCompatActivity
     private String logOutTitle;
     private String rateTitle;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -44,7 +47,9 @@ public class MenuActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        SecurePreferences securePreferences = new SecurePreferences(getApplicationContext());
+        context = getApplicationContext();
+
+        SecurePreferences securePreferences = new SecurePreferences(context);
         String accountType = securePreferences.getString(Constant.USER_ACCOUNT_TYPE, "");
 
         int awardTotal = NotificationHandler.getInstance(null).getAwardCount();
@@ -104,7 +109,7 @@ public class MenuActivity extends AppCompatActivity
             }
             else if (menuItem.getTitle().equals(rateTitle))
             {
-                String packageName = getApplicationContext().getPackageName();
+                String packageName = context.getPackageName();
 
                 try
                 {
