@@ -5,12 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.RankingListener;
 import com.intencity.intencity.model.User;
+import com.intencity.intencity.util.Constant;
 
 import java.util.ArrayList;
 
@@ -42,6 +44,7 @@ public class RankingListAdapter extends ArrayAdapter<User>
         TextView name;
         TextView points;
         TextView totalBadgesTextView;
+        ImageView userIndicator;
     }
 
     /**
@@ -90,6 +93,7 @@ public class RankingListAdapter extends ArrayAdapter<User>
             holder.name = (TextView) convertView.findViewById(R.id.text_view_name);
             holder.points = (TextView) convertView.findViewById(R.id.text_view_points);
             holder.totalBadgesTextView = (TextView) convertView.findViewById(R.id.total_badges);
+            holder.userIndicator = (ImageView) convertView.findViewById(R.id.user_indicator);
 
             holder.name.setText(user.getFullName());
             holder.points.setText(String.valueOf(user.getEarnedPoints()));
@@ -99,6 +103,8 @@ public class RankingListAdapter extends ArrayAdapter<User>
                 holder.rank = (TextView) convertView.findViewById(R.id.text_view_rank);
                 holder.rank.setText(String.valueOf(position + 1));
                 holder.rank.setVisibility(View.VISIBLE);
+
+                holder.userIndicator.setVisibility(user.getFollowingId() > (int)Constant.CODE_FAILED ? View.GONE : View.VISIBLE);
             }
 
             int totalBadges = user.getTotalBadges();
