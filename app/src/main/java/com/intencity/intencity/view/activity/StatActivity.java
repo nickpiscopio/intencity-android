@@ -80,7 +80,7 @@ public class StatActivity extends AppCompatActivity implements DialogListener
         Bundle bundle = getIntent().getExtras();
 
         exercise = bundle.getParcelable(Constant.BUNDLE_EXERCISE);
-        position = bundle.getInt(Constant.BUNDLE_EXERCISE_POSITION);
+        position = bundle.getInt(Constant.BUNDLE_POSITION);
 
         if(exercise != null)
         {
@@ -365,7 +365,7 @@ public class StatActivity extends AppCompatActivity implements DialogListener
     {
         // Send the new sets back to the exercise listener so we can use them later.
         Intent intent = new Intent();
-        intent.putExtra(Constant.BUNDLE_EXERCISE_POSITION, position);
+        intent.putExtra(Constant.BUNDLE_POSITION, position);
         intent.putExtra(Constant.BUNDLE_EXERCISE_SETS, sets);
         setResult(Constant.REQUEST_CODE_STAT, intent);
         finish();

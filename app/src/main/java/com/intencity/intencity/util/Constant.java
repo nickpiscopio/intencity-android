@@ -56,8 +56,9 @@ public class Constant
     // Request codes
     public static final int REQUEST_CODE_STAT = 10;
     public static final int REQUEST_CODE_SEARCH = 20;
-    public static final int REQUEST_CODE_TWEET = 30;
-    public static final int REQUEST_CODE_LOG_OUT = 40;
+    public static final int REQUEST_CODE_PROFILE = 30;
+    public static final int REQUEST_CODE_TWEET = 40;
+    public static final int REQUEST_CODE_LOG_OUT = 50;
 
     // Fragment IDs
     public static final int ID_FRAGMENT_EXERCISE_LIST = 1;
@@ -72,7 +73,6 @@ public class Constant
     public static final String BUNDLE_ROUTINE_NAME = "com.intencity.intencity.bundle.routine.name";
     public static final String BUNDLE_EXERCISE_LIST = "com.intencity.intencity.bundle.exercise.list";
     public static final String BUNDLE_EXERCISE = "com.intencity.intencity.bundle.exercise";
-    public static final String BUNDLE_EXERCISE_POSITION = "com.intencity.intencity.bundle.exercise.position";
     public static final String BUNDLE_EXERCISE_SETS = "com.intencity.intencity.bundle.exercise.sets";
     public static final String BUNDLE_EXERCISE_LIST_INDEX = "com.intencity.intencity.bundle.exercise.list.index";
     public static final String BUNDLE_RECOMMENDED_ROUTINE = "com.intencity.intencity.bundle.recommended.routine";
@@ -80,7 +80,10 @@ public class Constant
     public static final String BUNDLE_ID = "com.intencity.intencity.bundle.id";
     public static final String BUNDLE_EXERCISE_TYPE = "com.intencity.intencity.exercise.type";
     public static final String BUNDLE_EXERCISE_SKIPPED = "com.intencity.intencity.exercise.skipped";
+    public static final String BUNDLE_POSITION = "com.intencity.intencity.bundle.position";
     public static final String BUNDLE_USER = "com.intencity.intencity.user";
+    public static final String BUNDLE_PROFILE_IS_USER = "com.intencity.intencity.profile.is.user";
+    public static final String BUNDLE_FOLLOW_ID = "com.intencity.intencity.bundle.follow.id";
 
     // Service Endpoint
     private static final String ENDPOINT = "http://www.intencityapp.com/";

@@ -193,9 +193,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             User user  = users.get(position);
 
             Intent intent = new Intent(context, ProfileActivity.class);
+            intent.putExtra(Constant.BUNDLE_POSITION, position);
             intent.putExtra(Constant.BUNDLE_USER, user);
 
-            startActivity(intent);
+            startActivityForResult(intent, Constant.REQUEST_CODE_PROFILE);
         }
     };
 
@@ -266,5 +267,20 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     public void onExerciseAdded(Exercise exercise)
     {
         setResult(exercise);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == Constant.REQUEST_CODE_PROFILE)
+        {
+            Bundle extras = data.getExtras();
+            int position = extras.getInt(Constant.BUNDLE_POSITION);
+            int followId = extras.getInt(Constant.BUNDLE_FOLLOW_ID);
+
+            users.get(position).setFollowingId(followId);
+        }
     }
 }

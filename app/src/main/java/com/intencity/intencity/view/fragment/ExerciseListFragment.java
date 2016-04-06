@@ -541,7 +541,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     public void onStatClicked(int position)
     {
         Intent intent = new Intent(context, StatActivity.class);
-        intent.putExtra(Constant.BUNDLE_EXERCISE_POSITION, position);
+        intent.putExtra(Constant.BUNDLE_POSITION, position);
         intent.putExtra(Constant.BUNDLE_EXERCISE, currentExercises.get(position));
         startActivityForResult(intent, Constant.REQUEST_CODE_STAT);
     }
@@ -583,10 +583,10 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result codes are set from an activity with setResult().
-        if(resultCode == Constant.REQUEST_CODE_STAT)
+        if (resultCode == Constant.REQUEST_CODE_STAT)
         {
             Bundle extras = data.getExtras();
-            int position = extras.getInt(Constant.BUNDLE_EXERCISE_POSITION);
+            int position = extras.getInt(Constant.BUNDLE_POSITION);
             final ArrayList<Set> sets = extras.getParcelableArrayList(Constant.BUNDLE_EXERCISE_SETS);
 
             Exercise currentExercise = currentExercises.get(position);

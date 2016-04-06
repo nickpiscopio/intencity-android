@@ -251,4 +251,18 @@ public class Util
     {
         return text.replaceAll("'", "%27");
     }
+
+    /**
+     * Gets the email from the secure preferences.
+     *
+     * This method should only be used if we aren't going to open the secure preferences at all.
+     *
+     * @param context   The application context to get the email.
+     *
+     * @return  The email from the secure preferences.
+     */
+    public static String getSecurePreferencesEmail(Context context)
+    {
+        return new SecurePreferences(context).getString(Constant.USER_ACCOUNT_EMAIL, "");
+    }
 }

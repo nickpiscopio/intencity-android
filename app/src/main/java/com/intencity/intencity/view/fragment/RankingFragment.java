@@ -194,7 +194,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == Constant.REQUEST_CODE_SEARCH)
+        if(resultCode == Constant.REQUEST_CODE_SEARCH || resultCode == Constant.REQUEST_CODE_PROFILE)
         {
             getFollowing();
         }
@@ -242,8 +242,9 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
 
             Intent intent = new Intent(context, ProfileActivity.class);
             intent.putExtra(Constant.BUNDLE_USER, user);
+            intent.putExtra(Constant.BUNDLE_PROFILE_IS_USER, user.getFollowingId() < 0);
 
-            startActivity(intent);
+            startActivityForResult(intent, Constant.REQUEST_CODE_PROFILE);
         }
     };
 
