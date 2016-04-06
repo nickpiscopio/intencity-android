@@ -29,7 +29,7 @@
     <dimen name="card_button_margin">5dp</dimen>
     <dimen name="card_button_padding">11dp</dimen>
 
-    <dimen name="list_view_padding_bottom">90dp</dimen>
+    <dimen name="list_view_padding_bottom">85dp</dimen>
 
     <dimen name="ranking_badge_size">40dp</dimen>
 
