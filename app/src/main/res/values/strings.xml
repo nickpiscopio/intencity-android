@@ -77,6 +77,15 @@
     <string name="no_friends">We couldn\'t find the users you follow.</string>
     <string name="rankings_updated">Approximate ranking reset:\n%1$s</string>
 
+    <!-- Profile Strings -->
+    <string name="awards_title">Awards</string>
+    <string name="profile_routines_title">Last 7 day routines</string>
+    <string name="profile_pic_dialog_title">Profile picture</string>
+    <string name="profile_pic_dialog_message">How would you like to set your profile picture?</string>
+    <string name="profile_pic_dialog_camera_button">Take a picture</string>
+    <string name="profile_pic_dialog_pictures_button">Open my photos</string>
+    <string name="empty_profile_awards">No activity found.</string>
+
     <!-- Routine Strings -->
     <string name="title_routine">What routine would you like to do?</string>
     <string name="routine_continue">Continue where I left off</string>

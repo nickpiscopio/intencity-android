@@ -142,6 +142,13 @@ public class RoutineFragment extends android.support.v4.app.Fragment
                 previousExercises = exercises;
                 index = 0;
 
+                // We are adding a stretch to the exercise list.
+                Exercise stretch = getNewExercise(context.getString(R.string.stretch),
+                                                  Constant.RETURN_NULL, Constant.RETURN_NULL,
+                                                  Constant.RETURN_NULL, Constant.RETURN_NULL);
+                stretch.setDescription(context.getString(R.string.stretch_description));
+                exercises.add(stretch);
+
                 listener.onFinishedLoading(Constant.ID_FRAGMENT_EXERCISE_LIST);
             }
             catch (JSONException e)
@@ -150,15 +157,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment
 
                 listener.onFinishedLoading(Constant.CODE_FAILED_REPOPULATE);
             }
-
-            // We are adding a stretch to the exercise list.
-            Exercise stretch = getNewExercise(context.getString(R.string.stretch),
-                                              Constant.RETURN_NULL,
-                                              Constant.RETURN_NULL,
-                                              Constant.RETURN_NULL,
-                                              Constant.RETURN_NULL);
-            stretch.setDescription(context.getString(R.string.stretch_description));
-            exercises.add(stretch);
         }
 
         @Override

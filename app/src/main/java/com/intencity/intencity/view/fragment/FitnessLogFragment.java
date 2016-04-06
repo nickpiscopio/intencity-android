@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.handler.FragmentHandler;
 import com.intencity.intencity.listener.DatabaseListener;
 import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.LoadingListener;
@@ -21,7 +22,6 @@ import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.task.GetExerciseTask;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.handler.FragmentHandler;
 import com.intencity.intencity.util.SecurePreferences;
 
 import org.json.JSONArray;
