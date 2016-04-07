@@ -88,7 +88,7 @@ public class Constant
     // Service Endpoint
     private static final String ENDPOINT = "http://www.intencityapp.com/";
     private static final String BUILD_TYPE = ((BuildType.type == Build.Type.DEBUG) ? "dev/" : "");
-    private static final String UPLOADS_FOLDER = ENDPOINT + BUILD_TYPE + "uploads/";
+    public static final String UPLOAD_FOLDER = ENDPOINT + BUILD_TYPE + "uploads/";
     private static final String SERVICE_FOLDER = ENDPOINT + BUILD_TYPE + "services/";
     private static final String SERVICE_FOLDER_MOBILE = SERVICE_FOLDER + "mobile/";
 

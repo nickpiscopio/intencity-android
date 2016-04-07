@@ -2,6 +2,7 @@ package com.intencity.intencity.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
@@ -68,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity implements ServiceListene
         context = getApplicationContext();
 
         Bundle bundle = getIntent().getExtras();
-        index = bundle.getInt(Constant.BUNDLE_POSITION, (int) Constant.CODE_FAILED);
+        index = bundle.getInt(Constant.BUNDLE_POSITION, (int)Constant.CODE_FAILED);
         user = bundle.getParcelable(Constant.BUNDLE_USER);
         profileIsCurrentUser = bundle.getBoolean(Constant.BUNDLE_PROFILE_IS_USER, false);
 
@@ -76,11 +78,20 @@ public class ProfileActivity extends AppCompatActivity implements ServiceListene
         ((TextView)findViewById(R.id.text_view_points)).setText(String.valueOf(
                 user.getEarnedPoints()));
 
+        ImageView profilePic = (ImageView) findViewById(R.id.profile_pic);
+
         addRemoveButton = (ImageButton) findViewById(R.id.button_add_remove);
         addRemoveButton.setOnClickListener(addRemoveClickListener);
 
         originalFollowId = user.getFollowingId();
         userId = user.getId();
+
+        Bitmap savedProfilePic = user.getBmp();
+
+        if (savedProfilePic != null)
+        {
+            profilePic.setImageBitmap(savedProfilePic);
+        }
 
         if (!profileIsCurrentUser)
         {

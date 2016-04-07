@@ -1,6 +1,8 @@
 package com.intencity.intencity.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.listener.RankingListener;
+import com.intencity.intencity.listener.ImageListener;
 import com.intencity.intencity.model.User;
+import com.intencity.intencity.task.RetrieveImageTask;
 import com.intencity.intencity.util.Constant;
 
 import java.util.ArrayList;
@@ -23,9 +26,11 @@ import java.util.ArrayList;
  */
 public class RankingListAdapter extends ArrayAdapter<User>
 {
+    private final String USER_PROFILE_PIC_NAME = "/user-profile.jpg";
+
     private Context context;
 
-    private RankingListener listener;
+    private ImageListener listener;
 
     private int layoutResourceId;
 
@@ -45,18 +50,19 @@ public class RankingListAdapter extends ArrayAdapter<User>
         TextView points;
         TextView totalBadgesTextView;
         ImageView userIndicator;
+        ImageView profilePic;
     }
 
     /**
      * The constructor.
      *
      * @param context           The application context.
-     * @param listener          The listener to call back when we want to remove a user.
+     * @param listener          The listener to call back when we retrieved the profile picture.
      * @param layoutResourceId  The resource id of the view we are inflating.
      * @param users             The list of users to populate the list.
      * @param isSearch          A boolean value of whether or not we are searching for a user.
      */
-    public RankingListAdapter(Context context, RankingListener listener, int layoutResourceId, ArrayList<User> users, boolean isSearch)
+    public RankingListAdapter(Context context, ImageListener listener, int layoutResourceId, ArrayList<User> users, boolean isSearch)
     {
         super(context, layoutResourceId, users);
 
@@ -83,6 +89,7 @@ public class RankingListAdapter extends ArrayAdapter<User>
 
         if (this.position != position || convertView == null)
         {
+            final int index = position;
             this.position = position;
 
             convertView = inflater.inflate(layoutResourceId, parent, false);
@@ -94,9 +101,39 @@ public class RankingListAdapter extends ArrayAdapter<User>
             holder.points = (TextView) convertView.findViewById(R.id.text_view_points);
             holder.totalBadgesTextView = (TextView) convertView.findViewById(R.id.total_badges);
             holder.userIndicator = (ImageView) convertView.findViewById(R.id.user_indicator);
+            holder.profilePic = (ImageView) convertView.findViewById(R.id.profile_pic);
 
             holder.name.setText(user.getFullName());
             holder.points.setText(String.valueOf(user.getEarnedPoints()));
+
+            Bitmap profilePic = user.getBmp();
+
+            if (profilePic == null)
+            {
+                new RetrieveImageTask(new ImageListener() {
+                    @Override
+                    public void onImageRetrieved(Bitmap bmp)
+                    {
+                        holder.profilePic.setImageBitmap(bmp);
+
+                        listener.setImageResource(index, bmp, false);
+                    }
+
+                    @Override
+                    public void onImageRetrievalFailed()
+                    {
+                        holder.profilePic.setImageDrawable(
+                                ContextCompat.getDrawable(context, R.mipmap.default_profile_picture));
+                    }
+
+                    @Override
+                    public void setImageResource(int index, Bitmap bmp, boolean newlyUploaded) { }
+                }).execute(Constant.UPLOAD_FOLDER +  user.getId() + USER_PROFILE_PIC_NAME);
+            }
+            else
+            {
+                holder.profilePic.setImageBitmap(profilePic);
+            }
 
             if (!isSearch)
             {

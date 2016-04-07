@@ -2,6 +2,7 @@ package com.intencity.intencity.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import com.intencity.intencity.adapter.RankingListAdapter;
 import com.intencity.intencity.adapter.SearchExerciseListAdapter;
 import com.intencity.intencity.helper.doa.ExerciseDao;
 import com.intencity.intencity.helper.doa.UserDao;
+import com.intencity.intencity.listener.ImageListener;
 import com.intencity.intencity.listener.SearchListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
@@ -39,7 +41,7 @@ import java.util.ArrayList;
  * Created by Nick Piscopio on 12/18/15.
  */
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
-                                                                 SearchListener
+                                                                 SearchListener, ImageListener
 {
     private LinearLayout connectionIssue;
 
@@ -222,7 +224,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             else
             {
                 users = new UserDao().parseJson(response);
-                arrayAdapter  = new RankingListAdapter(context, null, R.layout.list_item_ranking, users, true);
+                arrayAdapter  = new RankingListAdapter(context, SearchActivity.this, R.layout.list_item_ranking, users, true);
             }
 
             listView.setAdapter(arrayAdapter);
@@ -282,5 +284,16 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
             users.get(position).setFollowingId(followId);
         }
+    }
+
+    @Override
+    public void onImageRetrieved(Bitmap bmp) { }
+
+    @Override
+    public void onImageRetrievalFailed() { }
+
+    @Override public void setImageResource(int index, Bitmap bmp, boolean newlyUploaded)
+    {
+        users.get(index).setBmp(bmp);
     }
 }

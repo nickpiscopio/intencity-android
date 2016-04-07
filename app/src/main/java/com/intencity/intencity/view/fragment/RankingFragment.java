@@ -2,6 +2,7 @@ package com.intencity.intencity.view.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -9,8 +10,6 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,13 +18,12 @@ import android.widget.Toast;
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RankingListAdapter;
 import com.intencity.intencity.helper.doa.UserDao;
-import com.intencity.intencity.listener.RankingListener;
+import com.intencity.intencity.listener.ImageListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.User;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
-import com.intencity.intencity.util.Util;
 import com.intencity.intencity.view.activity.ProfileActivity;
 import com.intencity.intencity.view.activity.SearchActivity;
 
@@ -41,7 +39,7 @@ import java.util.TimeZone;
  * Created by Nick Piscopio on 12/12/15.
  */
 public class RankingFragment extends android.support.v4.app.Fragment implements ServiceListener,
-                                                                                RankingListener
+                                                                                ImageListener
 {
     private Context context;
 
@@ -58,10 +56,6 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
     private ArrayList<User> users;
 
     private RankingListAdapter arrayAdapter;
-
-    private Animation animation;
-
-    private int row;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -82,9 +76,6 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         ranking.addFooterView(footer, null, false);
         ranking.setOnItemClickListener(userClickListener);
 
-        animation = AnimationUtils.loadAnimation(context, R.anim.anim_slide_out_right);
-        animation.setAnimationListener(animationListener);
-
         followingMessage = (TextView) footer.findViewById(R.id.following_message);
 
         SecurePreferences securePreferences = new SecurePreferences(context);
@@ -96,23 +87,6 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
 
         return view;
     }
-
-    /**
-     * The animation listener for removing a user from the following list.
-     */
-    private Animation.AnimationListener animationListener = new Animation.AnimationListener()
-    {
-        @Override public void onAnimationStart(Animation animation) { }
-
-        @Override public void onAnimationRepeat(Animation animation) { }
-
-        @Override
-        public void onAnimationEnd(Animation animation)
-        {
-            arrayAdapter.remove(arrayAdapter.getItem(row));
-            arrayAdapter.notifyDataSetChanged();
-        }
-    };
 
     /**
      * The refresh listener for the listview.
@@ -249,27 +223,14 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
     };
 
     @Override
-    public void onRemoveUser(View view, int position, int webServerId)
+    public void onImageRetrieved(Bitmap bmp){ }
+
+    @Override
+    public void onImageRetrievalFailed() { }
+
+    @Override
+    public void setImageResource(int index, Bitmap bmp, boolean newlyUploaded)
     {
-        final int pos = position;
-        final View v = view;
-
-        new ServiceTask(new ServiceListener()
-        {
-            @Override
-            public void onRetrievalSuccessful(String response)
-            {
-                row = pos;
-                v.startAnimation(animation);
-            }
-
-            @Override
-            public void onRetrievalFailed()
-            {
-                Util.showMessage(context, context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error));
-            }
-        }).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                      Constant.generateStoredProcedureParameters(
-                                              Constant.STORED_PROCEDURE_REMOVE_FROM_FOLLOWING, String.valueOf(webServerId)));
+        users.get(index).setBmp(bmp);
     }
 }

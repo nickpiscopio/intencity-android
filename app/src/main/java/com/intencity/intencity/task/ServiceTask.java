@@ -67,7 +67,6 @@ public class ServiceTask extends AsyncTask<String, Void, String>
 
             isr.close();
             reader.close();
-
         }
         catch(IOException e)
         {

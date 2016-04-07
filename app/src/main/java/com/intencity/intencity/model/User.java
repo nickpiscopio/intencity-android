@@ -1,7 +1,11 @@
 package com.intencity.intencity.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * The model class for User.
@@ -18,6 +22,8 @@ public class User implements Parcelable
     private String firstName;
     private String lastName;
 
+    private Bitmap bmp;
+
     public User() { }
 
     private User(Parcel in)
@@ -28,6 +34,11 @@ public class User implements Parcelable
         totalBadges = in.readInt();
         firstName = in.readString();
         lastName = in.readString();
+
+        byte[] bytes = new byte[in.readInt()];
+        in.readByteArray(bytes);
+
+        bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 
     public static final Creator<User> CREATOR = new Creator<User>()
@@ -58,6 +69,16 @@ public class User implements Parcelable
         dest.writeInt(totalBadges);
         dest.writeString(firstName);
         dest.writeString(lastName);
+
+        if (bmp != null)
+        {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+            byte[] bytes = stream.toByteArray();
+
+            dest.writeInt(bytes.length);
+            dest.writeByteArray(bytes);
+        }
     }
 
     /**
@@ -103,19 +124,9 @@ public class User implements Parcelable
         this.totalBadges = totalBadges;
     }
 
-    public String getFirstName()
-    {
-        return firstName;
-    }
-
     public void setFirstName(String firstName)
     {
         this.firstName = firstName;
-    }
-
-    public String getLastName()
-    {
-        return lastName;
     }
 
     public void setLastName(String lastName)
@@ -126,5 +137,15 @@ public class User implements Parcelable
     public String getFullName()
     {
         return this.firstName + " " + this.lastName;
+    }
+
+    public Bitmap getBmp()
+    {
+        return bmp;
+    }
+
+    public void setBmp(Bitmap bmp)
+    {
+        this.bmp = bmp;
     }
 }
