@@ -133,7 +133,9 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_EQUIPMENT = "getEquipment";
     public static final String STORED_PROCEDURE_GET_EXERCISE_PRIORITIES = "getExercisePriority";
     public static final String STORED_PROCEDURE_GRANT_POINTS = "grantPointsToUser";
-    public static final String STORED_PROCEDURE_GRANT_BADGE = "grantBadgeToUser";
+    public static final String STORED_PROCEDURE_GET_BADGES = "grantBadgeToUser";
+    public static final String STORED_PROCEDURE_GRANT_BADGE = "getBadges";
+    public static final String STORED_PROCEDURE_GET_LAST_WEEK_ROUTINES = "getLastWeekRoutines";
     public static final String STORED_PROCEDURE_GET_INJURY_PREVENTION_WORKOUTS = "getInjuryPreventionWorkouts";
     public static final String STORED_PROCEDURE_EXCLUDE_EXERCISE = "excludeExercise";
     public static final String STORED_PROCEDURE_REMOVE_ACCOUNT = "removeAccount";
@@ -177,6 +179,7 @@ public class Constant
     public static final String COLUMN_FIRST_NAME = "FirstName";
     public static final String COLUMN_LAST_NAME = "LastName";
     public static final String COLUMN_EARNED_POINTS = "EarnedPoints";
+    public static final String COLUMN_BADGE_NAME = "BadgeName";
     public static final String COLUMN_TOTAL_BADGES = "TotalBadges";
     public static final String COLUMN_PROFILE_PICTURE_URL = "Url";
     // The id from the following table if a user is following that user from a search.

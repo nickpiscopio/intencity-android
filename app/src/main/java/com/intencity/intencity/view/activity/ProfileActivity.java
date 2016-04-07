@@ -14,21 +14,30 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.adapter.ProfileAdapter;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.model.AwardRow;
+import com.intencity.intencity.model.ProfileRow;
 import com.intencity.intencity.model.User;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * This is the profile activity for a user.
  *
  * Created by Nick Piscopio on 4/5/15.
  */
-public class ProfileActivity extends AppCompatActivity implements ServiceListener
+public class ProfileActivity extends AppCompatActivity
 {
     private enum FollowState
     {
@@ -50,6 +59,8 @@ public class ProfileActivity extends AppCompatActivity implements ServiceListene
     private String email;
 
     private Context context;
+
+    private ArrayList<ProfileRow> profileSections = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -75,8 +86,8 @@ public class ProfileActivity extends AppCompatActivity implements ServiceListene
         profileIsCurrentUser = bundle.getBoolean(Constant.BUNDLE_PROFILE_IS_USER, false);
 
         ((TextView)findViewById(R.id.text_view_name)).setText(user.getFullName());
-        ((TextView)findViewById(R.id.text_view_points)).setText(String.valueOf(
-                user.getEarnedPoints()));
+        ((TextView)findViewById(R.id.text_view_points)).setText(
+                String.valueOf(user.getEarnedPoints()));
 
         ImageView profilePic = (ImageView) findViewById(R.id.profile_pic);
 
@@ -108,6 +119,16 @@ public class ProfileActivity extends AppCompatActivity implements ServiceListene
         setAddRemoveButtonImage();
 
         email = Util.getSecurePreferencesEmail(context);
+
+        String userId = String.valueOf(user.getId());
+
+        new ServiceTask(badgeRetrievalListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                      Constant.generateStoredProcedureParameters(
+                                              Constant.STORED_PROCEDURE_GET_BADGES, userId));
+
+        new ServiceTask(last7DayRoutineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                      Constant.generateStoredProcedureParameters(
+                                              Constant.STORED_PROCEDURE_GET_LAST_WEEK_ROUTINES, userId));
     }
 
     @Override
@@ -146,6 +167,15 @@ public class ProfileActivity extends AppCompatActivity implements ServiceListene
         addRemoveButton.setImageDrawable(drawable);
     }
 
+    private void updateListView()
+    {
+        ProfileAdapter adapter =
+                new ProfileAdapter(this, R.layout.list_item_header, R.layout.list_item_standard, profileSections);
+
+        ListView listView = (ListView) findViewById(R.id.list_view);
+        listView.setAdapter(adapter);
+    }
+
     private View.OnClickListener addRemoveClickListener = new View.OnClickListener()
     {
         @Override public void onClick(View v)
@@ -167,14 +197,77 @@ public class ProfileActivity extends AppCompatActivity implements ServiceListene
         }
     };
 
-    @Override
-    public void onRetrievalSuccessful(String response)
+    private ServiceListener badgeRetrievalListener = new ServiceListener()
     {
-//        response = response.replaceAll("\"", "");
-    }
+        @Override
+        public void onRetrievalSuccessful(String response)
+        {
+            try
+            {
+                ArrayList<AwardRow> awards = new ArrayList<>();
 
-    @Override
-    public void onRetrievalFailed() { }
+                JSONArray array = new JSONArray(response);
+
+                int length = array.length();
+
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject object = array.getJSONObject(i);
+
+                    String badgeName = object.getString(Constant.COLUMN_BADGE_NAME);
+                    String amount = object.getString(Constant.COLUMN_TOTAL_BADGES);
+
+                    awards.add(new AwardRow(badgeName, amount));
+                }
+
+                ArrayList<ProfileRow> awardSection = new ArrayList<>();
+                awardSection.add(new ProfileRow(true, context.getString(R.string.awards_title), awards));
+
+                profileSections.addAll(awardSection);
+
+                updateListView();
+            }
+            catch (Exception e) { }
+
+            updateListView();
+        }
+
+        @Override
+        public void onRetrievalFailed() { }
+    };
+
+    private ServiceListener last7DayRoutineServiceListener = new ServiceListener()
+    {
+        @Override
+        public void onRetrievalSuccessful(String response)
+        {
+            try
+            {
+                ArrayList<ProfileRow> lastWeekRoutines = new ArrayList<>();
+                lastWeekRoutines.add(new ProfileRow(true, context.getString(R.string.profile_routines_title), null));
+
+                JSONArray array = new JSONArray(response);
+
+                int length = array.length();
+
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject object = array.getJSONObject(i);
+
+                    String title = object.getString(Constant.COLUMN_DISPLAY_NAME);
+                    lastWeekRoutines.add(new ProfileRow(false, title, null));
+                }
+
+                profileSections.addAll(lastWeekRoutines);
+
+                updateListView();
+            }
+            catch (Exception e) { }
+        }
+
+        @Override
+        public void onRetrievalFailed() { }
+    };
 
     @Override public void onBackPressed()
     {
