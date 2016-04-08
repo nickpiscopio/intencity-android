@@ -133,8 +133,8 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_EQUIPMENT = "getEquipment";
     public static final String STORED_PROCEDURE_GET_EXERCISE_PRIORITIES = "getExercisePriority";
     public static final String STORED_PROCEDURE_GRANT_POINTS = "grantPointsToUser";
-    public static final String STORED_PROCEDURE_GET_BADGES = "grantBadgeToUser";
-    public static final String STORED_PROCEDURE_GRANT_BADGE = "getBadges";
+    public static final String STORED_PROCEDURE_GRANT_BADGE = "grantBadgeToUser";
+    public static final String STORED_PROCEDURE_GET_BADGES = "getBadges";
     public static final String STORED_PROCEDURE_GET_LAST_WEEK_ROUTINES = "getLastWeekRoutines";
     public static final String STORED_PROCEDURE_GET_INJURY_PREVENTION_WORKOUTS = "getInjuryPreventionWorkouts";
     public static final String STORED_PROCEDURE_EXCLUDE_EXERCISE = "excludeExercise";

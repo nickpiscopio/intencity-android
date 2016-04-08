@@ -1,7 +1,5 @@
 package com.intencity.intencity.model;
 
-import java.util.ArrayList;
-
 /**
  * The model class for the different sections of the profile screen.
  *
@@ -11,13 +9,13 @@ public class ProfileRow
 {
     private boolean isSectionHeader;
     private String title;
-    private ArrayList<AwardRow> awards;
+    private String amount;
 
-    public ProfileRow(boolean isSectionHeader, String title, ArrayList<AwardRow> awards)
+    public ProfileRow(boolean isSectionHeader, String title, String amount)
     {
         this.isSectionHeader = isSectionHeader;
         this.title = title;
-        this.awards = awards;
+        this.amount = amount;
     }
 
     /**
@@ -33,8 +31,8 @@ public class ProfileRow
         return title;
     }
 
-    public ArrayList<AwardRow> getRows()
+    public String getAmount()
     {
-        return awards;
+        return amount;
     }
 }

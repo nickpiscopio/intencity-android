@@ -1,86 +1,94 @@
 package com.intencity.intencity.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.adapter.viewholder.ProfileViewHolder;
 import com.intencity.intencity.model.ProfileRow;
-import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.TwoWayView.SpannableGridLayoutManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * The custom ArrayAdapter for the profile screen.
- *
- * Created by Nick Piscopio on 2/7/16.
- */
-public class ProfileAdapter extends ArrayAdapter<ProfileRow>
+public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    private Context context;
+    // Going to need this for the math.
+    private final Context context;
+    private final List<ProfileRow> rows;
 
-    private int headerResId;
-    private int listItemResId;
-
-    private ArrayList<ProfileRow> sections;
-
-    private LayoutInflater inflater;
-
-    private int position;
-
-    static class ProfileHolder
+    public ProfileAdapter(Context context, ArrayList<ProfileRow> rows)
     {
-        TextView title;
-    }
-
-    /**
-     * The constructor.
-     *
-     * @param context           The application context.
-     * @param headerResId       The resource id of the view we are inflating for the headers.
-     * @param listItemResId     The resource id of the view we are inflating for the list items.
-     * @param sections          The sections for the listview for the profile screen.
-     */
-    public ProfileAdapter(Context context, int headerResId, int listItemResId,
-                          ArrayList<ProfileRow> sections)
-    {
-        super(context, 0, sections);
-
         this.context = context;
-
-        this.headerResId = headerResId;
-        this.listItemResId = listItemResId;
-
-        this.sections = sections;
-
-        position = (int) Constant.CODE_FAILED;
-
-        inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.rows = rows;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent)
+    @Override
+    public ProfileViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        final ProfileHolder holder = (convertView == null) ?
-                                            new ProfileHolder() :
-                                            (ProfileHolder)convertView.getTag();
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item_profile, parent, false);
+        return new ProfileViewHolder(v);
+    }
 
-        if (this.position != position || convertView == null)
+    @Override
+    // Documentation for fixing layout params:
+    // http://stackoverflow.com/questions/28748905/twoway-view-spannable-grid-layout-parameters-not-working
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
+    {
+        View itemView = holder.itemView;
+
+        SpannableGridLayoutManager.LayoutParams lp = (SpannableGridLayoutManager.LayoutParams)itemView.getLayoutParams();
+
+        ProfileRow row = rows.get(position);
+
+        // TODO: Do math to get the real column span needed for the awards.
+        int colSpan = (row.getAmount() != "" ? 1 : 5);
+        // This should probably be the same value as the column span.
+        // It appears if it is larger than the default span, then the view wraps content properly.
+        int rowSpan = 5;
+
+        if (lp.rowSpan != rowSpan || lp.colSpan != colSpan)
         {
-            this.position = position;
+            lp.rowSpan = rowSpan;
+            lp.colSpan = colSpan;
 
-            ProfileRow row = sections.get(position);
-
-            convertView = inflater.inflate(row.isSectionHeader() ? headerResId : listItemResId, parent, false);
-
-            holder.title = (TextView) convertView.findViewById(R.id.text_view);
-            holder.title.setText(row.getTitle());
-
-            convertView.setTag(holder);
+            itemView.setLayoutParams(lp);
         }
 
-        return convertView;
+        ProfileViewHolder profileHolder = (ProfileViewHolder)holder;
+
+        String title = row.getTitle();
+
+        if (row.isSectionHeader())
+        {
+            profileHolder.setAsHeader(row.getTitle());
+        }
+        else
+        {
+            String amount = row.getAmount();
+
+            if (amount != "")
+            {
+                //set as award item
+
+                profileHolder.setAsAwardView(title, amount);
+            }
+            else
+            {
+                //set as routine list item
+
+                profileHolder.setAsRoutineView(row.getTitle());
+
+            }
+        }
+    }
+
+    @Override
+    public int getItemCount()
+    {
+        return rows.size();
     }
 }

@@ -47,4 +47,8 @@
         <item name="android:shadowRadius">@integer/shadow</item>
     </style>
 
+    <style name="TwoWayViewBase">
+        <item name="android:background">#999999</item>
+    </style>
+
 </resources>

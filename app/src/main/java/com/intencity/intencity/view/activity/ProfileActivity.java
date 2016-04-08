@@ -14,17 +14,16 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ProfileAdapter;
 import com.intencity.intencity.listener.ServiceListener;
-import com.intencity.intencity.model.AwardRow;
 import com.intencity.intencity.model.ProfileRow;
 import com.intencity.intencity.model.User;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.TwoWayView.TwoWayView;
 import com.intencity.intencity.util.Util;
 
 import org.json.JSONArray;
@@ -49,6 +48,8 @@ public class ProfileActivity extends AppCompatActivity
 
     private ImageButton addRemoveButton;
 
+    private TwoWayView recyclerView;
+
     private boolean profileIsCurrentUser;
     private User user;
 
@@ -59,6 +60,8 @@ public class ProfileActivity extends AppCompatActivity
     private String email;
 
     private Context context;
+
+    private ProfileAdapter adapter;
 
     private ArrayList<ProfileRow> profileSections = new ArrayList<>();
 
@@ -129,6 +132,12 @@ public class ProfileActivity extends AppCompatActivity
         new ServiceTask(last7DayRoutineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(
                                               Constant.STORED_PROCEDURE_GET_LAST_WEEK_ROUTINES, userId));
+
+        recyclerView = (TwoWayView) findViewById(R.id.list);
+
+        adapter = new ProfileAdapter(context, profileSections);
+
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -169,11 +178,7 @@ public class ProfileActivity extends AppCompatActivity
 
     private void updateListView()
     {
-        ProfileAdapter adapter =
-                new ProfileAdapter(this, R.layout.list_item_header, R.layout.list_item_standard, profileSections);
-
-        ListView listView = (ListView) findViewById(R.id.list_view);
-        listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     private View.OnClickListener addRemoveClickListener = new View.OnClickListener()
@@ -204,7 +209,8 @@ public class ProfileActivity extends AppCompatActivity
         {
             try
             {
-                ArrayList<AwardRow> awards = new ArrayList<>();
+                ArrayList<ProfileRow> awardSection = new ArrayList<>();
+                awardSection.add(new ProfileRow(true, context.getString(R.string.awards_title), ""));
 
                 JSONArray array = new JSONArray(response);
 
@@ -217,19 +223,14 @@ public class ProfileActivity extends AppCompatActivity
                     String badgeName = object.getString(Constant.COLUMN_BADGE_NAME);
                     String amount = object.getString(Constant.COLUMN_TOTAL_BADGES);
 
-                    awards.add(new AwardRow(badgeName, amount));
+                    awardSection.add(new ProfileRow(false, badgeName, amount));
                 }
 
-                ArrayList<ProfileRow> awardSection = new ArrayList<>();
-                awardSection.add(new ProfileRow(true, context.getString(R.string.awards_title), awards));
-
-                profileSections.addAll(awardSection);
+                profileSections.addAll(0, awardSection);
 
                 updateListView();
             }
             catch (Exception e) { }
-
-            updateListView();
         }
 
         @Override
@@ -244,7 +245,7 @@ public class ProfileActivity extends AppCompatActivity
             try
             {
                 ArrayList<ProfileRow> lastWeekRoutines = new ArrayList<>();
-                lastWeekRoutines.add(new ProfileRow(true, context.getString(R.string.profile_routines_title), null));
+                lastWeekRoutines.add(new ProfileRow(true, context.getString(R.string.profile_routines_title), ""));
 
                 JSONArray array = new JSONArray(response);
 
@@ -255,7 +256,7 @@ public class ProfileActivity extends AppCompatActivity
                     JSONObject object = array.getJSONObject(i);
 
                     String title = object.getString(Constant.COLUMN_DISPLAY_NAME);
-                    lastWeekRoutines.add(new ProfileRow(false, title, null));
+                    lastWeekRoutines.add(new ProfileRow(false, title, ""));
                 }
 
                 profileSections.addAll(lastWeekRoutines);

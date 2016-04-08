@@ -20,6 +20,8 @@ import java.util.ArrayList;
  */
 public class MenuAdapter extends ArrayAdapter<MenuItem>
 {
+    private final int HEADER_RES_ID = R.layout.list_item_header;
+    
     private Context context;
 
     private int headerResId;
@@ -62,9 +64,7 @@ public class MenuAdapter extends ArrayAdapter<MenuItem>
 
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        final MenuHolder holder = (convertView == null) ?
-                                            new MenuHolder() :
-                                            (MenuHolder)convertView.getTag();
+        final MenuHolder holder = (convertView == null) ? new MenuHolder() : (MenuHolder)convertView.getTag();
 
         if (this.position != position || convertView == null)
         {
@@ -72,11 +72,13 @@ public class MenuAdapter extends ArrayAdapter<MenuItem>
 
             MenuItem item = objects.get(position);
 
-            convertView = inflater.inflate((item.getCls() == null && !item.getTitle().equals(context.getString(
-                    R.string.title_log_out))) && !item.getTitle().equals(context.getString(
-                    R.string.title_rate_intencity)) ? headerResId : listItemResId, parent, false);
+            int resourceId = (item.getCls() == null &&
+                              !item.getTitle().equals(context.getString(R.string.title_log_out))) &&
+                              !item.getTitle().equals(context.getString(R.string.title_rate_intencity)) ? headerResId : listItemResId;
 
-            holder.title = (TextView) convertView.findViewById(R.id.text_view);
+            convertView = inflater.inflate(resourceId, parent, false);
+
+            holder.title = (TextView) convertView.findViewById(resourceId == HEADER_RES_ID ? R.id.text_view_header : R.id.text_view);
             holder.title.setText(item.getTitle());
 
             convertView.setTag(holder);

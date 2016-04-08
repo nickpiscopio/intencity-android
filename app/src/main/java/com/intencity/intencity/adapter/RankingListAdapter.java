@@ -122,8 +122,7 @@ public class RankingListAdapter extends ArrayAdapter<User>
                     @Override
                     public void onImageRetrievalFailed()
                     {
-                        holder.profilePic.setImageDrawable(
-                                ContextCompat.getDrawable(context, R.mipmap.default_profile_picture));
+                        holder.profilePic.setImageDrawable(ContextCompat.getDrawable(context, R.mipmap.default_profile_picture));
                     }
 
                     @Override

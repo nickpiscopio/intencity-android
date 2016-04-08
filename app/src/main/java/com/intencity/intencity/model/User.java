@@ -73,7 +73,7 @@ public class User implements Parcelable
         if (bmp != null)
         {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 70, stream);
             byte[] bytes = stream.toByteArray();
 
             dest.writeInt(bytes.length);

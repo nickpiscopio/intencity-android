@@ -79,8 +79,7 @@ public class MenuActivity extends AppCompatActivity
             menuItems.add(new MenuItem(getString(R.string.title_delete_account), DeleteAccountActivity.class));
         }
 
-        MenuAdapter settingsAdapter =
-                new MenuAdapter(this, R.layout.list_item_header, R.layout.list_item_standard, menuItems);
+        MenuAdapter settingsAdapter = new MenuAdapter(this, R.layout.list_item_header, R.layout.list_item_standard, menuItems);
 
         ListView listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(settingsAdapter);

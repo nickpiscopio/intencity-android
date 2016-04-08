@@ -135,8 +135,8 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
         ListView directionsListView = (ListView) findViewById(R.id.list_view_directions);
 
         // Populates the directions list.
-        DirectionListAdapter menuAdapter = new DirectionListAdapter(getApplicationContext(), directions);
-        directionsListView.setAdapter(menuAdapter);
+        DirectionListAdapter adapter = new DirectionListAdapter(getApplicationContext(), directions);
+        directionsListView.setAdapter(adapter);
 
         TextView submittedByTextView = (TextView) findViewById(R.id.text_view_submitted_by);
         submittedByTextView.setText(getResources().getString(R.string.submitted_by, submittedBy));
