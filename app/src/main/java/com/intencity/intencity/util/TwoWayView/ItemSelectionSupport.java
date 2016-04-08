@@ -339,8 +339,6 @@ public class ItemSelectionSupport
         mCheckedStates = state.getParcelable(STATE_KEY_CHECKED_STATES);
         mCheckedIdStates = state.getParcelable(STATE_KEY_CHECKED_ID_STATES);
         mCheckedCount = state.getInt(STATE_KEY_CHECKED_COUNT);
-
-        // TODO confirm ids here
     }
 
     public static ItemSelectionSupport addTo(RecyclerView recyclerView) {
@@ -348,8 +346,6 @@ public class ItemSelectionSupport
         if (itemSelectionSupport == null) {
             itemSelectionSupport = new ItemSelectionSupport(recyclerView);
             recyclerView.setTag(R.id.twowayview_item_selection_support, itemSelectionSupport);
-        } else {
-            // TODO: Log warning
         }
 
         return itemSelectionSupport;
@@ -358,7 +354,6 @@ public class ItemSelectionSupport
     public static void removeFrom(RecyclerView recyclerView) {
         final ItemSelectionSupport itemSelection = from(recyclerView);
         if (itemSelection == null) {
-            // TODO: Log warning
             return;
         }
 

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class MenuAdapter extends ArrayAdapter<MenuItem>
 {
     private final int HEADER_RES_ID = R.layout.list_item_header;
-    
+
     private Context context;
 
     private int headerResId;
