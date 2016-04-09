@@ -50,6 +50,8 @@ public class ProfileActivity extends AppCompatActivity
 
     private TwoWayView recyclerView;
 
+    private TextView emptyListTextView;
+
     private boolean profileIsCurrentUser;
     private User user;
 
@@ -93,6 +95,8 @@ public class ProfileActivity extends AppCompatActivity
                 String.valueOf(user.getEarnedPoints()));
 
         ImageView profilePic = (ImageView) findViewById(R.id.profile_pic);
+
+        emptyListTextView = (TextView) findViewById(R.id.empty_list);
 
         addRemoveButton = (ImageButton) findViewById(R.id.button_add_remove);
         addRemoveButton.setOnClickListener(addRemoveClickListener);
@@ -176,9 +180,23 @@ public class ProfileActivity extends AppCompatActivity
         addRemoveButton.setImageDrawable(drawable);
     }
 
+    /**
+     * Updates the activity list view.
+     */
     private void updateListView()
     {
-        adapter.notifyDataSetChanged();
+        if (profileSections.isEmpty())
+        {
+            emptyListTextView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
+        else
+        {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListTextView.setVisibility(View.GONE);
+
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private View.OnClickListener addRemoveClickListener = new View.OnClickListener()
@@ -227,10 +245,10 @@ public class ProfileActivity extends AppCompatActivity
                 }
 
                 profileSections.addAll(0, awardSection);
-
-                updateListView();
             }
             catch (Exception e) { }
+
+            updateListView();
         }
 
         @Override
@@ -260,10 +278,10 @@ public class ProfileActivity extends AppCompatActivity
                 }
 
                 profileSections.addAll(lastWeekRoutines);
-
-                updateListView();
             }
             catch (Exception e) { }
+
+            updateListView();
         }
 
         @Override

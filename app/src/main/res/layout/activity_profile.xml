@@ -109,4 +109,14 @@
         app:twowayview_numColumns="5"
         app:twowayview_numRows="1"/>
 
+    <TextView
+        android:id="@+id/empty_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/secondary_dark"
+        android:padding="@dimen/layout_margin"
+        android:gravity="center_horizontal"
+        android:text="@string/empty_profile_awards"
+        android:visibility="gone"/>
+
 </LinearLayout>
