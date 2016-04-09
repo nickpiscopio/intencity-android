@@ -57,14 +57,19 @@ public class Constant
     public static final int REQUEST_CODE_STAT = 10;
     public static final int REQUEST_CODE_SEARCH = 20;
     public static final int REQUEST_CODE_PROFILE = 30;
-    public static final int REQUEST_CODE_TWEET = 40;
-    public static final int REQUEST_CODE_LOG_OUT = 50;
+    public static final int REQUEST_CODE_OPEN_IMAGE = 40;
+    public static final int REQUEST_CODE_CAPTURE_IMAGE = 50;
+    public static final int REQUEST_CODE_TWEET = 60;
+    public static final int REQUEST_CODE_LOG_OUT = 70;
 
     // Fragment IDs
     public static final int ID_FRAGMENT_EXERCISE_LIST = 1;
 
     // Extras
     public static final String EXTRA_DEMO_PAGE = "com.intencity.intencity.extra.demo.page";
+
+    // Android bundles
+    public static final String BUNDLE_DATA = "data";
 
     // Bundles
     public static final String BUNDLE_SEARCH_EXERCISES = "com.intencity.intencity.bundle.search.exercises";
@@ -100,6 +105,7 @@ public class Constant
     public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
     public static final String SERVICE_UPDATE_EQUIPMENT = SERVICE_FOLDER_MOBILE + "update_equipment.php";
     public static final String SERVICE_UPDATE_EXERCISE_PRIORITY = SERVICE_FOLDER_MOBILE + "update_exercise_priority.php";
+    public static final String SERVICE_UPLOAD_PROFILE_PIC = SERVICE_FOLDER_MOBILE + "upload_image.php";
     public static final String SERVICE_CHANGE_PASSWORD = SERVICE_FOLDER_MOBILE + "change_password.php";
     public static final String SERVICE_FORGOT_PASSWORD = SERVICE_FOLDER + "forgot_password.php";
 

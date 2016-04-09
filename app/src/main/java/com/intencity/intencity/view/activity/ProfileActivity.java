@@ -5,23 +5,30 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ProfileAdapter;
+import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.ProfileRow;
 import com.intencity.intencity.model.User;
+import com.intencity.intencity.notification.CustomDialog;
+import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
+import com.intencity.intencity.task.UploadImageTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.TwoWayView.TwoWayView;
 import com.intencity.intencity.util.Util;
@@ -29,6 +36,7 @@ import com.intencity.intencity.util.Util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -36,7 +44,7 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 4/5/15.
  */
-public class ProfileActivity extends AppCompatActivity
+public class ProfileActivity extends AppCompatActivity implements DialogListener
 {
     private enum FollowState
     {
@@ -46,7 +54,8 @@ public class ProfileActivity extends AppCompatActivity
 
     private FollowState followState;
 
-    private ImageButton addRemoveButton;
+    private FloatingActionButton camera;
+    private FloatingActionButton addRemoveButton;
 
     private TwoWayView recyclerView;
 
@@ -98,7 +107,10 @@ public class ProfileActivity extends AppCompatActivity
 
         emptyListTextView = (TextView) findViewById(R.id.empty_list);
 
-        addRemoveButton = (ImageButton) findViewById(R.id.button_add_remove);
+        camera = (FloatingActionButton) findViewById(R.id.camera);
+        camera.setOnClickListener(cameraClickListener);
+
+        addRemoveButton = (FloatingActionButton) findViewById(R.id.button_add_remove);
         addRemoveButton.setOnClickListener(addRemoveClickListener);
 
         originalFollowId = user.getFollowingId();
@@ -117,7 +129,7 @@ public class ProfileActivity extends AppCompatActivity
         }
         else
         {
-            //TODO: NEED TO ADD CAMERA HERE.
+            camera.setVisibility(View.VISIBLE);
 
             // Remove add/remove button because a user cannot follow or unfollow him or herself.
             addRemoveButton.setVisibility(View.GONE);
@@ -199,9 +211,23 @@ public class ProfileActivity extends AppCompatActivity
         }
     }
 
+    private View.OnClickListener cameraClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            CustomDialogContent content = new CustomDialogContent(context.getString(R.string.profile_pic_dialog_title), context.getString(R.string.profile_pic_dialog_message), true);
+            content.setNegativeButtonStringRes(R.string.profile_pic_dialog_pictures_button);
+            content.setPositiveButtonStringRes(R.string.profile_pic_dialog_camera_button);
+
+            new CustomDialog(ProfileActivity.this, ProfileActivity.this, content, true);
+        }
+    };
+
     private View.OnClickListener addRemoveClickListener = new View.OnClickListener()
     {
-        @Override public void onClick(View v)
+        @Override
+        public void onClick(View v)
         {
             if (followState == FollowState.FOLLOWING)
             {
@@ -288,7 +314,74 @@ public class ProfileActivity extends AppCompatActivity
         public void onRetrievalFailed() { }
     };
 
-    @Override public void onBackPressed()
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK)
+        {
+            Bitmap bitmap = null;
+
+            if (requestCode == Constant.REQUEST_CODE_OPEN_IMAGE)
+            {
+                Uri imageUri = data.getData();
+
+                try
+                {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+
+                    Log.i(Constant.TAG, "Opened image: " + bitmap);
+                }
+                catch (IOException e)
+                {
+                    Log.e(Constant.TAG, "Couldn't retrieve image.");
+                }
+            }
+            else if (requestCode == Constant.REQUEST_CODE_CAPTURE_IMAGE)
+            {
+                Bundle extras = data.getExtras();
+                // This bundle seems to be set by the Android camera.
+                bitmap = (Bitmap) extras.get(Constant.BUNDLE_DATA);
+
+                Log.i(Constant.TAG, "Captured image: " + bitmap);
+            }
+
+            // Start the task to save the image to the web server.
+            new UploadImageTask(null, bitmap, user.getId()).execute();
+        }
+    }
+
+    @Override
+    public void onButtonPressed(int which)
+    {
+        Intent intent = new Intent();
+        int result = 0;
+
+        switch (which)
+        {
+            // Opens the photos.
+            case Constant.NEGATIVE_BUTTON:
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                result = Constant.REQUEST_CODE_OPEN_IMAGE;
+                break;
+
+            // Opens the camera
+            case Constant.POSITIVE_BUTTON:
+                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                result = Constant.REQUEST_CODE_CAPTURE_IMAGE;
+                break;
+
+            default:
+                break;
+        }
+
+        startActivityForResult(intent, result);
+    }
+
+    @Override
+    public void onBackPressed()
     {
         int followId = user.getFollowingId();
 

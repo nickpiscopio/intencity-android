@@ -20,7 +20,7 @@ import java.net.URL;
  */
 public class ServiceTask extends AsyncTask<String, Void, String>
 {
-    private final String FAILURE = "FAILURE";
+    public static final String FAILURE = "FAILURE";
 
     private ServiceListener serviceListener;
 
