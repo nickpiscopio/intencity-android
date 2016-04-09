@@ -6,10 +6,10 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.intencity.intencity.listener.ImageListener;
+import com.intencity.intencity.util.BitmapUtil;
 import com.intencity.intencity.util.Constant;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -54,10 +54,7 @@ public class UploadImageTask extends AsyncTask<Void, Void, String>
     {
         String response = null;
 
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 70, stream);
-
-        String encodedImage = Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT);
+        String encodedImage = Base64.encodeToString(new BitmapUtil().compressBitmap(image), Base64.DEFAULT);
 
         Map<String,String> dataToSend = new HashMap<>();
         dataToSend.put("image", encodedImage);

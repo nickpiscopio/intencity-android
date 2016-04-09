@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.ByteArrayOutputStream;
+import com.intencity.intencity.util.BitmapUtil;
 
 /**
  * The model class for User.
@@ -72,9 +72,7 @@ public class User implements Parcelable
 
         if (bmp != null)
         {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG, 70, stream);
-            byte[] bytes = stream.toByteArray();
+            byte[] bytes = new BitmapUtil().compressBitmap(bmp);
 
             dest.writeInt(bytes.length);
             dest.writeByteArray(bytes);
