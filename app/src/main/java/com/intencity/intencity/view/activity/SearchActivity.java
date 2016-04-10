@@ -195,6 +195,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             User user  = users.get(position);
 
             Intent intent = new Intent(context, ProfileActivity.class);
+            intent.putExtra(Constant.BUNDLE_FROM_SEARCH, true);
             intent.putExtra(Constant.BUNDLE_POSITION, position);
             intent.putExtra(Constant.BUNDLE_USER, user);
 

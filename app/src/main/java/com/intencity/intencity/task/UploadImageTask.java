@@ -3,7 +3,6 @@ package com.intencity.intencity.task;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Base64;
-import android.util.Log;
 
 import com.intencity.intencity.listener.ImageListener;
 import com.intencity.intencity.util.BitmapUtil;
@@ -60,49 +59,48 @@ public class UploadImageTask extends AsyncTask<Void, Void, String>
         dataToSend.put("image", encodedImage);
         dataToSend.put("id", String.valueOf(userId));
 
-        //Encoded String - we will have to encode string by our custom method (Very easy)
+        // Encoded String - we will have to encode string by our custom method (Very easy)
         String encodedStr = getEncodedData(dataToSend);
 
-        //Will be used if we want to read some data from server
+        // Will be used if we want to read some data from server
         BufferedReader reader = null;
 
-        //Connection Handling
         try
         {
-            //Converting address String to URL
             URL url = new URL(Constant.SERVICE_UPLOAD_PROFILE_PIC);
-            //Opening the connection (Not setting or using CONNECTION_TIMEOUT)
+
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            //Post Method
             conn.setRequestMethod("POST");
-            //To enable inputting values using POST method
-            //(Basically, after this we can write the dataToSend to the body of POST method)
+            // To enable inputting values using POST method
+            // (Basically, after this we can write the dataToSend to the body of POST method)
             conn.setDoOutput(true);
             OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-            //Writing dataToSend to outputstreamwriter
             writer.write(encodedStr);
-            //Sending the data to the server - This much is enough to send data to server
-            //But to read the response of the server, you will have to implement the procedure below
             writer.flush();
 
             InputStreamReader isr = new InputStreamReader(conn.getInputStream());
             reader = new BufferedReader(isr);
 
             // Response from server after login process will be stored in response variable.
-            response = reader.readLine();//Saving complete data received in string, you can do it differently
-
-            Log.i(Constant.TAG, "UploadImageTask response: " + response);
-
-        } catch (Exception e) {
+            response = reader.readLine(); // Saving complete data received in string, you can do it differently
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
 
             success = false;
-        } finally {
-            if(reader != null) {
-                try {
-                    reader.close();     //Closing the
-                } catch (IOException e) {
+        }
+        finally
+        {
+            if (reader != null)
+            {
+                try
+                {
+                    reader.close();
+                }
+                catch (IOException e)
+                {
                     e.printStackTrace();
                 }
             }
@@ -118,30 +116,45 @@ public class UploadImageTask extends AsyncTask<Void, Void, String>
         {
             if (success && result.length() > 0 && !result.replaceAll("\"", "").equalsIgnoreCase(ServiceTask.FAILURE))
             {
-                // call succcessful
-            }
-            else
-            {
-                // call failure
+                listener.onImageRetrieved(image);
             }
         }
     }
 
-    private String getEncodedData(Map<String,String> data) {
+    /**
+     * Encodes the data that is sent to the server.
+     *
+     * @param data  The data to encode.
+     *
+     * @return  The String of encoded data.
+     */
+    private String getEncodedData(Map<String,String> data)
+    {
         StringBuilder sb = new StringBuilder();
-        for(String key : data.keySet()) {
+
+        for(String key : data.keySet())
+        {
             String value = null;
-            try {
+
+            int stringLength = sb.length();
+
+            try
+            {
                 value = URLEncoder.encode(data.get(key), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
+            }
+            catch (UnsupportedEncodingException e)
+            {
                 e.printStackTrace();
             }
 
-            if(sb.length()>0)
+            if(stringLength > 0)
+            {
                 sb.append("&");
+            }
 
             sb.append(key + "=" + value);
         }
+
         return sb.toString();
     }
 }

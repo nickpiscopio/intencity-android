@@ -3,6 +3,7 @@ package com.intencity.intencity.view.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -170,7 +171,22 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
 
         if(resultCode == Constant.REQUEST_CODE_SEARCH || resultCode == Constant.REQUEST_CODE_PROFILE)
         {
-            getFollowing();
+            if (resultCode == Constant.REQUEST_CODE_PROFILE && data != null)
+            {
+                Bundle bundle = data.getExtras();
+
+                int userIndex = bundle.getInt(Constant.BUNDLE_POSITION);
+                byte[] profilePicBytes = bundle.getByteArray(Constant.BUNDLE_PROFILE_PIC);
+                Bitmap bmp = BitmapFactory.decodeByteArray(profilePicBytes, 0, profilePicBytes.length);
+
+                users.get(userIndex).setBmp(bmp);
+
+                populateRankingList();
+            }
+            else
+            {
+                getFollowing();
+            }
         }
     }
 
@@ -215,6 +231,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
             User user  = users.get(position);
 
             Intent intent = new Intent(context, ProfileActivity.class);
+            intent.putExtra(Constant.BUNDLE_POSITION, position);
             intent.putExtra(Constant.BUNDLE_USER, user);
             intent.putExtra(Constant.BUNDLE_PROFILE_IS_USER, user.getFollowingId() < 0);
 

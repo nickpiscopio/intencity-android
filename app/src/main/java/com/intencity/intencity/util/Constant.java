@@ -87,7 +87,9 @@ public class Constant
     public static final String BUNDLE_EXERCISE_SKIPPED = "com.intencity.intencity.exercise.skipped";
     public static final String BUNDLE_POSITION = "com.intencity.intencity.bundle.position";
     public static final String BUNDLE_USER = "com.intencity.intencity.user";
+    public static final String BUNDLE_FROM_SEARCH = "com.intencity.intencity.coming.from.search";
     public static final String BUNDLE_PROFILE_IS_USER = "com.intencity.intencity.profile.is.user";
+    public static final String BUNDLE_PROFILE_PIC = "com.intencity.intencity.profile.pic";
     public static final String BUNDLE_FOLLOW_ID = "com.intencity.intencity.bundle.follow.id";
 
     // Service Endpoint

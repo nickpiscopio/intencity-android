@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ProfileAdapter;
 import com.intencity.intencity.listener.DialogListener;
+import com.intencity.intencity.listener.ImageListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.ProfileRow;
 import com.intencity.intencity.model.User;
@@ -30,6 +32,7 @@ import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.task.UploadImageTask;
+import com.intencity.intencity.util.BitmapUtil;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.TwoWayView.TwoWayView;
 import com.intencity.intencity.util.Util;
@@ -45,7 +48,7 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 4/5/15.
  */
-public class ProfileActivity extends AppCompatActivity implements DialogListener
+public class ProfileActivity extends AppCompatActivity implements DialogListener, ImageListener
 {
     private enum FollowState
     {
@@ -55,6 +58,8 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
 
     private FollowState followState;
 
+    private ImageView profilePic;
+
     private FloatingActionButton camera;
     private FloatingActionButton addRemoveButton;
 
@@ -62,7 +67,10 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
 
     private TextView emptyListTextView;
 
+    private boolean fromSearch;
     private boolean profileIsCurrentUser;
+    private boolean updatedProfilePic = false;
+
     private User user;
 
     private int index;
@@ -96,6 +104,7 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         context = getApplicationContext();
 
         Bundle bundle = getIntent().getExtras();
+        fromSearch = bundle.getBoolean(Constant.BUNDLE_FROM_SEARCH, false);
         index = bundle.getInt(Constant.BUNDLE_POSITION, (int)Constant.CODE_FAILED);
         user = bundle.getParcelable(Constant.BUNDLE_USER);
         profileIsCurrentUser = bundle.getBoolean(Constant.BUNDLE_PROFILE_IS_USER, false);
@@ -104,7 +113,7 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         ((TextView)findViewById(R.id.text_view_points)).setText(
                 String.valueOf(user.getEarnedPoints()));
 
-        ImageView profilePic = (ImageView) findViewById(R.id.profile_pic);
+        profilePic = (ImageView) findViewById(R.id.profile_pic);
 
         emptyListTextView = (TextView) findViewById(R.id.empty_list);
 
@@ -326,6 +335,20 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
     };
 
     @Override
+    public void onImageRetrieved(Bitmap bmp)
+    {
+        profilePic.setImageBitmap(bmp);
+
+        updatedProfilePic = true;
+    }
+
+    @Override
+    public void onImageRetrievalFailed() { }
+
+    @Override
+    public void setImageResource(int index, Bitmap bmp, boolean newlyUploaded) { }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -359,7 +382,7 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
             }
 
             // Start the task to save the image to the web server.
-            new UploadImageTask(null, bitmap, user.getId()).execute();
+            new UploadImageTask(this, bitmap, user.getId()).execute();
         }
     }
 
@@ -417,7 +440,7 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
             // which we don't need to reset the followId because we reset the followers on back press.
             Intent intent = null;
 
-            if (index >= 0)
+            if (fromSearch)
             {
                 // Send the followId back to the search,
                 // so the add/remove button isn't reset if the user clicks on the same user.
@@ -425,6 +448,16 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
                 intent.putExtra(Constant.BUNDLE_POSITION, index);
                 intent.putExtra(Constant.BUNDLE_FOLLOW_ID, user.getFollowingId());
             }
+
+            setResult(Constant.REQUEST_CODE_PROFILE, intent);
+        }
+        else if (updatedProfilePic)
+        {
+            Bitmap bitmap = ((BitmapDrawable)profilePic.getDrawable()).getBitmap();
+
+            Intent intent = new Intent();
+            intent.putExtra(Constant.BUNDLE_POSITION, index);
+            intent.putExtra(Constant.BUNDLE_PROFILE_PIC, new BitmapUtil().compressBitmap(bitmap));
 
             setResult(Constant.REQUEST_CODE_PROFILE, intent);
         }

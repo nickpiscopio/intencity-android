@@ -2,6 +2,7 @@ package com.intencity.intencity.util;
 
 import android.graphics.Bitmap;
 import android.support.v4.graphics.BitmapCompat;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 
@@ -12,24 +13,38 @@ import java.io.ByteArrayOutputStream;
  */
 public class BitmapUtil
 {
-    private final int MAX_BITMAP_THRESHOLD = 1000000;
-
+    private final int MAX_BITMAP_THRESHOLD = 12840000;
     private final int IMAGE_COMPRESSION_QUALITY_MAX = 100;
-
-    // This value needs to compress the image to be less than 1MB.
-    private final int IMAGE_COMPRESSION_QUALITY_COMPRESSED = 70;
 
     public byte[] compressBitmap(Bitmap bitmap)
     {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-        bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapExceedsThreshold(bitmap) ? IMAGE_COMPRESSION_QUALITY_COMPRESSED : IMAGE_COMPRESSION_QUALITY_MAX, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, getBitmapCompressionQuality(bitmap), stream);
+
+        Log.i (Constant.TAG, "New image size: " + stream.toByteArray().length);
 
         return stream.toByteArray();
     }
 
-    public boolean bitmapExceedsThreshold(Bitmap bitmap)
+    public int getBitmapCompressionQuality(Bitmap bitmap)
     {
-        return BitmapCompat.getAllocationByteCount(bitmap) > MAX_BITMAP_THRESHOLD;
+        int quality = IMAGE_COMPRESSION_QUALITY_MAX;
+        int size = getBitmapSize(bitmap);
+        if (size > MAX_BITMAP_THRESHOLD)
+        {
+            float newQuality =  ((float)MAX_BITMAP_THRESHOLD / (float)size) * 100;
+            quality = (int)newQuality;
+        }
+
+        Log.i (Constant.TAG, "Image size: " + size);
+        Log.i (Constant.TAG, "quality: " + quality);
+
+        return quality;
+    }
+
+    public int getBitmapSize(Bitmap bitmap)
+    {
+        return BitmapCompat.getAllocationByteCount(bitmap);
     }
 }

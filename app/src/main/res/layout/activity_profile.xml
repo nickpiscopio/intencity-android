@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/layout_margin"
                 android:src="@mipmap/camera"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/button_add_remove"
