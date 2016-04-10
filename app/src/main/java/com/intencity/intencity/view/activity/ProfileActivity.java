@@ -2,6 +2,7 @@ package com.intencity.intencity.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -216,11 +217,21 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         @Override
         public void onClick(View v)
         {
-            CustomDialogContent content = new CustomDialogContent(context.getString(R.string.profile_pic_dialog_title), context.getString(R.string.profile_pic_dialog_message), true);
-            content.setNegativeButtonStringRes(R.string.profile_pic_dialog_pictures_button);
-            content.setPositiveButtonStringRes(R.string.profile_pic_dialog_camera_button);
+            PackageManager pm = context.getPackageManager();
 
-            new CustomDialog(ProfileActivity.this, ProfileActivity.this, content, true);
+            if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA))
+            {
+                CustomDialogContent content = new CustomDialogContent(context.getString(R.string.profile_pic_dialog_title), context.getString(R.string.profile_pic_dialog_message), true);
+                content.setNegativeButtonStringRes(R.string.profile_pic_dialog_pictures_button);
+                content.setPositiveButtonStringRes(R.string.profile_pic_dialog_camera_button);
+
+                new CustomDialog(ProfileActivity.this, ProfileActivity.this, content, true);
+            }
+            else
+            {
+                // We are opening the photos because the user doesn't have a camera.
+                onButtonPressed(Constant.NEGATIVE_BUTTON);
+            }
         }
     };
 
