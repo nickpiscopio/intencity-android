@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -32,14 +32,15 @@ import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.task.UploadImageTask;
-import com.intencity.intencity.util.BitmapUtil;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.TwoWayView.TwoWayView;
 import com.intencity.intencity.util.Util;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -126,13 +127,6 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         originalFollowId = user.getFollowingId();
         userId = user.getId();
 
-        Bitmap savedProfilePic = user.getBmp();
-
-        if (savedProfilePic != null)
-        {
-            profilePic.setImageBitmap(savedProfilePic);
-        }
-
         if (!profileIsCurrentUser)
         {
             followState = originalFollowId > 0 ? FollowState.FOLLOWING : FollowState.NOT_FOLLOWING;
@@ -164,6 +158,15 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         adapter = new ProfileAdapter(context, profileSections);
 
         recyclerView.setAdapter(adapter);
+
+        File savedProfilePic = ImageLoader.getInstance().getDiskCache().get(Constant.UPLOAD_FOLDER + user.getId() + Constant.USER_PROFILE_PIC_NAME);
+
+        Bitmap bitmap = BitmapFactory.decodeFile(savedProfilePic.getAbsolutePath());
+
+        if (bitmap != null)
+        {
+            profilePic.setImageBitmap(bitmap);
+        }
     }
 
     @Override
@@ -343,12 +346,6 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
     }
 
     @Override
-    public void onImageRetrievalFailed() { }
-
-    @Override
-    public void setImageResource(int index, Bitmap bmp, boolean newlyUploaded) { }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -453,11 +450,8 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         }
         else if (updatedProfilePic)
         {
-            Bitmap bitmap = ((BitmapDrawable)profilePic.getDrawable()).getBitmap();
-
             Intent intent = new Intent();
             intent.putExtra(Constant.BUNDLE_POSITION, index);
-            intent.putExtra(Constant.BUNDLE_PROFILE_PIC, new BitmapUtil().compressBitmap(bitmap));
 
             setResult(Constant.REQUEST_CODE_PROFILE, intent);
         }

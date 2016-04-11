@@ -52,7 +52,6 @@ public class UploadImageTask extends AsyncTask<Void, Void, String>
     protected String doInBackground(Void... params)
     {
         String response = null;
-
         String encodedImage = Base64.encodeToString(new BitmapUtil().compressBitmap(image), Base64.DEFAULT);
 
         Map<String,String> dataToSend = new HashMap<>();

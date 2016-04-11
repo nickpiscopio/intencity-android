@@ -89,7 +89,6 @@ public class Constant
     public static final String BUNDLE_USER = "com.intencity.intencity.user";
     public static final String BUNDLE_FROM_SEARCH = "com.intencity.intencity.coming.from.search";
     public static final String BUNDLE_PROFILE_IS_USER = "com.intencity.intencity.profile.is.user";
-    public static final String BUNDLE_PROFILE_PIC = "com.intencity.intencity.profile.pic";
     public static final String BUNDLE_FOLLOW_ID = "com.intencity.intencity.bundle.follow.id";
 
     // Service Endpoint
@@ -98,6 +97,8 @@ public class Constant
     public static final String UPLOAD_FOLDER = ENDPOINT + BUILD_TYPE + "uploads/";
     private static final String SERVICE_FOLDER = ENDPOINT + BUILD_TYPE + "services/";
     private static final String SERVICE_FOLDER_MOBILE = SERVICE_FOLDER + "mobile/";
+
+    public static final String USER_PROFILE_PIC_NAME = "/user-profile.jpg";
 
     // Services
     public static final String SERVICE_VALIDATE_USER_CREDENTIALS = SERVICE_FOLDER_MOBILE + "user_credentials.php";

@@ -13,7 +13,7 @@ import java.io.ByteArrayOutputStream;
  */
 public class BitmapUtil
 {
-    private final int MAX_BITMAP_THRESHOLD = 12840000;
+    private final int MAX_BITMAP_THRESHOLD = 8000000;
     private final int IMAGE_COMPRESSION_QUALITY_MAX = 100;
 
     public byte[] compressBitmap(Bitmap bitmap)

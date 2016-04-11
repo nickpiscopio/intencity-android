@@ -2,8 +2,6 @@ package com.intencity.intencity.view.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,7 +17,6 @@ import android.widget.Toast;
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RankingListAdapter;
 import com.intencity.intencity.helper.doa.UserDao;
-import com.intencity.intencity.listener.ImageListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.User;
 import com.intencity.intencity.task.ServiceTask;
@@ -27,6 +24,10 @@ import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.view.activity.ProfileActivity;
 import com.intencity.intencity.view.activity.SearchActivity;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.utils.DiskCacheUtils;
+import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,8 +40,7 @@ import java.util.TimeZone;
  *
  * Created by Nick Piscopio on 12/12/15.
  */
-public class RankingFragment extends android.support.v4.app.Fragment implements ServiceListener,
-                                                                                ImageListener
+public class RankingFragment extends android.support.v4.app.Fragment implements ServiceListener
 {
     private Context context;
 
@@ -57,6 +57,8 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
     private ArrayList<User> users;
 
     private RankingListAdapter arrayAdapter;
+
+    private ImageLoader imageLoaderInstance;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -83,6 +85,10 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
         users = new ArrayList<>();
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context).build();
+        imageLoaderInstance = ImageLoader.getInstance();
+        imageLoaderInstance.init(config);
 
         getFollowing();
 
@@ -176,10 +182,13 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
                 Bundle bundle = data.getExtras();
 
                 int userIndex = bundle.getInt(Constant.BUNDLE_POSITION);
-                byte[] profilePicBytes = bundle.getByteArray(Constant.BUNDLE_PROFILE_PIC);
-                Bitmap bmp = BitmapFactory.decodeByteArray(profilePicBytes, 0, profilePicBytes.length);
 
-                users.get(userIndex).setBmp(bmp);
+                User user = users.get(userIndex);
+
+                String path = Constant.UPLOAD_FOLDER + user.getId() + Constant.USER_PROFILE_PIC_NAME;
+
+                MemoryCacheUtils.removeFromCache(path, imageLoaderInstance.getMemoryCache());
+                DiskCacheUtils.removeFromCache(path, imageLoaderInstance.getDiskCache());
 
                 populateRankingList();
             }
@@ -195,7 +204,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
      */
     private void populateRankingList()
     {
-        arrayAdapter = new RankingListAdapter(context, this, R.layout.list_item_ranking, users, false);
+        arrayAdapter = new RankingListAdapter(context, R.layout.list_item_ranking, users, false);
         ranking.setAdapter(arrayAdapter);
 
         // The size will be 1 if there are no followers because
@@ -238,16 +247,4 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
             startActivityForResult(intent, Constant.REQUEST_CODE_PROFILE);
         }
     };
-
-    @Override
-    public void onImageRetrieved(Bitmap bmp){ }
-
-    @Override
-    public void onImageRetrievalFailed() { }
-
-    @Override
-    public void setImageResource(int index, Bitmap bmp, boolean newlyUploaded)
-    {
-        users.get(index).setBmp(bmp);
-    }
 }
