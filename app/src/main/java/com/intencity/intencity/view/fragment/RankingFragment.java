@@ -89,9 +89,9 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context).build();
         imageLoaderInstance = ImageLoader.getInstance();
         imageLoaderInstance.init(config);
+        imageLoaderInstance.clearDiskCache();
 
         getFollowing();
-
         return view;
     }
 
