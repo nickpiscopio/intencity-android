@@ -358,13 +358,29 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     /**
      * Adds an exercise to the list of exercises the user has completed
-     * as well as the total exercises from the web server.
+     * as well as the total exercises from the web server as well as removing
+     * an exercise with the same name if it exists.
      *
      * @param exercise  The exercise to add.
      */
     public void addExerciseToList(Exercise exercise)
     {
+        String exerciseName = exercise.getName();
+
+        int totalExercises = allExercises.size();
+
+        for (int i = autoFillTo; i < totalExercises; i++)
+        {
+            if (allExercises.get(i).getName().equals(exerciseName))
+            {
+                allExercises.remove(i);
+
+                break;
+            }
+        }
+
         allExercises.add(autoFillTo, exercise);
+
         addExercise(true);
     }
 
