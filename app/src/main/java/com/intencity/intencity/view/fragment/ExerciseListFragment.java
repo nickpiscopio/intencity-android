@@ -418,9 +418,12 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             updateRoutineName(--completedExerciseNum);
         }
 
-        // Add that the user has skipped an exercise.
-        // Can't get the Kept Swimming badge.
-        setExerciseSkipped(true);
+        if (!fromSearch)
+        {
+            // Add that the user has skipped an exercise.
+            // Can't get the Kept Swimming badge.
+            setExerciseSkipped(true);
+        }
     }
 
     /**
