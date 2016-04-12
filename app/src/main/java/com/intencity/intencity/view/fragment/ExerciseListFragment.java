@@ -412,82 +412,15 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         else
         {
             autoFillTo--;
-        }
-    }
 
-    /**
-     * Hides an exercise.
-     *
-     * @param forever   Boolean whether to hide the exercise forever or not.
-     */
-    private void hideExercise(boolean forever)
-    {
-        Exercise exerciseToRemove = currentExercises.get(position);
-        String exerciseName = exerciseToRemove.getName();
-
-        currentExercises.remove(exerciseToRemove);
-
-        // Only remove the exercise from allExercises if it is not a stretch.
-        if(!exerciseName.equalsIgnoreCase(stretchExerciseName))
-        {
-            allExercises.remove(exerciseToRemove);
-        }
-
-        autoFillTo--;
-        completedExerciseNum--;
-
-        // Remove 1 from the last position so we can see the animation
-        // for the next exercise that will be added.
-        adapter.setLastPosition(adapter.getLastPosition() - 1);
-
-        int currentExerciseSize = currentExercises.size();
-        if (exerciseName.equalsIgnoreCase(stretchExerciseName))
-        {
             updateTotalExercises();
 
-            updateRoutineName(completedExerciseNum);
-
-            adapter.notifyDataSetChanged();
-
-        }
-        else if (position <= currentExerciseSize)
-        {
-            updateTotalExercises();
-
-            if (currentExerciseSize != allExercises.size())
-            {
-                addExercise(false);
-            }
-            else
-            {
-                updateRoutineName(completedExerciseNum);
-
-                // If the last exercise is "Stretch" then we have completed the exercise,
-                // so any exercise removed at this point should notifyDataSetChanged().
-                if (currentExercises.get(currentExercises.size() - 1).getName().equalsIgnoreCase(stretchExerciseName))
-                {
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        }
-        else
-        {
-            adapter.notifyDataSetChanged();
+            updateRoutineName(--completedExerciseNum);
         }
 
         // Add that the user has skipped an exercise.
         // Can't get the Kept Swimming badge.
         setExerciseSkipped(true);
-
-        if (forever && !exerciseName.equals(warmUphExerciseName) && !exerciseName.equals(stretchExerciseName))
-        {
-            // Hide the exercise on the web server.
-            // The ServiceListener is null because we don't care if it reached the server.
-            // The worst that will happen is a user will have to hide the exercise again.
-            new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                          Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_EXCLUDE_EXERCISE,
-                                                                                     email, exerciseName));
-        }
     }
 
     /**
