@@ -92,6 +92,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         imageLoaderInstance.clearDiskCache();
 
         getFollowing();
+
         return view;
     }
 
