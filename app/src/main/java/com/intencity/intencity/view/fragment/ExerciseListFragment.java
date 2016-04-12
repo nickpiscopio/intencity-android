@@ -369,6 +369,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         int totalExercises = allExercises.size();
 
+        // TODO: This search will need to be updated better in case we have a lot of exercises.
+        // TODO: (continued) Either that, or we should only get so many exercises per workout.
         for (int i = autoFillTo; i < totalExercises; i++)
         {
             if (allExercises.get(i).getName().equals(exerciseName))

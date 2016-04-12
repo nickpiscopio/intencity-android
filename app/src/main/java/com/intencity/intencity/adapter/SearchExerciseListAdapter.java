@@ -116,7 +116,6 @@ public class SearchExerciseListAdapter extends ArrayAdapter<Exercise>
             }
         }
 
-
         return view;
     }
 }
