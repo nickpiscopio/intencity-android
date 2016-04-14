@@ -22,6 +22,7 @@ import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.ExercisePriorityUtil;
 import com.intencity.intencity.util.SecurePreferences;
 
 import org.json.JSONArray;
@@ -37,10 +38,6 @@ import java.util.ArrayList;
  */
 public class ExercisePriorityActivity extends AppCompatActivity implements ExercisePriorityListener
 {
-    public static final int PRIORITY_LIMIT_UPPER = 50;
-    public static final int PRIORITY_LIMIT_LOWER = 0;
-    public static final int INCREMENTAL_VALUE = 25;
-
     private LinearLayout description;
     private LinearLayout connectionIssue;
 
@@ -60,6 +57,8 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
     private Context context;
 
     private ArrayAdapter<String> adapter;
+
+    private ExercisePriorityUtil exercisePriorityUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -88,6 +87,8 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
 
         SecurePreferences securePreferences = new SecurePreferences(context);
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+
+        exercisePriorityUtil = new ExercisePriorityUtil();
 
         new ServiceTask(getExclusionService).execute(Constant.SERVICE_STORED_PROCEDURE,
                 Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EXERCISE_PRIORITIES, email));
@@ -238,14 +239,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
     @Override
     public void onSetExercisePriority(int position, int priority, boolean increment)
     {
-        if (priority < PRIORITY_LIMIT_UPPER && increment)
-        {
-            priority += INCREMENTAL_VALUE;
-        }
-        else if (priority >= PRIORITY_LIMIT_LOWER && !increment)
-        {
-            priority -= INCREMENTAL_VALUE;
-        }
+        priority = exercisePriorityUtil.getExercisePriority(priority, increment);
 
         exercisePriorities.set(position, String.valueOf(priority));
 

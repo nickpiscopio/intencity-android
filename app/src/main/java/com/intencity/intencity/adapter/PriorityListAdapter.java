@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.ExercisePriorityListener;
-import com.intencity.intencity.view.activity.ExercisePriorityActivity;
+import com.intencity.intencity.util.ExercisePriorityUtil;
 
 import java.util.ArrayList;
 
@@ -25,6 +25,7 @@ public class PriorityListAdapter extends ArrayAdapter<String>
     private String HIGH_PRIORITY;
     private String MEDIUM_PRIORITY;
     private String NORMAL_PRIORITY;
+    private String LOW_PRIORITY;
     private String HIDDEN;
 
     private Context context;
@@ -76,6 +77,7 @@ public class PriorityListAdapter extends ArrayAdapter<String>
         HIGH_PRIORITY = context.getString(R.string.high_priority);
         MEDIUM_PRIORITY = context.getString(R.string.medium_priority);
         NORMAL_PRIORITY = context.getString(R.string.normal_priority);
+        LOW_PRIORITY = context.getString(R.string.low_priority);
         HIDDEN = context.getString(R.string.hidden_exercise);
 
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -105,21 +107,28 @@ public class PriorityListAdapter extends ArrayAdapter<String>
 
             switch(priority)
             {
-                case ExercisePriorityActivity.PRIORITY_LIMIT_UPPER:
+                //40
+                case ExercisePriorityUtil.PRIORITY_LIMIT_UPPER:
                     holder.priority.setTextColor(ContextCompat.getColor(context, R.color.primary));
                     holder.priority.setText(HIGH_PRIORITY);
                     break;
-                case ExercisePriorityActivity.INCREMENTAL_VALUE:
-                    holder.priority.setTextColor(ContextCompat.getColor(context, R.color.secondary_dark));
+                // 30
+                case ExercisePriorityUtil.INCREMENTAL_VALUE * 3:
+                    holder.priority.setTextColor(ContextCompat.getColor(context, R.color.primary_dark));
                     holder.priority.setText(MEDIUM_PRIORITY);
                     break;
-                case ExercisePriorityActivity.PRIORITY_LIMIT_LOWER:
-                    holder.priority.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
+                // 20
+                case ExercisePriorityUtil.INCREMENTAL_VALUE * 2:
+                    holder.priority.setTextColor(ContextCompat.getColor(context, R.color.secondary_dark));
                     holder.priority.setText(NORMAL_PRIORITY);
                     break;
+                // 10
+                case ExercisePriorityUtil.INCREMENTAL_VALUE:
+                    holder.priority.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
+                    holder.priority.setText(LOW_PRIORITY);
+                    break;
                 default:
-                    holder.priority.setTextColor(
-                            ContextCompat.getColor(context, R.color.card_button_delete_select));
+                    holder.priority.setTextColor(ContextCompat.getColor(context, R.color.card_button_delete_select));
                     holder.priority.setText(HIDDEN);
                     break;
             }

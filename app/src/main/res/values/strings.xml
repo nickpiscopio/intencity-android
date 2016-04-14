@@ -177,6 +177,7 @@
     <string name="high_priority">HIGH PRIORITY</string>
     <string name="medium_priority">MEDIUM PRIORITY</string>
     <string name="normal_priority">NORMAL PRIORITY</string>
+    <string name="low_priority">LOW PRIORITY</string>
     <string name="hidden_exercise">EXERCISE HIDDEN</string>
     <string name="no_priorities">Priorities have not been set for any exercises.</string>
 
