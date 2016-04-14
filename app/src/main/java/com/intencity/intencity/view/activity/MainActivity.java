@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -15,8 +16,6 @@ import android.view.MenuItem;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ViewPagerAdapter;
-import com.intencity.intencity.view.fragment.FitnessLogFragment;
-import com.intencity.intencity.view.fragment.RankingFragment;
 import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ExerciseListListener;
@@ -26,6 +25,8 @@ import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
+import com.intencity.intencity.view.fragment.FitnessLogFragment;
+import com.intencity.intencity.view.fragment.RankingFragment;
 
 import java.util.Date;
 
@@ -60,9 +61,13 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
 
     private Context context;
 
+    private ActionBar actionBar;
+
     private SecurePreferences securePreferences;
 
-    boolean userHasLoggedIn;
+    private boolean userHasLoggedIn;
+
+    private ViewPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -138,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        actionBar = getSupportActionBar();
+
         viewPager = (ViewPager) findViewById(R.id.pager);
         setupViewPager();
         viewPager.setCurrentItem(TAB_FITNESS_GURU);
@@ -201,18 +208,40 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
      */
     private void setupViewPager()
     {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         fitnessLogFragment = new FitnessLogFragment();
         fitnessLogFragment.setMainActivityExerciseListListener(this);
         fitnessLogFragment.setNotificationListener(this);
-        adapter.addFrag(fitnessLogFragment, "");
+        adapter.addFrag(fitnessLogFragment, context.getString(R.string.app_name));
 
         rankingFragment = new RankingFragment();
-        adapter.addFrag(rankingFragment, "");
+        adapter.addFrag(rankingFragment, context.getString(R.string.title_rankings));
 
         viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(pageChangeListener);
     }
+
+    /**
+     * The listener for the page changing.
+     */
+    private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener()
+    {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+
+        @Override
+        public void onPageSelected(int position)
+        {
+            if (actionBar != null)
+            {
+                actionBar.setTitle(adapter.getTitle(position));
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) { }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)

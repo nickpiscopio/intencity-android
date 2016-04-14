@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter
 {
-    private final List<Fragment> mFragmentList = new ArrayList<>();
-    private final List<String> mFragmentTitleList = new ArrayList<>();
+    private final List<Fragment> fragmentList = new ArrayList<>();
+    private final List<String> fragmentTitleList = new ArrayList<>();
 
     public ViewPagerAdapter(FragmentManager manager)
     {
@@ -25,24 +25,33 @@ public class ViewPagerAdapter extends FragmentPagerAdapter
     @Override
     public Fragment getItem(int position)
     {
-        return mFragmentList.get(position);
+        return fragmentList.get(position);
     }
 
     @Override
     public int getCount()
     {
-        return mFragmentList.size();
+        return fragmentList.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position)
     {
-        if (mFragmentTitleList.size() > 0)
-        {
-            return mFragmentTitleList.get(position);
-        }
-
         return null;
+    }
+
+    /**
+     * Returns the title of the page.
+     *
+     * If we want this to be in the tab titles, place in the overridden getPageTitle(int position) method.
+     *
+     * @param position  The position of the list.
+     *
+     * @return  The title of the page from the list.
+     */
+    public CharSequence getTitle(int position)
+    {
+        return fragmentTitleList.size() > 0 ? fragmentTitleList.get(position) : null;
     }
 
     /**
@@ -53,11 +62,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter
      */
     public void addFrag(Fragment fragment, String title)
     {
-        mFragmentList.add(fragment);
+        fragmentList.add(fragment);
 
         if (!title.equals(""))
         {
-            mFragmentTitleList.add(title);
+            fragmentTitleList.add(title);
         }
     }
 }

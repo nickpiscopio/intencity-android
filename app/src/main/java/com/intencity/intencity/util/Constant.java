@@ -107,7 +107,7 @@ public class Constant
     public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER_MOBILE + "complex_insert.php";
     public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
     public static final String SERVICE_UPDATE_EQUIPMENT = SERVICE_FOLDER_MOBILE + "update_equipment.php";
-    public static final String SERVICE_UPDATE_EXERCISE_PRIORITY = SERVICE_FOLDER_MOBILE + "update_exercise_priority.php";
+    public static final String SERVICE_UPDATE_EXERCISE_PRIORITY = SERVICE_FOLDER_MOBILE + "update_priority.php";
     public static final String SERVICE_UPLOAD_PROFILE_PIC = SERVICE_FOLDER_MOBILE + "upload_image.php";
     public static final String SERVICE_CHANGE_PASSWORD = SERVICE_FOLDER_MOBILE + "change_password.php";
     public static final String SERVICE_FORGOT_PASSWORD = SERVICE_FOLDER + "forgot_password.php";
@@ -132,7 +132,7 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS = "getAllDisplayMuscleGroups";
     public static final String STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY = "getExercisesForToday";
     public static final String STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP = "setCurrentMuscleGroup";
-    public static final String STORED_PROCEDURE_SET_EXERCISE_PRIORITY = "setExercisePriority";
+    public static final String STORED_PROCEDURE_SET_EXERCISE_PRIORITY = "setPriority";
     public static final String STORED_PROCEDURE_GET_FOLLOWING = "getFollowing";
     public static final String STORED_PROCEDURE_REMOVE_FROM_FOLLOWING = "removeFromFollowing";
     public static final String STORED_PROCEDURE_SEARCH_EXERCISES = "searchExercises";
@@ -140,13 +140,12 @@ public class Constant
     public static final String STORED_PROCEDURE_FOLLOW_USER = "followUser";
     public static final String STORED_PROCEDURE_GET_EXERCISE_DIRECTION = "getDirection";
     public static final String STORED_PROCEDURE_GET_EQUIPMENT = "getEquipment";
-    public static final String STORED_PROCEDURE_GET_EXERCISE_PRIORITIES = "getExercisePriority";
+    public static final String STORED_PROCEDURE_GET_EXERCISE_PRIORITIES = "getPriority";
     public static final String STORED_PROCEDURE_GRANT_POINTS = "grantPointsToUser";
     public static final String STORED_PROCEDURE_GRANT_BADGE = "grantBadgeToUser";
     public static final String STORED_PROCEDURE_GET_BADGES = "getBadges";
     public static final String STORED_PROCEDURE_GET_LAST_WEEK_ROUTINES = "getLastWeekRoutines";
     public static final String STORED_PROCEDURE_GET_INJURY_PREVENTION_WORKOUTS = "getInjuryPreventionWorkouts";
-    public static final String STORED_PROCEDURE_EXCLUDE_EXERCISE = "excludeExercise";
     public static final String STORED_PROCEDURE_REMOVE_ACCOUNT = "removeAccount";
 
     // Column Values

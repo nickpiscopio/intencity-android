@@ -13,7 +13,7 @@
     <string name="demo_fitness_direction_description">Get step-by-step directions on how to do each exercise.</string>
     <string name="demo_fitness_log_title">Log Your Progress</string>
     <string name="demo_fitness_log_description">Let Intencity remember your last set, so you can get back to your goal.</string>
-    <string name="demo_ranking_title">Rankings</string>
+    <string name="demo_ranking_title">Weekly Competitions</string>
     <string name="demo_ranking_description">Have a friendly, fitness competition with your friends.</string>
 
     <string name="first_name">First Name</string>
@@ -60,7 +60,7 @@
     <string name="field_validation_error">Fields cannot contain &lt; &gt; " = +</string>
 
     <!-- Intencity Strings-->
-    <string name="title_rankings">Rankings</string>
+    <string name="title_rankings">Leaderboard</string>
     <string name="title_fitness_guru">Fitness Guru</string>
     <string name="title_menu">Menu</string>
     <string name="menu_search">Search</string>
