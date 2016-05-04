@@ -91,11 +91,11 @@
 
             </LinearLayout>
 
-            <CheckBox
-                android:id="@+id/check_box_terms"
+            <TextView
+                android:id="@+id/terms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/terms_checkbox"
+                android:text="@string/terms_login"
                 android:textColor="@color/secondary_dark"
                 android:layout_marginTop="@dimen/layout_margin"
                 android:layout_gravity="left"/>

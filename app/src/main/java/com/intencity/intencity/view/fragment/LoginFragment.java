@@ -13,23 +13,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.view.activity.CreateAccountActivity;
-import com.intencity.intencity.view.activity.ForgotPasswordActivity;
-import com.intencity.intencity.view.activity.TermsActivity;
-import com.intencity.intencity.notification.CustomDialog;
-import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.notification.CustomDialog;
+import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
+import com.intencity.intencity.view.activity.CreateAccountActivity;
+import com.intencity.intencity.view.activity.ForgotPasswordActivity;
+import com.intencity.intencity.view.activity.TermsActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +49,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
 
     private LinearLayout loginForm;
 
-    private CheckBox termsCheckBox;
+    private TextView terms;
 
     private Context context;
 
@@ -66,7 +65,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
 
         loginForm = (LinearLayout) view.findViewById(R.id.linear_layout_login_form);
 
-        termsCheckBox = (CheckBox) view.findViewById(R.id.check_box_terms);
+        terms = (TextView) view.findViewById(R.id.terms);
 
         Button signIn = (Button) view.findViewById(R.id.btn_sign_in);
         TextView tryIntencity = (TextView) view.findViewById(R.id.btn_try_intencity);
@@ -87,7 +86,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
 
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
-        String[] checkBoxString = termsCheckBox.getText().toString().split("@");
+        String[] checkBoxString = terms.getText().toString().split("@");
         int termsStringLength = checkBoxString.length;
 
         for (int i = 0; i < termsStringLength; i++)
@@ -107,8 +106,8 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
                 builder.append(checkBoxString[i]);
             }
 
-            termsCheckBox.setText(builder, TextView.BufferType.SPANNABLE);
-            termsCheckBox.setOnClickListener(termsClickListener);
+            terms.setText(builder, TextView.BufferType.SPANNABLE);
+            terms.setOnClickListener(termsClickListener);
         }
 
         return view;
@@ -127,11 +126,6 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
                 showMessage(context.getString(R.string.generic_error),
                             getString(R.string.fill_in_fields));
             }
-            else if (!termsCheckBox.isChecked())
-            {
-                showMessage(context.getString(R.string.generic_error),
-                            getString(R.string.accept_terms));
-            }
             else
             {
                 checkCredentials(userEmail, userPassword);
@@ -144,15 +138,11 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         @Override
         public void onClick(View v)
         {
-            if (termsCheckBox.isChecked())
-            {
-                new CustomDialog(context, trialDialogListener, new CustomDialogContent(getString(R.string.trial_account_title), getString(R.string.trial_account_message), true), true);
-            }
-            else
-            {
-               showMessage(context.getString(R.string.generic_error),
-                           getString(R.string.accept_terms));
-            }
+            CustomDialogContent dialogContent = new CustomDialogContent(getString(R.string.trial_account_title), getString(R.string.trial_account_message), true);
+            dialogContent.setPositiveButtonStringRes(R.string.create_trial);
+            dialogContent.setNegativeButtonStringRes(R.string.terms_button);
+
+            new CustomDialog(context, trialDialogListener, dialogContent, true);
         }
     };
 
@@ -175,21 +165,14 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     };
 
     /**
-     * The click listener for the terms checkbox.
+     * The click listener for the terms.
      */
     private View.OnClickListener termsClickListener = new View.OnClickListener()
     {
-        @Override public void onClick(View v)
+        @Override
+        public void onClick(View v)
         {
-            // The terms checkbox gets checked first, then the click listener gets called,
-            // so we want to start the TermsActivity only if the checkbox is checked.
-            if (termsCheckBox.isChecked())
-            {
-                Intent intent = new Intent(context, TermsActivity.class);
-                intent.putExtra(TermsActivity.IS_TERMS, true);
-                intent.putExtra(TermsActivity.SHOW_PRIVACY_POLICY, true);
-                startActivity(intent);
-            }
+            openTerms();
         }
     };
 
@@ -251,6 +234,17 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     }
 
     /**
+     * Opens the terms of use.
+     */
+    private void openTerms()
+    {
+        Intent intent = new Intent(context, TermsActivity.class);
+        intent.putExtra(TermsActivity.IS_TERMS, true);
+        intent.putExtra(TermsActivity.SHOW_PRIVACY_POLICY, true);
+        startActivity(intent);
+    }
+
+    /**
      * The dialog listener for the "Try Intencity" button.
      */
     private DialogListener trialDialogListener = new DialogListener()
@@ -294,6 +288,11 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
                     }).execute(Constant.SERVICE_CREATE_ACCOUNT,
                                Constant.getAccountParameters(firstName, lastName, email, password,
                                                              Constant.ACCOUNT_TYPE_MOBILE_TRIAL));
+                    break;
+                case Constant.NEGATIVE_BUTTON: // Open terms
+
+                    openTerms();
+
                     break;
                 default:
                     break;

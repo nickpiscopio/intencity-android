@@ -13,7 +13,6 @@ import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -46,7 +45,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
     private EditText passwordEditText;
     private EditText confirmPasswordEditText;
 
-    private CheckBox termsCheckBox;
+    private TextView terms;
 
     private Button createAccount;
 
@@ -69,7 +68,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
         passwordEditText = (EditText) findViewById(R.id.edit_text_password);
         confirmPasswordEditText = (EditText) findViewById(R.id.edit_text_confirm_password);
 
-        termsCheckBox = (CheckBox) findViewById(R.id.check_box_terms);
+        terms = (TextView) findViewById(R.id.terms);
 
         createAccount = (Button) findViewById(R.id.btn_create_account);
 
@@ -83,7 +82,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
 
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
-        String[] checkBoxString = termsCheckBox.getText().toString().split("@");
+        String[] checkBoxString = terms.getText().toString().split("@");
         int termsStringLength = checkBoxString.length;
 
         for (int i = 0; i < termsStringLength; i++)
@@ -103,8 +102,8 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
                 builder.append(checkBoxString[i]);
             }
 
-            termsCheckBox.setText(builder, TextView.BufferType.SPANNABLE);
-            termsCheckBox.setOnClickListener(termsClickListener);
+            terms.setText(builder, TextView.BufferType.SPANNABLE);
+            terms.setOnClickListener(termsClickListener);
         }
 
         createAccount.setOnClickListener(createAccountClickListener);
@@ -118,21 +117,17 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
     }
 
     /**
-     * The click listener for the terms checkbox.
+     * The click listener for the terms.
      */
     private View.OnClickListener termsClickListener = new View.OnClickListener()
     {
-        @Override public void onClick(View v)
+        @Override
+        public void onClick(View v)
         {
-            // The terms checkbox gets checked first, then the click listener gets called,
-            // so we want to start the TermsActivity only if the checkbox is checked.
-            if (termsCheckBox.isChecked())
-            {
-                Intent intent = new Intent(context, TermsActivity.class);
-                intent.putExtra(TermsActivity.IS_TERMS, true);
-                intent.putExtra(TermsActivity.SHOW_PRIVACY_POLICY, true);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(context, TermsActivity.class);
+            intent.putExtra(TermsActivity.IS_TERMS, true);
+            intent.putExtra(TermsActivity.SHOW_PRIVACY_POLICY, true);
+            startActivity(intent);
         }
     };
 
@@ -182,11 +177,6 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
             else if (!password.equals(confirmPassword))
             {
                 showErrorMessage(context.getString(R.string.password_match_error));
-            }
-            // Check to see if the user has accepted the terms.
-            else if (!termsCheckBox.isChecked())
-            {
-                showErrorMessage(context.getString(R.string.accept_terms));
             }
             else
             {
