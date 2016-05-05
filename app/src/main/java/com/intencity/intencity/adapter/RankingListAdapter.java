@@ -105,7 +105,7 @@ public class RankingListAdapter extends ArrayAdapter<User>
                     .cacheOnDisk(true)
                     .build();
 
-            ImageLoader.getInstance().displayImage(Constant.UPLOAD_FOLDER +  user.getId() + Constant.USER_PROFILE_PIC_NAME, holder.profilePic, options);
+            ImageLoader.getInstance().displayImage(Constant.UPLOAD_FOLDER + user.getId() + Constant.USER_PROFILE_PIC_NAME, holder.profilePic, options);
 
             if (!isSearch)
             {

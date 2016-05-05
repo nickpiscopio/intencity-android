@@ -13,20 +13,22 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.handler.FragmentHandler;
+import com.intencity.intencity.helper.doa.IntencityRoutineDao;
 import com.intencity.intencity.listener.DatabaseListener;
 import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.NotificationListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
+import com.intencity.intencity.model.RoutineSection;
 import com.intencity.intencity.task.GetExerciseTask;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.RoutineKey;
+import com.intencity.intencity.util.RoutineType;
 import com.intencity.intencity.util.SecurePreferences;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -64,6 +66,8 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
 
     private ExerciseListListener mainActivityExerciseListListener;
 
+    private ArrayList<RoutineSection> sections;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -77,9 +81,18 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
 
         context = getContext();
 
+        initRoutineCards();
+
         new GetExerciseTask(context, this).execute();
 
         return view;
+    }
+
+    private void initRoutineCards()
+    {
+        sections = new ArrayList<>();
+        sections.add(new RoutineSection(RoutineType.CUSTOM_ROUTINE, getString(R.string.title_custom_routine), new int[] { RoutineKey.USER_SELECTED }, null));
+        sections.add(new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.CONSECUTIVE }, null));
     }
 
     /**
@@ -119,38 +132,13 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         {
             try
             {
-                recommendedRoutine = 0;
-
-                ArrayList<String> displayMuscleGroups = new ArrayList<>();
-
-                JSONArray array = new JSONArray(response);
-
-                int length = array.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject object = array.getJSONObject(i);
-
-                    String routine = object.getString(Constant.COLUMN_DISPLAY_NAME);
-                    String recommended = object.getString(Constant.COLUMN_CURRENT_MUSCLE_GROUP);
-
-                    // Add all the muscle groups from the database to the array list.
-                    displayMuscleGroups.add(routine);
-
-                    if (routine.equals(recommended))
-                    {
-                        // Get the index of the recommended routine which is
-                        // the COLUMN_CURRENT_MUSCLE_GROUP from the database.
-                        recommendedRoutine = i;
-                    }
-                }
+                sections.add(new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_intencity_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, new IntencityRoutineDao().parseJson(response)));
 
                 // Add the previous exercise to the list.
                 if (previousExercises != null && previousExercises.size() > 0)
                 {
-                    // Need the context here because we haven't started this fragment yet.
-                    displayMuscleGroups.add(getString(R.string.routine_continue));
-                    recommendedRoutine = displayMuscleGroups.size() - 1;
+                    // TODO: Add continue card
+//                    sections.add(new RoutineSection(getString(R.string.title_intencity_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, new IntencityRoutineDao().parseJson(response)));
                 }
 
                 if (pushedTryAgain)
@@ -158,12 +146,12 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                     // Repopulate the spinner if the user gets their connection back
                     try
                     {
-                        repopulateSpinner(displayMuscleGroups);
+//                        repopulateSpinner(sections);
                     }
                     catch (Exception e)
                     {
                         // Only add the saved exercises to the spinner because of the network issue.
-                        pushRoutineFragment(displayMuscleGroups);
+                        pushRoutineFragment(sections);
                     }
 
                     removeConnectionIssueMessage();
@@ -171,7 +159,7 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                 }
                 else
                 {
-                    pushRoutineFragment(displayMuscleGroups);
+                    pushRoutineFragment(sections);
                 }
             }
             catch (JSONException e)
@@ -196,24 +184,23 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
      * @param values    The values to add to the spinner
      *
      */
-    private void repopulateSpinner(ArrayList<String> values)
-    {
-        routineFragment.setRoutineName(routineName);
-        routineFragment.setDisplayMuscleGroups(values);
-        routineFragment.setRecommendedRoutine(recommendedRoutine);
-        routineFragment.populateMuscleGroupSpinner();
-    }
+//    private void repopulateSpinner(ArrayList<String> values)
+//    {
+//        routineFragment.setRoutineName(routineName);
+//        routineFragment.setDisplayMuscleGroups(values);
+//        routineFragment.setRecommendedRoutine(recommendedRoutine);
+//        routineFragment.populateMuscleGroupSpinner();
+//    }
 
     /**
      * Pushes the RoutineFragment on the stack.
      *
-     * @param displayMuscleGroups   The display muscle groups to add to the spinner
-     *                              in the RoutineFragment.
+     * @param sections  The routine sections to display in the routine list view.
      */
-    private void pushRoutineFragment(ArrayList<String> displayMuscleGroups)
+    private void pushRoutineFragment(ArrayList<RoutineSection> sections)
     {
         Bundle bundle = new Bundle();
-        bundle.putStringArrayList(Constant.BUNDLE_DISPLAY_MUSCLE_GROUPS, displayMuscleGroups);
+        bundle.putParcelableArrayList(Constant.BUNDLE_ROUTINE_SECTIONS, sections);
         bundle.putString(Constant.BUNDLE_ROUTINE_NAME, routineName);
         bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, previousExercises);
         bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, index);
@@ -248,12 +235,12 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
             if (hasRoutineFragment)
             {
                 // Repopulate the spinner since we lost the connection
-                repopulateSpinner(displayMuscleGroups);
+//                repopulateSpinner(displayMuscleGroups);
             }
             else
             {
                 // Only add the saved exercises to the spinner because of the network issue.
-                pushRoutineFragment(displayMuscleGroups);
+                pushRoutineFragment(sections);
             }
         }
     }

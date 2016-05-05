@@ -74,7 +74,7 @@ public class Constant
     // Bundles
     public static final String BUNDLE_SEARCH_EXERCISES = "com.intencity.intencity.bundle.search.exercises";
     public static final String BUNDLE_SET_NUMBER = "com.intencity.intencity.bundle.set.number";
-    public static final String BUNDLE_DISPLAY_MUSCLE_GROUPS = "com.intencity.intencity.bundle.display.muscle.groups";
+    public static final String BUNDLE_ROUTINE_SECTIONS = "com.intencity.intencity.bundle.routine.sections";
     public static final String BUNDLE_ROUTINE_NAME = "com.intencity.intencity.bundle.routine.name";
     public static final String BUNDLE_EXERCISE_LIST = "com.intencity.intencity.bundle.exercise.list";
     public static final String BUNDLE_EXERCISE = "com.intencity.intencity.bundle.exercise";
@@ -173,6 +173,8 @@ public class Constant
     // The current muscle group a user is recommended to do.
     public static final String COLUMN_CURRENT_MUSCLE_GROUP = "currentMuscleGroup";
     public static final String COLUMN_DISPLAY_NAME = "DisplayName";
+    public static final String COLUMN_ROUTINE_NAME = "RoutineName";
+    public static final String COLUMN_EXERCISE_DAY = "ExerciseDay";
     public static final String COLUMN_DATE = "Date";
     public static final String COLUMN_TIME = "Time";
     public static final String COLUMN_EXERCISE_NAME = "ExerciseName";

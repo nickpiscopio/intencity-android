@@ -90,7 +90,20 @@
 
     <!-- Routine Strings -->
     <string name="title_routine">What routine would you like to do?</string>
-    <string name="routine_continue">Continue where I left off</string>
+    <string name="routine_continue">CONTINUE %1$s</string>
+    <string name="title_custom_routine">Custom Routine</string>
+    <string name="title_custom_routines">Custom Routines</string>
+    <string name="title_intencity_routines">Intencity Routines</string>
+    <string name="title_default_routines">Default Routines</string>
+    <string name="title_saved_routines">Saved Routines</string>
+    <string name="description_custom_routines">BUILD A ROUTINE AS YOU EXERCISE</string>
+    <string name="description_default_routine">SELECT FROM %1$s ROUTINE</string>
+    <string name="description_default_routines">SELECT FROM %1$s ROUTINES</string>
+    <string name="key_user_selected">Users can input their own exercises.</string>
+    <string name="key_random">Utilizes Intencity\'s algorithm to select exercises.</string>
+    <string name="key_consecutive">Consecutive list of exercises.</string>
+    <string name="intencity_routine_description">These routines utilize Intencity\'s algorithm to select exercises. They also allow users to input exercises.</string>
+    <string name="user_routine_description">These routines have a consecutive set of exercises. They also allow users to input exercises.</string>
 
     <!-- Exercise List Strings -->
     <string name="more_priority_string">You will see %1$s more.</string>

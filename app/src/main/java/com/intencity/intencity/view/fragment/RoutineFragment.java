@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.ListView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.adapter.RoutineAdapter;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
+import com.intencity.intencity.model.RoutineSection;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
@@ -31,11 +31,9 @@ import java.util.ArrayList;
  */
 public class RoutineFragment extends android.support.v4.app.Fragment
 {
-    private Spinner spinner;
-
-    private Button start;
-
     private Context context;
+
+    private ListView listView;
 
     private ArrayList<String> displayMuscleGroups;
 
@@ -46,23 +44,24 @@ public class RoutineFragment extends android.support.v4.app.Fragment
 
     private LoadingListener listener;
 
-    String email;
+    private String email;
+
+    private RoutineAdapter adapter;
+
+    private ArrayList<RoutineSection> sections;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_routine, container, false);
 
-        spinner = (Spinner) view.findViewById(R.id.spinner_routine);
-
-        start = (Button) view.findViewById(R.id.button_start);
-        start.setOnClickListener(startClickListener);
+        listView = (ListView) view.findViewById(R.id.list_view);
 
         Bundle bundle = getArguments();
 
         if (bundle != null)
         {
-            displayMuscleGroups = bundle.getStringArrayList(Constant.BUNDLE_DISPLAY_MUSCLE_GROUPS);
+            sections = bundle.getParcelableArrayList(Constant.BUNDLE_ROUTINE_SECTIONS);
             routineName = bundle.getString(Constant.BUNDLE_ROUTINE_NAME);
             previousExercises = bundle.getParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST);
             index = bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX);
@@ -74,7 +73,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         SecurePreferences securePreferences = new SecurePreferences(context);
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
-        populateMuscleGroupSpinner();
+        adapter  = new RoutineAdapter(context, R.layout.list_item_routine, sections);
+        listView.setAdapter(adapter);
 
         return view;
     }
@@ -203,11 +203,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment
      */
     public void populateMuscleGroupSpinner()
     {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner, displayMuscleGroups);
-
-        spinner.setAdapter(adapter);
-        adapter.setDropDownViewResource(R.layout.spinner_item);
-        spinner.setSelection(recommendedRoutine);
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -218,28 +214,28 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         @Override
         public void onClick(View v)
         {
-            int spinnerPosition = spinner.getSelectedItemPosition();
+//            int spinnerPosition = spinner.getSelectedItemPosition();
+//
+//            String routineSelection = spinner.getItemAtPosition(spinnerPosition).toString();
 
-            String routineSelection = spinner.getItemAtPosition(spinnerPosition).toString();
-
-            // If the user selects to continue from the last routine he or she chose.
-            if (routineSelection.equals(getString(R.string.routine_continue)))
-            {
-                listener.onFinishedLoading(Constant.ID_FRAGMENT_EXERCISE_LIST);
-            }
-            else
-            {
-                routineName = routineSelection;
-
-                String routine = String.valueOf(spinnerPosition + 1);
-                String storedProcedureParameters = Constant.generateStoredProcedureParameters(
-                        Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);
-
-                listener.onStartLoading();
-
-                new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                                storedProcedureParameters);
-            }
+//            // If the user selects to continue from the last routine he or she chose.
+//            if (routineSelection.equals(getString(R.string.routine_continue)))
+//            {
+//                listener.onFinishedLoading(Constant.ID_FRAGMENT_EXERCISE_LIST);
+//            }
+//            else
+//            {
+//                routineName = routineSelection;
+//
+//                String routine = String.valueOf(spinnerPosition + 1);
+//                String storedProcedureParameters = Constant.generateStoredProcedureParameters(
+//                        Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);
+//
+//                listener.onStartLoading();
+//
+//                new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+//                                                                storedProcedureParameters);
+//            }
         }
     };
 
