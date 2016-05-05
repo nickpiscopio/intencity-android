@@ -7,7 +7,7 @@ package com.intencity.intencity.util;
  */
 public class RoutineKey
 {
-    public static int RANDOM = 0;
-    public static int USER_SELECTED = 1;
-    public static int CONSECUTIVE = 2;
+    public static final int RANDOM = 0;
+    public static final int USER_SELECTED = 1;
+    public static final int CONSECUTIVE = 2;
 }

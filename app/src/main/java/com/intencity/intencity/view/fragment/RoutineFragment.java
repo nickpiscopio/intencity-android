@@ -54,6 +54,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_routine, container, false);
+        View header = inflater.inflate(R.layout.routine_header, null);
+        View footer = inflater.inflate(R.layout.routine_footer, null);
 
         listView = (ListView) view.findViewById(R.id.list_view);
 
@@ -75,6 +77,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment
 
         adapter  = new RoutineAdapter(context, R.layout.list_item_routine, sections);
         listView.setAdapter(adapter);
+        listView.addHeaderView(header, null, false);
+        listView.addFooterView(footer, null, false);
 
         return view;
     }

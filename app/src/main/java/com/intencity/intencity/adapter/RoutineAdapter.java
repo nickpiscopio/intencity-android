@@ -1,6 +1,7 @@
 package com.intencity.intencity.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -8,11 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.model.RoutineGroup;
 import com.intencity.intencity.model.RoutineSection;
+import com.intencity.intencity.util.RoutineKey;
 import com.intencity.intencity.util.RoutineType;
 
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ public class RoutineAdapter extends ArrayAdapter<RoutineSection>
     private final int PLURAL_LIMIT = 2;
 
     private Context context;
+    private Resources res;
 
     private int layoutResourceId;
 
@@ -39,6 +43,7 @@ public class RoutineAdapter extends ArrayAdapter<RoutineSection>
     static class RoutineHolder
     {
         CardView cardView;
+        LinearLayout titleLayout;
         TextView title;
         TextView description;
         ImageView imageView;
@@ -56,14 +61,13 @@ public class RoutineAdapter extends ArrayAdapter<RoutineSection>
         super(context, layoutResourceId, sections);
 
         this.context = context;
+        this.res = context.getResources();
 
         this.layoutResourceId = layoutResourceId;
 
         this.sections = sections;
 
         position = -1;
-
-
 
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -81,12 +85,15 @@ public class RoutineAdapter extends ArrayAdapter<RoutineSection>
             convertView = inflater.inflate(layoutResourceId, parent, false);
 
             holder.cardView = (CardView) convertView.findViewById(R.id.card_view);
+            holder.titleLayout = (LinearLayout) convertView.findViewById(R.id.layout_title);
             holder.title = (TextView) convertView.findViewById(R.id.title);
             holder.description = (TextView) convertView.findViewById(R.id.description);
             holder.imageView = (ImageView) convertView.findViewById(R.id.routine_image);
 
             RoutineSection section = sections.get(position);
             ArrayList<RoutineGroup> groups = section.getRoutineGroups();
+
+            int[] keys = section.getKeys();
 
             RoutineType type = section.getType();
             String description;
@@ -111,6 +118,31 @@ public class RoutineAdapter extends ArrayAdapter<RoutineSection>
 
             holder.title.setText(section.getTitle());
             holder.description.setText(description);
+
+            for (int key : keys)
+            {
+                ImageView imageView = new ImageView(context);
+
+                switch (key)
+                {
+                    case RoutineKey.USER_SELECTED:
+                        imageView.setImageResource(R.drawable.circle_red);
+                        break;
+                    case RoutineKey.RANDOM:
+                        imageView.setImageResource(R.drawable.circle_accent);
+                        break;
+                    case RoutineKey.CONSECUTIVE:
+                        imageView.setImageResource(R.drawable.circle_primary_dark);
+                        break;
+                    default:
+                        break;
+                }
+
+                imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                imageView.setPadding(res.getDimensionPixelSize(R.dimen.layout_margin_quarter), 0, 0, 0);
+
+                holder.titleLayout.addView(imageView);
+            }
 
             switch (type)
             {

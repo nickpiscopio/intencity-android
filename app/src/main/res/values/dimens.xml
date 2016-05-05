@@ -34,4 +34,7 @@
     <dimen name="profile_pic_size">50dp</dimen>
     <dimen name="ranking_badge_size">40dp</dimen>
 
+    <dimen name="circle_padding">2dp</dimen>
+    <dimen name="circle_size">8dp</dimen>
+
 </resources>
