@@ -12,6 +12,7 @@
         android:layout_marginBottom="@dimen/layout_margin_half"
         android:layout_marginLeft="@dimen/layout_margin"
         android:layout_marginRight="@dimen/layout_margin"
+        android:foreground="?android:attr/selectableItemBackground"
         card_view:cardCornerRadius="@dimen/rounded_corner_radius">
 
         <ImageView
