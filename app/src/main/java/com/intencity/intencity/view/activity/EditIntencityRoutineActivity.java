@@ -7,6 +7,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -50,6 +52,7 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
     private FloatingActionButton add;
 
     private ArrayList<String> routines;
+    private ArrayList<String> routinesToRemove;
 
     private String email;
 
@@ -83,12 +86,24 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.save_menu, menu);
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem)
     {
         switch (menuItem.getItemId())
         {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.save:
+                removeRoutines();
                 return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
@@ -113,6 +128,7 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
         try
         {
             routines = new ArrayList<>();
+            routinesToRemove = new ArrayList<>();
 
             JSONArray array = new JSONArray(response);
 
@@ -144,6 +160,21 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
         showConnectionIssue();
     }
 
+    private ServiceListener saveRoutinesServiceListener = new ServiceListener()
+    {
+        @Override
+        public void onRetrievalSuccessful(String response)
+        {
+            finish();
+        }
+
+        @Override
+        public void onRetrievalFailed()
+        {
+            showConnectionIssue();
+        }
+    };
+
     /**
      * Displays a generic error to the user stating Intencity couldn't connect to the server.
      */
@@ -168,10 +199,32 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
         listView.setEmptyView(findViewById(R.id.empty_list));
         listView.setOnItemClickListener(routineClickListener);
 
+        int routinesSize = routines.size();
+        for (int i = 0; i < routinesSize; i++)
+        {
+            listView.setItemChecked(i, true);
+        }
+
         progressBar.setVisibility(View.GONE);
 
         divider.setVisibility(View.VISIBLE);
         description.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Sends the data to the server to remove routines.
+     */
+    private void removeRoutines()
+    {
+        if (routinesToRemove.size() > 0)
+        {
+            new ServiceTask(saveRoutinesServiceListener).execute(Constant.SERVICE_UPDATE_USER_MUSCLE_GROUP_ROUTINE,
+                                                                Constant.generateServiceListVariables(email, routinesToRemove, false));
+        }
+        else
+        {
+            finish();
+        }
     }
 
     /**
@@ -187,7 +240,7 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
         }
     };
 
-        /**
+    /**
      * The click listener for when a routine is clicked in the ListView.
      */
     private AdapterView.OnItemClickListener routineClickListener = new AdapterView.OnItemClickListener()
@@ -195,17 +248,17 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-//            // Add or remove muscle groups from the list
-//            // if he or she clicks on a list item.
-//            String muscleGroup = muscleGroups.get(position);
-//            if (routineMuscleGroups.contains(muscleGroup))
-//            {
-//                routineMuscleGroups.remove(muscleGroup);
-//            }
-//            else
-//            {
-//                routineMuscleGroups.add(muscleGroup);
-//            }
+            // Add or remove muscle groups from the list
+            // if he or she clicks on a list item.
+            String muscleGroup = routines.get(position);
+            if (routinesToRemove.contains(muscleGroup))
+            {
+                routinesToRemove.remove(muscleGroup);
+            }
+            else
+            {
+                routinesToRemove.add(muscleGroup);
+            }
         }
     };
 }
