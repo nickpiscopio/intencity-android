@@ -1,6 +1,7 @@
 package com.intencity.intencity.util;
 
 import com.intencity.intencity.BuildType;
+import com.intencity.intencity.model.Exercise;
 
 import java.util.ArrayList;
 
@@ -108,6 +109,10 @@ public class Constant
     public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER_MOBILE + "complex_insert.php";
     public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
     public static final String SERVICE_UPDATE_EQUIPMENT = SERVICE_FOLDER_MOBILE + "update_equipment.php";
+    public static final String SERVICE_SET_ROUTINE = SERVICE_FOLDER_MOBILE + "set_routine.php";
+    public static final String SERVICE_SET_USER_MUSCLE_GROUP_ROUTINE = SERVICE_FOLDER_MOBILE + "set_user_muscle_group_routine.php";
+    public static final String SERVICE_UPDATE_USER_MUSCLE_GROUP_ROUTINE = SERVICE_FOLDER_MOBILE + "update_user_muscle_group_routine.php";
+    public static final String SERVICE_UPDATE_USER_ROUTINE = SERVICE_FOLDER_MOBILE + "update_user_routine.php";
     public static final String SERVICE_UPDATE_EXERCISE_PRIORITY = SERVICE_FOLDER_MOBILE + "update_priority.php";
     public static final String SERVICE_UPLOAD_PROFILE_PIC = SERVICE_FOLDER_MOBILE + "upload_image.php";
     public static final String SERVICE_CHANGE_PASSWORD = SERVICE_FOLDER_MOBILE + "change_password.php";
@@ -116,6 +121,7 @@ public class Constant
     // Parameters
     public static final String PARAMETER_AMPERSAND = "&";
     public static final String PARAMETER_DELIMITER = ",";
+    public static final String PARAMETER_DELIMITER_REMOVE = "|";
     // This does not have "=" because it usually has a number followed by it.
     // i.e. &table0
     public static final String PARAMETER_TABLE = "table";
@@ -128,6 +134,7 @@ public class Constant
     private static final String PARAMETER_LAST_NAME = "last_name=";
     private static final String PARAMETER_ACCOUNT_TYPE = "account_type=";
     private static final String PARAMETER_INSERTS = "inserts=";
+    private static final String PARAMETER_REMOVE = "remove=";
 
     // Stored Procedure Names
     public static final String STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS = "getAllDisplayMuscleGroups";
@@ -142,6 +149,8 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_EXERCISE_DIRECTION = "getDirection";
     public static final String STORED_PROCEDURE_GET_EQUIPMENT = "getEquipment";
     public static final String STORED_PROCEDURE_GET_EXERCISE_PRIORITIES = "getPriority";
+    public static final String STORED_PROCEDURE_GET_CUSTOM_ROUTINE_MUSCLE_GROUP = "getCustomRoutineMuscleGroup";
+    public static final String STORED_PROCEDURE_GET_USER_MUSCLE_GROUP_ROUTINE = "getUserMuscleGroupRoutine";
     public static final String STORED_PROCEDURE_GRANT_POINTS = "grantPointsToUser";
     public static final String STORED_PROCEDURE_GRANT_BADGE = "grantBadgeToUser";
     public static final String STORED_PROCEDURE_GET_BADGES = "getBadges";
@@ -253,33 +262,62 @@ public class Constant
      */
     public static String generateStoredProcedureParameters(String name, String... variables)
     {
-        String storedProcedureParameters = PARAMETER_DATA + name + PARAMETER_AMPERSAND + PARAMETER_VARIABLE;
+        String storedProcedureParameters = PARAMETER_DATA + name;
 
-        int length = variables.length;
-
-        for (int i = 0; i < length; i++)
+        if (variables != null)
         {
-            storedProcedureParameters += ((i > 0) ? PARAMETER_DELIMITER : "") + variables[i];
+            int length = variables.length;
+
+            for (int i = 0; i < length; i++)
+            {
+                if (i == 0)
+                {
+                    storedProcedureParameters += PARAMETER_AMPERSAND + PARAMETER_VARIABLE;
+                }
+
+                storedProcedureParameters += ((i > 0) ? PARAMETER_DELIMITER : "") + variables[i];
+            }
         }
 
         return storedProcedureParameters;
     }
 
     /**
-     * Generates the URL string to update the user's equipment list.
+     * Generates the URL string to update a service list.
      *
      * @param email         The user's email.
      * @param variables     The list items to update.
+     * @param isInserting   A boolean value of whether we are insert into the list or removing from the list.
      *
      * @return  The generated URL string.
      */
-    public static String generateEquipmentListVariables(String email, ArrayList<String> variables)
+    public static String generateServiceListVariables(String email, ArrayList<String> variables, boolean isInserting)
     {
         String parameters = PARAMETER_EMAIL + email;
-        parameters += generateListVariables(PARAMETER_AMPERSAND + PARAMETER_INSERTS, variables);
+        parameters += isInserting ? generateListVariables(PARAMETER_AMPERSAND + PARAMETER_INSERTS, variables) : generateRemoveListVariables(PARAMETER_AMPERSAND + PARAMETER_REMOVE, variables);
 
         return parameters;
     }
+
+    /**
+     * Generates the URL string to add a routine.
+     *
+     * @param email         The user's email.
+     * @param routineName   The name of the routine.
+     * @param exercises     The list exercises to insert.
+     *
+     * @return  The generated URL string.
+     */
+    public static String generateRoutineListVariables(String email, String routineName, ArrayList<Exercise> exercises)
+    {
+        String PARAMETER_ROUTINE_NAME = "&routine=";
+
+        String parameters = PARAMETER_EMAIL + email + PARAMETER_ROUTINE_NAME + routineName;
+        parameters += generateExerciseListVariables("&" + PARAMETER_INSERTS, exercises);
+
+        return parameters;
+    }
+
 
     /**
      * Generates the URL string to update the user's priority list.
@@ -298,6 +336,42 @@ public class Constant
         String parameters = PARAMETER_EMAIL + email;
         parameters += generateListVariables(PARAMETER_EXERCISES, exercises);
         parameters += generateListVariables(PARAMETER_PRIORITIES, priorities);
+
+        return parameters;
+    }
+
+    /**
+     * Generates the URL string for a list of exercises.
+     *
+     * @param variableName  The name of the variable to add to teh URL string.
+     * @param exercises     The variables to add to the URL string.
+     *
+     * @return  The generated URL string.
+     */
+    public static String generateExerciseListVariables(String variableName, ArrayList<Exercise> exercises)
+    {
+        // We want to skip the warm-up, so we are starting at 1.
+        int START_INDEX = 1;
+        String parameters = "";
+
+        int length = exercises.size();
+        for (int i = START_INDEX; i < length; i++)
+        {
+            Exercise exercise = exercises.get(i);
+
+            if (i == START_INDEX)
+            {
+                parameters += variableName;
+            }
+
+            // This is so we don't add the warm-up and stretch to the database.
+            if(exercise.getDescription() != "")
+            {
+                continue;
+            }
+
+            parameters += ((i > START_INDEX) ? PARAMETER_DELIMITER : "") + exercise.getName();
+        }
 
         return parameters;
     }
@@ -327,6 +401,33 @@ public class Constant
 
         return parameters;
     }
+
+    /**
+     * Generates the URL string for a list of variables.
+     *
+     * @param variableName  The name of the variable to add to teh URL string.
+     * @param variables     The variables to add to the URL string.
+     *
+     * @return  The generated URL string.
+     */
+    public static String generateRemoveListVariables(String variableName, ArrayList<String> variables)
+    {
+        String parameters = "";
+
+        int length = variables.size();
+        for (int i = 0; i < length; i++)
+        {
+            if (i == 0)
+            {
+                parameters += variableName;
+            }
+
+            parameters += ((i > 0) ? PARAMETER_DELIMITER_REMOVE : "") + variables.get(i).replaceAll("&", "%26");
+        }
+
+        return parameters;
+    }
+
 
     /**
      * Generates the change password URL string.

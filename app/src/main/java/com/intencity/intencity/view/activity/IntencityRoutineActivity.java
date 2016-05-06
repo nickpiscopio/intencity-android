@@ -1,9 +1,13 @@
 package com.intencity.intencity.view.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +27,8 @@ import java.util.ArrayList;
  */
 public class IntencityRoutineActivity extends AppCompatActivity
 {
+    private Context context;
+
     private FloatingActionButton start;
 
     @Override
@@ -38,6 +44,8 @@ public class IntencityRoutineActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        context = getApplicationContext();
+
         start = (FloatingActionButton) findViewById(R.id.button_next);
         start.setOnClickListener(startExerciseClickListener);
 
@@ -45,12 +53,21 @@ public class IntencityRoutineActivity extends AppCompatActivity
 
         ArrayList<RoutineRow> rows = bundle.getParcelableArrayList(Constant.BUNDLE_ROUTINE_ROWS);
 
-        RoutineAdapter adapter = new RoutineAdapter(getApplicationContext(), R.layout.list_item_header, android.R.layout.simple_list_item_single_choice, rows);
+        RoutineAdapter adapter = new RoutineAdapter(context, R.layout.list_item_header, android.R.layout.simple_list_item_single_choice, rows);
 
         ListView listView = (ListView) findViewById(R.id.list_view);
 //        listView.addHeaderView(getLayoutInflater().inflate(R.layout.routine_header, null), null, false);
         listView.setOnItemClickListener(routineClickListener);
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.routine_menu, menu);
+
+        return true;
     }
 
     @Override
@@ -60,6 +77,9 @@ public class IntencityRoutineActivity extends AppCompatActivity
         {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.edit:
+                startActivity(new Intent(context, EditIntencityRoutineActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(menuItem);

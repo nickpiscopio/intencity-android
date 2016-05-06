@@ -89,6 +89,7 @@
     <string name="empty_profile_awards">No activity found.</string>
 
     <!-- Routine Strings -->
+    <string name="menu_save">SAVE</string>
     <string name="title_routine">What routine would you like to do?</string>
     <string name="routine_continue">CONTINUE %1$s</string>
     <string name="title_custom_routine">Custom Routine</string>
@@ -104,6 +105,17 @@
     <string name="key_consecutive">Consecutive list of exercises.</string>
     <string name="intencity_routine_description">These routines utilize Intencity\'s algorithm to select exercises. They also allow users to input exercises.</string>
     <string name="user_routine_description">These routines have a consecutive set of exercises. They also allow users to input exercises.</string>
+
+    <string name="edit_custom_routines_title">Edit Custom Routines</string>
+    <string name="edit_routines_description1">Below are the custom routines you have created.</string>
+    <string name="edit_routines_description2">Only checked routines will be kept when hitting \'Save\'.</string>
+    <string name="edit_saved_title">Edit Saved Routines</string>
+    <string name="edit_saved_description">Below are the routines you have saved.</string>
+    <string name="no_custom_routines">No custom routines found.</string>
+    <string name="add_routines_title">Add Routine</string>
+    <string name="add_routines_description">Select the muscle groups you would like in this routine.</string>
+    <string name="muscle_group_limit_title">Limit error</string>
+    <string name="muscle_group_limit_description">Please select at least 1 muscle group for this routine.</string>
 
     <!-- Exercise List Strings -->
     <string name="more_priority_string">You will see %1$s more.</string>

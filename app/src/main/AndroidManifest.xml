@@ -64,6 +64,18 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".view.activity.EditIntencityRoutineActivity"
+            android:theme="@style/AppTheme.Base"
+            android:label="@string/edit_custom_routines_title"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.activity.AddIntencityRoutineActivity"
+            android:theme="@style/AppTheme.Base"
+            android:label="@string/add_routines_title"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".view.activity.AboutActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/title_about"

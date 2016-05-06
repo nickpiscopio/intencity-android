@@ -2,18 +2,29 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/page_background">
+    android:background="@color/page_background"
+    android:animateLayoutChanges="true">
 
-   <ListView
-       android:id="@id/list_view"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:choiceMode="singleChoice"
-       android:background="@android:color/white"
-       android:dividerHeight="@dimen/divider_height"
-       android:divider="@color/shadow"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@id/list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:choiceMode="singleChoice"
+            android:background="@android:color/white"
+            android:dividerHeight="@dimen/divider_height"
+            android:divider="@color/shadow"/>
+
+        <include layout="@layout/divider"/>
+
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/button_next"
@@ -23,7 +34,7 @@
         android:layout_margin="@dimen/layout_margin"
         android:src="@mipmap/ic_plus_white"
         android:visibility="gone"
-        app:layout_anchor="@id/list_view"
+        app:layout_anchor="@id/layout"
         app:layout_anchorGravity="bottom|right|end"/>
 
 </android.support.design.widget.CoordinatorLayout>

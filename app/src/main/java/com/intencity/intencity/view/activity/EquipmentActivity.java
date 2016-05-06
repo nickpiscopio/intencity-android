@@ -15,13 +15,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.notification.CustomDialog;
-import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.notification.CustomDialog;
+import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.SecurePreferences;
+import com.intencity.intencity.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -79,8 +79,7 @@ public class EquipmentActivity extends AppCompatActivity
 
         context = getApplicationContext();
 
-        SecurePreferences securePreferences = new SecurePreferences(context);
-        email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+        email = Util.getSecurePreferencesEmail(context);
 
         new ServiceTask(getEquipmentServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                 Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EQUIPMENT, email));
@@ -229,8 +228,8 @@ public class EquipmentActivity extends AppCompatActivity
     private void updateEquipment()
     {
         new ServiceTask(updateEquipmentServiceListener).execute(Constant.SERVICE_UPDATE_EQUIPMENT,
-                                                                Constant.generateEquipmentListVariables(
-                                                                        email, userEquipment));
+                                                                Constant.generateServiceListVariables(
+                                                                        email, userEquipment, true));
     }
 
     /**

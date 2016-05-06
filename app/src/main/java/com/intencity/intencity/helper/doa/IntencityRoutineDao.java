@@ -19,7 +19,8 @@ import java.util.ArrayList;
  */
 public class IntencityRoutineDao
 {
-    private final int CUSTOM_ROUTINE_ROW_START = 7;
+    // We add the 'default' title to the rows first, so row 6 (Starting from 0) will be the first custom routine.
+    private final int INTENCITY_DEFAULT_ROUTINE_TOTAL = 6;
 
     /**
      * Parses the JSON response.
@@ -52,7 +53,7 @@ public class IntencityRoutineDao
             int exerciseDay = object.getInt(Constant.COLUMN_EXERCISE_DAY);
 
             // This would be the first row of a custom routine.
-            if (i == CUSTOM_ROUTINE_ROW_START)
+            if (i == INTENCITY_DEFAULT_ROUTINE_TOTAL)
             {
                 // Add the title of the custom routines.
                 rows.add(new RoutineRow(context.getString(R.string.title_custom_routine), titleNumber));
