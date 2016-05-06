@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * This is the Intencity Routine activity.
@@ -211,6 +212,8 @@ public class AddIntencityRoutineActivity extends AppCompatActivity implements Se
     {
         if (routineMuscleGroups.size() > 0)
         {
+            Collections.sort(routineMuscleGroups, String.CASE_INSENSITIVE_ORDER);
+
             new ServiceTask(saveRoutineServiceListener).execute(Constant.SERVICE_SET_USER_MUSCLE_GROUP_ROUTINE,
                                                                 Constant.generateServiceListVariables(email, routineMuscleGroups, true));
         }

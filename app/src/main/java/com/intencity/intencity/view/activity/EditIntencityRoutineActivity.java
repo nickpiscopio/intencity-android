@@ -148,9 +148,7 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
         }
         catch (JSONException exception)
         {
-            Log.e(Constant.TAG, "Couldn't parse equipment " + exception.toString());
-
-            showConnectionIssue();
+            Log.e(Constant.TAG, "Couldn't parse custom Intencity routine list. " + exception.toString());
         }
     }
 
