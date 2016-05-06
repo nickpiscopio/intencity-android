@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/page_background"
@@ -9,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/layout_margin"
+        android:paddingTop="@dimen/layout_margin"
+        android:paddingBottom="@dimen/layout_margin"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -38,80 +40,104 @@
             android:paddingBottom="@dimen/logo_margin"
             android:textStyle="bold"/>
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/layout_margin"
-            android:background="@drawable/card"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/secondary_dark"
-                android:text="@string/title_mission"
-                android:textStyle="bold"
-                android:paddingBottom="@dimen/layout_margin_quarter"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/secondary_dark"
-                android:text="@string/mission"
-                android:lineSpacingMultiplier="1.1" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/layout_margin"
-            android:background="@drawable/card"
-            android:layout_marginTop="@dimen/layout_margin_half"
+            android:layout_marginLeft="@dimen/layout_margin"
+            android:layout_marginRight="@dimen/layout_margin"
             android:layout_marginBottom="@dimen/layout_margin_half"
-            android:orientation="vertical">
+            card_view:cardCornerRadius="@dimen/rounded_corner_radius">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/secondary_dark"
-                android:text="@string/title_founders"
-                android:textStyle="bold"
-                android:paddingBottom="@dimen/layout_margin_quarter"/>
+                android:padding="@dimen/layout_margin"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/secondary_dark"
-                android:text="@string/founders"
-                android:lineSpacingMultiplier="1.1" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary_dark"
+                    android:text="@string/title_mission"
+                    android:textStyle="bold"
+                    android:paddingBottom="@dimen/layout_margin_quarter"/>
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary_dark"
+                    android:text="@string/mission"
+                    android:lineSpacingMultiplier="1.1" />
 
-        <LinearLayout
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/layout_margin"
-            android:background="@drawable/card"
-            android:layout_marginBottom="@dimen/layout_margin_quarter"
-            android:orientation="vertical">
+            android:layout_marginLeft="@dimen/layout_margin"
+            android:layout_marginRight="@dimen/layout_margin"
+            android:layout_marginBottom="@dimen/layout_margin_half"
+            card_view:cardCornerRadius="@dimen/rounded_corner_radius">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/secondary_dark"
-                android:text="@string/title_contributors"
-                android:paddingBottom="@dimen/layout_margin_quarter"
-                android:textStyle="bold"/>
+                android:padding="@dimen/layout_margin"
+                android:orientation="vertical">
 
-            <TextView
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary_dark"
+                    android:text="@string/title_founders"
+                    android:textStyle="bold"
+                    android:paddingBottom="@dimen/layout_margin_quarter"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary_dark"
+                    android:text="@string/founders"
+                    android:lineSpacingMultiplier="1.1" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/layout_margin"
+            android:layout_marginRight="@dimen/layout_margin"
+            android:layout_marginBottom="@dimen/layout_margin_half"
+            card_view:cardCornerRadius="@dimen/rounded_corner_radius">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/secondary_dark"
-                android:text="@string/contributors"
-                android:lineSpacingMultiplier="1.1" />
+                android:padding="@dimen/layout_margin"
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary_dark"
+                    android:text="@string/title_contributors"
+                    android:paddingBottom="@dimen/layout_margin_quarter"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary_dark"
+                    android:text="@string/contributors"
+                    android:lineSpacingMultiplier="1.1" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
 
         <TextView
             android:layout_width="wrap_content"
