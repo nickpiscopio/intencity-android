@@ -1,6 +1,8 @@
 package com.intencity.intencity.helper.doa;
 
-import com.intencity.intencity.model.RoutineGroup;
+import android.content.Context;
+
+import com.intencity.intencity.R;
 import com.intencity.intencity.model.RoutineRow;
 import com.intencity.intencity.util.Constant;
 
@@ -17,19 +19,26 @@ import java.util.ArrayList;
  */
 public class IntencityRoutineDao
 {
+    private final int CUSTOM_ROUTINE_ROW_START = 7;
+
     /**
      * Parses the JSON response.
      *
+     * @param context   The context of the activity.
      * @param response  The String response from the server in a JSON format.
      *
      * @return  The ArrayList of sections for a routine list.
      */
-    public ArrayList<RoutineGroup> parseJson(String response) throws JSONException
+    public ArrayList<RoutineRow> parseJson(Context context, String response) throws JSONException
     {
-        ArrayList<RoutineGroup> groups = new ArrayList<>();
+        ArrayList<RoutineRow> rows = new ArrayList<>();
 
-        ArrayList<RoutineRow> defaultRoutines = new ArrayList<>();
-        ArrayList<RoutineRow> customRoutines = new ArrayList<>();
+        // There isn't an exercise day for a title.
+        // This is how we will differentiate between titles and rows when displaying the information.
+        int titleNumber = (int)Constant.CODE_FAILED;
+
+        // Add the title of the default routines.
+        rows.add(new RoutineRow(context.getString(R.string.title_default_routines), titleNumber));
 
         JSONArray array = new JSONArray(response);
 
@@ -42,16 +51,16 @@ public class IntencityRoutineDao
             String muscleGroup = object.getString(Constant.COLUMN_DISPLAY_NAME);
             int exerciseDay = object.getInt(Constant.COLUMN_EXERCISE_DAY);
 
-            if (i > 6)
+            // This would be the first row of a custom routine.
+            if (i == CUSTOM_ROUTINE_ROW_START)
             {
-                customRoutines.add(new RoutineRow(muscleGroup, exerciseDay));
+                // Add the title of the custom routines.
+                rows.add(new RoutineRow(context.getString(R.string.title_custom_routine), titleNumber));
             }
-            else
-            {
-                defaultRoutines.add(new RoutineRow(muscleGroup, exerciseDay));
-            }
+
+            rows.add(new RoutineRow(muscleGroup, exerciseDay));
         }
 
-        return groups;
+        return rows;
     }
 }

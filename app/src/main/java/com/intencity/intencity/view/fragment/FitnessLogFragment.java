@@ -132,7 +132,7 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         {
             try
             {
-                sections.add(new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_intencity_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, new IntencityRoutineDao().parseJson(response)));
+                sections.add(new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_intencity_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, new IntencityRoutineDao().parseJson(context, response)));
 
                 // Add the previous exercise to the list.
                 if (previousExercises != null && previousExercises.size() > 0)

@@ -1,22 +1,27 @@
 package com.intencity.intencity.view.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.adapter.RoutineAdapter;
+import com.intencity.intencity.adapter.RoutineSectionAdapter;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
+import com.intencity.intencity.model.RoutineRow;
 import com.intencity.intencity.model.RoutineSection;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.RoutineType;
 import com.intencity.intencity.util.SecurePreferences;
+import com.intencity.intencity.view.activity.IntencityRoutineActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,7 +51,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment
 
     private String email;
 
-    private RoutineAdapter adapter;
+    private RoutineSectionAdapter adapter;
 
     private ArrayList<RoutineSection> sections;
 
@@ -75,10 +80,11 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         SecurePreferences securePreferences = new SecurePreferences(context);
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
-        adapter  = new RoutineAdapter(context, R.layout.list_item_routine, sections);
+        adapter  = new RoutineSectionAdapter(context, R.layout.list_item_routine, sections);
         listView.setAdapter(adapter);
         listView.addHeaderView(header, null, false);
         listView.addFooterView(footer, null, false);
+        listView.setOnItemClickListener(routineClickListener);
 
         return view;
     }
@@ -240,6 +246,43 @@ public class RoutineFragment extends android.support.v4.app.Fragment
 //                new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
 //                                                                storedProcedureParameters);
 //            }
+        }
+    };
+
+    /**
+     * The click listener for each item clicked in the settings list.
+     */
+    private AdapterView.OnItemClickListener routineClickListener = new AdapterView.OnItemClickListener()
+    {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        {
+            RoutineSection section = sections.get(position - 1);
+            RoutineType sectionType = section.getType();
+            ArrayList<RoutineRow> rows = section.getRoutineRows();
+
+            Intent intent = null;
+
+            switch (sectionType)
+            {
+                case CONTINUE:
+                    break;
+                case CUSTOM_ROUTINE:
+                    break;
+                case INTENCITY_ROUTINE:
+                    intent = new Intent(context, IntencityRoutineActivity.class);
+                    intent.putExtra(Constant.BUNDLE_ROUTINE_ROWS, rows);
+                    break;
+                case SAVED_ROUTINE:
+                    break;
+                default:
+                    break;
+            }
+
+            if (intent != null)
+            {
+                context.startActivity(intent);
+            }
         }
     };
 

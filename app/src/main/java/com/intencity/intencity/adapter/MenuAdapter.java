@@ -44,18 +44,18 @@ public class MenuAdapter extends ArrayAdapter<MenuItem>
      * @param context           The application context.
      * @param headerResId       The resource id of the view we are inflating for the headers.
      * @param listItemResId     The resource id of the view we are inflating for the list items.
-     * @param awards            The list of awards the user received.
+     * @param items             The list of menu items.
      */
-    public MenuAdapter(Context context, int headerResId, int listItemResId, ArrayList<MenuItem> awards)
+    public MenuAdapter(Context context, int headerResId, int listItemResId, ArrayList<MenuItem> items)
     {
-        super(context, 0, awards);
+        super(context, 0, items);
 
         this.context = context;
 
         this.headerResId = headerResId;
         this.listItemResId = listItemResId;
 
-        this.objects = awards;
+        this.objects = items;
 
         position = (int) Constant.CODE_FAILED;
 

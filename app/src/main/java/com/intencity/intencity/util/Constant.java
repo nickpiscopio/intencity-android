@@ -75,6 +75,7 @@ public class Constant
     public static final String BUNDLE_SEARCH_EXERCISES = "com.intencity.intencity.bundle.search.exercises";
     public static final String BUNDLE_SET_NUMBER = "com.intencity.intencity.bundle.set.number";
     public static final String BUNDLE_ROUTINE_SECTIONS = "com.intencity.intencity.bundle.routine.sections";
+    public static final String BUNDLE_ROUTINE_ROWS = "com.intencity.intencity.bundle.routine.rows";
     public static final String BUNDLE_ROUTINE_NAME = "com.intencity.intencity.bundle.routine.name";
     public static final String BUNDLE_EXERCISE_LIST = "com.intencity.intencity.bundle.exercise.list";
     public static final String BUNDLE_EXERCISE = "com.intencity.intencity.bundle.exercise";

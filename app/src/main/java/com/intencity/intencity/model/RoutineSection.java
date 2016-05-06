@@ -20,7 +20,7 @@ public class RoutineSection implements Parcelable
 
     private int[] keys;
 
-    private ArrayList<RoutineGroup> routineGroups;
+    private ArrayList<RoutineRow> rows;
 
     /**
      * The constructor for the RoutineSection.
@@ -28,14 +28,14 @@ public class RoutineSection implements Parcelable
      * @param type      The type of rotine.
      * @param title     The title of the section.
      * @param keys      The int equivalents to what dot is being shown for each routine, which will correlate to the routine key.
-     * @param groups    The routine groups for each section.
+     * @param rows      The routine rows for each section.
      */
-    public RoutineSection(RoutineType type, String title, int[] keys, ArrayList<RoutineGroup> groups)
+    public RoutineSection(RoutineType type, String title, int[] keys, ArrayList<RoutineRow> rows)
     {
         this.type = type;
         this.title = title;
         this.keys = keys;
-        this.routineGroups = groups;
+        this.rows = rows;
     }
 
     private RoutineSection(Parcel in)
@@ -45,8 +45,8 @@ public class RoutineSection implements Parcelable
 
         in.readIntArray(keys);
 
-        routineGroups = new ArrayList<>();
-        in.readTypedList(routineGroups, RoutineGroup.CREATOR);
+        rows = new ArrayList<>();
+        in.readTypedList(rows, RoutineRow.CREATOR);
     }
 
     public static final Creator<RoutineSection> CREATOR = new Creator<RoutineSection>()
@@ -76,7 +76,7 @@ public class RoutineSection implements Parcelable
         dest.writeString(type.name());
         dest.writeString(title);
         dest.writeIntArray(keys);
-        dest.writeTypedList(routineGroups);
+        dest.writeTypedList(rows);
     }
 
     /**
@@ -112,13 +112,13 @@ public class RoutineSection implements Parcelable
         this.keys = keys;
     }
 
-    public ArrayList<RoutineGroup> getRoutineGroups()
+    public ArrayList<RoutineRow> getRoutineRows()
     {
-        return routineGroups;
+        return rows;
     }
 
-    public void setRoutineGroups(ArrayList<RoutineGroup> routineGroups)
+    public void setRoutineRows(ArrayList<RoutineRow> rows)
     {
-        this.routineGroups = routineGroups;
+        this.rows = rows;
     }
 }
