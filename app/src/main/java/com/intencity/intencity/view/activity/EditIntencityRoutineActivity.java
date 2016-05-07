@@ -56,6 +56,8 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
 
     private String email;
 
+    private boolean hasMoreExercises = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -81,8 +83,19 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
 
         email = Util.getSecurePreferencesEmail(context);
 
-        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                      Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_MUSCLE_GROUP_ROUTINE, email));
+        getRoutines();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (hasMoreExercises)
+        {
+            setResult(Constant.REQUEST_ROUTINE_UPDATED);
+            finish();
+        }
+
+        super.onBackPressed();
     }
 
     @Override
@@ -118,7 +131,8 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
         @Override
         public void onClick(View v)
         {
-            startActivity(new Intent(context, AddIntencityRoutineActivity.class));
+            Intent intent = new Intent(context, AddIntencityRoutineActivity.class);
+            startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
         }
     };
 
@@ -163,6 +177,7 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
         @Override
         public void onRetrievalSuccessful(String response)
         {
+            setResult(Constant.REQUEST_ROUTINE_UPDATED);
             finish();
         }
 
@@ -172,6 +187,15 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
             showConnectionIssue();
         }
     };
+
+    /**
+     * Gets the routines from the server.
+     */
+    private void getRoutines()
+    {
+        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                      Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_MUSCLE_GROUP_ROUTINE, email));
+    }
 
     /**
      * Displays a generic error to the user stating Intencity couldn't connect to the server.
@@ -221,7 +245,7 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
         }
         else
         {
-            finish();
+            onBackPressed();
         }
     }
 
@@ -259,4 +283,17 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
             }
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Constant.REQUEST_ROUTINE_UPDATED)
+        {
+            hasMoreExercises = true;
+
+            getRoutines();
+        }
+    }
 }

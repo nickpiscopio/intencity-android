@@ -12,11 +12,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RoutineAdapter;
+import com.intencity.intencity.helper.doa.IntencityRoutineDao;
+import com.intencity.intencity.listener.DialogListener;
+import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.RoutineRow;
+import com.intencity.intencity.notification.CustomDialog;
+import com.intencity.intencity.notification.CustomDialogContent;
+import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.Util;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -25,11 +35,21 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 5/6/16.
  */
-public class IntencityRoutineActivity extends AppCompatActivity
+public class IntencityRoutineActivity extends AppCompatActivity implements ServiceListener
 {
     private Context context;
 
+    private ListView listView;
+
     private FloatingActionButton start;
+
+    private String email;
+
+    private RoutineAdapter adapter;
+
+    private ArrayList<RoutineRow> rows;
+
+    private boolean hasMoreExercises = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -51,14 +71,24 @@ public class IntencityRoutineActivity extends AppCompatActivity
 
         Bundle bundle = getIntent().getExtras();
 
-        ArrayList<RoutineRow> rows = bundle.getParcelableArrayList(Constant.BUNDLE_ROUTINE_ROWS);
+        rows = bundle.getParcelableArrayList(Constant.BUNDLE_ROUTINE_ROWS);
 
-        RoutineAdapter adapter = new RoutineAdapter(context, R.layout.list_item_header, android.R.layout.simple_list_item_single_choice, rows);
+        email = Util.getSecurePreferencesEmail(context);
 
-        ListView listView = (ListView) findViewById(R.id.list_view);
-//        listView.addHeaderView(getLayoutInflater().inflate(R.layout.routine_header, null), null, false);
+        View header = getLayoutInflater().inflate(R.layout.header_title_description, null);
+
+        TextView title = (TextView) header.findViewById(R.id.title);
+        TextView description = (TextView) header.findViewById(R.id.description);
+
+        title.setText(context.getString(R.string.title_routine));
+        description.setText(context.getString(R.string.intencity_routine_description));
+
+        listView = (ListView) findViewById(R.id.list_view);
+        listView.addHeaderView(header, null, false);
         listView.setOnItemClickListener(routineClickListener);
-        listView.setAdapter(adapter);
+        listView.setHeaderDividersEnabled(false);
+
+        populateRoutineList();
     }
 
     @Override
@@ -79,11 +109,40 @@ public class IntencityRoutineActivity extends AppCompatActivity
                 onBackPressed();
                 return true;
             case R.id.edit:
-                startActivity(new Intent(context, EditIntencityRoutineActivity.class));
+                Intent intent = new Intent(context, EditIntencityRoutineActivity.class);
+                startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
                 return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
+    }
+
+    /**
+     * Gets the routines from the server.
+     */
+    private void getRoutines()
+    {
+        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS, email));
+    }
+
+    /**
+     * Populates the routine list.
+     */
+    private void populateRoutineList()
+    {
+        adapter = new RoutineAdapter(context, R.layout.list_item_header, android.R.layout.simple_list_item_single_choice, rows);
+
+        listView.setAdapter(adapter);
+    }
+
+    /**
+     * Displays a generic error to the user stating Intencity couldn't connect to the server.
+     */
+    private void showConnectionIssue()
+    {
+        CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
+
+        new CustomDialog(IntencityRoutineActivity.this, dialogListener, dialog, false);
     }
 
     /**
@@ -109,4 +168,66 @@ public class IntencityRoutineActivity extends AppCompatActivity
             // TODO: Start exercising.
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Constant.REQUEST_ROUTINE_UPDATED)
+        {
+            getRoutines();
+        }
+    }
+
+    /**
+     * The dialog listener for when the connection to Intencity fails.
+     */
+    private DialogListener dialogListener = new DialogListener()
+    {
+        @Override
+        public void onButtonPressed(int which)
+        {
+            // There is only 1 button that can be pressed, so we aren't going to switch on it.
+            finish();
+        }
+    };
+
+    @Override
+    public void onBackPressed()
+    {
+        if (hasMoreExercises)
+        {
+            Intent intent = new Intent();
+            intent.putExtra(Constant.BUNDLE_ROUTINE_ROWS, rows);
+
+            setResult(Constant.REQUEST_ROUTINE_UPDATED, intent);
+        }
+
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onRetrievalSuccessful(String response)
+    {
+        try
+        {
+            rows.clear();
+            rows.addAll(new IntencityRoutineDao().parseJson(context, response));
+
+            adapter.notifyDataSetChanged();
+
+            hasMoreExercises = true;
+        }
+        catch (JSONException e)
+        {
+            showConnectionIssue();
+        }
+    }
+
+    @Override
+    public void onRetrievalFailed()
+    {
+        showConnectionIssue();
+    }
 }

@@ -62,6 +62,7 @@ public class Constant
     public static final int REQUEST_CODE_CAPTURE_IMAGE = 50;
     public static final int REQUEST_CODE_TWEET = 60;
     public static final int REQUEST_CODE_LOG_OUT = 70;
+    public static final int REQUEST_ROUTINE_UPDATED = 80;
 
     // Fragment IDs
     public static final int ID_FRAGMENT_EXERCISE_LIST = 1;

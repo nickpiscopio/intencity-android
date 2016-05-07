@@ -151,7 +151,7 @@ public class AddIntencityRoutineActivity extends AppCompatActivity implements Se
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            // TODO: NEED TO TELL THE PREVIOUS ROUTINE WE UPDATED.
+            setResult(Constant.REQUEST_ROUTINE_UPDATED);
             finish();
         }
 

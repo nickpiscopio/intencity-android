@@ -19,6 +19,7 @@ import com.intencity.intencity.model.RoutineSection;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.RoutineKey;
 import com.intencity.intencity.util.RoutineType;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.view.activity.IntencityRoutineActivity;
@@ -54,6 +55,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment
     private RoutineSectionAdapter adapter;
 
     private ArrayList<RoutineSection> sections;
+
+    private int sectionSelected;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -257,7 +260,9 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            RoutineSection section = sections.get(position - 1);
+            sectionSelected = position - 1;
+
+            RoutineSection section = sections.get(sectionSelected);
             RoutineType sectionType = section.getType();
             ArrayList<RoutineRow> rows = section.getRoutineRows();
 
@@ -281,10 +286,26 @@ public class RoutineFragment extends android.support.v4.app.Fragment
 
             if (intent != null)
             {
-                context.startActivity(intent);
+                startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
             }
         }
     };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Constant.REQUEST_ROUTINE_UPDATED)
+        {
+            ArrayList<RoutineRow> rows = data.getParcelableArrayListExtra(Constant.BUNDLE_ROUTINE_ROWS);
+
+            sections.remove(sectionSelected);
+            sections.add(new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_intencity_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, rows));
+
+            adapter.notifyDataSetChanged();
+        }
+    }
 
     /**
      * Setters and getters for the RoutineFragment.
