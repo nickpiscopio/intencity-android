@@ -2,9 +2,11 @@ package com.intencity.intencity.view.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -49,10 +51,19 @@ import java.util.Date;
  */
 public class ExerciseListFragment extends android.support.v4.app.Fragment implements ExerciseListener
 {
+    private enum ActiveButtonState
+    {
+        INTENCITY,
+        SEARCH
+    }
+
     private int TOTAL_EXERCISE_NUM = 7;
 
     private ArrayList<Exercise> allExercises;
     private ArrayList<Exercise> currentExercises;
+
+    private FloatingActionButton activeButton;
+    private FloatingActionButton inactiveButton;
 
     private TextView routineProgress;
     private TextView routine;
@@ -80,6 +91,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     private ArrayList<String> awards = new ArrayList<>();
 
+    private ActiveButtonState activeButtonState = ActiveButtonState.INTENCITY;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -87,17 +100,20 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         ImageButton search = (ImageButton)view.findViewById(R.id.search);
         ImageButton info = (ImageButton)view.findViewById(R.id.info);
-        FloatingActionButton nextExercise =
-                (FloatingActionButton)view.findViewById(R.id.button_next);
+        activeButton = (FloatingActionButton)  view.findViewById(R.id.button_active);
+        inactiveButton = (FloatingActionButton)  view.findViewById(R.id.button_inactive);
+
+        context = getContext();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
         routineProgress = (TextView) view.findViewById(R.id.text_view_routine_progress);
         routine = (TextView) view.findViewById(R.id.text_view_routine);
 
-        search.setOnClickListener(searchClickListener);
         info.setOnClickListener(infoClickListener);
-        nextExercise.setOnClickListener(nextExerciseClickListener);
+        activeButton.setOnClickListener(activeButtonClickListener);
+        inactiveButton.setOnClickListener(inactiveButtonClickListener);
+        inactiveButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.page_background)));
 
         Bundle bundle = getArguments();
 
@@ -123,8 +139,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         updateRoutineName(completedExerciseNum);
 
-        context = getContext();
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(
@@ -138,6 +152,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         workoutFinished = false;
 
+        setButtonImages();
+
         return view;
     }
 
@@ -150,6 +166,26 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         if (allExercises != null && allExercises.size() < TOTAL_EXERCISE_NUM)
         {
             TOTAL_EXERCISE_NUM = allExercises.size();
+        }
+    }
+
+    /**
+     * Sets the button images for the active and inactive buttons.
+     */
+    private void setButtonImages()
+    {
+        switch (activeButtonState)
+        {
+            case INTENCITY:
+                activeButton.setImageResource(R.mipmap.next_light);
+                inactiveButton.setImageResource(R.mipmap.magnyfying_dark);
+                break;
+            case SEARCH:
+                activeButton.setImageResource(R.mipmap.ic_magnify_white);
+                inactiveButton.setImageResource(R.mipmap.next_dark);
+                break;
+            default:
+                break;
         }
     }
 
@@ -170,74 +206,116 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     /**
      * The search exercise click listener.
      */
-    private View.OnClickListener searchClickListener = new View.OnClickListener()
+    private View.OnClickListener finishClickListener = new View.OnClickListener()
     {
         @Override
         public void onClick(View v)
         {
-            // Open the search to search for a new exercise.
-            Bundle bundle = new Bundle();
-            bundle.putBoolean(Constant.BUNDLE_SEARCH_EXERCISES, true);
-            bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, currentExercises);
-            Intent intent = new Intent(ExerciseListFragment.this.getActivity(), SearchActivity.class);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, Constant.REQUEST_CODE_SEARCH);
+
         }
     };
 
     /**
-     * The next exercise click listener.
+     * The active button exercise click listener.
      */
-    private View.OnClickListener nextExerciseClickListener = new View.OnClickListener()
+    private View.OnClickListener activeButtonClickListener = new View.OnClickListener()
     {
         @Override
         public void onClick(View v)
         {
-            if (currentExercises.size() == allExercises.size())
+            switch (activeButtonState)
             {
-                // We remove the exercises from the database here, so when we go back to
-                // the fitness log, it doesn't ask if we want to continue where we left off.
-                removeExercisesFromDatabase();
+                case INTENCITY:
 
-                workoutFinished = true;
+                    if (currentExercises.size() == allExercises.size())
+                    {
+                        // We remove the exercises from the database here, so when we go back to
+                        // the fitness log, it doesn't ask if we want to continue where we left off.
+                        removeExercisesFromDatabase();
 
-                // Grant the user the "Kept Swimming" badge if he or she didn't skip an exercise.
-                if (!securePreferences.getBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, false))
-                {
-                    Util.grantBadgeToUser(email, Badge.KEPT_SWIMMING,
-                                          new AwardDialogContent(R.mipmap.kept_swimming,
-                                                                 context.getString(R.string.award_kept_swimming_description)), true);
-                }
-                else
-                {
-                    // Set the user has skipped an exercise to false for next time.
-                    setExerciseSkipped(false);
-                }
+                        workoutFinished = true;
 
-                String finisherDescription = context.getString(R.string.award_finisher_description);
+                        // Grant the user the "Kept Swimming" badge if he or she didn't skip an exercise.
+                        if (!securePreferences.getBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, false))
+                        {
+                            Util.grantBadgeToUser(email, Badge.KEPT_SWIMMING,
+                                                  new AwardDialogContent(R.mipmap.kept_swimming,
+                                                                         context.getString(R.string.award_kept_swimming_description)), true);
+                        }
+                        else
+                        {
+                            // Set the user has skipped an exercise to false for next time.
+                            setExerciseSkipped(false);
+                        }
 
-                NotificationHandler notificationHandler = NotificationHandler.getInstance(null);
-                ArrayList<AwardDialogContent> awards = notificationHandler.getAwards();
+                        String finisherDescription = context.getString(R.string.award_finisher_description);
 
-                AwardDialogContent finisherAward = new AwardDialogContent(R.mipmap.finisher, finisherDescription);
-                if (!notificationHandler.hasAward(finisherAward))
-                {
-                    Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(
-                            R.string.award_completed_workout_description));
-                    Util.grantBadgeToUser(email, Badge.FINISHER, finisherAward, true);
-                }
+                        NotificationHandler notificationHandler = NotificationHandler.getInstance(null);
+                        ArrayList<AwardDialogContent> awards = notificationHandler.getAwards();
 
-                CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.completed_workout_title), context.getString(R.string.award_workout_completed_award_description), true);
-                dialog.setAwards(awards);
-                dialog.setPositiveButtonStringRes(R.string.tweet_button);
-                dialog.setNegativeButtonStringRes(R.string.finish_button);
+                        AwardDialogContent finisherAward = new AwardDialogContent(R.mipmap.finisher, finisherDescription);
+                        if (!notificationHandler.hasAward(finisherAward))
+                        {
+                            Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(
+                                    R.string.award_completed_workout_description));
+                            Util.grantBadgeToUser(email, Badge.FINISHER, finisherAward, true);
+                        }
 
-                new CustomDialog(context, dialogListener, dialog, true);
+                        CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.completed_workout_title), context.getString(R.string.award_workout_completed_award_description), true);
+                        dialog.setAwards(awards);
+                        dialog.setPositiveButtonStringRes(R.string.tweet_button);
+                        dialog.setNegativeButtonStringRes(R.string.finish_button);
+
+                        new CustomDialog(context, dialogListener, dialog, true);
+                    }
+                    else
+                    {
+                        addExercise(false);
+                    }
+
+                    break;
+
+                case SEARCH:
+
+                    // Open the search to search for a new exercise.
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean(Constant.BUNDLE_SEARCH_EXERCISES, true);
+                    bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, currentExercises);
+                    Intent intent = new Intent(ExerciseListFragment.this.getActivity(), SearchActivity.class);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, Constant.REQUEST_CODE_SEARCH);
+
+                    break;
+
+                default:
+                    break;
             }
-            else
+
+
+        }
+    };
+
+    /**
+     * The inactive button exercise click listener.
+     */
+    private View.OnClickListener inactiveButtonClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            switch (activeButtonState)
             {
-                addExercise(false);
+                case INTENCITY:
+                    activeButtonState = ActiveButtonState.SEARCH;
+                    break;
+                case SEARCH:
+                    activeButtonState = ActiveButtonState.INTENCITY;
+                    break;
+                default:
+                    break;
             }
+
+            setButtonImages();
         }
     };
 
@@ -461,11 +539,11 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         String exerciseName = allExercises.get(position).getName();
         if (exerciseName.equalsIgnoreCase(warmUphExerciseName))
         {
-            startActivity(context, Constant.EXERCISE_TYPE_WARM_UP, routineName);
+            startSearchActivity(context, Constant.EXERCISE_TYPE_WARM_UP, routineName);
         }
         else if (exerciseName.equalsIgnoreCase(stretchExerciseName))
         {
-            startActivity(context, Constant.EXERCISE_TYPE_STRETCH, routineName);
+            startSearchActivity(context, Constant.EXERCISE_TYPE_STRETCH, routineName);
         }
         else
         {
@@ -482,7 +560,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      * @param type          The exercise type.
      * @param routineName   The routine name.
      */
-    private void startActivity(Context context, String type, String routineName)
+    private void startSearchActivity(Context context, String type, String routineName)
     {
         Intent intent = new Intent(context, ExerciseSearchActivity.class);
         intent.putExtra(Constant.BUNDLE_EXERCISE_TYPE, type);

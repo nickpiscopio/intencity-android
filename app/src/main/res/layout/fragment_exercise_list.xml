@@ -85,7 +85,20 @@
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/button_next"
+        android:id="@+id/button_inactive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="@dimen/inactive_button_margin_right"
+        android:layout_marginBottom="@dimen/inactive_button_margin_bottom"
+        android:src="@mipmap/ic_plus_white"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        app:layout_anchor="@id/recycler_view"
+        app:layout_anchorGravity="bottom|right|end"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/button_active"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"

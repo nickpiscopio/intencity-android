@@ -102,7 +102,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     /**
      * Animates an item being removed from the adapter.
      *
-     * @param pos   The position of teh item being removed.
+     * @param pos   The position of the item being removed.
      */
     public void animateRemoveItem(final int pos)
     {
@@ -113,26 +113,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         exercises.remove(exercise);
 
         notifyItemRemoved(pos);
-        notifyItemRangeChanged(pos, getItemCount() - pos);
-    }
-
-    /**
-     * Gets the last position of the recycler view.
-     *
-     * @return  The last position of the recycler view.
-     */
-    public int getLastPosition()
-    {
-        return lastPosition;
-    }
-
-    /**
-     * Sets the last position of the recycler view.
-     *
-     * @param lastPosition  The position to set.
-     */
-    public void setLastPosition(int lastPosition)
-    {
-        this.lastPosition = lastPosition;
+        notifyItemRangeChanged(pos, getItemCount() - 1);
     }
 }
