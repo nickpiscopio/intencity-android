@@ -275,18 +275,17 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private String generateTweet()
     {
-        // Remove all the whitespace so the hashtags are proper.
-        // Replace the ampersand with its equivalent url code and add a hashtag.
-        String routine = routineName.replaceAll(" ", "").replace(Constant.PARAMETER_AMPERSAND,
-                                                                 " %26 %23");
-
         String twitterUrl = "https://twitter.com/intent/tweet?text=";
         String[] tweetText = { "I %23dominated my %23workout with %23Intencity! %23WOD %23Fitness",
                                "I %23finished my %23workout of the day with %23Intencity! %23WOD %23Fitness",
                                "I made it through %23Intencity%27s %23routine! %23Fitness",
-                               "I %23completed %23" + routine + " with %23Intencity! %23WOD %23Fitness",
+                               "Making %23gains with %23Intencity! %23WOD %23Fitness %23Exercise %23Gainz",
                                "%23Finished my %23Intencity %23workout! %23Retweet if you've %23exercised today. %23WOD %23Fitness",
-                               "I %23lifted with %23Intencity today! %23lift %23lifting"};
+                               "I %23lifted with %23Intencity today! %23lift %23lifting",
+                               "%23Intencity %23trained me today!",
+                               "Getting %23strong with %23Intencity! %23GetStrong %23DoWork %23Fitness",
+                               "Getting that %23BeachBody with %23Intencity! %23Lift %23Exercise %23Fitness",
+                               "Nothing feels better than finishing a great %23workout!"};
         String tweetUrl = "&url=www.Intencity.fit";
         String via = "&via=IntencityApp";
 
