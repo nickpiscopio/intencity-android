@@ -50,12 +50,12 @@
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/search"
+                android:id="@+id/finish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/card_button_padding"
                 android:background="@drawable/button_card_dark"
-                android:src="@mipmap/ic_magnify_white"/>
+                android:src="@mipmap/finish_button"/>
 
             <ImageButton
                 android:id="@+id/info"
