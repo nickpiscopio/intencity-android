@@ -6,10 +6,9 @@
     android:layout_height="match_parent"
     android:background="@color/page_background">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:animateLayoutChanges="true">
 
         <LinearLayout
@@ -18,16 +17,17 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@color/secondary_light"
-            android:paddingTop="@dimen/card_button_margin"
-            android:paddingRight="@dimen/card_button_margin"
-            android:paddingBottom="@dimen/card_button_margin"
-            android:paddingLeft="@dimen/layout_margin"
+            android:padding="@dimen/card_button_margin"
             android:gravity="center_vertical">
 
             <LinearLayout
+                android:id="@+id/layout_routine_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:padding="@dimen/card_button_padding"
+                android:layout_marginRight="@dimen/layout_margin_half"
+                android:background="@drawable/button_card_dark"
                 android:orientation="horizontal">
 
                 <TextView
@@ -67,22 +67,24 @@
 
         </LinearLayout>
 
-        <!-- Shadow -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/shadow"
-            android:background="@drawable/shadow_dark"/>
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            app:layout_anchor="@id/layout_exercise_title"
+            android:layout_below="@id/layout_exercise_title"
             android:paddingBottom="@dimen/list_view_padding_bottom"
-            android:clipToPadding="false"/>
+            android:clipToPadding="false"
+            app:layout_anchor="@id/layout_exercise_title"/>
 
-    </LinearLayout>
+        <!-- Shadow -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shadow"
+            android:layout_below="@id/layout_exercise_title"
+            android:background="@drawable/shadow_dark"/>
+
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/button_inactive"

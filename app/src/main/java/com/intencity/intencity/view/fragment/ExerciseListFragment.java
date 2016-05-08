@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,8 +99,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         View view = inflater.inflate(R.layout.fragment_exercise_list, container, false);
 
-        ImageButton finish = (ImageButton)view.findViewById(R.id.finish);
-        ImageButton info = (ImageButton)view.findViewById(R.id.info);
+        LinearLayout routineNameLayout = (LinearLayout) view.findViewById(R.id.layout_routine_name);
+        ImageButton finish = (ImageButton) view.findViewById(R.id.finish);
+        ImageButton info = (ImageButton) view.findViewById(R.id.info);
         activeButton = (FloatingActionButton)  view.findViewById(R.id.button_active);
         inactiveButton = (FloatingActionButton)  view.findViewById(R.id.button_inactive);
 
@@ -110,6 +112,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         routineProgress = (TextView) view.findViewById(R.id.text_view_routine_progress);
         routine = (TextView) view.findViewById(R.id.text_view_routine);
 
+        routineNameLayout.setOnClickListener(routineNameClickListener);
         finish.setOnClickListener(finishClickListener);
         info.setOnClickListener(infoClickListener);
         activeButton.setOnClickListener(activeButtonClickListener);
@@ -234,6 +237,20 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         new CustomDialog(context, dialogListener, dialog, true);
     }
+
+    /**
+     * The click listener for the routine name.
+     */
+    private View.OnClickListener routineNameClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            CustomDialogContent dialog = new CustomDialogContent(routineName, context.getString(R.string.routine_total_description, completedExerciseNum, TOTAL_EXERCISE_NUM), false);
+
+            new CustomDialog(context, null, dialog, true);
+        }
+    };
 
     /**
      * The finish exercise click listener.
