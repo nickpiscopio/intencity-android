@@ -49,6 +49,8 @@ public class IntencityRoutineActivity extends AppCompatActivity implements Servi
 
     private ArrayList<RoutineRow> rows;
 
+    private int routineSelected;
+
     private boolean hasMoreExercises = false;
 
     @Override
@@ -153,6 +155,8 @@ public class IntencityRoutineActivity extends AppCompatActivity implements Servi
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
+            routineSelected = position - 1;
+
             start.setVisibility(View.VISIBLE);
         }
     };
@@ -165,7 +169,14 @@ public class IntencityRoutineActivity extends AppCompatActivity implements Servi
         @Override
         public void onClick(View v)
         {
-            // TODO: Start exercising.
+            RoutineRow row = rows.get(routineSelected);
+
+            Intent intent = new Intent();
+            intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, row.getTitle());
+            intent.putExtra(Constant.BUNDLE_POSITION, row.getRowNumber());
+
+            setResult(Constant.REQUEST_START_EXERCISING_INTENCITY_ROUTINE, intent);
+            finish();
         }
     };
 

@@ -212,14 +212,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment
     }
 
     /**
-     * Populates the muscle spinner.
-     */
-    public void populateMuscleGroupSpinner()
-    {
-        adapter.notifyDataSetChanged();
-    }
-
-    /**
      * The click listener for the start button.
      */
     private View.OnClickListener startClickListener = new View.OnClickListener()
@@ -304,6 +296,20 @@ public class RoutineFragment extends android.support.v4.app.Fragment
             sections.add(new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_intencity_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, rows));
 
             adapter.notifyDataSetChanged();
+        }
+        else if (resultCode == Constant.REQUEST_START_EXERCISING_INTENCITY_ROUTINE)
+        {
+            routineName = data.getStringExtra(Constant.BUNDLE_ROUTINE_NAME);
+            int position = data.getIntExtra(Constant.BUNDLE_POSITION, (int)Constant.CODE_FAILED);
+
+            String routine = String.valueOf(position);
+            String storedProcedureParameters = Constant.generateStoredProcedureParameters(
+                    Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);
+
+            listener.onStartLoading();
+
+            new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                                            storedProcedureParameters);
         }
     }
 
