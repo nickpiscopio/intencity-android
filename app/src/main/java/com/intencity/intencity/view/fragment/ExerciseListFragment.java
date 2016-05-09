@@ -37,6 +37,7 @@ import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.task.SetExerciseTask;
 import com.intencity.intencity.util.Badge;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.RoutineState;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 import com.intencity.intencity.view.activity.Direction;
@@ -101,6 +102,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     private ArrayList<String> awards = new ArrayList<>();
 
+    private int routineState;
+
     private ActiveButtonState activeButtonState = ActiveButtonState.INTENCITY;
 
     @Override
@@ -133,6 +136,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         Bundle bundle = getArguments();
 
         routineName = bundle.getString(Constant.BUNDLE_ROUTINE_NAME);
+        routineState = bundle.getInt(Constant.BUNDLE_ROUTINE_TYPE);
 
         allExercises = bundle.getParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST);
 
@@ -167,7 +171,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         workoutFinished = false;
 
-        setButtonImages();
+        setRoutineState();
 
         return view;
     }
@@ -182,6 +186,24 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         {
             TOTAL_EXERCISE_NUM = allExercises.size();
         }
+    }
+
+    /**
+     * Sets the routine state for the routine.
+     */
+    private void setRoutineState()
+    {
+        switch (routineState)
+        {
+            case RoutineState.CUSTOM:
+                activeButtonState = ActiveButtonState.SEARCH;
+                inactiveButton.setVisibility(View.GONE);
+                break;
+            default:
+                break;
+        }
+
+        setButtonImages();
     }
 
     /**

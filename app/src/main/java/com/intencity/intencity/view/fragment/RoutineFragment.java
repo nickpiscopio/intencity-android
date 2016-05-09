@@ -20,6 +20,7 @@ import com.intencity.intencity.model.Set;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.RoutineKey;
+import com.intencity.intencity.util.RoutineState;
 import com.intencity.intencity.util.RoutineType;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.view.activity.IntencityRoutineActivity;
@@ -41,8 +42,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment
 
     private ListView listView;
 
-    private ArrayList<String> displayMuscleGroups;
-
     private String routineName;
     private ArrayList<Exercise> previousExercises;
     private int index;
@@ -57,6 +56,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment
     private ArrayList<RoutineSection> sections;
 
     private int sectionSelected;
+
+    private int state;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -124,13 +125,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment
             ArrayList<Exercise> exercises = new ArrayList<>();
 
             // We are adding a warm-up to the exercise list.
-            Exercise warmUp = getNewExercise(context.getString(R.string.warm_up),
-                                             Constant.RETURN_NULL,
-                                             Constant.RETURN_NULL,
-                                             Constant.RETURN_NULL,
-                                             Constant.RETURN_NULL);
-            warmUp.setDescription(context.getString(R.string.warm_up_description));
-            exercises.add(warmUp);
+            exercises.add(getWarmUp());
 
             try
             {
@@ -178,6 +173,23 @@ public class RoutineFragment extends android.support.v4.app.Fragment
             listener.onFinishedLoading(Constant.CODE_FAILED_REPOPULATE);
         }
     };
+
+    /**
+     * Gets a warm up exercise to add to the exercise list.
+     *
+     * @return  The warm up exercise.
+     */
+    private Exercise getWarmUp()
+    {
+        Exercise warmUp = getNewExercise(context.getString(R.string.warm_up),
+                                         Constant.RETURN_NULL,
+                                         Constant.RETURN_NULL,
+                                         Constant.RETURN_NULL,
+                                         Constant.RETURN_NULL);
+        warmUp.setDescription(context.getString(R.string.warm_up_description));
+
+        return warmUp;
+    }
 
     /**
      * Get a new exercise.
@@ -265,11 +277,28 @@ public class RoutineFragment extends android.support.v4.app.Fragment
                 case CONTINUE:
                     break;
                 case CUSTOM_ROUTINE:
+
+                    routineName = getString(R.string.title_custom_routine);
+                    previousExercises = new ArrayList<>();
+                    previousExercises.add(getWarmUp());
+
+                    index = 1;
+
+                    state = RoutineState.CUSTOM;
+
+                    listener.onFinishedLoading(Constant.ID_FRAGMENT_EXERCISE_LIST);
+
                     break;
+
                 case INTENCITY_ROUTINE:
+
                     intent = new Intent(context, IntencityRoutineActivity.class);
                     intent.putExtra(Constant.BUNDLE_ROUTINE_ROWS, rows);
+
+                    state = RoutineState.INTENCITY;
+
                     break;
+
                 case SAVED_ROUTINE:
                     break;
                 default:
@@ -341,13 +370,13 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         return index;
     }
 
+    public int getRoutineState()
+    {
+        return state;
+    }
+
     public void setRecommendedRoutine(int recommendedRoutine)
     {
         this.recommendedRoutine = recommendedRoutine;
-    }
-
-    public void setDisplayMuscleGroups(ArrayList<String> displayMuscleGroups)
-    {
-        this.displayMuscleGroups = displayMuscleGroups;
     }
 }

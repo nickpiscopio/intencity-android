@@ -166,8 +166,7 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
             {
                 Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
 
-                onFinishedLoading(
-                        pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : (int) Constant.CODE_FAILED);
+                onFinishedLoading(pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : (int) Constant.CODE_FAILED);
             }
         }
 
@@ -293,6 +292,7 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                 bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST,
                                               routineFragment.getPreviousExercises());
                 bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, routineFragment.getIndex());
+                bundle.putInt(Constant.BUNDLE_ROUTINE_TYPE, routineFragment.getRoutineState());
 
                 exerciseListFragment = new ExerciseListFragment();
                 exerciseListFragment.setLoadingListener(FitnessLogFragment.this);
