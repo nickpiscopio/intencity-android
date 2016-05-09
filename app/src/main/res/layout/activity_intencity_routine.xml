@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/layout_margin"
-        android:src="@mipmap/ic_plus_white"
+        android:src="@mipmap/next_light"
         android:visibility="gone"
         app:layout_anchor="@id/layout"
         app:layout_anchorGravity="bottom|right|end"/>
