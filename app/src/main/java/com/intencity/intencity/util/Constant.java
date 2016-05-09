@@ -66,7 +66,8 @@ public class Constant
     public static final int REQUEST_START_EXERCISING_INTENCITY_ROUTINE = 90;
 
     // Fragment IDs
-    public static final int ID_FRAGMENT_EXERCISE_LIST = 1;
+    public static final int ID_FRAGMENT_EXERCISE_LIST = 10;
+    public static final int ID_SAVE_EXERCISE_LIST = 20;
 
     // Extras
     public static final String EXTRA_DEMO_PAGE = "com.intencity.intencity.extra.demo.page";
@@ -367,12 +368,10 @@ public class Constant
             }
 
             // This is so we don't add the warm-up and stretch to the database.
-            if(exercise.getDescription() != "")
+            if(exercise.getDescription() == null)
             {
-                continue;
+                parameters += ((i > START_INDEX) ? PARAMETER_DELIMITER : "") + exercise.getName();
             }
-
-            parameters += ((i > START_INDEX) ? PARAMETER_DELIMITER : "") + exercise.getName();
         }
 
         return parameters;

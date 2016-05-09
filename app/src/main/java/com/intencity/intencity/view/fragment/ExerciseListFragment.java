@@ -23,12 +23,15 @@ import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.ExerciseListener;
+import com.intencity.intencity.listener.LoadingListener;
+import com.intencity.intencity.listener.SaveRoutineListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.notification.AwardDialogContent;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
+import com.intencity.intencity.notification.SaveDialog;
 import com.intencity.intencity.notification.WorkoutInfoDialog;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.task.SetExerciseTask;
@@ -50,7 +53,8 @@ import java.util.Date;
  *
  * Created by Nick Piscopio on 12/12/15.
  */
-public class ExerciseListFragment extends android.support.v4.app.Fragment implements ExerciseListener
+public class ExerciseListFragment extends android.support.v4.app.Fragment implements ExerciseListener,
+                                                                                     SaveRoutineListener
 {
     private enum ActiveButtonState
     {
@@ -58,16 +62,19 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         SEARCH
     }
 
+    private final int EXERCISE_MIN_SAVE_THRESHOLD = 2;
     private int TOTAL_EXERCISE_NUM = 7;
 
     private ArrayList<Exercise> allExercises;
     private ArrayList<Exercise> currentExercises;
 
-    private FloatingActionButton activeButton;
-    private FloatingActionButton inactiveButton;
-
     private TextView routineProgress;
     private TextView routine;
+
+    private ImageButton save;
+
+    private FloatingActionButton activeButton;
+    private FloatingActionButton inactiveButton;
 
     private RecyclerView recyclerView;
 
@@ -79,6 +86,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private int position;
     private int autoFillTo;
 
+    private LoadingListener loadingListener;
     private ExerciseListListener fitnessLogListener;
 
     private SecurePreferences securePreferences;
@@ -89,6 +97,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private String routineName;
     private String warmUphExerciseName;
     private String stretchExerciseName;
+    private String savedRoutineName;
 
     private ArrayList<String> awards = new ArrayList<>();
 
@@ -102,6 +111,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         LinearLayout routineNameLayout = (LinearLayout) view.findViewById(R.id.layout_routine_name);
         ImageButton finish = (ImageButton) view.findViewById(R.id.finish);
         ImageButton info = (ImageButton) view.findViewById(R.id.info);
+        save = (ImageButton) view.findViewById(R.id.save);
         activeButton = (FloatingActionButton)  view.findViewById(R.id.button_active);
         inactiveButton = (FloatingActionButton)  view.findViewById(R.id.button_inactive);
 
@@ -115,6 +125,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         routineNameLayout.setOnClickListener(routineNameClickListener);
         finish.setOnClickListener(finishClickListener);
         info.setOnClickListener(infoClickListener);
+        save.setOnClickListener(saveClickListener);
         activeButton.setOnClickListener(activeButtonClickListener);
         inactiveButton.setOnClickListener(inactiveButtonClickListener);
         inactiveButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.page_background)));
@@ -265,6 +276,18 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     };
 
     /**
+     * The save workout click listener.
+     */
+    private View.OnClickListener saveClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            new SaveDialog(context, ExerciseListFragment.this, SaveDialog.SaveDialogState.INIT);
+        }
+    };
+
+    /**
      * The info click listener.
      *
      * This is where we display how to workout with Intencity
@@ -316,8 +339,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 default:
                     break;
             }
-
-
         }
     };
 
@@ -366,6 +387,28 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
             // Start the fitness log over again.
             fitnessLogListener.onCompletedWorkout();
+        }
+    };
+
+    /**
+     * The service listener for saving a routine.
+     */
+    private ServiceListener saveRoutineServiceListener = new ServiceListener()
+    {
+        @Override
+        public void onRetrievalSuccessful(String response)
+        {
+            loadingListener.onFinishedLoading(Constant.ID_SAVE_EXERCISE_LIST);
+
+            Toast.makeText(context, getString(R.string.routine_saved, savedRoutineName), Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onRetrievalFailed()
+        {
+            loadingListener.onFinishedLoading(Constant.ID_SAVE_EXERCISE_LIST);
+
+            new SaveDialog(context, ExerciseListFragment.this, SaveDialog.SaveDialogState.SAME_NAME_ERROR);
         }
     };
 
@@ -457,6 +500,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         routineProgress.setText(completedExerciseNum + "/" + TOTAL_EXERCISE_NUM);
         routine.setText(routineName.toUpperCase());
+
+        save.setVisibility(completedExerciseNum < EXERCISE_MIN_SAVE_THRESHOLD ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -632,6 +677,25 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         // Displays a toast to the user telling them they will see an exercise more or less.
         Toast.makeText(context, context.getString(increasing ? R.string.more_priority_string : R.string.less_priority_string, exerciseName), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onSavePressed(String routineName)
+    {
+        if (routineName.length() > 0)
+        {
+            loadingListener.onStartLoading();
+
+            savedRoutineName = routineName;
+
+            new ServiceTask(saveRoutineServiceListener).execute(Constant.SERVICE_SET_ROUTINE,
+                                                                Constant.generateRoutineListVariables(email, routineName, currentExercises));
+        }
+        else
+        {
+            new SaveDialog(context, ExerciseListFragment.this, SaveDialog.SaveDialogState.NAME_REQUIRED);
+        }
+
     }
 
     @Override
@@ -880,9 +944,19 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     }
 
     /**
+     * Sets the loading listener.
+     *
+     * @param listener  The LoadingListener to set.
+     */
+    public void setLoadingListener(LoadingListener listener)
+    {
+        loadingListener = listener;
+    }
+
+    /**
      * Sets the fitness listener.
      *
-     * @param listener  The ExerciseListListener to set the fitness listener to.
+     * @param listener  The ExerciseListListener to set.
      */
     public void setFitnessLogListener(ExerciseListListener listener)
     {

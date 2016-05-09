@@ -295,6 +295,7 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                 bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, routineFragment.getIndex());
 
                 exerciseListFragment = new ExerciseListFragment();
+                exerciseListFragment.setLoadingListener(FitnessLogFragment.this);
                 exerciseListFragment.setFitnessLogListener(FitnessLogFragment.this);
 
                 FragmentHandler.getInstance().pushFragment(getFragmentManager(),
@@ -313,6 +314,9 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                 connectionIssue.setVisibility(View.VISIBLE);
                 checkPreviousExercises(false);
                 break;
+            // We don't need anything to happen.
+            // We just need the progress bar to stop.
+            case Constant.ID_SAVE_EXERCISE_LIST:
             default:
                 break;
         }

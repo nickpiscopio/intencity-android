@@ -6,6 +6,7 @@
     <integer name="weight_edit_text">100</integer>
     <integer name="weight_intensity">60</integer>
     <integer name="name_length">30</integer>
+    <integer name="routine_name_length">30</integer>
     <integer name="email_length">40</integer>
     <integer name="password_length">40</integer>
     <integer name="exercise_notes_length">255</integer>
