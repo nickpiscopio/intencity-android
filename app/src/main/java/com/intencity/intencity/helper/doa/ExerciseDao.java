@@ -44,51 +44,55 @@ public class ExerciseDao
 
         ArrayList<Exercise> exercises = new ArrayList<>();
 
-        JSONArray array = new JSONArray(response);
-
-        int length = array.length();
-
-        for (int i = 0; i < length; i++)
+        if (!response.equals("") && !response.equalsIgnoreCase(Constant.RETURN_NULL))
         {
-            JSONObject object = array.getJSONObject(i);
+            JSONArray array = new JSONArray(response);
 
-            String name = object.getString(Constant.COLUMN_EXERCISE_NAME);
-            String weight = object.getString(Constant.COLUMN_EXERCISE_WEIGHT);
-            String reps = object.getString(Constant.COLUMN_EXERCISE_REPS);
-            String duration = object.getString(Constant.COLUMN_EXERCISE_DURATION);
-            String difficulty = object.getString(Constant.COLUMN_EXERCISE_DIFFICULTY);
-            String notes = object.getString(Constant.COLUMN_NOTES);
+            int length = array.length();
 
-            Set set = new Set();
-            set.setWeight(
-                    weight.equalsIgnoreCase(Constant.RETURN_NULL) ? (int)Constant.CODE_FAILED :
-                            Float.valueOf(weight));
-            set.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ? 0 : Integer.valueOf(reps));
-            set.setDuration(duration);
-            set.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ?
-                                      (int)Constant.CODE_FAILED : Integer.valueOf(difficulty));
-
-            if (!notes.equalsIgnoreCase(Constant.RETURN_NULL))
+            for (int i = 0; i < length; i++)
             {
-                set.setNotes(notes);
+                JSONObject object = array.getJSONObject(i);
+
+                String name = object.getString(Constant.COLUMN_EXERCISE_NAME);
+                String weight = object.getString(Constant.COLUMN_EXERCISE_WEIGHT);
+                String reps = object.getString(Constant.COLUMN_EXERCISE_REPS);
+                String duration = object.getString(Constant.COLUMN_EXERCISE_DURATION);
+                String difficulty = object.getString(Constant.COLUMN_EXERCISE_DIFFICULTY);
+                String notes = object.getString(Constant.COLUMN_NOTES);
+
+                Set set = new Set();
+                set.setWeight(
+                        weight.equalsIgnoreCase(Constant.RETURN_NULL) ? (int)Constant.CODE_FAILED :
+                                Float.valueOf(weight));
+                set.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ? 0 : Integer.valueOf(reps));
+                set.setDuration(duration);
+                set.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ?
+                                          (int)Constant.CODE_FAILED : Integer.valueOf(difficulty));
+
+                if (!notes.equalsIgnoreCase(Constant.RETURN_NULL))
+                {
+                    set.setNotes(notes);
+                }
+
+                ArrayList<Set> sets = new ArrayList<>();
+                sets.add(set);
+
+                Exercise exercise = new Exercise();
+                exercise.setName(name);
+                exercise.setSets(sets);
+                exercise.setIncludedInIntencity(true);
+
+                // This determines if what we searched for has been returned from the database.
+                // This is not case sensitive.
+                if (!searchString.equals("") && !foundSearchResult && name.equalsIgnoreCase(searchString))
+                {
+                    foundSearchResult = true;
+                }
+
+                // Add all the exercises from the database to the array list.
+                exercises.add(exercise);
             }
-
-            ArrayList<Set> sets = new ArrayList<>();
-            sets.add(set);
-
-            Exercise exercise = new Exercise();
-            exercise.setName(name);
-            exercise.setSets(sets);
-
-            // This determines if what we searched for has been returned from the database.
-            // This is not case sensitive.
-            if (!searchString.equals("") && !foundSearchResult && name.equalsIgnoreCase(searchString))
-            {
-                foundSearchResult = true;
-            }
-
-            // Add all the exercises from the database to the array list.
-            exercises.add(exercise);
         }
 
         if (!searchString.equals("") && !foundSearchResult)

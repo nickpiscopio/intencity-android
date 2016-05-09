@@ -65,6 +65,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     private String searchString;
 
+    private ArrayAdapter arrayAdapter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -219,19 +221,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
             progressBar.setVisibility(View.GONE);
 
-            ArrayAdapter arrayAdapter = null;
-
             if (searchExercises)
             {
-                try
-                {
-                    ArrayList<Exercise> searchedExerciseResults = new ExerciseDao().parseJson(response, searchString);
-                    arrayAdapter  = new SearchExerciseListAdapter(context, R.layout.list_item_search_exercise, searchedExerciseResults, exercises, SearchActivity.this);
-                }
-                catch (JSONException e)
-                {
-                    showConnectionIssue();
-                }
+                parseExercises(response);
             }
             else
             {
@@ -250,9 +242,36 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         @Override
         public void onRetrievalFailed()
         {
-            showConnectionIssue();
+            if (searchExercises)
+            {
+                parseExercises("");
+
+                showConnectionIssue();
+            }
+            else
+            {
+                showConnectionIssue();
+            }
         }
     };
+
+    /**
+     * Parses the exercises from the response.
+     *
+     * @param response  The response from the server.
+     */
+    private void parseExercises(String response)
+    {
+        try
+        {
+            ArrayList<Exercise> searchedExerciseResults = new ExerciseDao().parseJson(response, searchString);
+            arrayAdapter  = new SearchExerciseListAdapter(context, R.layout.list_item_search_exercise, searchedExerciseResults, exercises, SearchActivity.this);
+        }
+        catch (JSONException e)
+        {
+            showConnectionIssue();
+        }
+    }
 
     /**
      * Shows a connection issue to the user.

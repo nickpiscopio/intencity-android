@@ -143,13 +143,34 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         return view;
     }
 
-    /**
-     * Sets the  exercise TextView.
+    /** 
+     * Sets the exercise card information. 
      *
-     * @param exerciseName  The name of the exercise to set the TextView.
+     * @param exerciseName          The name of the exercise to set the TextView. 
+     * @param description           The description to show. 
+     * @param includedInIntencity   Boolean value of whether the exercise is included in Intencity. 
      */
-    public void setExerciseText(String exerciseName)
+    public void setExercise(String exerciseName, String description, boolean includedInIntencity)
     {
+        if (description != null)
+        {
+            this.description.setText(description);
+            this.description.setVisibility(View.VISIBLE);
+            this.exerciseEditLayout.setVisibility(View.GONE);
+            this.hide.setVisibility(View.GONE);
+            this.exercise.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
+        }
+        else
+        {
+            this.description.setVisibility(View.GONE);
+            this.exerciseEditLayout.setVisibility(View.VISIBLE);
+            this.hide.setVisibility(View.VISIBLE);
+
+            exercise.setClickable(!includedInIntencity);
+            exercise.setBackgroundResource(includedInIntencity ? R.drawable.button_card : 0);
+            exercise.setTextColor(ContextCompat.getColor(context, includedInIntencity ? R.color.primary : R.color.secondary_dark));
+        }
+
         exercise.setText(exerciseName);
     }
 
@@ -192,32 +213,6 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
             this.slash.setVisibility(View.VISIBLE);
 
             this.weight.setText(String.valueOf(weight));
-        }
-    }
-
-    /**
-     * Sets and shows the description for the exercise.
-     *
-     * @param description   the description to show.
-     */
-    public void setDescription(String description)
-    {
-        if (description != null)
-        {
-            this.description.setText(description);
-            this.description.setVisibility(View.VISIBLE);
-            this.exerciseEditLayout.setVisibility(View.GONE);
-            this.hide.setVisibility(View.GONE);
-
-            this.exercise.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
-        }
-        else
-        {
-            this.description.setVisibility(View.GONE);
-            this.exerciseEditLayout.setVisibility(View.VISIBLE);
-            this.hide.setVisibility(View.VISIBLE);
-
-            this.exercise.setTextColor(ContextCompat.getColor(context, R.color.primary));
         }
     }
 

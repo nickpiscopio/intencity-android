@@ -71,6 +71,7 @@
 
     <!-- Search Strings -->
     <string name="search_exercise">Search for an exercise</string>
+    <string name="search_exercise_not_found">Intencity doesn\'t have directions for this exercise.</string>
     <string name="search_user">Search for a user</string>
     <string name="no_results">No results to display.</string>
 

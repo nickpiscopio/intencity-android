@@ -57,10 +57,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Set set = sets.get(sets.size() - 1);
 
         ExerciseViewHolder exerciseHolder = (ExerciseViewHolder) holder;
-        exerciseHolder.setExerciseText(exercise.getName());
+        exerciseHolder.setExercise(exercise.getName(), exercise.getDescription(), exercise.isIncludedInIntencity());
         exerciseHolder.setPosition(position);
         exerciseHolder.setWeight(set.getWeight());
-        exerciseHolder.setDescription(exercise.getDescription());
 
         String reps = String.valueOf(set.getReps());
         String duration = set.getDuration();
