@@ -11,12 +11,12 @@ import android.widget.ListView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RoutineSectionAdapter;
+import com.intencity.intencity.helper.doa.ExerciseDao;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.RoutineRow;
 import com.intencity.intencity.model.RoutineSection;
-import com.intencity.intencity.model.Set;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.RoutineKey;
@@ -25,9 +25,7 @@ import com.intencity.intencity.util.RoutineType;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.view.activity.IntencityRoutineActivity;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -122,39 +120,23 @@ public class RoutineFragment extends android.support.v4.app.Fragment
         @Override
         public void onRetrievalSuccessful(String response)
         {
+            ExerciseDao dao = new ExerciseDao();
             ArrayList<Exercise> exercises = new ArrayList<>();
-
-            // We are adding a warm-up to the exercise list.
-            exercises.add(getWarmUp());
 
             try
             {
-                JSONArray array = new JSONArray(response);
-
-                int length = array.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject object = array.getJSONObject(i);
-
-                    String name = object.getString(Constant.COLUMN_EXERCISE_NAME);
-                    String weight = object.getString(Constant.COLUMN_EXERCISE_WEIGHT);
-                    String reps = object.getString(Constant.COLUMN_EXERCISE_REPS);
-                    String duration = object.getString(Constant.COLUMN_EXERCISE_DURATION);
-                    String difficulty = object.getString(Constant.COLUMN_EXERCISE_DIFFICULTY);
-
-                    // Add all the exercises from the database to the array list.
-                    exercises.add(getNewExercise(name, weight, reps, duration, difficulty));
-                }
-
                 previousExercises = exercises;
                 index = 0;
 
                 // We are adding a stretch to the exercise list.
-                Exercise stretch = getNewExercise(context.getString(R.string.stretch),
-                                                  Constant.RETURN_NULL, Constant.RETURN_NULL,
-                                                  Constant.RETURN_NULL, Constant.RETURN_NULL);
+                Exercise stretch = dao.getNewExercise(context.getString(R.string.stretch),
+                                                      Constant.RETURN_NULL, Constant.RETURN_NULL,
+                                                      Constant.RETURN_NULL, Constant.RETURN_NULL, true);
                 stretch.setDescription(context.getString(R.string.stretch_description));
+
+                // We are adding a warm-up to the exercise list.
+                exercises.add(getWarmUp(dao));
+                exercises.addAll(dao.parseJson(response, ""));
                 exercises.add(stretch);
 
                 listener.onFinishedLoading(Constant.ID_FRAGMENT_EXERCISE_LIST);
@@ -177,50 +159,22 @@ public class RoutineFragment extends android.support.v4.app.Fragment
     /**
      * Gets a warm up exercise to add to the exercise list.
      *
+     * @param dao   An instance of the ExerciseDao.
+     *
      * @return  The warm up exercise.
      */
-    private Exercise getWarmUp()
+    private Exercise getWarmUp(ExerciseDao dao)
     {
-        Exercise warmUp = getNewExercise(context.getString(R.string.warm_up),
-                                         Constant.RETURN_NULL,
-                                         Constant.RETURN_NULL,
-                                         Constant.RETURN_NULL,
-                                         Constant.RETURN_NULL);
+        Exercise warmUp = dao.getNewExercise(context.getString(R.string.warm_up),
+                                             Constant.RETURN_NULL,
+                                             Constant.RETURN_NULL,
+                                             Constant.RETURN_NULL,
+                                             Constant.RETURN_NULL,
+                                             true);
+
         warmUp.setDescription(context.getString(R.string.warm_up_description));
 
         return warmUp;
-    }
-
-    /**
-     * Get a new exercise.
-     *
-     * @param name          The name of the exercise.
-     * @param weight        The weight the user did last time.
-     * @param reps          The amount of reps the user did.
-     * @param duration      The duration the user did.
-     *                      Usually in 00:00:00 format.
-     * @param difficulty    The difficulty from 1-10.
-     *
-     * @return  The new exercise.
-     */
-    private Exercise getNewExercise(String name, String weight, String reps, String duration, String difficulty)
-    {
-        Set set = new Set();
-        set.setWeight(weight.equalsIgnoreCase(Constant.RETURN_NULL) ? (int) Constant.CODE_FAILED :
-                              Float.valueOf(weight));
-        set.setReps(reps.equalsIgnoreCase(Constant.RETURN_NULL) ? 0 : Integer.valueOf(reps));
-        set.setDuration(duration);
-        set.setDifficulty(difficulty.equalsIgnoreCase(Constant.RETURN_NULL) ? (int) Constant.CODE_FAILED :
-                                  Integer.valueOf(difficulty));
-
-        ArrayList<Set> sets = new ArrayList<>();
-        sets.add(set);
-
-        Exercise exercise = new Exercise();
-        exercise.setName(name);
-        exercise.setSets(sets);
-
-        return exercise;
     }
 
     /**
@@ -280,7 +234,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment
 
                     routineName = getString(R.string.title_custom_routine);
                     previousExercises = new ArrayList<>();
-                    previousExercises.add(getWarmUp());
+                    previousExercises.add(getWarmUp(new ExerciseDao()));
 
                     index = 1;
 

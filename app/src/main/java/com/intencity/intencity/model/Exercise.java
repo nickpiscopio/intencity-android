@@ -20,6 +20,8 @@ public class Exercise implements Parcelable
 
     private ArrayList<Set> sets;
 
+    private boolean includedInIntencity;
+
     public Exercise() { }
 
     public Exercise(ArrayList<Set> sets)
@@ -34,6 +36,8 @@ public class Exercise implements Parcelable
 
         sets = new ArrayList<>();
         in.readTypedList(sets, Set.CREATOR);
+
+        includedInIntencity = in.readInt() == 0 ? false : true;
     }
 
     public static final Creator<Exercise> CREATOR = new Creator<Exercise>()
@@ -63,6 +67,7 @@ public class Exercise implements Parcelable
         dest.writeString(name);
         dest.writeString(description);
         dest.writeTypedList(sets);
+        dest.writeInt(includedInIntencity ? 1 : 0);
     }
 
     /**
@@ -106,5 +111,15 @@ public class Exercise implements Parcelable
     public void setSets(ArrayList<Set> sets)
     {
         this.sets = sets;
+    }
+
+    public boolean isIncludedInIntencity()
+    {
+        return includedInIntencity;
+    }
+
+    public void setIncludedInIntencity(boolean includedInIntencity)
+    {
+        this.includedInIntencity = includedInIntencity;
     }
 }

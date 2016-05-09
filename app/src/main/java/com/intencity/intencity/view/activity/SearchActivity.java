@@ -31,6 +31,8 @@ import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 
 /**
@@ -60,6 +62,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     // This is the list of exercises that the user has already completed.
     private ArrayList<Exercise> exercises;
+
+    private String searchString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -125,6 +129,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         progressBar.setVisibility(View.VISIBLE);
 
         connectionIssue.setVisibility(View.GONE);
+
+        searchString = query;
 
         SecurePreferences securePreferences = new SecurePreferences(context);
         String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
@@ -213,12 +219,19 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
             progressBar.setVisibility(View.GONE);
 
-            ArrayAdapter arrayAdapter;
+            ArrayAdapter arrayAdapter = null;
 
             if (searchExercises)
             {
-                ArrayList<Exercise> searchedExerciseResults = new ExerciseDao().parseJson(response);
-                arrayAdapter  = new SearchExerciseListAdapter(context, R.layout.list_item_search_exercise, searchedExerciseResults, exercises, SearchActivity.this);
+                try
+                {
+                    ArrayList<Exercise> searchedExerciseResults = new ExerciseDao().parseJson(response, searchString);
+                    arrayAdapter  = new SearchExerciseListAdapter(context, R.layout.list_item_search_exercise, searchedExerciseResults, exercises, SearchActivity.this);
+                }
+                catch (JSONException e)
+                {
+                    showConnectionIssue();
+                }
             }
             else
             {
@@ -226,22 +239,33 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                 arrayAdapter  = new RankingListAdapter(context, R.layout.list_item_ranking, users, true);
             }
 
-            listView.setAdapter(arrayAdapter);
+            if (arrayAdapter != null)
+            {
+                listView.setAdapter(arrayAdapter);
 
-            divider.setVisibility(View.GONE);
+                divider.setVisibility(View.GONE);
+            }
         }
 
         @Override
         public void onRetrievalFailed()
         {
-            searchView.clearFocus();
-
-            connectionIssue.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
-
-            divider.setVisibility(View.VISIBLE);
+            showConnectionIssue();
         }
     };
+
+    /**
+     * Shows a connection issue to the user.
+     */
+    private void showConnectionIssue()
+    {
+        searchView.clearFocus();
+
+        connectionIssue.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+
+        divider.setVisibility(View.VISIBLE);
+    }
 
     /**
      * Sets the result for this activity and goes back.
