@@ -37,7 +37,7 @@ public class Exercise implements Parcelable
         sets = new ArrayList<>();
         in.readTypedList(sets, Set.CREATOR);
 
-        includedInIntencity = in.readInt() == 0 ? false : true;
+        includedInIntencity = in.readInt() == 1;
     }
 
     public static final Creator<Exercise> CREATOR = new Creator<Exercise>()

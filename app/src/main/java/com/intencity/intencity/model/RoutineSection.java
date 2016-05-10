@@ -107,18 +107,8 @@ public class RoutineSection implements Parcelable
         return keys;
     }
 
-    public void setKeys(int[] keys)
-    {
-        this.keys = keys;
-    }
-
     public ArrayList<RoutineRow> getRoutineRows()
     {
         return rows;
-    }
-
-    public void setRoutineRows(ArrayList<RoutineRow> rows)
-    {
-        this.rows = rows;
     }
 }

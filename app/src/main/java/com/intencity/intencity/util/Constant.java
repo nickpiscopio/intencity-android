@@ -66,8 +66,9 @@ public class Constant
     public static final int REQUEST_START_EXERCISING_INTENCITY_ROUTINE = 90;
 
     // Fragment IDs
-    public static final int ID_FRAGMENT_EXERCISE_LIST = 10;
-    public static final int ID_SAVE_EXERCISE_LIST = 20;
+    public static final int ID_FRAGMENT_ROUTINE = 10;
+    public static final int ID_FRAGMENT_EXERCISE_LIST = 20;
+    public static final int ID_SAVE_EXERCISE_LIST = 30;
 
     // Extras
     public static final String EXTRA_DEMO_PAGE = "com.intencity.intencity.extra.demo.page";

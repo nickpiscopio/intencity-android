@@ -22,26 +22,28 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
 {
     private Context context;
 
+    private int index;
+    private int routineState;
+
     private String routineName;
 
     private ArrayList<Exercise> exercises;
-
-    private int index;
 
     public SetExerciseTask(Context context)
     {
         this.context = context;
     }
 
-    public SetExerciseTask(Context context, String routineName, ArrayList<Exercise> exercises, int index)
+    public SetExerciseTask(Context context, int routineState, String routineName, ArrayList<Exercise> exercises, int index)
     {
         this.context = context;
+
+        this.index = index;
+        this.routineState = routineState;
 
         this.routineName = routineName;
 
         this.exercises = exercises;
-
-        this.index = index;
     }
 
     @Override
@@ -71,10 +73,12 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
                 for (Set set : sets)
                 {
                     ContentValues values = new ContentValues();
+                    values.put(ExerciseTable.COLUMN_ROUTINE_STATE, routineState);
                     values.put(ExerciseTable.COLUMN_INDEX, index);
                     values.put(ExerciseTable.COLUMN_ROUTINE_NAME, routineName);
                     values.put(ExerciseTable.COLUMN_NAME, exercise.getName());
                     values.put(ExerciseTable.COLUMN_DESCRIPTION, exercise.getDescription());
+                    values.put(ExerciseTable.COLUMN_FROM_INTENCITY, exercise.isIncludedInIntencity());
 
                     int webId = set.getWebId();
                     float weight = set.getWeight();

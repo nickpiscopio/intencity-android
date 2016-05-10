@@ -3,7 +3,6 @@ package com.intencity.intencity.view.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +12,12 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.handler.FragmentHandler;
-import com.intencity.intencity.helper.doa.IntencityRoutineDao;
-import com.intencity.intencity.listener.DatabaseListener;
 import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.NotificationListener;
-import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.RoutineSection;
-import com.intencity.intencity.task.GetExerciseTask;
-import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.RoutineKey;
-import com.intencity.intencity.util.RoutineType;
-import com.intencity.intencity.util.SecurePreferences;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -37,7 +26,7 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 12/12/15.
  */
-public class FitnessLogFragment extends android.support.v4.app.Fragment implements DatabaseListener,
+public class FitnessLogFragment extends android.support.v4.app.Fragment implements
                                                                                    LoadingListener,
                                                                                    ExerciseListListener
 {
@@ -49,6 +38,7 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
 
     private Context context;
 
+    private int routineState;
     private String routineName;
     private ArrayList<Exercise> previousExercises;
     private int index;
@@ -81,29 +71,10 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
 
         context = getContext();
 
-        initRoutineCards();
+        initRoutineFragment();
 
-        new GetExerciseTask(context, this).execute();
 
         return view;
-    }
-
-    private void initRoutineCards()
-    {
-        sections = new ArrayList<>();
-        sections.add(new RoutineSection(RoutineType.CUSTOM_ROUTINE, getString(R.string.title_custom_routine), new int[] { RoutineKey.USER_SELECTED }, null));
-        sections.add(new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.CONSECUTIVE }, null));
-    }
-
-    /**
-     * Starts the service to get the muscle groups from the web server.
-     */
-    private void getMuscleGroups()
-    {
-        new ServiceTask(muscleGroupServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                            Constant.generateStoredProcedureParameters(
-                                                                    Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS,
-                                                                    email));
     }
 
     /**
@@ -116,66 +87,16 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         {
             pushedTryAgain = true;
             onStartLoading();
-            getMuscleGroups();
+//            getMuscleGroups();
         }
     };
 
-    /**
-     * The service listener for populating the spinner with routine names.
-     *
-     * The routine name that gets set is the recommended routine name.
-     */
-    public ServiceListener muscleGroupServiceListener = new ServiceListener()
+    private void initRoutineFragment()
     {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-            try
-            {
-                sections.add(new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_intencity_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, new IntencityRoutineDao().parseJson(context, response)));
+        onFinishedLoading(Constant.ID_FRAGMENT_ROUTINE);
+    }
 
-                // Add the previous exercise to the list.
-                if (previousExercises != null && previousExercises.size() > 0)
-                {
-                    // TODO: Add continue card
-//                    sections.add(new RoutineSection(getString(R.string.title_intencity_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, new IntencityRoutineDao().parseJson(response)));
-                }
 
-                if (pushedTryAgain)
-                {
-                    // Repopulate the spinner if the user gets their connection back
-                    try
-                    {
-//                        repopulateSpinner(sections);
-                    }
-                    catch (Exception e)
-                    {
-                        // Only add the saved exercises to the spinner because of the network issue.
-                        pushRoutineFragment(sections);
-                    }
-
-                    removeConnectionIssueMessage();
-                    stopLoading();
-                }
-                else
-                {
-                    pushRoutineFragment(sections);
-                }
-            }
-            catch (JSONException e)
-            {
-                Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
-
-                onFinishedLoading(pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : (int) Constant.CODE_FAILED);
-            }
-        }
-
-        @Override
-        public void onRetrievalFailed()
-        {
-            onFinishedLoading(pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : (int) Constant.CODE_FAILED);
-        }
-    };
 
     /**
      * Repopulates the RoutineFragment's spinner
@@ -198,12 +119,12 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
      */
     private void pushRoutineFragment(ArrayList<RoutineSection> sections)
     {
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(Constant.BUNDLE_ROUTINE_SECTIONS, sections);
-        bundle.putString(Constant.BUNDLE_ROUTINE_NAME, routineName);
-        bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, previousExercises);
-        bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, index);
-        bundle.putInt(Constant.BUNDLE_RECOMMENDED_ROUTINE, recommendedRoutine);
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelableArrayList(Constant.BUNDLE_ROUTINE_SECTIONS, sections);
+//        bundle.putString(Constant.BUNDLE_ROUTINE_NAME, routineName);
+//        bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, previousExercises);
+//        bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, index);
+//        bundle.putInt(Constant.BUNDLE_RECOMMENDED_ROUTINE, recommendedRoutine);
 
         routineFragment = new RoutineFragment();
         routineFragment.setListener(this);
@@ -212,7 +133,7 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         FragmentManager manager = getFragmentManager();
         FragmentHandler fragmentHandler = FragmentHandler.getInstance();
         fragmentHandler.pushFragment(manager, R.id.layout_fitness_log, routineFragment, Constant.FRAGMENT_ROUTINE, false,
-                                     bundle, false);
+                                     null, false);
 
         stopLoading();
     }
@@ -261,20 +182,6 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void onRetrievalSuccessful(String routineName, ArrayList<?> results, int index)
-    {
-        this.routineName = routineName;
-        previousExercises = (ArrayList<Exercise>)results;
-        this.index = index;
-
-        SecurePreferences securePreferences = new SecurePreferences(context);
-        email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
-
-        getMuscleGroups();
-    }
-
-    @Override
     public void onStartLoading()
     {
         progressBar.setVisibility(View.VISIBLE);
@@ -285,6 +192,9 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     {
         switch (which)
         {
+            case Constant.ID_FRAGMENT_ROUTINE:
+                pushRoutineFragment(null);
+                break;
             case Constant.ID_FRAGMENT_EXERCISE_LIST:
 
                 Bundle bundle = new Bundle();

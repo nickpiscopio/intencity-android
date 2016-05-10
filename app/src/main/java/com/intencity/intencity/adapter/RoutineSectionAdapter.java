@@ -34,7 +34,8 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
     private Context context;
     private Resources res;
 
-    private int layoutResourceId;
+    private int layoutResourceContinueId;
+    private int layoutResourceRoutineId;
 
     private ArrayList<RoutineSection> sections;
 
@@ -54,18 +55,20 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
     /**
      * The constructor.
      *
-     * @param context           The application context.
-     * @param layoutResourceId  The resource id of the view we are inflating.
-     * @param sections          The routine sections for the list view.
+     * @param context                   The application context.
+     * @param layoutResourceContinueId  The resource id of the continue card we are inflating.
+     * @param layoutResourceRoutineId   The resource id of the routine card  we are inflating.
+     * @param sections                  The routine sections for the list view.
      */
-    public RoutineSectionAdapter(Context context, int layoutResourceId, ArrayList<RoutineSection> sections)
+    public RoutineSectionAdapter(Context context, int layoutResourceContinueId, int layoutResourceRoutineId, ArrayList<RoutineSection> sections)
     {
-        super(context, layoutResourceId, sections);
+        super(context, layoutResourceContinueId, layoutResourceRoutineId, sections);
 
         this.context = context;
         this.res = context.getResources();
 
-        this.layoutResourceId = layoutResourceId;
+        this.layoutResourceContinueId = layoutResourceContinueId;
+        this.layoutResourceRoutineId = layoutResourceRoutineId;
 
         this.sections = sections;
 
@@ -84,7 +87,14 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
         {
             this.position = position;
 
-            convertView = inflater.inflate(layoutResourceId, parent, false);
+            RoutineSection section = sections.get(position);
+            ArrayList<RoutineRow> rows = (ArrayList<RoutineRow>)section.getRoutineRows();
+
+            int[] keys = section.getKeys();
+
+            RoutineType type = section.getType();
+
+            convertView = inflater.inflate(type == RoutineType.CONTINUE ? layoutResourceContinueId : layoutResourceRoutineId, parent, false);
 
             holder.cardView = (CardView) convertView.findViewById(R.id.card_view);
             holder.titleLayout = (LinearLayout) convertView.findViewById(R.id.layout_title);
@@ -92,12 +102,6 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
             holder.description = (TextView) convertView.findViewById(R.id.description);
             holder.imageView = (ImageView) convertView.findViewById(R.id.routine_image);
 
-            RoutineSection section = sections.get(position);
-            ArrayList<RoutineRow> rows = section.getRoutineRows();
-
-            int[] keys = section.getKeys();
-
-            RoutineType type = section.getType();
             String description;
 
             if (rows != null)
@@ -127,37 +131,40 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
             }
 
             holder.title.setText(section.getTitle());
-            holder.description.setText(description);
 
-            for (int key : keys)
+            // This means we aren't using the continue routine card.
+            if (keys != null)
             {
-                ImageView imageView = new ImageView(context);
+                holder.description.setText(description);
 
-                switch (key)
+                for (int key : keys)
                 {
-                    case RoutineKey.USER_SELECTED:
-                        imageView.setImageResource(R.drawable.circle_red);
-                        break;
-                    case RoutineKey.RANDOM:
-                        imageView.setImageResource(R.drawable.circle_accent);
-                        break;
-                    case RoutineKey.CONSECUTIVE:
-                        imageView.setImageResource(R.drawable.circle_primary_dark);
-                        break;
-                    default:
-                        break;
+                    ImageView imageView = new ImageView(context);
+
+                    switch (key)
+                    {
+                        case RoutineKey.USER_SELECTED:
+                            imageView.setImageResource(R.drawable.circle_red);
+                            break;
+                        case RoutineKey.RANDOM:
+                            imageView.setImageResource(R.drawable.circle_accent);
+                            break;
+                        case RoutineKey.CONSECUTIVE:
+                            imageView.setImageResource(R.drawable.circle_primary_dark);
+                            break;
+                        default:
+                            break;
+                    }
+
+                    imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    imageView.setPadding(res.getDimensionPixelSize(R.dimen.layout_margin_quarter), 0, 0, 0);
+
+                    holder.titleLayout.addView(imageView);
                 }
-
-                imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                imageView.setPadding(res.getDimensionPixelSize(R.dimen.layout_margin_quarter), 0, 0, 0);
-
-                holder.titleLayout.addView(imageView);
             }
 
             switch (type)
             {
-                case CONTINUE:
-                    break;
                 case CUSTOM_ROUTINE:
                     holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.secondary_dark));
                     holder.imageView.setImageResource(R.mipmap.custom_routine_background);

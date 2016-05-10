@@ -570,7 +570,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         {
             // Save the exercises to the database in case the user wants
             // to continue with this routine later.
-            new SetExerciseTask(context, routineName, allExercises, currentExercises.size()).execute();
+            new SetExerciseTask(context, routineState, routineName, allExercises, currentExercises.size()).execute();
         }
     }
 

@@ -19,8 +19,9 @@ public class ExerciseTable implements BaseColumns
 {
     public static final String TABLE_NAME = "Exercise";
 
-    // The last exercise we left off at.
+    public static final String COLUMN_ROUTINE_STATE = "RoutineState";
     public static final String COLUMN_ROUTINE_NAME = "RoutineName";
+    // The last exercise we left off at.
     public static final String COLUMN_INDEX = "LastExerciseIndex";
     public static final String COLUMN_NAME = "ExerciseName";
     public static final String COLUMN_DESCRIPTION = "ExerciseDescription";
@@ -30,4 +31,6 @@ public class ExerciseTable implements BaseColumns
     public static final String COLUMN_DURATION = "ExerciseDuration";
     public static final String COLUMN_DIFFICULTY = "ExerciseDifficulty";
     public static final String COLUMN_NOTES = "Notes";
+    // Whether a search result is from Intencity or the user typed it in.
+    public static final String COLUMN_FROM_INTENCITY = "FromIntencity";
 }
