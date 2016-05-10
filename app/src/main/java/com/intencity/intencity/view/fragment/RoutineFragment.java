@@ -64,8 +64,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_routine, container, false);
-        View header = inflater.inflate(R.layout.routine_header, null);
-        View footer = inflater.inflate(R.layout.routine_footer, null);
+        View header = inflater.inflate(R.layout.list_item_routine_header, null);
+        View footer = inflater.inflate(R.layout.list_item_routine_footer, null);
 
         listView = (ListView) view.findViewById(R.id.list_view);
 

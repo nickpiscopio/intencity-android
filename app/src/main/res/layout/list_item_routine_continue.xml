@@ -8,7 +8,8 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/layout_margin_half"
+        android:layout_marginTop="@dimen/layout_margin_quarter"
+        android:layout_marginBottom="@dimen/layout_margin_quarter"
         android:layout_marginLeft="@dimen/layout_margin"
         android:layout_marginRight="@dimen/layout_margin"
         android:foreground="?android:attr/selectableItemBackground"
@@ -19,20 +20,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:padding="@dimen/layout_margin"
             android:gravity="center">
 
             <TextView
                 android:id="@+id/title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="CONTINUE LOWER BACK"
+                android:textStyle="bold"
                 android:layout_marginRight="@dimen/layout_margin"
-                android:text="CONTINUE LOWER BACK adsfklj ;sdfkljsd flkjasd fkjl sdflkj sdaj asdljk asdflkj sadf lkjas d sdlkjsadflk jsdf "
-                android:textSize="@dimen/card_title_size"
+                android:textSize="@dimen/card_continue_title_size"
                 android:textColor="@color/secondary_light"/>
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="@dimen/card_continue_title_size"
+                android:layout_height="@dimen/card_continue_title_size"
                 android:src="@mipmap/next_dark"/>
 
         </LinearLayout>
