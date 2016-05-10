@@ -39,7 +39,7 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
 
     private Context context;
 
-    private int layoutResourceId;
+    private int layoutResId;
 
     private ArrayList<Set> sets;
 
@@ -57,10 +57,10 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
         Spinner intensitySpinner;
     }
 
-    public ExerciseSetAdapter(Context context, int layoutResourceId, ArrayList<Set> sets)
+    public ExerciseSetAdapter(Context context, int layoutResId, ArrayList<Set> sets)
     {
-        super(context, layoutResourceId, sets);
-        this.layoutResourceId = layoutResourceId;
+        super(context, layoutResId, sets);
+        this.layoutResId = layoutResId;
         this.context = context;
         this.sets = sets;
 
@@ -74,14 +74,19 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        final SetHolder holder = (convertView == null) ? new SetHolder() : (SetHolder)convertView.getTag();
+        SetHolder holder;
 
-        if (this.position != position || convertView == null)
+        // If convertView is not null, we can reuse it directly, no inflation required!
+        // We only inflate a new View when the convertView is null.
+        if (convertView == null || this.position != position)
         {
             this.position = position;
 
-            convertView = inflater.inflate(layoutResourceId, parent, false);
+            convertView = inflater.inflate(layoutResId, parent, false);
 
+            holder = new SetHolder();
+
+            // Create a ViewHolder and store references to the two children views
             holder.setNumber = (TextView)convertView.findViewById(R.id.text_view_set);
             holder.weightEditText = (EditText)convertView.findViewById(WEIGHT);
             holder.durationEditText = (EditText)convertView.findViewById(DURATION);
@@ -90,17 +95,14 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
             holder.weightEditText.setOnTouchListener(clearClickLister);
             holder.durationEditText.setOnTouchListener(clearClickLister);
 
-            ArrayAdapter<Integer> adapter =
-                    new ArrayAdapter<>(context, R.layout.spinner, INTENSITY_VALUES);
+            ArrayAdapter<Integer> adapter = new ArrayAdapter<>(context, R.layout.spinner, INTENSITY_VALUES);
             holder.intensitySpinner.setAdapter(adapter);
             adapter.setDropDownViewResource(R.layout.spinner_item);
 
             // Add the listeners to the views for each list item.
-            holder.weightEditText.addTextChangedListener(
-                    new GenericTextWatcher(this, position, holder.weightEditText));
+            holder.weightEditText.addTextChangedListener(new GenericTextWatcher(this, position, holder.weightEditText));
             holder.durationEditText.addTextChangedListener(new GenericTextWatcher(this, position, holder.durationEditText));
-            holder.intensitySpinner
-                    .setOnItemSelectedListener(new GenericItemSelectionListener(this, position));
+            holder.intensitySpinner.setOnItemSelectedListener(new GenericItemSelectionListener(this, position));
 
             // This is auto incremented with each added view.
             holder.setNumber.setText(String.valueOf(position + 1));
@@ -118,23 +120,20 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
 
             // Add the values to each list item.
             holder.weightEditText.setText(weight.equals(codeFailed) ? "" : weight);
-            holder.weightEditText.setFilters(
-                    new InputFilter[] { new DecimalDigitsInputFilter(4, 1) });
-
+            holder.weightEditText.setFilters(new InputFilter[] { new DecimalDigitsInputFilter(4, 1) });
 
             if (time.equals(Constant.RETURN_NULL))
             {
-                holder.durationEditText.setText(
-                        reps.equals(codeFailed) || reps.equals(Constant.RETURN_NULL) ? "" : reps);
+                holder.durationEditText.setText(reps.equals(codeFailed) || reps.equals(Constant.RETURN_NULL) ? "" : reps);
             }
             else
             {
-                holder.durationEditText.setText(
-                        time.equals(codeFailed) || time.equals(Constant.RETURN_NULL) ? "" : time);
+                holder.durationEditText.setText(time.equals(codeFailed) || time.equals(Constant.RETURN_NULL) ? "" : time);
             }
 
             holder.intensitySpinner.setSelection(intensity - 1);
 
+            // The tag can be any Object, this just happens to be the ViewHolder
             convertView.setTag(holder);
         }
 

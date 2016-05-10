@@ -64,11 +64,13 @@ public class MenuAdapter extends ArrayAdapter<MenuItem>
 
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        final MenuHolder holder = (convertView == null) ? new MenuHolder() : (MenuHolder)convertView.getTag();
+        MenuHolder holder;
 
-        if (this.position != position || convertView == null)
+        if (convertView == null || this.position != position)
         {
             this.position = position;
+
+            holder = new MenuHolder();
 
             MenuItem item = objects.get(position);
 

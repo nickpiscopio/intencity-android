@@ -69,17 +69,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
         listView = (ListView) view.findViewById(R.id.list_view);
 
-//        Bundle bundle = getArguments();
-//
-//        if (bundle != null)
-//        {
-//            sections = bundle.getParcelableArrayList(Constant.BUNDLE_ROUTINE_SECTIONS);
-//            routineName = bundle.getString(Constant.BUNDLE_ROUTINE_NAME);
-//            previousExercises = bundle.getParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST);
-//            index = bundle.getInt(Constant.BUNDLE_EXERCISE_LIST_INDEX);
-//            recommendedRoutine = bundle.getInt(Constant.BUNDLE_RECOMMENDED_ROUTINE);
-//        }
-
         context = getContext();
 
         email = Util.getSecurePreferencesEmail(context);
@@ -92,7 +81,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         // This will be added to the CONTINUE Card.
         new GetExerciseTask(context, this).execute();
 
-        adapter  = new RoutineSectionAdapter(context, R.layout.list_item_routine_continue, R.layout.list_item_routine, sections);
+        adapter  = new RoutineSectionAdapter(context, R.layout.list_item_routine, sections);
         listView.setAdapter(adapter);
         listView.addHeaderView(header, null, false);
         listView.addFooterView(footer, null, false);

@@ -34,19 +34,17 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
     private Context context;
     private Resources res;
 
-    private int layoutResourceContinueId;
-    private int layoutResourceRoutineId;
+    private int layoutResId;
 
     private ArrayList<RoutineSection> sections;
 
     private LayoutInflater inflater;
 
-    private int position;
-
     static class RoutineHolder
     {
         CardView cardView;
-        LinearLayout titleLayout;
+        LinearLayout indicatorLayout;
+        LinearLayout nextLayout;
         TextView title;
         TextView description;
         ImageView imageView;
@@ -55,112 +53,122 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
     /**
      * The constructor.
      *
-     * @param context                   The application context.
-     * @param layoutResourceContinueId  The resource id of the continue card we are inflating.
-     * @param layoutResourceRoutineId   The resource id of the routine card  we are inflating.
-     * @param sections                  The routine sections for the list view.
+     * @param context       The application context.
+     * @param layoutResId   The resource id of the continue card we are inflating.
+     * @param sections  The routine sections for the list view.
      */
-    public RoutineSectionAdapter(Context context, int layoutResourceContinueId, int layoutResourceRoutineId, ArrayList<RoutineSection> sections)
+    public RoutineSectionAdapter(Context context, int layoutResId, ArrayList<RoutineSection> sections)
     {
-        super(context, layoutResourceContinueId, layoutResourceRoutineId, sections);
+        super(context, layoutResId, sections);
 
         this.context = context;
         this.res = context.getResources();
 
-        this.layoutResourceContinueId = layoutResourceContinueId;
-        this.layoutResourceRoutineId = layoutResourceRoutineId;
+        this.layoutResId = layoutResId;
 
         this.sections = sections;
-
-        position = -1;
 
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        final RoutineHolder holder = (convertView == null) ?
-                                            new RoutineHolder() :
-                                            (RoutineHolder)convertView.getTag();
+        RoutineSection section = sections.get(position);
+        RoutineType type = section.getType();
 
-        if (this.position != position || convertView == null)
+        // Avoid unnecessary calls to findViewById() on each row, which is expensive!
+        RoutineHolder holder;
+
+        // If convertView is not null, we can reuse it directly, no inflation required!
+        // We only inflate a new View when the convertView is null.
+        if (convertView == null || type == RoutineType.CONTINUE)
         {
-            this.position = position;
+            convertView = inflater.inflate(layoutResId, parent, false);
 
-            RoutineSection section = sections.get(position);
-            ArrayList<RoutineRow> rows = (ArrayList<RoutineRow>)section.getRoutineRows();
-
-            int[] keys = section.getKeys();
-
-            RoutineType type = section.getType();
-
-            convertView = inflater.inflate(type == RoutineType.CONTINUE ? layoutResourceContinueId : layoutResourceRoutineId, parent, false);
-
+            // Create a ViewHolder and store references to the two children views
+            holder = new RoutineHolder();
             holder.cardView = (CardView) convertView.findViewById(R.id.card_view);
-            holder.titleLayout = (LinearLayout) convertView.findViewById(R.id.layout_title);
+            holder.indicatorLayout = (LinearLayout) convertView.findViewById(R.id.layout_indicator);
+            holder.nextLayout = (LinearLayout) convertView.findViewById(R.id.layout_next_image);
             holder.title = (TextView) convertView.findViewById(R.id.title);
             holder.description = (TextView) convertView.findViewById(R.id.description);
             holder.imageView = (ImageView) convertView.findViewById(R.id.routine_image);
 
-            String description;
+            // The tag can be any Object, this just happens to be the ViewHolder
+            convertView.setTag(holder);
+        }
+        else
+        {
+            // Get the ViewHolder back to get fast access to the views in the layout.
+            holder = (RoutineHolder) convertView.getTag();
+        }
 
-            if (rows != null)
+        ArrayList<RoutineRow> rows = section.getRoutineRows();
+
+        int[] keys = section.getKeys();
+        String description;
+
+        if (rows != null)
+        {
+            int routineTotal = 0;
+
+            routineTotal += rows.size();
+
+            if (type == RoutineType.INTENCITY_ROUTINE)
             {
-                int routineTotal = 0;
-
-                routineTotal += rows.size();
-
-                if (type == RoutineType.INTENCITY_ROUTINE)
+                for (int i = 0; i < 2; i++)
                 {
-                    for (int i = 0; i < 2; i++)
+                    if (routineTotal > DEFAULT_ROUTINE_TOTAL)
                     {
-                        if (routineTotal > DEFAULT_ROUTINE_TOTAL)
-                        {
-                            routineTotal--;
-                        }
+                        routineTotal--;
                     }
                 }
-
-                int descriptionRes = routineTotal < PLURAL_LIMIT ? R.string.description_default_routine : R.string.description_default_routines;
-
-                description = context.getString(descriptionRes, String.valueOf(routineTotal));
-            }
-            else
-            {
-                description = context.getString(R.string.description_custom_routines);
             }
 
-            holder.title.setText(section.getTitle());
+            int descriptionRes = routineTotal < PLURAL_LIMIT ? R.string.description_default_routine : R.string.description_default_routines;
 
-            // This means we aren't using the continue routine card.
-            if (keys != null)
+            description = context.getString(descriptionRes, String.valueOf(routineTotal));
+        }
+        else
+        {
+            description = context.getString(R.string.description_custom_routines);
+        }
+
+        holder.title.setText(section.getTitle());
+
+        // This means we aren't using the continue routine card.
+        if (keys != null)
+        {
+            holder.title.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+            holder.description.setVisibility(View.VISIBLE);
+            holder.description.setText(description);
+            holder.indicatorLayout.removeAllViews();
+            holder.imageView.setVisibility(View.VISIBLE);
+            holder.nextLayout.setVisibility(View.GONE);
+
+            for (int key : keys)
             {
-                holder.description.setText(description);
+                ImageView imageView = new ImageView(context);
 
-                for (int key : keys)
+                switch (key)
                 {
-                    ImageView imageView = new ImageView(context);
-
-                    switch (key)
-                    {
-                        case RoutineKey.USER_SELECTED:
-                            imageView.setImageResource(R.drawable.circle_red);
-                            break;
-                        case RoutineKey.RANDOM:
-                            imageView.setImageResource(R.drawable.circle_accent);
-                            break;
-                        case RoutineKey.CONSECUTIVE:
-                            imageView.setImageResource(R.drawable.circle_primary_dark);
-                            break;
-                        default:
-                            break;
-                    }
-
-                    imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    imageView.setPadding(res.getDimensionPixelSize(R.dimen.layout_margin_quarter), 0, 0, 0);
-
-                    holder.titleLayout.addView(imageView);
+                    case RoutineKey.USER_SELECTED:
+                        imageView.setImageResource(R.drawable.circle_red);
+                        break;
+                    case RoutineKey.RANDOM:
+                        imageView.setImageResource(R.drawable.circle_accent);
+                        break;
+                    case RoutineKey.CONSECUTIVE:
+                        imageView.setImageResource(R.drawable.circle_primary_dark);
+                        break;
+                    default:
+                        break;
                 }
+
+                imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                imageView.setPadding(res.getDimensionPixelSize(R.dimen.layout_margin_quarter), 0, 0, 0);
+
+                holder.indicatorLayout.addView(imageView);
             }
 
             switch (type)
@@ -180,8 +188,13 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
                 default:
                     break;
             }
-
-            convertView.setTag(holder);
+        }
+        else
+        {
+            holder.title.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
+            holder.description.setVisibility(View.GONE);
+            holder.imageView.setVisibility(View.GONE);
+            holder.nextLayout.setVisibility(View.VISIBLE);
         }
 
         return convertView;
