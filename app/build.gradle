@@ -20,10 +20,6 @@ android {
     }
 }
 
-repositories {
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-}
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -36,7 +32,4 @@ dependencies {
     // Lazy loading of images.
     // Documentation: https://github.com/nostra13/Android-Universal-Image-Loader
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-
-    compile 'org.lucasr.twowayview:core:1.0.0-SNAPSHOT@aar'
-    compile 'org.lucasr.twowayview:layouts:1.0.0-SNAPSHOT@aar'
 }
