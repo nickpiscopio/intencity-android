@@ -98,92 +98,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     }
 
     /**
-     * The service listener for setting the routine.
-     */
-    public ServiceListener routineServiceListener = new ServiceListener()
-    {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-            new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                             Constant.generateStoredProcedureParameters(
-                                                                     Constant.STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY,
-                                                                     email));
-        }
-
-        @Override
-        public void onRetrievalFailed()
-        {
-            listener.onFinishedLoading(Constant.CODE_FAILED_REPOPULATE);
-        }
-    };
-
-    /**
-     * The service listener for getting the exercise list.
-     */
-    public ServiceListener exerciseServiceListener = new ServiceListener()
-    {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-            ExerciseDao dao = new ExerciseDao();
-            ArrayList<Exercise> exercises = new ArrayList<>();
-
-            try
-            {
-                previousExercises = exercises;
-                index = 0;
-
-                // We are adding a stretch to the exercise list.
-                Exercise stretch = dao.getNewExercise(context.getString(R.string.stretch),
-                                                      Constant.RETURN_NULL, Constant.RETURN_NULL,
-                                                      Constant.RETURN_NULL, Constant.RETURN_NULL, true);
-                stretch.setDescription(context.getString(R.string.stretch_description));
-
-                // We are adding a warm-up to the exercise list.
-                exercises.add(getWarmUp(dao));
-                exercises.addAll(dao.parseJson(response, ""));
-                exercises.add(stretch);
-
-                listener.onFinishedLoading(Constant.ID_FRAGMENT_EXERCISE_LIST);
-            }
-            catch (JSONException e)
-            {
-                e.printStackTrace();
-
-                listener.onFinishedLoading(Constant.CODE_FAILED_REPOPULATE);
-            }
-        }
-
-        @Override
-        public void onRetrievalFailed()
-        {
-            listener.onFinishedLoading(Constant.CODE_FAILED_REPOPULATE);
-        }
-    };
-
-    /**
-     * Gets a warm up exercise to add to the exercise list.
-     *
-     * @param dao   An instance of the ExerciseDao.
-     *
-     * @return  The warm up exercise.
-     */
-    private Exercise getWarmUp(ExerciseDao dao)
-    {
-        Exercise warmUp = dao.getNewExercise(context.getString(R.string.warm_up),
-                                             Constant.RETURN_NULL,
-                                             Constant.RETURN_NULL,
-                                             Constant.RETURN_NULL,
-                                             Constant.RETURN_NULL,
-                                             true);
-
-        warmUp.setDescription(context.getString(R.string.warm_up_description));
-
-        return warmUp;
-    }
-
-    /**
      * The click listener for the start button.
      */
     private View.OnClickListener startClickListener = new View.OnClickListener()
@@ -292,8 +206,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
             RoutineType sectionType = section.getType();
             ArrayList<?> rows = section.getRoutineRows();
 
-            Intent intent = null;
-
             switch (sectionType)
             {
                 case CONTINUE:
@@ -304,11 +216,13 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
                 case CUSTOM_ROUTINE:
 
+                    ExerciseDao dao = new ExerciseDao(context);
+
                     routineName = getString(R.string.title_custom_routine);
                     previousExercises = new ArrayList<>();
-                    previousExercises.add(getWarmUp(new ExerciseDao()));
+                    previousExercises.add(dao.getInjuryPreventionExercise(ExerciseDao.ExerciseType.WARM_UP));
 
-                    index = 1;
+                    index = 0;
 
                     routineState = RoutineState.CUSTOM;
 
@@ -318,10 +232,12 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
                 case INTENCITY_ROUTINE:
 
-                    intent = new Intent(context, IntencityRoutineActivity.class);
+                    Intent intent = new Intent(context, IntencityRoutineActivity.class);
                     intent.putExtra(Constant.BUNDLE_ROUTINE_ROWS, rows);
 
                     routineState = RoutineState.INTENCITY;
+
+                    startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
 
                     break;
 
@@ -329,11 +245,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
                     break;
                 default:
                     break;
-            }
-
-            if (intent != null)
-            {
-                startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
             }
         }
     };
@@ -365,23 +276,18 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
             ArrayList<RoutineRow> rows = data.getParcelableArrayListExtra(Constant.BUNDLE_ROUTINE_ROWS);
 
             sections.remove(sectionSelected);
-            sections.add(new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_intencity_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, rows));
+            sections.add(new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_intencity_routines),
+                                            new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, rows));
 
             adapter.notifyDataSetChanged();
         }
         else if (resultCode == Constant.REQUEST_START_EXERCISING_INTENCITY_ROUTINE)
         {
+            index = 0;
             routineName = data.getStringExtra(Constant.BUNDLE_ROUTINE_NAME);
-            int position = data.getIntExtra(Constant.BUNDLE_POSITION, (int)Constant.CODE_FAILED);
+            previousExercises = data.getParcelableArrayListExtra(Constant.BUNDLE_EXERCISE_LIST);
 
-            String routine = String.valueOf(position);
-            String storedProcedureParameters = Constant.generateStoredProcedureParameters(
-                    Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);
-
-            listener.onStartLoading();
-
-            new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                            storedProcedureParameters);
+            listener.onFinishedLoading(Constant.ID_FRAGMENT_EXERCISE_LIST);
         }
     }
 
@@ -398,11 +304,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         return routineName;
     }
 
-    public void setRoutineName(String routineName)
-    {
-        this.routineName = routineName;
-    }
-
     public ArrayList<Exercise> getPreviousExercises()
     {
         return previousExercises;
@@ -416,10 +317,5 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     public int getRoutineState()
     {
         return routineState;
-    }
-
-    public void setRecommendedRoutine(int recommendedRoutine)
-    {
-        this.recommendedRoutine = recommendedRoutine;
     }
 }

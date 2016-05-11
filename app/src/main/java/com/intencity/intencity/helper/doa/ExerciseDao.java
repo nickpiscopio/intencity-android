@@ -1,7 +1,9 @@
 package com.intencity.intencity.helper.doa;
 
 import android.content.ContentValues;
+import android.content.Context;
 
+import com.intencity.intencity.R;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.util.Constant;
@@ -19,10 +21,22 @@ import java.util.ArrayList;
  */
 public class ExerciseDao
 {
+    public enum ExerciseType
+    {
+        WARM_UP,
+        STRETCH
+    }
+
+    private Context context;
     private String tableName;
     private ContentValues contentValues;
 
     public ExerciseDao() { }
+
+    public ExerciseDao(Context context)
+    {
+        this.context = context;
+    }
 
     public ExerciseDao(String tableName, ContentValues contentValues)
     {
@@ -101,6 +115,27 @@ public class ExerciseDao
         }
 
         return exercises;
+    }
+
+    /**
+     * Gets an injury prevention exercise.
+     *
+     * @param type  The exercise type.
+     *
+     * @return  The exercise.
+     */
+    public Exercise getInjuryPreventionExercise(ExerciseType type)
+    {
+        Exercise exercise = getNewExercise(context.getString(type == ExerciseType.WARM_UP ? R.string.warm_up : R.string.stretch),
+                                             Constant.RETURN_NULL,
+                                             Constant.RETURN_NULL,
+                                             Constant.RETURN_NULL,
+                                             Constant.RETURN_NULL,
+                                             true);
+
+        exercise.setDescription(context.getString(type == ExerciseType.WARM_UP ? R.string.warm_up_description : R.string.stretch_description));
+
+        return exercise;
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.intencity.intencity.view.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -15,64 +14,48 @@ import com.intencity.intencity.handler.FragmentHandler;
 import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.NotificationListener;
-import com.intencity.intencity.model.Exercise;
-import com.intencity.intencity.model.RoutineSection;
 import com.intencity.intencity.util.Constant;
-
-import java.util.ArrayList;
 
 /**
  * The Fitness Log Fragment for Intencity.
  *
  * Created by Nick Piscopio on 12/12/15.
  */
-public class FitnessLogFragment extends android.support.v4.app.Fragment implements
-                                                                                   LoadingListener,
+public class FitnessLogFragment extends android.support.v4.app.Fragment implements LoadingListener,
                                                                                    ExerciseListListener
 {
+    private final int LAYOUT_FITNESS_LOG = R.id.layout_fitness_log;
+
     private LinearLayout connectionIssue;
 
     private TextView tryAgain;
 
     private ProgressBar progressBar;
 
-    private Context context;
-
-    private int routineState;
-    private String routineName;
-    private ArrayList<Exercise> previousExercises;
-    private int index;
-    private int recommendedRoutine;
-
-    private RoutineFragment routineFragment;
-
-    private String email;
-
-    private boolean pushedTryAgain = false;
-
     private NotificationListener notificationListener;
-
-    private ExerciseListFragment exerciseListFragment;
 
     private ExerciseListListener mainActivityExerciseListListener;
 
-    private ArrayList<RoutineSection> sections;
+    private RoutineFragment routineFragment;
+
+    private FragmentManager manager;
+    private FragmentHandler fragmentHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_intencity_fitness_log, container, false);
 
-        connectionIssue = (LinearLayout) view.findViewById(R.id.image_view_connection_issue);
-        tryAgain = (TextView) view.findViewById(R.id.btn_try_again);
-        tryAgain.setOnClickListener(tryConnectingAgainListener);
+        connectionIssue = (LinearLayout) view.findViewById(R.id.layout_connection_issue);
+//        tryAgain = (TextView) view.findViewById(R.id.btn_try_again);
+//        tryAgain.setOnClickListener(tryConnectingAgainListener);
         progressBar = (ProgressBar) view.findViewById(R.id.progress_bar_loading);
         onStartLoading();
 
-        context = getContext();
+        manager = getFragmentManager();
+        fragmentHandler = FragmentHandler.getInstance();
 
-        initRoutineFragment();
-
+        onFinishedLoading(Constant.ID_FRAGMENT_ROUTINE);
 
         return view;
     }
@@ -85,84 +68,30 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         @Override
         public void onClick(View v)
         {
-            pushedTryAgain = true;
+//            pushedTryAgain = true;
             onStartLoading();
 //            getMuscleGroups();
         }
     };
 
-    private void initRoutineFragment()
-    {
-        onFinishedLoading(Constant.ID_FRAGMENT_ROUTINE);
-    }
-
-
-
-    /**
-     * Repopulates the RoutineFragment's spinner
-     *
-     * @param values    The values to add to the spinner
-     *
-     */
-//    private void repopulateSpinner(ArrayList<String> values)
-//    {
-//        routineFragment.setRoutineName(routineName);
-//        routineFragment.setDisplayMuscleGroups(values);
-//        routineFragment.setRecommendedRoutine(recommendedRoutine);
-//        routineFragment.populateMuscleGroupSpinner();
-//    }
-
     /**
      * Pushes the RoutineFragment on the stack.
      *
-     * @param sections  The routine sections to display in the routine list view.
+     * @param reload    A boolean value of whether or not to replace the existing fragment.
      */
-    private void pushRoutineFragment(ArrayList<RoutineSection> sections)
+    private void pushRoutineFragment(boolean reload)
     {
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelableArrayList(Constant.BUNDLE_ROUTINE_SECTIONS, sections);
-//        bundle.putString(Constant.BUNDLE_ROUTINE_NAME, routineName);
-//        bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, previousExercises);
-//        bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, index);
-//        bundle.putInt(Constant.BUNDLE_RECOMMENDED_ROUTINE, recommendedRoutine);
-
-        routineFragment = new RoutineFragment();
-        routineFragment.setListener(this);
+//        if (routineFragment == null)
+//        {
+            routineFragment = new RoutineFragment();
+            routineFragment.setListener(this);
+//        }
 
         // Pushes the routine fragment onto the stack when everything has finished loading.
-        FragmentManager manager = getFragmentManager();
-        FragmentHandler fragmentHandler = FragmentHandler.getInstance();
-        fragmentHandler.pushFragment(manager, R.id.layout_fitness_log, routineFragment, Constant.FRAGMENT_ROUTINE, false,
-                                     null, false);
+        fragmentHandler.pushFragment(manager, LAYOUT_FITNESS_LOG, routineFragment, Constant.FRAGMENT_ROUTINE, false,
+                                     null, reload);
 
         stopLoading();
-    }
-
-    /**
-     * Checks if there are previous exercises and repopulates the spinner.
-     *
-     * @param hasRoutineFragment    Boolean value of if the RoutineFragment has already been added.
-     */
-    private void checkPreviousExercises(Boolean hasRoutineFragment)
-    {
-        if (previousExercises != null && previousExercises.size() > 0)
-        {
-            ArrayList<String> displayMuscleGroups = new ArrayList<>();
-            // Need the context here because we haven't started this fragment yet.
-            displayMuscleGroups.add(getString(R.string.routine_continue));
-            recommendedRoutine = displayMuscleGroups.size() - 1;
-
-            if (hasRoutineFragment)
-            {
-                // Repopulate the spinner since we lost the connection
-//                repopulateSpinner(displayMuscleGroups);
-            }
-            else
-            {
-                // Only add the saved exercises to the spinner because of the network issue.
-                pushRoutineFragment(sections);
-            }
-        }
     }
 
     /**
@@ -193,36 +122,39 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         switch (which)
         {
             case Constant.ID_FRAGMENT_ROUTINE:
-                pushRoutineFragment(null);
+                pushRoutineFragment(false);
+                break;
+            case Constant.ID_FRAGMENT_ROUTINE_RELOAD:
+                pushRoutineFragment(true);
                 break;
             case Constant.ID_FRAGMENT_EXERCISE_LIST:
 
                 Bundle bundle = new Bundle();
                 bundle.putString(Constant.BUNDLE_ROUTINE_NAME, routineFragment.getRoutineName());
-                bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST,
-                                              routineFragment.getPreviousExercises());
+                bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, routineFragment.getPreviousExercises());
                 bundle.putInt(Constant.BUNDLE_EXERCISE_LIST_INDEX, routineFragment.getIndex());
                 bundle.putInt(Constant.BUNDLE_ROUTINE_TYPE, routineFragment.getRoutineState());
 
-                exerciseListFragment = new ExerciseListFragment();
-                exerciseListFragment.setLoadingListener(FitnessLogFragment.this);
-                exerciseListFragment.setFitnessLogListener(FitnessLogFragment.this);
+                ExerciseListFragment fragment = new ExerciseListFragment();
+                fragment.setLoadingListener(FitnessLogFragment.this);
+                fragment.setFitnessLogListener(FitnessLogFragment.this);
 
-                FragmentHandler.getInstance().pushFragment(getFragmentManager(),
-                                                           R.id.layout_fitness_log,
-                                                           exerciseListFragment, "", false,
-                                                           bundle, true);
-
-                removeConnectionIssueMessage();
+                fragmentHandler.pushFragment(manager,
+                                             LAYOUT_FITNESS_LOG,
+                                             fragment,
+                                             "",
+                                             false,
+                                             bundle,
+                                             true);
 
                 break;
             case Constant.CODE_FAILED_REPOPULATE:
                 connectionIssue.setVisibility(View.VISIBLE);
-                checkPreviousExercises(true);
+//                pushRoutineFragment();
                 break;
             case (int) Constant.CODE_FAILED:
                 connectionIssue.setVisibility(View.VISIBLE);
-                checkPreviousExercises(false);
+//                pushRoutineFragment();
                 break;
             // We don't need anything to happen.
             // We just need the progress bar to stop.
@@ -231,7 +163,7 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                 break;
         }
 
-        stopLoading();
+//        stopLoading();
     }
 
     /**

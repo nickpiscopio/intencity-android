@@ -6,19 +6,24 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RoutineAdapter;
+import com.intencity.intencity.helper.doa.ExerciseDao;
 import com.intencity.intencity.helper.doa.IntencityRoutineDao;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.RoutineRow;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
@@ -38,6 +43,10 @@ import java.util.ArrayList;
 public class IntencityRoutineActivity extends AppCompatActivity implements ServiceListener
 {
     private Context context;
+
+    private ProgressBar progressBar;
+
+    private LinearLayout connectionIssueLayout;
 
     private ListView listView;
 
@@ -68,6 +77,8 @@ public class IntencityRoutineActivity extends AppCompatActivity implements Servi
 
         context = getApplicationContext();
 
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
+        connectionIssueLayout = (LinearLayout) findViewById(R.id.layout_connection_issue);
         start = (FloatingActionButton) findViewById(R.id.button_next);
         start.setOnClickListener(startExerciseClickListener);
 
@@ -138,9 +149,36 @@ public class IntencityRoutineActivity extends AppCompatActivity implements Servi
     }
 
     /**
-     * Displays a generic error to the user stating Intencity couldn't connect to the server.
+     * Shows the loading view.
+     */
+    private void showLoading()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+        connectionIssueLayout.setVisibility(View.GONE);
+    }
+
+    /**
+     * Hides the loading view.
+     */
+    private void hideLoading()
+    {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    /**
+     * Shows the connection issue view.
      */
     private void showConnectionIssue()
+    {
+        hideLoading();
+
+        connectionIssueLayout.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Displays a generic error to the user stating Intencity couldn't connect to the server.
+     */
+    private void showConnectionIssueDialog()
     {
         CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 
@@ -169,14 +207,14 @@ public class IntencityRoutineActivity extends AppCompatActivity implements Servi
         @Override
         public void onClick(View v)
         {
+            showLoading();
+
             RoutineRow row = rows.get(routineSelected);
 
-            Intent intent = new Intent();
-            intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, row.getTitle());
-            intent.putExtra(Constant.BUNDLE_POSITION, row.getRowNumber());
+            String routine = String.valueOf(row.getRowNumber());
+            String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);
 
-            setResult(Constant.REQUEST_START_EXERCISING_INTENCITY_ROUTINE, intent);
-            finish();
+            new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE, storedProcedureParameters);
         }
     };
 
@@ -218,6 +256,69 @@ public class IntencityRoutineActivity extends AppCompatActivity implements Servi
         super.onBackPressed();
     }
 
+    /**
+     * The service listener for setting the routine.
+     */
+    public ServiceListener routineServiceListener = new ServiceListener()
+    {
+        @Override
+        public void onRetrievalSuccessful(String response)
+        {
+            new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                                             Constant.generateStoredProcedureParameters(
+                                                                     Constant.STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY,
+                                                                     email));
+        }
+
+        @Override
+        public void onRetrievalFailed()
+        {
+            showConnectionIssue();
+        }
+    };
+
+    /**
+     * The service listener for getting the exercise list.
+     */
+    public ServiceListener exerciseServiceListener = new ServiceListener()
+    {
+        @Override
+        public void onRetrievalSuccessful(String response)
+        {
+            ExerciseDao dao = new ExerciseDao(context);
+            ArrayList<Exercise> exercises = new ArrayList<>();
+
+            try
+            {
+                // We are adding a warm-up to the exercise list.
+                exercises.add(dao.getInjuryPreventionExercise(ExerciseDao.ExerciseType.WARM_UP));
+                exercises.addAll(dao.parseJson(response, ""));
+                exercises.add(dao.getInjuryPreventionExercise(ExerciseDao.ExerciseType.STRETCH));
+
+                RoutineRow row = rows.get(routineSelected);
+
+                Intent intent = new Intent();
+                intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, row.getTitle());
+                intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, exercises);
+
+                setResult(Constant.REQUEST_START_EXERCISING_INTENCITY_ROUTINE, intent);
+                finish();
+            }
+            catch (JSONException e)
+            {
+                Log.e(Constant.TAG, e.getMessage());
+
+                showConnectionIssue();
+            }
+        }
+
+        @Override
+        public void onRetrievalFailed()
+        {
+            showConnectionIssue();
+        }
+    };
+
     @Override
     public void onRetrievalSuccessful(String response)
     {
@@ -232,13 +333,13 @@ public class IntencityRoutineActivity extends AppCompatActivity implements Servi
         }
         catch (JSONException e)
         {
-            showConnectionIssue();
+            showConnectionIssueDialog();
         }
     }
 
     @Override
     public void onRetrievalFailed()
     {
-        showConnectionIssue();
+        showConnectionIssueDialog();
     }
 }

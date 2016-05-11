@@ -8,8 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import com.intencity.intencity.R;
 import com.intencity.intencity.util.Constant;
 
-import java.util.List;
-
 /**
  * Handles the fragments for Intencity.
  *
@@ -57,15 +55,6 @@ public class FragmentHandler
             transaction.setCustomAnimations(R.anim.anim_slide_in_up, R.anim.anim_slide_out_up);
         }
 
-        if (replace)
-        {
-            List<Fragment> fragments = manager.getFragments();
-
-            Fragment last = fragments.get(fragments.size() - 1);
-
-            transaction.remove(last);
-        }
-
         if (bundle != null)
         {
             fragmentToAdd.setArguments(bundle);
@@ -81,7 +70,15 @@ public class FragmentHandler
             }
         }
 
-        transaction.add(parent, fragmentToAdd, tag);
+        if (replace)
+        {
+            transaction.replace(parent, fragmentToAdd, tag);
+        }
+        else
+        {
+            transaction.add(parent, fragmentToAdd, tag);
+        }
+
         // Changing the way this is committed as per the descriptions from the below URL:
         // http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit
         transaction.commitAllowingStateLoss();

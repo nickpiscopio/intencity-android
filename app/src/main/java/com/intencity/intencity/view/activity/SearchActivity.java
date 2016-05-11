@@ -73,9 +73,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        connectionIssue = (LinearLayout) findViewById(R.id.image_view_connection_issue);
-        tryAgain = (TextView) findViewById(R.id.btn_try_again);
-        tryAgain.setVisibility(View.GONE);
+        connectionIssue = (LinearLayout) findViewById(R.id.layout_connection_issue);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
 
         divider = findViewById(R.id.divider);

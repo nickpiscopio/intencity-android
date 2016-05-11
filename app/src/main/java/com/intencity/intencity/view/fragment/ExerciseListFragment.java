@@ -407,8 +407,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     break;
             }
 
-            // Start the fitness log over again.
-            fitnessLogListener.onCompletedWorkout();
+            // Start the routine view over again.
+            loadingListener.onFinishedLoading(Constant.ID_FRAGMENT_ROUTINE_RELOAD);
         }
     };
 

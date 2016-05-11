@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/image_view_connection_issue"
+    android:id="@+id/layout_connection_issue"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -18,16 +18,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/generic_error"
-        android:paddingTop="@dimen/layout_margin_quarter"
-        android:paddingBottom="@dimen/layout_margin_quarter"/>
-
-    <TextView
-        android:id="@+id/btn_try_again"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/try_again"
-        android:padding="@dimen/card_button_margin"
-        android:textStyle="bold"
-        android:background="@drawable/button_card"/>
+        android:paddingTop="@dimen/layout_margin_quarter"/>
 
 </LinearLayout>

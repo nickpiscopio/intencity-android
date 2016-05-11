@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * The AsynTask for service calls.
+ * The AsyncTask for service calls.
  *
  * Created by Nick Piscopio on 12/10/15.
  */
@@ -40,7 +40,7 @@ public class ServiceTask extends AsyncTask<String, Void, String>
     protected String doInBackground(String... params)
     {
         HttpURLConnection connection;
-        OutputStreamWriter request = null;
+        OutputStreamWriter request;
 
         URL url;
         String response = null;
