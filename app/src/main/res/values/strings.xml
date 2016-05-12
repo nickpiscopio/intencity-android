@@ -125,6 +125,8 @@
     <string name="routine_saved_routine_name_error">A routine name is required. Please try again.</string>
     <string name="save">Save</string>
     <string name="routine_saved">%1$s was saved.</string>
+    <string name="no_saved_routine_title">No saved routines</string>
+    <string name="no_saved_routine_message">You removed all your saved routines.</string>
 
     <string name="routine_total_description">Completed Exercises: %1$s\nExercises in Routine: %2$s</string>
 

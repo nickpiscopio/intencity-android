@@ -40,7 +40,7 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 5/6/16.
  */
-public class IntencityRoutineActivity extends AppCompatActivity implements ServiceListener
+public class RoutineIntencityActivity extends AppCompatActivity implements ServiceListener
 {
     private Context context;
 
@@ -66,7 +66,7 @@ public class IntencityRoutineActivity extends AppCompatActivity implements Servi
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_intencity_routine);
+        setContentView(R.layout.activity_routine_intencity);
 
         // Add the back button to the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -79,7 +79,7 @@ public class IntencityRoutineActivity extends AppCompatActivity implements Servi
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
         connectionIssueLayout = (LinearLayout) findViewById(R.id.layout_connection_issue);
-        start = (FloatingActionButton) findViewById(R.id.button_next);
+        start = (FloatingActionButton) findViewById(R.id.button_add);
         start.setOnClickListener(startExerciseClickListener);
 
         Bundle bundle = getIntent().getExtras();
@@ -122,7 +122,7 @@ public class IntencityRoutineActivity extends AppCompatActivity implements Servi
                 onBackPressed();
                 return true;
             case R.id.edit:
-                Intent intent = new Intent(context, EditIntencityRoutineActivity.class);
+                Intent intent = new Intent(context, RoutineIntencityEditActivity.class);
                 startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
                 return true;
             default:
@@ -182,7 +182,7 @@ public class IntencityRoutineActivity extends AppCompatActivity implements Servi
     {
         CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 
-        new CustomDialog(IntencityRoutineActivity.this, dialogListener, dialog, false);
+        new CustomDialog(RoutineIntencityActivity.this, dialogListener, dialog, false);
     }
 
     /**

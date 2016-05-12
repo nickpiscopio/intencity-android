@@ -14,6 +14,7 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RoutineSectionAdapter;
 import com.intencity.intencity.helper.doa.ExerciseDao;
 import com.intencity.intencity.helper.doa.IntencityRoutineDao;
+import com.intencity.intencity.helper.doa.UserRoutineDao;
 import com.intencity.intencity.listener.DatabaseListener;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.ServiceListener;
@@ -27,7 +28,8 @@ import com.intencity.intencity.util.RoutineKey;
 import com.intencity.intencity.util.RoutineState;
 import com.intencity.intencity.util.RoutineType;
 import com.intencity.intencity.util.Util;
-import com.intencity.intencity.view.activity.IntencityRoutineActivity;
+import com.intencity.intencity.view.activity.RoutineIntencityActivity;
+import com.intencity.intencity.view.activity.RoutineSavedActivity;
 
 import org.json.JSONException;
 
@@ -75,8 +77,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
         initRoutineCards();
 
-        getMuscleGroups();
-
         // Gets routines from the device database if it has any.
         // This will be added to the CONTINUE Card.
         new GetExerciseTask(context, this).execute();
@@ -94,7 +94,18 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     {
         sections = new ArrayList<>();
         sections.add(new RoutineSection(RoutineType.CUSTOM_ROUTINE, getString(R.string.title_custom_routine), new int[] { RoutineKey.USER_SELECTED }, null));
-        sections.add(new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.CONSECUTIVE }, null));
+
+        // Get the Intencity Routines
+        new ServiceTask(intencityRoutineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                                                 Constant.generateStoredProcedureParameters(
+                                                                    Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS,
+                                                                    email));
+
+        // Get the saved routines
+        new ServiceTask(savedRoutineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                                                 Constant.generateStoredProcedureParameters(
+                                                                    Constant.STORED_PROCEDURE_GET_USER_ROUTINE,
+                                                                    email));
     }
 
     /**
@@ -131,22 +142,9 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     };
 
     /**
-     * Starts the service to get the muscle groups from the web server.
+     * The service listener for getting the Intencity Routine names.
      */
-    private void getMuscleGroups()
-    {
-        new ServiceTask(muscleGroupServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                            Constant.generateStoredProcedureParameters(
-                                                                    Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS,
-                                                                    email));
-    }
-
-    /**
-     * The service listener for populating the spinner with routine names.
-     *
-     * The routine name that gets set is the recommended routine name.
-     */
-    public ServiceListener muscleGroupServiceListener = new ServiceListener()
+    public ServiceListener intencityRoutineServiceListener = new ServiceListener()
     {
         @Override
         public void onRetrievalSuccessful(String response)
@@ -193,6 +191,55 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     };
 
     /**
+     * The service listener for getting the Intencity Routine names.
+     */
+    public ServiceListener savedRoutineServiceListener = new ServiceListener()
+    {
+        @Override
+        public void onRetrievalSuccessful(String response)
+        {
+            try
+            {
+                sections.add(new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.CONSECUTIVE }, new UserRoutineDao().parseJson(response)));
+
+                //                if (pushedTryAgain)
+                //                {
+                //                    // Repopulate the spinner if the user gets their connection back
+                //                    try
+                //                    {
+                //                        //                        repopulateSpinner(sections);
+                //                    }
+                //                    catch (Exception e)
+                //                    {
+                //                        // Only add the saved exercises to the spinner because of the network issue.
+                //                        pushRoutineFragment(sections);
+                //                    }
+                //
+                //                    removeConnectionIssueMessage();
+                //                    stopLoading();
+                //                }
+                //                else
+                //                {
+                adapter.notifyDataSetChanged();
+                //                    pushRoutineFragment(sections);
+                //                }
+            }
+            catch (JSONException e)
+            {
+                Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
+
+                //                onFinishedLoading(pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : (int) Constant.CODE_FAILED);
+            }
+        }
+
+        @Override
+        public void onRetrievalFailed()
+        {
+            //            onFinishedLoading(pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : (int) Constant.CODE_FAILED);
+        }
+    };
+
+    /**
      * The click listener for each item clicked in the settings list.
      */
     private AdapterView.OnItemClickListener routineClickListener = new AdapterView.OnItemClickListener()
@@ -232,22 +279,36 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
                 case INTENCITY_ROUTINE:
 
-                    Intent intent = new Intent(context, IntencityRoutineActivity.class);
-                    intent.putExtra(Constant.BUNDLE_ROUTINE_ROWS, rows);
-
-                    routineState = RoutineState.INTENCITY;
-
-                    startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
+                    startActivity(RoutineIntencityActivity.class, rows);
 
                     break;
 
                 case SAVED_ROUTINE:
+
+                    startActivity(RoutineSavedActivity.class, rows);
+
                     break;
                 default:
                     break;
             }
         }
     };
+
+    /**
+     * Starts an activity.
+     *
+     * @param cls       The class to start.
+     * @param rows      The array list of rows for the listview in the new class.
+     */
+    private void startActivity(Class cls, ArrayList<?> rows)
+    {
+        Intent intent = new Intent(context, cls);
+        intent.putExtra(Constant.BUNDLE_ROUTINE_ROWS, rows);
+
+        routineState = RoutineState.INTENCITY;
+
+        startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
+    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -271,13 +332,23 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Constant.REQUEST_ROUTINE_UPDATED)
+        if (resultCode == Constant.REQUEST_ROUTINE_UPDATED || resultCode == Constant.REQUEST_SAVED_ROUTINE_UPDATED)
         {
             ArrayList<RoutineRow> rows = data.getParcelableArrayListExtra(Constant.BUNDLE_ROUTINE_ROWS);
 
             sections.remove(sectionSelected);
-            sections.add(new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_intencity_routines),
-                                            new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, rows));
+
+            if (resultCode == Constant.REQUEST_ROUTINE_UPDATED)
+            {
+                sections.add(sectionSelected, new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_intencity_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, rows));
+            }
+            else
+            {
+                if (rows.size() > 0)
+                {
+                    sections.add(sectionSelected, new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.CONSECUTIVE }, rows));
+                }
+            }
 
             adapter.notifyDataSetChanged();
         }

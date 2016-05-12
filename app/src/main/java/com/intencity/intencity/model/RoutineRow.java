@@ -14,6 +14,9 @@ public class RoutineRow implements Parcelable
 
     private int rowNumber;
 
+    private boolean selected = false;
+    private boolean checked = true;
+
     public RoutineRow(String title, int rowNumber)
     {
         this.title = title;
@@ -24,6 +27,8 @@ public class RoutineRow implements Parcelable
     {
         title = in.readString();
         rowNumber = in.readInt();
+        selected = in.readInt() == 1;
+        checked = in.readInt() == 1;
     }
 
     public static final Creator<RoutineRow> CREATOR = new Creator<RoutineRow>()
@@ -52,6 +57,8 @@ public class RoutineRow implements Parcelable
     {
         dest.writeString(title);
         dest.writeInt(rowNumber);
+        dest.writeInt(selected ? 1 : 0);
+        dest.writeInt(checked ? 1 : 0);
     }
 
     /**
@@ -72,8 +79,23 @@ public class RoutineRow implements Parcelable
         return rowNumber;
     }
 
-    public void setRowNumber(int rowNumber)
+    public boolean isChecked()
     {
-        this.rowNumber = rowNumber;
+        return checked;
+    }
+
+    public void setChecked(boolean checked)
+    {
+        this.checked = checked;
+    }
+
+    public boolean isSelected()
+    {
+        return selected;
+    }
+
+    public void setSelected(boolean selected)
+    {
+        this.selected = selected;
     }
 }

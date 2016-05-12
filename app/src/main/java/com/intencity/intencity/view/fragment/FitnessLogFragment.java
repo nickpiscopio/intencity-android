@@ -163,7 +163,7 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                 break;
         }
 
-//        stopLoading();
+        stopLoading();
     }
 
     /**

@@ -1,9 +1,7 @@
 package com.intencity.intencity.view.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,13 +29,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * This is the Intencity Routine activity.
  *
  * Created by Nick Piscopio on 5/6/16.
  */
-public class EditIntencityRoutineActivity extends AppCompatActivity implements ServiceListener
+public class RoutineIntencityAddActivity extends AppCompatActivity implements ServiceListener
 {
     private Context context;
 
@@ -49,20 +48,16 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
 
     private ListView listView;
 
-    private FloatingActionButton add;
-
-    private ArrayList<String> routines;
-    private ArrayList<String> routinesToRemove;
-
     private String email;
 
-    private boolean hasMoreExercises = false;
+    private ArrayList<String> muscleGroups;
+    private ArrayList<String> routineMuscleGroups;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_intencity_routine);
+        setContentView(R.layout.activity_intencity_routine_add);
 
         // Add the back button to the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -71,31 +66,20 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        context = getApplicationContext();
-
         divider = findViewById(R.id.divider);
         description = (LinearLayout) findViewById(R.id.layout_description);
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
+        progressBar.setVisibility(View.VISIBLE);
 
-        add = (FloatingActionButton) findViewById(R.id.button_add);
-        add.setOnClickListener(addClickListener);
+        context = getApplicationContext();
 
         email = Util.getSecurePreferencesEmail(context);
 
-        getRoutines();
-    }
+        progressBar.setVisibility(View.VISIBLE);
 
-    @Override
-    public void onBackPressed()
-    {
-        if (hasMoreExercises)
-        {
-            setResult(Constant.REQUEST_ROUTINE_UPDATED);
-            finish();
-        }
-
-        super.onBackPressed();
+        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                      Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_CUSTOM_ROUTINE_MUSCLE_GROUP, null));
     }
 
     @Override
@@ -116,33 +100,20 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
                 onBackPressed();
                 return true;
             case R.id.save:
-                removeRoutines();
+                saveRoutine();
                 return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
     }
 
-    /**
-     * The click listener for adding an Intencity Routine.
-     */
-    private View.OnClickListener addClickListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v)
-        {
-            Intent intent = new Intent(context, AddIntencityRoutineActivity.class);
-            startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
-        }
-    };
-
     @Override
     public void onRetrievalSuccessful(String response)
     {
         try
         {
-            routines = new ArrayList<>();
-            routinesToRemove = new ArrayList<>();
+            muscleGroups = new ArrayList<>();
+            routineMuscleGroups = new ArrayList<>();
 
             JSONArray array = new JSONArray(response);
 
@@ -152,17 +123,19 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
             {
                 JSONObject object = array.getJSONObject(i);
 
-                String routine = object.getString(Constant.COLUMN_DISPLAY_NAME);
+                String muscleGroup = object.getString(Constant.COLUMN_DISPLAY_NAME);
 
                 // Add all the equipment to the array.
-                routines.add(routine);
+                muscleGroups.add(muscleGroup);
             }
 
-            populateListView(routines);
+            populateListView(muscleGroups);
         }
         catch (JSONException exception)
         {
-            Log.e(Constant.TAG, "Couldn't parse custom Intencity routine list. " + exception.toString());
+            Log.e(Constant.TAG, "Couldn't parse equipment " + exception.toString());
+
+            showConnectionIssue();
         }
     }
 
@@ -172,7 +145,7 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
         showConnectionIssue();
     }
 
-    private ServiceListener saveRoutinesServiceListener = new ServiceListener()
+    private ServiceListener saveRoutineServiceListener = new ServiceListener()
     {
         @Override
         public void onRetrievalSuccessful(String response)
@@ -189,22 +162,15 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
     };
 
     /**
-     * Gets the routines from the server.
-     */
-    private void getRoutines()
-    {
-        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                      Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_MUSCLE_GROUP_ROUTINE, email));
-    }
-
-    /**
      * Displays a generic error to the user stating Intencity couldn't connect to the server.
      */
     private void showConnectionIssue()
     {
         CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 
-        new CustomDialog(EditIntencityRoutineActivity.this, dialogListener, dialog, false);
+        new CustomDialog(RoutineIntencityAddActivity.this, dialogListener, dialog, false);
+
+        progressBar.setVisibility(View.GONE);
     }
 
     /**
@@ -218,35 +184,13 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
 
         listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
-        listView.setEmptyView(findViewById(R.id.empty_list));
-        listView.setOnItemClickListener(routineClickListener);
 
-        int routinesSize = routines.size();
-        for (int i = 0; i < routinesSize; i++)
-        {
-            listView.setItemChecked(i, true);
-        }
+        listView.setOnItemClickListener(routineClickListener);
 
         progressBar.setVisibility(View.GONE);
 
         divider.setVisibility(View.VISIBLE);
         description.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Sends the data to the server to remove routines.
-     */
-    private void removeRoutines()
-    {
-        if (routinesToRemove.size() > 0)
-        {
-            new ServiceTask(saveRoutinesServiceListener).execute(Constant.SERVICE_UPDATE_USER_MUSCLE_GROUP_ROUTINE,
-                                                                Constant.generateServiceListVariables(email, routinesToRemove, false));
-        }
-        else
-        {
-            onBackPressed();
-        }
     }
 
     /**
@@ -263,6 +207,28 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
     };
 
     /**
+     * Sends the data to the server to save teh routine.
+     */
+    private void saveRoutine()
+    {
+        if (routineMuscleGroups.size() > 0)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+
+            Collections.sort(routineMuscleGroups, String.CASE_INSENSITIVE_ORDER);
+
+            new ServiceTask(saveRoutineServiceListener).execute(Constant.SERVICE_SET_USER_MUSCLE_GROUP_ROUTINE,
+                                                                Constant.generateServiceListVariables(email, routineMuscleGroups, true));
+        }
+        else
+        {
+            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.muscle_group_limit_title), context.getString(R.string.muscle_group_limit_description), false);
+
+            new CustomDialog(RoutineIntencityAddActivity.this, null, dialog, false);
+        }
+    }
+
+    /**
      * The click listener for when a routine is clicked in the ListView.
      */
     private AdapterView.OnItemClickListener routineClickListener = new AdapterView.OnItemClickListener()
@@ -272,28 +238,15 @@ public class EditIntencityRoutineActivity extends AppCompatActivity implements S
         {
             // Add or remove muscle groups from the list
             // if he or she clicks on a list item.
-            String muscleGroup = routines.get(position);
-            if (routinesToRemove.contains(muscleGroup))
+            String muscleGroup = muscleGroups.get(position);
+            if (routineMuscleGroups.contains(muscleGroup))
             {
-                routinesToRemove.remove(muscleGroup);
+                routineMuscleGroups.remove(muscleGroup);
             }
             else
             {
-                routinesToRemove.add(muscleGroup);
+                routineMuscleGroups.add(muscleGroup);
             }
         }
     };
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == Constant.REQUEST_ROUTINE_UPDATED)
-        {
-            hasMoreExercises = true;
-
-            getRoutines();
-        }
-    }
 }

@@ -63,7 +63,8 @@ public class Constant
     public static final int REQUEST_CODE_TWEET = 60;
     public static final int REQUEST_CODE_LOG_OUT = 70;
     public static final int REQUEST_ROUTINE_UPDATED = 80;
-    public static final int REQUEST_START_EXERCISING_INTENCITY_ROUTINE = 90;
+    public static final int REQUEST_SAVED_ROUTINE_UPDATED = 90;
+    public static final int REQUEST_START_EXERCISING_INTENCITY_ROUTINE = 100;
 
     // Fragment IDs
     public static final int ID_FRAGMENT_ROUTINE = 10;
@@ -143,6 +144,7 @@ public class Constant
     private static final String PARAMETER_REMOVE = "remove=";
 
     // Stored Procedure Names
+    public static final String STORED_PROCEDURE_GET_USER_ROUTINE = "getUserRoutine";
     public static final String STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS = "getAllDisplayMuscleGroups";
     public static final String STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY = "getExercisesForToday";
     public static final String STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP = "setCurrentMuscleGroup";

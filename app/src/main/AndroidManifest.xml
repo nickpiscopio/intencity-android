@@ -58,19 +58,31 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".view.activity.IntencityRoutineActivity"
+            android:name=".view.activity.RoutineIntencityActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/title_intencity_routines"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".view.activity.EditIntencityRoutineActivity"
+            android:name=".view.activity.RoutineIntencityEditActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/edit_custom_routines_title"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".view.activity.AddIntencityRoutineActivity"
+            android:name=".view.activity.RoutineSavedActivity"
+            android:theme="@style/AppTheme.Base"
+            android:label="@string/title_saved_routines"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.activity.RoutineSavedEditActivity"
+            android:theme="@style/AppTheme.Base"
+            android:label="@string/edit_saved_title"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.activity.RoutineIntencityAddActivity"
             android:theme="@style/AppTheme.Base"
             android:label="@string/add_routines_title"
             android:screenOrientation="portrait" />

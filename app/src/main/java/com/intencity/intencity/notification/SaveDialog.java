@@ -30,7 +30,7 @@ public class SaveDialog
         int style = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) ?
                 android.R.style.Theme_DeviceDefault_Light_Dialog_Alert :
                 AlertDialog.THEME_DEVICE_DEFAULT_LIGHT;
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, style);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, style);
 
         String title;
         String message;
@@ -58,6 +58,7 @@ public class SaveDialog
 
         final EditText routineNameEditText = (EditText) view.findViewById(R.id.edit_text_routine_name);
 
+        alertDialog.setCancelable(false);
         alertDialog.setView(view);
         alertDialog.setTitle(title);
         alertDialog.setMessage(message);
@@ -67,6 +68,11 @@ public class SaveDialog
             {
                 listener.onSavePressed(routineNameEditText.getText().toString().trim());
             }
+        });
+        alertDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
+        {
+            // No need for an implementation since we want the cancel button to dismiss the dialog.
+            public void onClick(DialogInterface dialog, int which) { }
         });
         alertDialog.show();
     }

@@ -72,7 +72,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(refreshListener);
 
-        findFriend = (FloatingActionButton) view.findViewById(R.id.button_next);
+        findFriend = (FloatingActionButton) view.findViewById(R.id.button_add);
         findFriend.setOnClickListener(searchUsersListener);
 
         ranking = (ListView) view.findViewById(R.id.list_view_ranking);

@@ -420,17 +420,17 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            loadingListener.onFinishedLoading(Constant.ID_SAVE_EXERCISE_LIST);
-
             Toast.makeText(context, getString(R.string.routine_saved, savedRoutineName), Toast.LENGTH_SHORT).show();
+
+            loadingListener.onFinishedLoading(Constant.ID_SAVE_EXERCISE_LIST);
         }
 
         @Override
         public void onRetrievalFailed()
         {
-            loadingListener.onFinishedLoading(Constant.ID_SAVE_EXERCISE_LIST);
-
             new SaveDialog(context, ExerciseListFragment.this, SaveDialog.SaveDialogState.SAME_NAME_ERROR);
+
+            loadingListener.onFinishedLoading(Constant.ID_SAVE_EXERCISE_LIST);
         }
     };
 
