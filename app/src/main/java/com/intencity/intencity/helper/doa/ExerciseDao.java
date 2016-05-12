@@ -68,6 +68,15 @@ public class ExerciseDao
             {
                 JSONObject object = array.getJSONObject(i);
 
+                String exerciseTableExerciseName = "";
+
+                try
+                {
+                    exerciseTableExerciseName = object.getString(Constant.COLUMN_EXERCISE_TABLE_EXERCISE_NAME);
+                }
+                // We need this catch because the getExercisesForToday Stored Procedure doesn't have COLUMN_EXERCISE_TABLE_EXERCISE_NAME
+                catch (Exception e) { }
+
                 String name = object.getString(Constant.COLUMN_EXERCISE_NAME);
                 String weight = object.getString(Constant.COLUMN_EXERCISE_WEIGHT);
                 String reps = object.getString(Constant.COLUMN_EXERCISE_REPS);
@@ -95,7 +104,7 @@ public class ExerciseDao
                 Exercise exercise = new Exercise();
                 exercise.setName(name);
                 exercise.setSets(sets);
-                exercise.setIncludedInIntencity(true);
+                exercise.setIncludedInIntencity(exerciseTableExerciseName.equals("") || !exerciseTableExerciseName.equalsIgnoreCase(Constant.RETURN_NULL));
 
                 // This determines if what we searched for has been returned from the database.
                 // This is not case sensitive.

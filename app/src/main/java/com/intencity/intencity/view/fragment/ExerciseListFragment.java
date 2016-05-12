@@ -199,6 +199,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 activeButtonState = ActiveButtonState.SEARCH;
                 inactiveButton.setVisibility(View.GONE);
                 break;
+            case RoutineState.SAVED:
+                TOTAL_EXERCISE_NUM = allExercises.size();
             default:
                 break;
         }
@@ -710,8 +712,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
             savedRoutineName = routineName;
 
-            new ServiceTask(saveRoutineServiceListener).execute(Constant.SERVICE_SET_ROUTINE,
-                                                                Constant.generateRoutineListVariables(email, routineName, currentExercises));
+            String params = Constant.generateRoutineListVariables(email, routineName, currentExercises);
+
+            new ServiceTask(saveRoutineServiceListener).execute(Constant.SERVICE_SET_ROUTINE, params);
         }
         else
         {

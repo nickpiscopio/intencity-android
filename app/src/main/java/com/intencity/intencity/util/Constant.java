@@ -64,7 +64,7 @@ public class Constant
     public static final int REQUEST_CODE_LOG_OUT = 70;
     public static final int REQUEST_ROUTINE_UPDATED = 80;
     public static final int REQUEST_SAVED_ROUTINE_UPDATED = 90;
-    public static final int REQUEST_START_EXERCISING_INTENCITY_ROUTINE = 100;
+    public static final int REQUEST_START_EXERCISING = 100;
 
     // Fragment IDs
     public static final int ID_FRAGMENT_ROUTINE = 10;
@@ -148,6 +148,7 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS = "getAllDisplayMuscleGroups";
     public static final String STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY = "getExercisesForToday";
     public static final String STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP = "setCurrentMuscleGroup";
+    public static final String STORED_PROCEDURE_GET_USER_ROUTINE_EXERCISES = "getUserRoutineExercises";
     public static final String STORED_PROCEDURE_SET_EXERCISE_PRIORITY = "setPriority";
     public static final String STORED_PROCEDURE_GET_FOLLOWING = "getFollowing";
     public static final String STORED_PROCEDURE_REMOVE_FROM_FOLLOWING = "removeFromFollowing";
@@ -195,6 +196,7 @@ public class Constant
     public static final String COLUMN_EXERCISE_DAY = "ExerciseDay";
     public static final String COLUMN_DATE = "Date";
     public static final String COLUMN_TIME = "Time";
+    public static final String COLUMN_EXERCISE_TABLE_EXERCISE_NAME = "ExerciseTableExerciseName";
     public static final String COLUMN_EXERCISE_NAME = "ExerciseName";
     public static final String COLUMN_EXERCISE_WEIGHT = "ExerciseWeight";
     public static final String COLUMN_EXERCISE_REPS = "ExerciseReps";
@@ -433,7 +435,6 @@ public class Constant
 
         return parameters;
     }
-
 
     /**
      * Generates the change password URL string.

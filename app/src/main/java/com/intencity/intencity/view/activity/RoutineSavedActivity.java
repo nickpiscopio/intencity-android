@@ -232,7 +232,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
             RoutineRow row = rows.get(routineSelected);
 
             String routine = String.valueOf(row.getRowNumber());
-            String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);
+            String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_ROUTINE_EXERCISES, email, routine);
 
             new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE, storedProcedureParameters);
         }
@@ -277,30 +277,9 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
     }
 
     /**
-     * The service listener for setting the routine.
-     */
-    public ServiceListener routineServiceListener = new ServiceListener()
-    {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-            new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                             Constant.generateStoredProcedureParameters(
-                                                                     Constant.STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY,
-                                                                     email));
-        }
-
-        @Override
-        public void onRetrievalFailed()
-        {
-            showConnectionIssue();
-        }
-    };
-
-    /**
      * The service listener for getting the exercise list.
      */
-    public ServiceListener exerciseServiceListener = new ServiceListener()
+    public ServiceListener routineServiceListener = new ServiceListener()
     {
         @Override
         public void onRetrievalSuccessful(String response)
@@ -321,7 +300,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
                 intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, row.getTitle());
                 intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, exercises);
 
-                setResult(Constant.REQUEST_START_EXERCISING_INTENCITY_ROUTINE, intent);
+                setResult(Constant.REQUEST_START_EXERCISING, intent);
                 finish();
             }
             catch (JSONException e)

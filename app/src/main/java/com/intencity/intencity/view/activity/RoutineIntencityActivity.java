@@ -301,7 +301,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
                 intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, row.getTitle());
                 intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, exercises);
 
-                setResult(Constant.REQUEST_START_EXERCISING_INTENCITY_ROUTINE, intent);
+                setResult(Constant.REQUEST_START_EXERCISING, intent);
                 finish();
             }
             catch (JSONException e)

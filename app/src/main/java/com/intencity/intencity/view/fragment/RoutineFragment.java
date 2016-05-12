@@ -279,11 +279,15 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
                 case INTENCITY_ROUTINE:
 
+                    routineState = RoutineState.INTENCITY;
+
                     startActivity(RoutineIntencityActivity.class, rows);
 
                     break;
 
                 case SAVED_ROUTINE:
+
+                    routineState = RoutineState.SAVED;
 
                     startActivity(RoutineSavedActivity.class, rows);
 
@@ -304,8 +308,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     {
         Intent intent = new Intent(context, cls);
         intent.putExtra(Constant.BUNDLE_ROUTINE_ROWS, rows);
-
-        routineState = RoutineState.INTENCITY;
 
         startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
     }
@@ -352,7 +354,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
             adapter.notifyDataSetChanged();
         }
-        else if (resultCode == Constant.REQUEST_START_EXERCISING_INTENCITY_ROUTINE)
+        else if (resultCode == Constant.REQUEST_START_EXERCISING)
         {
             index = 0;
             routineName = data.getStringExtra(Constant.BUNDLE_ROUTINE_NAME);
