@@ -15,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RankingListAdapter;
@@ -45,12 +44,11 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 {
     private LinearLayout connectionIssue;
 
-    private TextView tryAgain;
-
     private ProgressBar progressBar;
 
     private View divider;
 
+    private MenuItem searchItem;
     private SearchView searchView;
     private ListView listView;
 
@@ -102,7 +100,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.search);
+        searchItem = menu.findItem(R.id.search);
         searchItem.expandActionView();
 
         searchView = (SearchView) searchItem.getActionView();

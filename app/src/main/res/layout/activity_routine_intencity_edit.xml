@@ -64,7 +64,14 @@
             android:dividerHeight="@dimen/divider_height"
             android:divider="@color/shadow"/>
 
-        <include layout="@layout/divider"/>
+        <TextView
+            android:id="@+id/empty_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/secondary_dark"
+            android:padding="@dimen/layout_margin"
+            android:gravity="center_horizontal"
+            android:text="@string/no_custom_routines"/>
 
     </LinearLayout>
 
@@ -77,14 +84,5 @@
         android:src="@mipmap/ic_plus_white"
         app:layout_anchor="@id/layout"
         app:layout_anchorGravity="bottom|right|end"/>
-
-    <TextView
-        android:id="@+id/empty_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="@color/secondary_dark"
-        android:padding="@dimen/layout_margin"
-        android:gravity="center_horizontal"
-        android:text="@string/no_custom_routines"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -163,6 +163,8 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
         catch (JSONException exception)
         {
             Log.e(Constant.TAG, "Couldn't parse custom Intencity routine list. " + exception.toString());
+
+            progressBar.setVisibility(View.GONE);
         }
     }
 
