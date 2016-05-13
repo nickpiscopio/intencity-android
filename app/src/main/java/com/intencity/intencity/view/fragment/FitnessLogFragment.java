@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.handler.FragmentHandler;
-import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.NotificationListener;
 import com.intencity.intencity.util.Constant;
@@ -21,8 +20,7 @@ import com.intencity.intencity.util.Constant;
  *
  * Created by Nick Piscopio on 12/12/15.
  */
-public class FitnessLogFragment extends android.support.v4.app.Fragment implements LoadingListener,
-                                                                                   ExerciseListListener
+public class FitnessLogFragment extends android.support.v4.app.Fragment implements LoadingListener
 {
     private final int LAYOUT_FITNESS_LOG = R.id.layout_fitness_log;
 
@@ -33,8 +31,6 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     private ProgressBar progressBar;
 
     private NotificationListener notificationListener;
-
-    private ExerciseListListener mainActivityExerciseListListener;
 
     private RoutineFragment routineFragment;
 
@@ -142,7 +138,6 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
 
                 ExerciseListFragment fragment = new ExerciseListFragment();
                 fragment.setLoadingListener(FitnessLogFragment.this);
-                fragment.setFitnessLogListener(FitnessLogFragment.this);
 
                 fragmentHandler.pushFragment(manager,
                                              LAYOUT_FITNESS_LOG,
@@ -169,17 +164,6 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     }
 
     /**
-     * Sets the MainActivity's ExerciseListListener,
-     * so we can call it when the workout is completed.
-     *
-     * @param listener  The listener to set the MainActivity's ExerciseListListener to.
-     */
-    public void setMainActivityExerciseListListener(ExerciseListListener listener)
-    {
-        this.mainActivityExerciseListListener = listener;
-    }
-
-    /**
      * Sets the MainActivity's NotificationListener.
      *
      * @param notificationListener  The listener to set the MainActivity's NotificationListener to.
@@ -187,11 +171,5 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     public void setNotificationListener(NotificationListener notificationListener)
     {
         this.notificationListener = notificationListener;
-    }
-
-    @Override
-    public void onCompletedWorkout()
-    {
-        mainActivityExerciseListListener.onCompletedWorkout();
     }
 }

@@ -18,7 +18,6 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ViewPagerAdapter;
 import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.listener.DialogListener;
-import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.NotificationListener;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
@@ -35,8 +34,7 @@ import java.util.Date;
  *
  * Created by Nick Piscopio on 12/9/15.
  */
-public class MainActivity extends AppCompatActivity implements ExerciseListListener,
-                                                               NotificationListener, DialogListener
+public class MainActivity extends AppCompatActivity implements NotificationListener, DialogListener
 {
     private final int MENU_ID = R.id.menu;
 
@@ -211,8 +209,6 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         fitnessLogFragment = new FitnessLogFragment();
-        fitnessLogFragment.setMainActivityExerciseListListener(this);
-        fitnessLogFragment.setNotificationListener(this);
         adapter.addFrag(fitnessLogFragment, context.getString(R.string.app_name));
 
         rankingFragment = new RankingFragment();
@@ -296,12 +292,6 @@ public class MainActivity extends AppCompatActivity implements ExerciseListListe
         {
             logOut();
         }
-    }
-
-    @Override
-    public void onCompletedWorkout()
-    {
-        setupViewPager();
     }
 
     @Override

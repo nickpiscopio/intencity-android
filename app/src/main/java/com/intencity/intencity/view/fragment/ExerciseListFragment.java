@@ -21,7 +21,6 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ExerciseAdapter;
 import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.listener.DialogListener;
-import com.intencity.intencity.listener.ExerciseListListener;
 import com.intencity.intencity.listener.ExerciseListener;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.SaveRoutineListener;
@@ -88,7 +87,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private int autoFillTo;
 
     private LoadingListener loadingListener;
-    private ExerciseListListener fitnessLogListener;
 
     private SecurePreferences securePreferences;
 
@@ -976,15 +974,5 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     public void setLoadingListener(LoadingListener listener)
     {
         loadingListener = listener;
-    }
-
-    /**
-     * Sets the fitness listener.
-     *
-     * @param listener  The ExerciseListListener to set.
-     */
-    public void setFitnessLogListener(ExerciseListListener listener)
-    {
-        fitnessLogListener = listener;
     }
 }
