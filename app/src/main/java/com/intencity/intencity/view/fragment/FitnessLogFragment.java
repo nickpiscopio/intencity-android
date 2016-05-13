@@ -47,8 +47,8 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         View view = inflater.inflate(R.layout.fragment_intencity_fitness_log, container, false);
 
         connectionIssue = (LinearLayout) view.findViewById(R.id.layout_connection_issue);
-//        tryAgain = (TextView) view.findViewById(R.id.btn_try_again);
-//        tryAgain.setOnClickListener(tryConnectingAgainListener);
+        tryAgain = (TextView) view.findViewById(R.id.btn_try_again);
+        tryAgain.setOnClickListener(tryConnectingAgainListener);
         progressBar = (ProgressBar) view.findViewById(R.id.progress_bar_loading);
         onStartLoading();
 
@@ -68,9 +68,7 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         @Override
         public void onClick(View v)
         {
-//            pushedTryAgain = true;
-            onStartLoading();
-//            getMuscleGroups();
+            routineFragment.initRoutineCards();
         }
     };
 
@@ -81,25 +79,33 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
      */
     private void pushRoutineFragment(boolean reload)
     {
-//        if (routineFragment == null)
-//        {
-            routineFragment = new RoutineFragment();
-            routineFragment.setListener(this);
-//        }
+        routineFragment = new RoutineFragment();
+        routineFragment.setListener(this);
 
         // Pushes the routine fragment onto the stack when everything has finished loading.
         fragmentHandler.pushFragment(manager, LAYOUT_FITNESS_LOG, routineFragment, Constant.FRAGMENT_ROUTINE, false,
                                      null, reload);
 
         stopLoading();
+        removeConnectionIssue();
+    }
+
+    /**
+     * Displays a connection issue message to the user.
+     */
+    private void showConnectionIssue()
+    {
+        connectionIssue.setVisibility(View.VISIBLE);
+        tryAgain.setVisibility(View.VISIBLE);
     }
 
     /**
      * Removes the message to the user about the connection issue.
      */
-    private void removeConnectionIssueMessage()
+    private void removeConnectionIssue()
     {
         connectionIssue.setVisibility(View.GONE);
+        tryAgain.setVisibility(View.GONE);
     }
 
     /**
@@ -128,7 +134,6 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                 pushRoutineFragment(true);
                 break;
             case Constant.ID_FRAGMENT_EXERCISE_LIST:
-
                 Bundle bundle = new Bundle();
                 bundle.putString(Constant.BUNDLE_ROUTINE_NAME, routineFragment.getRoutineName());
                 bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, routineFragment.getPreviousExercises());
@@ -147,19 +152,16 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
                                              bundle,
                                              true);
 
-                break;
-            case Constant.CODE_FAILED_REPOPULATE:
-                connectionIssue.setVisibility(View.VISIBLE);
-//                pushRoutineFragment();
+                removeConnectionIssue();
                 break;
             case (int) Constant.CODE_FAILED:
-                connectionIssue.setVisibility(View.VISIBLE);
-//                pushRoutineFragment();
+                showConnectionIssue();
                 break;
             // We don't need anything to happen.
             // We just need the progress bar to stop.
             case Constant.ID_SAVE_EXERCISE_LIST:
             default:
+                removeConnectionIssue();
                 break;
         }
 

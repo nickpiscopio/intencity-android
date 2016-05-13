@@ -50,7 +50,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     private String routineName;
     private ArrayList<Exercise> previousExercises;
     private int index;
-    private int recommendedRoutine;
 
     private LoadingListener listener;
 
@@ -75,6 +74,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
         email = Util.getSecurePreferencesEmail(context);
 
+        sections = new ArrayList<>();
+
         initRoutineCards();
 
         // Gets routines from the device database if it has any.
@@ -90,9 +91,14 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         return view;
     }
 
-    private void initRoutineCards()
+    /**
+     * Initializes the routine cards.
+     */
+    public void initRoutineCards()
     {
-        sections = new ArrayList<>();
+        listener.onStartLoading();
+
+        sections.clear();
         sections.add(new RoutineSection(RoutineType.CUSTOM_ROUTINE, getString(R.string.title_custom_routine), new int[] { RoutineKey.USER_SELECTED }, null));
 
         // Get the Intencity Routines
@@ -109,39 +115,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     }
 
     /**
-     * The click listener for the start button.
-     */
-    private View.OnClickListener startClickListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v)
-        {
-//            int spinnerPosition = spinner.getSelectedItemPosition();
-//
-//            String routineSelection = spinner.getItemAtPosition(spinnerPosition).toString();
-
-//            // If the user selects to continue from the last routine he or she chose.
-//            if (routineSelection.equals(getString(R.string.routine_continue)))
-//            {
-//                listener.onFinishedLoading(Constant.ID_FRAGMENT_EXERCISE_LIST);
-//            }
-//            else
-//            {
-//                routineName = routineSelection;
-//
-//                String routine = String.valueOf(spinnerPosition + 1);
-//                String storedProcedureParameters = Constant.generateStoredProcedureParameters(
-//                        Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);
-//
-//                listener.onStartLoading();
-//
-//                new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-//                                                                storedProcedureParameters);
-//            }
-        }
-    };
-
-    /**
      * The service listener for getting the Intencity Routine names.
      */
     public ServiceListener intencityRoutineServiceListener = new ServiceListener()
@@ -153,40 +126,22 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
             {
                 sections.add(new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_intencity_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, new IntencityRoutineDao().parseJson(context, response)));
 
-//                if (pushedTryAgain)
-//                {
-//                    // Repopulate the spinner if the user gets their connection back
-//                    try
-//                    {
-//                        //                        repopulateSpinner(sections);
-//                    }
-//                    catch (Exception e)
-//                    {
-//                        // Only add the saved exercises to the spinner because of the network issue.
-//                        pushRoutineFragment(sections);
-//                    }
-//
-//                    removeConnectionIssueMessage();
-//                    stopLoading();
-//                }
-//                else
-//                {
-                    adapter.notifyDataSetChanged();
-//                    pushRoutineFragment(sections);
-//                }
+                adapter.notifyDataSetChanged();
+
+                listener.onFinishedLoading(Constant.CODE_NULL);
             }
             catch (JSONException e)
             {
                 Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
 
-//                onFinishedLoading(pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : (int) Constant.CODE_FAILED);
+                listener.onFinishedLoading((int) Constant.CODE_FAILED);
             }
         }
 
         @Override
         public void onRetrievalFailed()
         {
-//            onFinishedLoading(pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : (int) Constant.CODE_FAILED);
+            listener.onFinishedLoading((int) Constant.CODE_FAILED);
         }
     };
 
@@ -202,40 +157,22 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
             {
                 sections.add(new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.CONSECUTIVE }, new UserRoutineDao().parseJson(response)));
 
-                //                if (pushedTryAgain)
-                //                {
-                //                    // Repopulate the spinner if the user gets their connection back
-                //                    try
-                //                    {
-                //                        //                        repopulateSpinner(sections);
-                //                    }
-                //                    catch (Exception e)
-                //                    {
-                //                        // Only add the saved exercises to the spinner because of the network issue.
-                //                        pushRoutineFragment(sections);
-                //                    }
-                //
-                //                    removeConnectionIssueMessage();
-                //                    stopLoading();
-                //                }
-                //                else
-                //                {
                 adapter.notifyDataSetChanged();
-                //                    pushRoutineFragment(sections);
-                //                }
+
+                listener.onFinishedLoading(Constant.CODE_NULL);
             }
             catch (JSONException e)
             {
                 Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
 
-                //                onFinishedLoading(pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : (int) Constant.CODE_FAILED);
+                listener.onFinishedLoading((int) Constant.CODE_FAILED);
             }
         }
 
         @Override
         public void onRetrievalFailed()
         {
-            //            onFinishedLoading(pushedTryAgain ? Constant.CODE_FAILED_REPOPULATE : (int) Constant.CODE_FAILED);
+            listener.onFinishedLoading((int) Constant.CODE_FAILED);
         }
     };
 

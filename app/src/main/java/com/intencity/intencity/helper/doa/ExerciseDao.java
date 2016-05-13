@@ -155,7 +155,7 @@ public class ExerciseDao
      *
      * @return The exercise.
      */
-    private Exercise getExercise(String exerciseName, boolean includedInIntencity)
+    public Exercise getExercise(String exerciseName, boolean includedInIntencity)
     {
         return getNewExercise(exerciseName, Constant.RETURN_NULL, Constant.RETURN_NULL, Constant.RETURN_NULL, Constant.RETURN_NULL, includedInIntencity);
     }

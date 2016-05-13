@@ -227,12 +227,11 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             {
                 users = new UserDao().parseJson(response);
                 arrayAdapter  = new RankingListAdapter(context, R.layout.list_item_ranking, users, true);
+                listView.setAdapter(arrayAdapter);
             }
 
             if (arrayAdapter != null)
             {
-                listView.setAdapter(arrayAdapter);
-
                 divider.setVisibility(View.GONE);
             }
         }
@@ -260,10 +259,12 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
      */
     private void parseExercises(String response)
     {
+        ExerciseDao dao = new ExerciseDao();
         try
         {
-            ArrayList<Exercise> searchedExerciseResults = new ExerciseDao().parseJson(response, searchString);
+            ArrayList<Exercise> searchedExerciseResults = dao.parseJson(response, searchString);
             arrayAdapter  = new SearchExerciseListAdapter(context, R.layout.list_item_search_exercise, searchedExerciseResults, exercises, SearchActivity.this);
+            listView.setAdapter(arrayAdapter);
         }
         catch (JSONException e)
         {
