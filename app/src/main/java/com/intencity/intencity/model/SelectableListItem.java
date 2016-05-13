@@ -8,7 +8,7 @@ import android.os.Parcelable;
  *
  * Created by Nick Piscopio on 5/5/16.
  */
-public class RoutineRow implements Parcelable
+public class SelectableListItem implements Parcelable
 {
     private String title;
 
@@ -17,13 +17,18 @@ public class RoutineRow implements Parcelable
     private boolean selected = false;
     private boolean checked = true;
 
-    public RoutineRow(String title, int rowNumber)
+    public SelectableListItem(String title)
+    {
+        this.title = title;
+    }
+
+    public SelectableListItem(String title, int rowNumber)
     {
         this.title = title;
         this.rowNumber = rowNumber;
     }
 
-    private RoutineRow(Parcel in)
+    private SelectableListItem(Parcel in)
     {
         title = in.readString();
         rowNumber = in.readInt();
@@ -31,18 +36,18 @@ public class RoutineRow implements Parcelable
         checked = in.readInt() == 1;
     }
 
-    public static final Creator<RoutineRow> CREATOR = new Creator<RoutineRow>()
+    public static final Creator<SelectableListItem> CREATOR = new Creator<SelectableListItem>()
     {
         @Override
-        public RoutineRow createFromParcel(Parcel in)
+        public SelectableListItem createFromParcel(Parcel in)
         {
-            return new RoutineRow(in);
+            return new SelectableListItem(in);
         }
 
         @Override
-        public RoutineRow[] newArray(int size)
+        public SelectableListItem[] newArray(int size)
         {
-            return new RoutineRow[size];
+            return new SelectableListItem[size];
         }
     };
 

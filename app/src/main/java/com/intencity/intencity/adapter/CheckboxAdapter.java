@@ -9,7 +9,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.model.RoutineRow;
+import com.intencity.intencity.model.SelectableListItem;
 
 import java.util.ArrayList;
 
@@ -18,13 +18,13 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 5/6/16.
  */
-public class RoutineSavedAdapter extends ArrayAdapter<RoutineRow>
+public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
 {
     private Context context;
 
     private int listItemResId;
 
-    private ArrayList<RoutineRow> objects;
+    private ArrayList<SelectableListItem> objects;
 
     private LayoutInflater inflater;
 
@@ -41,7 +41,7 @@ public class RoutineSavedAdapter extends ArrayAdapter<RoutineRow>
      * @param listItemResId     The resource id of the view we are inflating for the list items.
      * @param titles            The title of the row.
      */
-    public RoutineSavedAdapter(Context context, int listItemResId, ArrayList<RoutineRow> titles)
+    public CheckboxAdapter(Context context, int listItemResId, ArrayList<SelectableListItem> titles)
     {
         super(context, 0, titles);
 
@@ -74,7 +74,7 @@ public class RoutineSavedAdapter extends ArrayAdapter<RoutineRow>
             holder = (Holder) convertView.getTag();
         }
 
-        RoutineRow row = objects.get(position);
+        SelectableListItem row = objects.get(position);
 
         holder.title.setText(row.getTitle());
         holder.checkbox.setChecked(row.isChecked());

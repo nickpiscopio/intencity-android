@@ -20,7 +20,7 @@ public class RoutineSection implements Parcelable
 
     private int[] keys;
 
-    private ArrayList<RoutineRow> rows;
+    private ArrayList<SelectableListItem> rows;
 
     /**
      * The constructor for the RoutineSection.
@@ -30,7 +30,7 @@ public class RoutineSection implements Parcelable
      * @param keys      The int equivalents to what dot is being shown for each routine, which will correlate to the routine key.
      * @param rows      The routine rows for each section.
      */
-    public RoutineSection(RoutineType type, String title, int[] keys, ArrayList<RoutineRow> rows)
+    public RoutineSection(RoutineType type, String title, int[] keys, ArrayList<SelectableListItem> rows)
     {
         this.type = type;
         this.title = title;
@@ -46,7 +46,7 @@ public class RoutineSection implements Parcelable
         in.readIntArray(keys);
 
         rows = new ArrayList<>();
-        in.readTypedList(rows, RoutineRow.CREATOR);
+        in.readTypedList(rows, SelectableListItem.CREATOR);
     }
 
     public static final Creator<RoutineSection> CREATOR = new Creator<RoutineSection>()
@@ -107,7 +107,7 @@ public class RoutineSection implements Parcelable
         return keys;
     }
 
-    public ArrayList<RoutineRow> getRoutineRows()
+    public ArrayList<SelectableListItem> getRoutineRows()
     {
         return rows;
     }

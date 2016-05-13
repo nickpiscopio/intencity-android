@@ -12,14 +12,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.adapter.CheckboxAdapter;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
@@ -51,10 +52,12 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
 
     private FloatingActionButton add;
 
-    private ArrayList<String> routines;
+    private ArrayList<SelectableListItem> routines;
     private ArrayList<String> routinesToRemove;
 
     private String email;
+
+    private CheckboxAdapter adapter;
 
     private boolean hasMoreExercises = false;
 
@@ -152,10 +155,10 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
             {
                 JSONObject object = array.getJSONObject(i);
 
-                String routine = object.getString(Constant.COLUMN_DISPLAY_NAME);
+                String name = object.getString(Constant.COLUMN_DISPLAY_NAME);
 
                 // Add all the equipment to the array.
-                routines.add(routine);
+                routines.add(new SelectableListItem(name));
             }
 
             populateListView(routines);
@@ -219,22 +222,16 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
     /**
      * Populates the list.
      *
-     * @param muscleGroups      ArrayList of muscle groups to add to the list view.
+     * @param rows      The ArrayList of routines.
      */
-    private void populateListView(ArrayList<String> muscleGroups)
+    private void populateListView(ArrayList<SelectableListItem> rows)
     {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, muscleGroups);
+        adapter = new CheckboxAdapter(context, R.layout.list_item_standard_checkbox, rows);
 
         listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
         listView.setEmptyView(findViewById(R.id.empty_list));
         listView.setOnItemClickListener(routineClickListener);
-
-        int routinesSize = routines.size();
-        for (int i = 0; i < routinesSize; i++)
-        {
-            listView.setItemChecked(i, true);
-        }
 
         progressBar.setVisibility(View.GONE);
 
@@ -281,17 +278,24 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
+            SelectableListItem routine = routines.get(position);
+
+            String title = routine.getTitle();
+
             // Add or remove muscle groups from the list
             // if he or she clicks on a list item.
-            String muscleGroup = routines.get(position);
-            if (routinesToRemove.contains(muscleGroup))
+            if (routinesToRemove.contains(title))
             {
-                routinesToRemove.remove(muscleGroup);
+                routine.setChecked(true);
+                routinesToRemove.remove(title);
             }
             else
             {
-                routinesToRemove.add(muscleGroup);
+                routine.setChecked(false);
+                routinesToRemove.add(title);
             }
+
+            adapter.notifyDataSetChanged();
         }
     };
 

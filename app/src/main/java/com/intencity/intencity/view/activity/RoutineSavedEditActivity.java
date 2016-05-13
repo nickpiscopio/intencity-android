@@ -14,10 +14,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.adapter.RoutineSavedAdapter;
+import com.intencity.intencity.adapter.CheckboxAdapter;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
-import com.intencity.intencity.model.RoutineRow;
+import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
@@ -43,9 +43,9 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
 
     private ListView listView;
 
-    private RoutineSavedAdapter adapter;
+    private CheckboxAdapter adapter;
 
-    private ArrayList<RoutineRow> routines;
+    private ArrayList<SelectableListItem> routines;
     private ArrayList<String> routinesToRemove;
 
     private String email;
@@ -133,9 +133,9 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
      *
      * @param routines      ArrayList of routines to add to the list view.
      */
-    private void populateListView(ArrayList<RoutineRow> routines)
+    private void populateListView(ArrayList<SelectableListItem> routines)
     {
-        adapter = new RoutineSavedAdapter(context, R.layout.list_item_standard_checkbox, routines);
+        adapter = new CheckboxAdapter(context, R.layout.list_item_standard_checkbox, routines);
 
         listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
@@ -185,7 +185,7 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            RoutineRow routine = routines.get(position);
+            SelectableListItem routine = routines.get(position);
 
             String title = routine.getTitle();
 

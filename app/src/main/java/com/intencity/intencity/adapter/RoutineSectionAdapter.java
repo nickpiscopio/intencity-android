@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.model.RoutineRow;
+import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.model.RoutineSection;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.RoutineKey;
@@ -109,7 +109,7 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
             holder = (RoutineHolder) convertView.getTag();
         }
 
-        ArrayList<RoutineRow> rows = section.getRoutineRows();
+        ArrayList<SelectableListItem> rows = section.getRoutineRows();
 
         int[] keys = section.getKeys();
         String description;

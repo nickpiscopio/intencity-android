@@ -1,6 +1,6 @@
 package com.intencity.intencity.helper.doa;
 
-import com.intencity.intencity.model.RoutineRow;
+import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.util.Constant;
 
 import org.json.JSONArray;
@@ -23,9 +23,9 @@ public class UserRoutineDao
      *
      * @return  The ArrayList of sections for a routine list.
      */
-    public ArrayList<RoutineRow> parseJson(String response) throws JSONException
+    public ArrayList<SelectableListItem> parseJson(String response) throws JSONException
     {
-        ArrayList<RoutineRow> rows = new ArrayList<>();
+        ArrayList<SelectableListItem> rows = new ArrayList<>();
 
         JSONArray array = new JSONArray(response);
 
@@ -38,7 +38,7 @@ public class UserRoutineDao
             String muscleGroup = object.getString(Constant.COLUMN_ROUTINE_NAME);
             int exerciseDay = object.getInt(Constant.COLUMN_EXERCISE_DAY);
 
-            rows.add(new RoutineRow(muscleGroup, exerciseDay));
+            rows.add(new SelectableListItem(muscleGroup, exerciseDay));
         }
 
         return rows;

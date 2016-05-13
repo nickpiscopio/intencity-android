@@ -8,15 +8,15 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.adapter.CheckboxAdapter;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
@@ -39,8 +39,6 @@ public class EquipmentActivity extends AppCompatActivity
     private LinearLayout description;
     private LinearLayout connectionIssue;
 
-    private TextView tryAgain;
-
     private ProgressBar progressBar;
 
     private ListView listView;
@@ -49,10 +47,12 @@ public class EquipmentActivity extends AppCompatActivity
 
     private String email;
 
-    private ArrayList<String> equipmentList;
+    private ArrayList<SelectableListItem> equipmentList;
     private ArrayList<String> userEquipment;
 
     private Context context;
+
+    private CheckboxAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -107,7 +107,7 @@ public class EquipmentActivity extends AppCompatActivity
             try
             {
                 equipmentList = new ArrayList<>();
-                ArrayList<Integer> userEquipment = new ArrayList<>();
+                userEquipment = new ArrayList<>();
 
                 JSONArray array = new JSONArray(response);
 
@@ -120,18 +120,20 @@ public class EquipmentActivity extends AppCompatActivity
                     String equipmentName = object.getString(Constant.COLUMN_EQUIPMENT_NAME);
                     boolean hasEquipment = object.getString(Constant.COLUMN_HAS_EQUIPMENT).equalsIgnoreCase(Constant.TRUE);
 
-                    // Add all the equipment to the array.
-                    equipmentList.add(equipmentName);
+                    SelectableListItem listItem = new SelectableListItem(equipmentName);
+                    listItem.setChecked(hasEquipment);
 
-                    // Add all the equipment to the user's equipment list
-                    // if it is returned from the web database. from the database.
+                    // Add all the equipment to the array.
+                    equipmentList.add(listItem);
+
+                    // Add the list item to the user's equipment list if he or she currently has it.
                     if (hasEquipment)
                     {
-                        userEquipment.add(i);
+                        userEquipment.add(equipmentName);
                     }
                 }
 
-                populateEquipmentListView(userEquipment);
+                populateEquipmentListView();
             }
             catch (JSONException exception)
             {
@@ -192,25 +194,13 @@ public class EquipmentActivity extends AppCompatActivity
 
     /**
      * Populates the equipment list.
-     *
-     * @param userEquipment     ArrayList of indices the current equipment the user has.
-     *                          This directly correlates to the equipmentList indices.
      */
-    private void populateEquipmentListView(ArrayList<Integer> userEquipment)
+    private void populateEquipmentListView()
     {
-        this.userEquipment = new ArrayList<>();
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, equipmentList);
+        adapter = new CheckboxAdapter(this, R.layout.list_item_standard_checkbox, equipmentList);
 
         listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
-
-        for (int equipmentIndex : userEquipment)
-        {
-            listView.setItemChecked(equipmentIndex, true);
-
-            this.userEquipment.add(equipmentList.get(equipmentIndex));
-        }
 
         listView.setOnItemClickListener(settingClicked);
 
@@ -238,17 +228,24 @@ public class EquipmentActivity extends AppCompatActivity
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            // Add or remove equipment from the user's list of equipment
+            SelectableListItem equipment = equipmentList.get(position);
+
+            String title = equipment.getTitle();
+
+            // Add or remove muscle groups from the list
             // if he or she clicks on a list item.
-            String equipment = equipmentList.get(position);
-            if (userEquipment.contains(equipment))
+            if (userEquipment.contains(title))
             {
-                userEquipment.remove(equipment);
+                equipment.setChecked(false);
+                userEquipment.remove(title);
             }
             else
             {
-                userEquipment.add(equipment);
+                equipment.setChecked(true);
+                userEquipment.add(title);
             }
+
+            adapter.notifyDataSetChanged();
         }
     };
 

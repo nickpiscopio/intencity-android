@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.PriorityListAdapter;
@@ -40,8 +39,6 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
 {
     private LinearLayout description;
     private LinearLayout connectionIssue;
-
-    private TextView tryAgain;
 
     private ProgressBar progressBar;
 

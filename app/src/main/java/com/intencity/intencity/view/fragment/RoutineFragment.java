@@ -19,7 +19,7 @@ import com.intencity.intencity.listener.DatabaseListener;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
-import com.intencity.intencity.model.RoutineRow;
+import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.model.RoutineSection;
 import com.intencity.intencity.task.GetExerciseTask;
 import com.intencity.intencity.task.ServiceTask;
@@ -286,7 +286,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
         if (resultCode == Constant.REQUEST_ROUTINE_UPDATED || resultCode == Constant.REQUEST_SAVED_ROUTINE_UPDATED)
         {
-            ArrayList<RoutineRow> rows = data.getParcelableArrayListExtra(Constant.BUNDLE_ROUTINE_ROWS);
+            ArrayList<SelectableListItem> rows = data.getParcelableArrayListExtra(Constant.BUNDLE_ROUTINE_ROWS);
 
             sections.remove(sectionSelected);
 

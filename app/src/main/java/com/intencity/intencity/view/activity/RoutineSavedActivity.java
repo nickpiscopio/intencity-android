@@ -24,7 +24,7 @@ import com.intencity.intencity.helper.doa.UserRoutineDao;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
-import com.intencity.intencity.model.RoutineRow;
+import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
@@ -62,7 +62,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
 
     private RoutineAdapter adapter;
 
-    private ArrayList<RoutineRow> rows;
+    private ArrayList<SelectableListItem> rows;
 
     private int routineSelected;
 
@@ -229,7 +229,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
         {
             showLoading();
 
-            RoutineRow row = rows.get(routineSelected);
+            SelectableListItem row = rows.get(routineSelected);
 
             String routine = String.valueOf(row.getRowNumber());
             String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_ROUTINE_EXERCISES, email, routine);
@@ -294,7 +294,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
                 exercises.addAll(dao.parseJson(response, ""));
                 exercises.add(dao.getInjuryPreventionExercise(ExerciseDao.ExerciseType.STRETCH));
 
-                RoutineRow row = rows.get(routineSelected);
+                SelectableListItem row = rows.get(routineSelected);
 
                 Intent intent = new Intent();
                 intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, row.getTitle());

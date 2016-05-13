@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.intencity.intencity.R;
 import com.intencity.intencity.handler.FragmentHandler;
 import com.intencity.intencity.listener.LoadingListener;
-import com.intencity.intencity.listener.NotificationListener;
 import com.intencity.intencity.util.Constant;
 
 /**
@@ -29,8 +28,6 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
     private TextView tryAgain;
 
     private ProgressBar progressBar;
-
-    private NotificationListener notificationListener;
 
     private RoutineFragment routineFragment;
 
@@ -161,15 +158,5 @@ public class FitnessLogFragment extends android.support.v4.app.Fragment implemen
         }
 
         stopLoading();
-    }
-
-    /**
-     * Sets the MainActivity's NotificationListener.
-     *
-     * @param notificationListener  The listener to set the MainActivity's NotificationListener to.
-     */
-    public void setNotificationListener(NotificationListener notificationListener)
-    {
-        this.notificationListener = notificationListener;
     }
 }

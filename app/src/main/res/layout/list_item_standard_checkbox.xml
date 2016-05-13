@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
+    android:background="@android:color/white"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/layout_margin_half"
-        android:paddingBottom="@dimen/layout_margin_half"
-        android:paddingLeft="@dimen/layout_margin"
-        android:paddingRight="@dimen/layout_margin"
+        android:layout_marginLeft="@dimen/layout_margin"
+        android:layout_marginRight="@dimen/layout_margin_half"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
@@ -23,8 +23,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="@dimen/card_title_size"
-            android:paddingLeft="@dimen/layout_margin_half"
-            android:text="test"
+            android:layout_marginTop="@dimen/layout_margin"
+            android:layout_marginBottom="@dimen/layout_margin"
+            android:layout_marginLeft="@dimen/layout_margin_half"
+            android:layout_marginRight="@dimen/layout_margin_half"
             android:textColor="@color/secondary_dark"/>
 
         <CheckBox

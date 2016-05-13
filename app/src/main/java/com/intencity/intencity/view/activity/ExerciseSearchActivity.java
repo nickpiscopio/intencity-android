@@ -35,8 +35,6 @@ public class ExerciseSearchActivity extends AppCompatActivity implements Service
 {
     private LinearLayout connectionIssue;
 
-    private TextView tryAgain;
-
     private ProgressBar progressBar;
 
     private ListView listView;

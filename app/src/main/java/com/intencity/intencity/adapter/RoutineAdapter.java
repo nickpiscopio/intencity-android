@@ -6,10 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.model.RoutineRow;
+import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.util.Constant;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 5/6/16.
  */
-public class RoutineAdapter extends ArrayAdapter<RoutineRow>
+public class RoutineAdapter extends ArrayAdapter<SelectableListItem>
 {
     private final int HEADER_RES_ID = R.layout.list_item_header;
 
@@ -28,7 +29,7 @@ public class RoutineAdapter extends ArrayAdapter<RoutineRow>
     private int headerResId;
     private int listItemResId;
 
-    private ArrayList<RoutineRow> objects;
+    private ArrayList<SelectableListItem> objects;
 
     private LayoutInflater inflater;
 
@@ -37,6 +38,7 @@ public class RoutineAdapter extends ArrayAdapter<RoutineRow>
     static class Holder
     {
         TextView title;
+        RadioButton radioButton;
     }
 
     /**
@@ -47,7 +49,7 @@ public class RoutineAdapter extends ArrayAdapter<RoutineRow>
      * @param listItemResId     The resource id of the view we are inflating for the list items.
      * @param titles            The title of the row.
      */
-    public RoutineAdapter(Context context, int headerResId, int listItemResId, ArrayList<RoutineRow> titles)
+    public RoutineAdapter(Context context, int headerResId, int listItemResId, ArrayList<SelectableListItem> titles)
     {
         super(context, 0, titles);
 
@@ -71,7 +73,7 @@ public class RoutineAdapter extends ArrayAdapter<RoutineRow>
         {
             this.position = position;
 
-            RoutineRow row = objects.get(position);
+            SelectableListItem row = objects.get(position);
             int rowNumber = row.getRowNumber();
 
             int resourceId = (rowNumber > Constant.CODE_FAILED ? listItemResId : headerResId);
@@ -90,6 +92,31 @@ public class RoutineAdapter extends ArrayAdapter<RoutineRow>
 
             convertView.setTag(holder);
         }
+
+//        Holder holder;
+//
+//        if (convertView == null)
+//        {
+//            holder = new Holder();
+//
+//            convertView = inflater.inflate(listItemResId, parent, false);
+//
+//            holder.title = (TextView) convertView.findViewById(R.id.text_view);
+//            holder.radioButton = (CheckBox) convertView.findViewById(R.id.radio_button);
+//
+//            convertView.setTag(holder);
+//        }
+//        else
+//        {
+//            holder = (Holder) convertView.getTag();
+//        }
+//
+//        RoutineRow row = objects.get(position);
+//
+//        holder.title.setText(row.getTitle());
+//        holder.radioButton.setChecked(row.isSelected());
+//
+//        return convertView;
 
         return convertView;
     }

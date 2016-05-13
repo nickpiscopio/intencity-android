@@ -24,7 +24,7 @@ import com.intencity.intencity.helper.doa.IntencityRoutineDao;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
-import com.intencity.intencity.model.RoutineRow;
+import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
@@ -56,7 +56,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
 
     private RoutineAdapter adapter;
 
-    private ArrayList<RoutineRow> rows;
+    private ArrayList<SelectableListItem> rows;
 
     private int routineSelected;
 
@@ -135,6 +135,8 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
      */
     private void getRoutines()
     {
+        showLoading();
+
         new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS, email));
     }
 
@@ -183,6 +185,8 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 
         new CustomDialog(RoutineIntencityActivity.this, dialogListener, dialog, false);
+
+        hideLoading();
     }
 
     /**
@@ -209,7 +213,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         {
             showLoading();
 
-            RoutineRow row = rows.get(routineSelected);
+            SelectableListItem row = rows.get(routineSelected);
 
             String routine = String.valueOf(row.getRowNumber());
             String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);
@@ -295,7 +299,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
                 exercises.addAll(dao.parseJson(response, ""));
                 exercises.add(dao.getInjuryPreventionExercise(ExerciseDao.ExerciseType.STRETCH));
 
-                RoutineRow row = rows.get(routineSelected);
+                SelectableListItem row = rows.get(routineSelected);
 
                 Intent intent = new Intent();
                 intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, row.getTitle());
@@ -330,6 +334,8 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
             adapter.notifyDataSetChanged();
 
             hasMoreExercises = true;
+
+            hideLoading();
         }
         catch (JSONException e)
         {

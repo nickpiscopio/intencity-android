@@ -60,9 +60,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:choiceMode="multipleChoice"
-            android:background="@android:color/white"
-            android:dividerHeight="@dimen/divider_height"
-            android:divider="@color/shadow"/>
+            android:dividerHeight="0dp"
+            android:divider="@null"
+            android:paddingBottom="@dimen/list_view_padding_bottom"
+            android:clipToPadding="false"/>
 
         <TextView
             android:id="@+id/empty_list"
