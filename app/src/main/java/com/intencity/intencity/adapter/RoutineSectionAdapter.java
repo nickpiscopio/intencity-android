@@ -7,6 +7,8 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import com.intencity.intencity.R;
 import com.intencity.intencity.model.RoutineRow;
 import com.intencity.intencity.model.RoutineSection;
+import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.RoutineKey;
 import com.intencity.intencity.util.RoutineType;
 
@@ -39,6 +42,8 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
     private ArrayList<RoutineSection> sections;
 
     private LayoutInflater inflater;
+
+    private int lastPosition = (int)Constant.CODE_FAILED;
 
     static class RoutineHolder
     {
@@ -197,6 +202,26 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
             holder.nextLayout.setVisibility(View.VISIBLE);
         }
 
+        setAnimation(holder.cardView, position);
+
         return convertView;
+    }
+
+    /**
+     * Sets the animation for a view.
+     *
+     * @param viewToAnimate     The view to set an animation.
+     * @param position          The current position of the recycler view.
+     */
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen.
+        // Add animation.
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.anim_slide_in_right);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
     }
 }

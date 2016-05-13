@@ -98,7 +98,17 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     {
         listener.onStartLoading();
 
-        sections.clear();
+        int size = sections.size();
+
+        if (size > 0 && sections.get(0).getType() == RoutineType.CONTINUE)
+        {
+            sections.removeAll(sections.subList(1, size));
+        }
+        else
+        {
+            sections.clear();
+        }
+
         sections.add(new RoutineSection(RoutineType.CUSTOM_ROUTINE, getString(R.string.title_custom_routine), new int[] { RoutineKey.USER_SELECTED }, null));
 
         // Get the Intencity Routines
@@ -155,9 +165,12 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         {
             try
             {
-                sections.add(new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.CONSECUTIVE }, new UserRoutineDao().parseJson(response)));
+                if (!response.equalsIgnoreCase(Constant.RETURN_NULL))
+                {
+                    sections.add(new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.CONSECUTIVE }, new UserRoutineDao().parseJson(response)));
 
-                adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
+                }
 
                 listener.onFinishedLoading(Constant.CODE_NULL);
             }
