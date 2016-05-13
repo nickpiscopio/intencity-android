@@ -26,6 +26,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
     private LinearLayout exerciseEditLayout;
     private LinearLayout lastSetLayout;
     private LinearLayout lastSet;
+    private LinearLayout priorityLayout;
     private TextView exercise;
     private TextView weight;
     private TextView weightSuffix;
@@ -56,6 +57,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         exerciseEditLayout = (LinearLayout) view.findViewById(R.id.layout_exercise_edit);
         lastSetLayout = (LinearLayout) view.findViewById(R.id.layout_last_set);
         lastSet = (LinearLayout) view.findViewById(R.id.last_set);
+        priorityLayout = (LinearLayout) view.findViewById(R.id.layout_priority);
         exercise = (TextView) view.findViewById(R.id.exercise);
         weight = (TextView) view.findViewById(R.id.weight);
         weightSuffix = (TextView) view.findViewById(R.id.weight_suffix);
@@ -169,6 +171,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
             exercise.setClickable(!includedInIntencity);
             exercise.setBackgroundResource(includedInIntencity ? R.drawable.button_card : 0);
             exercise.setTextColor(ContextCompat.getColor(context, includedInIntencity ? R.color.primary : R.color.secondary_dark));
+            priorityLayout.setVisibility(includedInIntencity ? View.VISIBLE : View.GONE);
         }
 
         exercise.setText(exerciseName);

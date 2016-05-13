@@ -575,7 +575,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     }
 
     /**
-     * Starts the asynctask to remove the exercises from the database.
+     * Starts the AsyncTask to remove the exercises from the database.
      */
     private void removeExercisesFromDatabase()
     {
@@ -711,7 +711,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             savedRoutineName = routineName;
 
             String params = Constant.generateRoutineListVariables(email, routineName, currentExercises);
-
             new ServiceTask(saveRoutineServiceListener).execute(Constant.SERVICE_SET_ROUTINE, params);
         }
         else
