@@ -156,6 +156,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             completedExerciseNum++;
         }
 
+        setRoutineState();
+
         updateRoutineName(completedExerciseNum);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
@@ -170,8 +172,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
 
         workoutFinished = false;
-
-        setRoutineState();
 
         return view;
     }
