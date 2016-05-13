@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,9 +50,9 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
     {
         CardView cardView;
         LinearLayout indicatorLayout;
-        LinearLayout nextLayout;
         TextView title;
         TextView description;
+        ImageView nextImage;
         ImageView imageView;
     }
 
@@ -94,9 +95,9 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
             holder = new RoutineHolder();
             holder.cardView = (CardView) convertView.findViewById(R.id.card_view);
             holder.indicatorLayout = (LinearLayout) convertView.findViewById(R.id.layout_indicator);
-            holder.nextLayout = (LinearLayout) convertView.findViewById(R.id.layout_next_image);
             holder.title = (TextView) convertView.findViewById(R.id.title);
             holder.description = (TextView) convertView.findViewById(R.id.description);
+            holder.nextImage = (ImageView) convertView.findViewById(R.id.image_next);
             holder.imageView = (ImageView) convertView.findViewById(R.id.routine_image);
 
             // The tag can be any Object, this just happens to be the ViewHolder
@@ -145,11 +146,12 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
         if (keys != null)
         {
             holder.title.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+            holder.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimension(R.dimen.card_title_size));
             holder.description.setVisibility(View.VISIBLE);
             holder.description.setText(description);
             holder.indicatorLayout.removeAllViews();
             holder.imageView.setVisibility(View.VISIBLE);
-            holder.nextLayout.setVisibility(View.GONE);
+            holder.nextImage.setVisibility(View.GONE);
 
             for (int key : keys)
             {
@@ -197,9 +199,10 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
         else
         {
             holder.title.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
+            holder.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimension(R.dimen.card_continue_title_size));
             holder.description.setVisibility(View.GONE);
             holder.imageView.setVisibility(View.GONE);
-            holder.nextLayout.setVisibility(View.VISIBLE);
+            holder.nextImage.setVisibility(View.VISIBLE);
         }
 
         setAnimation(holder.cardView, position);

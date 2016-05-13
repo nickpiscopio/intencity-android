@@ -33,38 +33,40 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Intencity Routine"
-                    android:textSize="@dimen/card_title_size"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold"/>
-
                 <LinearLayout
-                    android:id="@+id/layout_indicator"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"/>
-
-                <LinearLayout
-                    android:id="@+id/layout_next_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical|end"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="@dimen/card_continue_title_size"
-                        android:layout_height="@dimen/card_continue_title_size"
-                        android:src="@mipmap/next_dark"/>
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CONTINUE LOWER BACK"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/card_title_size"
+                        android:textColor="@color/secondary_light"/>
+
+                    <LinearLayout
+                        android:id="@+id/layout_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"/>
 
                 </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/image_next"
+                    android:layout_width="@dimen/card_continue_title_size"
+                    android:layout_height="@dimen/card_continue_title_size"
+                    android:layout_marginLeft="@dimen/layout_margin"
+                    android:src="@mipmap/next_dark"/>
 
             </LinearLayout>
 
