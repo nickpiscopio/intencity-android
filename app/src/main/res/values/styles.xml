@@ -14,8 +14,6 @@
     <style name="AppTheme" parent="AppTheme.Base">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="colorControlActivated">@color/accent</item>
-        <item name="colorControlNormal">@color/accent</item>
     </style>
 
     <style name="Overlay" parent="AppTheme.Base">
@@ -53,11 +51,5 @@
     <style name="TwoWayViewBase">
         <item name="android:background">#999999</item>
     </style>
-
-    <!--<style name="checkBox">-->
-        <!--<item name="colorControlActivated">@color/accent</item>-->
-        <!--<item name="colorControlNormal">@color/accent</item>-->
-        <!--<item name="colorAccent">@color/accent</item>-->
-    <!--</style>-->
 
 </resources>

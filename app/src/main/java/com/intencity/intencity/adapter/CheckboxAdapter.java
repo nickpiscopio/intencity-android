@@ -54,6 +54,7 @@ public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
         Holder holder;
