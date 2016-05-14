@@ -2,8 +2,6 @@ package com.intencity.intencity.util.TwoWayView;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnItemTouchListener;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -14,11 +12,11 @@ abstract class ClickItemTouchListener implements OnItemTouchListener
 {
     private static final String LOGTAG = "ClickItemTouchListener";
 
-    private final GestureDetectorCompat mGestureDetector;
+//    private final GestureDetectorCompat mGestureDetector;
 
     ClickItemTouchListener(RecyclerView hostView) {
-        mGestureDetector = new ItemClickGestureDetector(hostView.getContext(),
-                new ItemClickGestureListener(hostView));
+//        mGestureDetector = new ItemClickGestureDetector(hostView.getContext(),
+//                new ItemClickGestureListener(hostView));
     }
 
     private boolean isAttachedToWindow(RecyclerView hostView) {
@@ -39,7 +37,7 @@ abstract class ClickItemTouchListener implements OnItemTouchListener
             return false;
         }
 
-        mGestureDetector.onTouchEvent(event);
+//        mGestureDetector.onTouchEvent(event);
         return false;
     }
 
@@ -52,26 +50,26 @@ abstract class ClickItemTouchListener implements OnItemTouchListener
     abstract boolean performItemClick(RecyclerView parent, View view, int position, long id);
     abstract boolean performItemLongClick(RecyclerView parent, View view, int position, long id);
 
-    private class ItemClickGestureDetector extends GestureDetectorCompat
+    private class ItemClickGestureDetector
     {
-        private final ItemClickGestureListener mGestureListener;
+//        private final ItemClickGestureListener mGestureListener;
 
         public ItemClickGestureDetector(Context context, ItemClickGestureListener listener) {
-            super(context, listener);
-            mGestureListener = listener;
+//            super(context, listener);
+//            mGestureListener = listener;
         }
 
-        @Override
-        public boolean onTouchEvent(MotionEvent event) {
-            final boolean handled = super.onTouchEvent(event);
-
-            final int action = event.getAction() & MotionEventCompat.ACTION_MASK;
-            if (action == MotionEvent.ACTION_UP) {
-                mGestureListener.dispatchSingleTapUpIfNeeded(event);
-            }
-
-            return handled;
-        }
+//        @Override
+//        public boolean onTouchEvent(MotionEvent event) {
+//            final boolean handled = super.onTouchEvent(event);
+//
+//            final int action = event.getAction() & MotionEventCompat.ACTION_MASK;
+//            if (action == MotionEvent.ACTION_UP) {
+//                mGestureListener.dispatchSingleTapUpIfNeeded(event);
+//            }
+//
+//            return handled;
+//        }
     }
 
     private class ItemClickGestureListener extends SimpleOnGestureListener

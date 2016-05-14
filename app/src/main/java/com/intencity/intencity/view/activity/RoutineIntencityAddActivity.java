@@ -10,9 +10,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.CheckboxAdapter;
@@ -43,10 +43,6 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
 
     private ProgressBar progressBar;
 
-    private LinearLayout description;
-
-    private View divider;
-
     private ListView listView;
 
     private String email;
@@ -60,7 +56,7 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_intencity_routine_add);
+        setContentView(R.layout.activity_routine_intencity_add);
 
         // Add the back button to the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -68,9 +64,6 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
         {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        divider = findViewById(R.id.divider);
-        description = (LinearLayout) findViewById(R.id.layout_description);
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
         progressBar.setVisibility(View.VISIBLE);
@@ -188,15 +181,19 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
     {
         adapter = new CheckboxAdapter(context, R.layout.list_item_standard_checkbox, rows);
 
+        View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
+
+        TextView title = (TextView) header.findViewById(R.id.title);
+        header.findViewById(R.id.description).setVisibility(View.GONE);
+
+        title.setText(context.getString(R.string.add_routines_description));
+
         listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
-
+        listView.addHeaderView(header, null, false);
         listView.setOnItemClickListener(routineClickListener);
 
         progressBar.setVisibility(View.GONE);
-
-        divider.setVisibility(View.VISIBLE);
-        description.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -242,7 +239,7 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            SelectableListItem routine = muscleGroups.get(position);
+            SelectableListItem routine = muscleGroups.get(position - 1);
 
             String title = routine.getTitle();
 

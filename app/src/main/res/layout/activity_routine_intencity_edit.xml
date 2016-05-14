@@ -2,77 +2,49 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/page_background">
-    
+    android:background="@color/page_background"
+    android:animateLayoutChanges="true">
+
     <LinearLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:animateLayoutChanges="true">
-
-        <include
-            layout="@layout/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_margin"/>
-
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    
         <LinearLayout
-            android:id="@+id/layout_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <include
+                layout="@layout/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_margin"/>
+
+            <TextView
+                android:id="@+id/empty_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/secondary_dark"
+                android:padding="@dimen/layout_margin"
+                android:gravity="center_horizontal"
+                android:text="@string/no_custom_routines"/>
+
+            <ListView
+                android:id="@+id/list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_margin"
-                android:layout_marginLeft="@dimen/layout_margin"
-                android:layout_marginRight="@dimen/layout_margin"
-                android:layout_marginBottom="@dimen/layout_margin_half"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/edit_routines_description1"
-                    android:textSize="@dimen/card_title_size"
-                    android:layout_marginBottom="@dimen/layout_margin_quarter"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/edit_routines_description2"/>
-
-            </LinearLayout>
-
-            <include layout="@layout/divider"/>
+                android:choiceMode="multipleChoice"
+                android:dividerHeight="0dp"
+                android:divider="@null"
+                android:paddingBottom="@dimen/list_view_padding_bottom"
+                android:clipToPadding="false"/>
 
         </LinearLayout>
-
-        <ListView
-            android:id="@+id/list_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:choiceMode="multipleChoice"
-            android:dividerHeight="0dp"
-            android:divider="@null"
-            android:paddingBottom="@dimen/list_view_padding_bottom"
-            android:clipToPadding="false"/>
-
-        <TextView
-            android:id="@+id/empty_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="@color/secondary_dark"
-            android:padding="@dimen/layout_margin"
-            android:gravity="center_horizontal"
-            android:text="@string/no_custom_routines"/>
 
     </LinearLayout>
 

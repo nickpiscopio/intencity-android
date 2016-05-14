@@ -9,9 +9,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.CheckboxAdapter;
@@ -37,10 +37,6 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
 
     private ProgressBar progressBar;
 
-    private LinearLayout description;
-
-    private View divider;
-
     private ListView listView;
 
     private CheckboxAdapter adapter;
@@ -64,9 +60,6 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
         }
 
         context = getApplicationContext();
-
-        divider = findViewById(R.id.divider);
-        description = (LinearLayout) findViewById(R.id.layout_description);
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
 
@@ -137,14 +130,20 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
     {
         adapter = new CheckboxAdapter(context, R.layout.list_item_standard_checkbox, routines);
 
+        View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
+
+        TextView title = (TextView) header.findViewById(R.id.title);
+        TextView description = (TextView) header.findViewById(R.id.description);
+
+        title.setText(context.getString(R.string.edit_routines_description1));
+        description.setText(context.getString(R.string.edit_routines_description2));
+
         listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
+        listView.addHeaderView(header, null, false);
         listView.setOnItemClickListener(routineClickListener);
 
         progressBar.setVisibility(View.GONE);
-
-        divider.setVisibility(View.VISIBLE);
-        description.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -185,7 +184,7 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            SelectableListItem routine = routines.get(position);
+            SelectableListItem routine = routines.get(position - 1);
 
             String title = routine.getTitle();
 
