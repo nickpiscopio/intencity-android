@@ -16,14 +16,14 @@
         android:paddingLeft="@dimen/layout_margin"
         android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_view_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/card_title2_size"
-        android:textStyle="bold"
-        android:text="Header"
-        android:textColor="@color/secondary_light"/>
+        <TextView
+            android:id="@+id/text_view_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/card_title2_size"
+            android:textStyle="bold"
+            android:text="Header"
+            android:textColor="@color/secondary_light"/>
 
     </LinearLayout>
 

@@ -29,6 +29,7 @@ import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.SelectionType;
 import com.intencity.intencity.util.Util;
 
 import org.json.JSONException;
@@ -94,7 +95,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
 
         email = Util.getSecurePreferencesEmail(context);
 
-        View header = getLayoutInflater().inflate(R.layout.header_title_description, null);
+        View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
 
         TextView title = (TextView) header.findViewById(R.id.title);
         TextView description = (TextView) header.findViewById(R.id.description);
@@ -105,7 +106,6 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
         listView = (ListView) findViewById(R.id.list_view);
         listView.addHeaderView(header, null, false);
         listView.setOnItemClickListener(routineClickListener);
-        listView.setHeaderDividersEnabled(true);
 
         populateRoutineList();
     }
@@ -150,7 +150,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
      */
     private void populateRoutineList()
     {
-        adapter = new RoutineAdapter(context, R.layout.list_item_header, android.R.layout.simple_list_item_single_choice, rows);
+        adapter = new RoutineAdapter(context, R.layout.list_item_header, R.layout.list_item_standard_radio_button, rows);
 
         listView.setAdapter(adapter);
     }
@@ -206,6 +206,19 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
     }
 
     /**
+     * Sets the flag to select or deselect a row.
+     *
+     * @param type      The type of selection we want to do.
+     * @param position  The position to select or deselect a row.
+     */
+    private void setSelection(SelectionType type, int position)
+    {
+        SelectableListItem selectedItem = rows.get(position);
+
+        selectedItem.setSelected(type == SelectionType.SELECT);
+    }
+
+    /**
      * The click listener for when a routine is clicked in the ListView.
      */
     private AdapterView.OnItemClickListener routineClickListener = new AdapterView.OnItemClickListener()
@@ -213,7 +226,14 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
+            // We deselect the old row.
+            setSelection(SelectionType.DESELECT, routineSelected);
+
+            // We select the new row.
             routineSelected = position - 1;
+            setSelection(SelectionType.SELECT, routineSelected);
+
+            adapter.notifyDataSetChanged();
 
             start.setVisibility(View.VISIBLE);
         }

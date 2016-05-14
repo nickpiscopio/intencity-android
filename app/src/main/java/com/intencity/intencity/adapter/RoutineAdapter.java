@@ -1,7 +1,6 @@
 package com.intencity.intencity.adapter;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.model.SelectableListItem;
-import com.intencity.intencity.util.Constant;
 
 import java.util.ArrayList;
 
@@ -22,7 +20,8 @@ import java.util.ArrayList;
  */
 public class RoutineAdapter extends ArrayAdapter<SelectableListItem>
 {
-    private final int HEADER_RES_ID = R.layout.list_item_header;
+    private final int HEADER = 0;
+    private final int ROW = 1;
 
     private Context context;
 
@@ -32,8 +31,6 @@ public class RoutineAdapter extends ArrayAdapter<SelectableListItem>
     private ArrayList<SelectableListItem> objects;
 
     private LayoutInflater inflater;
-
-    private int position;
 
     static class Holder
     {
@@ -60,64 +57,75 @@ public class RoutineAdapter extends ArrayAdapter<SelectableListItem>
 
         this.objects = titles;
 
-        position = (int) Constant.CODE_FAILED;
-
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        final Holder holder = (convertView == null) ? new Holder() : (Holder)convertView.getTag();
+        int type = getItemViewType(position);
 
-        if (this.position != position || convertView == null)
+        Holder holder;
+
+        SelectableListItem row = objects.get(position);
+
+        if (convertView == null)
         {
-            this.position = position;
+            holder = new Holder();
 
-            SelectableListItem row = objects.get(position);
-            int rowNumber = row.getRowNumber();
+            int resourceId;
+            int titleId;
 
-            int resourceId = (rowNumber > Constant.CODE_FAILED ? listItemResId : headerResId);
+            switch (type)
+            {
+                case HEADER:
+                    resourceId = headerResId;
+                    titleId = R.id.text_view_header;
+                    break;
+                case ROW:
+                default:
+                    resourceId = listItemResId;
+                    titleId = R.id.text_view;
+                    break;
+            }
 
             convertView = inflater.inflate(resourceId, parent, false);
 
-            boolean isHeader = resourceId == HEADER_RES_ID;
-
-            holder.title = (TextView) convertView.findViewById(isHeader ? R.id.text_view_header : android.R.id.text1);
-            holder.title.setText(row.getTitle());
-
-            if (!isHeader)
-            {
-                holder.title.setTextColor(ContextCompat.getColor(context, R.color.secondary_dark));
-            }
+            holder.title = (TextView) convertView.findViewById(titleId);
+            holder.radioButton = (RadioButton) convertView.findViewById(R.id.radio_button);
 
             convertView.setTag(holder);
         }
+        else
+        {
+            holder = (Holder) convertView.getTag();
+        }
 
-//        Holder holder;
-//
-//        if (convertView == null)
-//        {
-//            holder = new Holder();
-//
-//            convertView = inflater.inflate(listItemResId, parent, false);
-//
-//            holder.title = (TextView) convertView.findViewById(R.id.text_view);
-//            holder.radioButton = (CheckBox) convertView.findViewById(R.id.radio_button);
-//
-//            convertView.setTag(holder);
-//        }
-//        else
-//        {
-//            holder = (Holder) convertView.getTag();
-//        }
-//
-//        RoutineRow row = objects.get(position);
-//
-//        holder.title.setText(row.getTitle());
-//        holder.radioButton.setChecked(row.isSelected());
-//
-//        return convertView;
+        holder.title.setText(row.getTitle());
+
+        switch (type)
+        {
+            case ROW:
+            default:
+                if (holder.radioButton != null)
+                {
+                    holder.radioButton.setChecked(row.isSelected());
+                }
+                break;
+        }
 
         return convertView;
+    }
+
+    @Override
+    public int getItemViewType(int position)
+    {
+        return objects.get(position).getRowNumber() < 0 ? HEADER : ROW;
+    }
+
+    @Override
+    public int getViewTypeCount()
+    {
+        return 2;
     }
 }
