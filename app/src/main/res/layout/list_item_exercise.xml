@@ -84,6 +84,7 @@
                             android:id="@+id/weight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/secondary_light"
                             android:text="45"
                             android:textStyle="bold"/>
 
@@ -91,6 +92,7 @@
                             android:id="@+id/weight_suffix"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/secondary_light"
                             android:text="@string/title_lbs"
                             android:layout_marginLeft="@dimen/layout_margin_quarter"
                             android:textSize="@dimen/card_title2_size"/>
@@ -99,6 +101,7 @@
                             android:id="@+id/slash"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/secondary_light"
                             android:text="/"
                             android:layout_marginRight="@dimen/layout_margin_quarter"
                             android:layout_marginLeft="@dimen/layout_margin_quarter"
@@ -108,6 +111,7 @@
                             android:id="@+id/duration"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/secondary_light"
                             android:text="10"
                             android:textStyle="bold"/>
 
@@ -115,6 +119,7 @@
                             android:id="@+id/suffix"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/secondary_light"
                             android:text="@string/title_reps"
                             android:layout_marginLeft="@dimen/layout_margin_quarter"
                             android:textSize="@dimen/card_title2_size"/>
@@ -126,6 +131,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
+                        android:textColor="@color/secondary_light"
                         android:text="@string/edit"
                         android:layout_gravity="center_vertical"
                         android:visibility="gone"/>
