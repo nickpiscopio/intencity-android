@@ -4,10 +4,10 @@
 
     <item
         android:state_checked="false"
-        android:drawable="@mipmap/radio_button_unmarked"  />
+        android:drawable="@mipmap/checkbox_unchecked"  />
 
     <item
         android:state_checked="true"
-        android:drawable="@mipmap/radio_button_marked"/>
+        android:drawable="@mipmap/checkbox_checked"/>
 
 </selector>

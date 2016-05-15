@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.PriorityListAdapter;
@@ -37,14 +38,11 @@ import java.util.ArrayList;
  */
 public class ExercisePriorityActivity extends AppCompatActivity implements ExercisePriorityListener
 {
-    private LinearLayout description;
     private LinearLayout connectionIssue;
 
     private ProgressBar progressBar;
 
     private ListView listView;
-
-    private View divider;
 
     private String email;
 
@@ -70,9 +68,6 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        divider = findViewById(R.id.divider);
-
-        description = (LinearLayout) findViewById(R.id.layout_description);
         connectionIssue = (LinearLayout) findViewById(R.id.layout_connection_issue);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
 
@@ -141,9 +136,6 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
 
                 connectionIssue.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
-
-                divider.setVisibility(View.GONE);
-                description.setVisibility(View.GONE);
             }
         }
 
@@ -152,9 +144,6 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
         {
             connectionIssue.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
-
-            divider.setVisibility(View.GONE);
-            description.setVisibility(View.GONE);
         }
     };
 
@@ -198,14 +187,20 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
     {
         adapter = new PriorityListAdapter(context, this, R.layout.list_item_exercise_priority, exerciseNames, exercisePriorities);
 
+        View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
+
+        TextView title = (TextView) header.findViewById(R.id.title);
+        TextView description = (TextView) header.findViewById(R.id.description);
+
+        title.setText(context.getString(R.string.edit_priority_title));
+        description.setText(context.getString(R.string.edit_priority_description));
+
         listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
+        listView.addHeaderView(header, null, false);
         listView.setEmptyView(findViewById(R.id.text_view_no_priorities));
 
         progressBar.setVisibility(View.GONE);
-
-        divider.setVisibility(View.VISIBLE);
-        description.setVisibility(exerciseNames.size() > 0 ? View.VISIBLE : View.GONE);
     }
 
     /**
