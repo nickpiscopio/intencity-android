@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.model.MenuItem;
-import com.intencity.intencity.util.Constant;
 
 import java.util.ArrayList;
 
@@ -20,7 +19,8 @@ import java.util.ArrayList;
  */
 public class MenuAdapter extends ArrayAdapter<MenuItem>
 {
-    private final int HEADER_RES_ID = R.layout.list_item_header;
+    private final int HEADER = 0;
+    private final int ROW = 1;
 
     private Context context;
 
@@ -31,9 +31,7 @@ public class MenuAdapter extends ArrayAdapter<MenuItem>
 
     private LayoutInflater inflater;
 
-    private int position;
-
-    static class MenuHolder
+    static class ViewHolder
     {
         TextView title;
     }
@@ -57,35 +55,67 @@ public class MenuAdapter extends ArrayAdapter<MenuItem>
 
         this.objects = items;
 
-        position = (int) Constant.CODE_FAILED;
-
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        MenuHolder holder;
+        int type = getItemViewType(position);
 
-        if (convertView == null || this.position != position)
+        MenuItem item = objects.get(position);
+
+        ViewHolder holder;
+
+        if (convertView == null)
         {
-            this.position = position;
+            holder = new ViewHolder();
 
-            holder = new MenuHolder();
+            int resourceId;
+            int titleId;
 
-            MenuItem item = objects.get(position);
-
-            int resourceId = (item.getCls() == null &&
-                              !item.getTitle().equals(context.getString(R.string.title_log_out))) &&
-                              !item.getTitle().equals(context.getString(R.string.title_rate_intencity)) ? headerResId : listItemResId;
+            switch (type)
+            {
+                case HEADER:
+                    resourceId = headerResId;
+                    titleId = R.id.text_view_header;
+                    break;
+                case ROW:
+                default:
+                    resourceId = listItemResId;
+                    titleId = R.id.text_view;
+                    break;
+            }
 
             convertView = inflater.inflate(resourceId, parent, false);
 
-            holder.title = (TextView) convertView.findViewById(resourceId == HEADER_RES_ID ? R.id.text_view_header : R.id.text_view);
-            holder.title.setText(item.getTitle());
+            holder.title = (TextView) convertView.findViewById(titleId);
 
             convertView.setTag(holder);
         }
+        else
+        {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        holder.title.setText(item.getTitle());
 
         return convertView;
+    }
+
+    @Override
+    public int getItemViewType(int position)
+    {
+        MenuItem item = objects.get(position);
+
+        return (item.getCls() == null &&
+                !item.getTitle().equals(context.getString(R.string.title_log_out))) &&
+                !item.getTitle().equals(context.getString(R.string.title_rate_intencity)) &&
+                !item.getTitle().equals(context.getString(R.string.title_contribute_intencity)) ? HEADER : ROW;
+    }
+
+    @Override
+    public int getViewTypeCount()
+    {
+        return 2;
     }
 }

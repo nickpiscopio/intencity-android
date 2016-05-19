@@ -31,6 +31,7 @@ public class MenuActivity extends AppCompatActivity
 
     private String logOutTitle;
     private String rateTitle;
+    private String contributeTitle;
 
     private Context context;
 
@@ -56,6 +57,7 @@ public class MenuActivity extends AppCompatActivity
 
         logOutTitle = getString(R.string.title_log_out);
         rateTitle = getString(R.string.title_rate_intencity);
+        contributeTitle = getString(R.string.title_contribute_intencity);
 
         menuItems = new ArrayList<>();
         menuItems.add(new MenuItem(getString(R.string.notifications, "(" + awardTotal + ")"), NotificationActivity.class));
@@ -72,6 +74,7 @@ public class MenuActivity extends AppCompatActivity
         menuItems.add(new MenuItem(getString(R.string.title_terms), TermsActivity.class, getTermsBundle(true)));
         menuItems.add(new MenuItem(getString(R.string.title_privacy_policy), TermsActivity.class, getTermsBundle(false)));
         menuItems.add(new MenuItem(rateTitle, null));
+        menuItems.add(new MenuItem(contributeTitle, null));
 
         if (!accountType.equals(Constant.ACCOUNT_TYPE_MOBILE_TRIAL))
         {
@@ -119,6 +122,10 @@ public class MenuActivity extends AppCompatActivity
                     startActivity(new Intent(Intent.ACTION_VIEW,
                                              Uri.parse("http://play.google.com/store/apps/details?id=" + packageName)));
                 }
+            }
+            else if (menuItem.getTitle().equals(contributeTitle))
+            {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://intencity.fit/contribute.html")));
             }
         }
     };
