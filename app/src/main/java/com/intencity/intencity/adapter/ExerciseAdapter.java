@@ -26,6 +26,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 {
     private Context context;
 
+    private int routineState;
+
     private ArrayList<Exercise> exercises;
 
     private ExerciseListener listener;
@@ -33,9 +35,10 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     // Allows to remember the last item shown on screen
     private int lastPosition = 0;
 
-    public ExerciseAdapter(Context context, ArrayList<Exercise> exercises, ExerciseListener listener)
+    public ExerciseAdapter(Context context, int routineState, ArrayList<Exercise> exercises, ExerciseListener listener)
     {
         this.context = context;
+        this.routineState = routineState;
         this.exercises = exercises;
         this.listener = listener;
     }
@@ -57,7 +60,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Set set = sets.get(sets.size() - 1);
 
         ExerciseViewHolder exerciseHolder = (ExerciseViewHolder) holder;
-        exerciseHolder.setExercise(exercise.getName(), exercise.getDescription(), exercise.isIncludedInIntencity());
+        exerciseHolder.setExercise(exercise.getName(), exercise.getDescription(), routineState, exercise.isIncludedInIntencity());
         exerciseHolder.setPosition(position);
         exerciseHolder.setWeight(set.getWeight());
 

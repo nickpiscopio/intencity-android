@@ -142,6 +142,8 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
      */
     private void getRoutines()
     {
+        showLoading();
+
         new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_ROUTINE, email));
     }
 
@@ -362,11 +364,15 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
         {
             showDialog(DialogType.COMMUNICATION_ERROR);
         }
+
+        hideLoading();
     }
 
     @Override
     public void onRetrievalFailed()
     {
         showDialog(DialogType.COMMUNICATION_ERROR);
+
+        hideLoading();
     }
 }

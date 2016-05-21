@@ -164,6 +164,8 @@ public class EquipmentActivity extends AppCompatActivity
             CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 
             new CustomDialog(EquipmentActivity.this, dialogListener, dialog, false);
+
+            progressBar.setVisibility(View.GONE);
         }
     };
 
@@ -209,6 +211,8 @@ public class EquipmentActivity extends AppCompatActivity
      */
     private void updateEquipment()
     {
+        progressBar.setVisibility(View.VISIBLE);
+
         new ServiceTask(updateEquipmentServiceListener).execute(Constant.SERVICE_UPDATE_EQUIPMENT,
                                                                 Constant.generateServiceListVariables(
                                                                         email, userEquipment, true));

@@ -19,14 +19,13 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/layout_margin"/>
 
-        <include layout="@layout/divider"/>
-
         <ListView
             android:id="@+id/list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:choiceMode="multipleChoice"
             android:background="@android:color/white"
+            android:drawSelectorOnTop="true"
             android:dividerHeight="0dp"
             android:divider="@null"/>
 

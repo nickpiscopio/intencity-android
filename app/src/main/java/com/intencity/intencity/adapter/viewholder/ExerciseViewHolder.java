@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.ExerciseListener;
+import com.intencity.intencity.util.RoutineState;
 
 /**
  * The ExerciseViewHolder for the exercise RecyclerView.
@@ -150,9 +151,11 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
      *
      * @param exerciseName          The name of the exercise to set the TextView. 
      * @param description           The description to show. 
+     * @param routineState          The routine we are doing.
+     *                              i.e. Custom, Intencity, Saved
      * @param includedInIntencity   Boolean value of whether the exercise is included in Intencity. 
      */
-    public void setExercise(String exerciseName, String description, boolean includedInIntencity)
+    public void setExercise(String exerciseName, String description, int routineState, boolean includedInIntencity)
     {
         if (description != null)
         {
@@ -171,7 +174,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
             exercise.setClickable(!includedInIntencity);
             exercise.setBackgroundResource(includedInIntencity ? R.drawable.button_card : 0);
             exercise.setTextColor(ContextCompat.getColor(context, includedInIntencity ? R.color.primary : R.color.secondary_dark));
-            priorityLayout.setVisibility(includedInIntencity ? View.VISIBLE : View.GONE);
+            priorityLayout.setVisibility(routineState == RoutineState.INTENCITY && includedInIntencity ? View.VISIBLE : View.GONE);
         }
 
         exercise.setText(exerciseName);

@@ -164,6 +164,8 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
             CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 
             new CustomDialog(ExercisePriorityActivity.this, dialogListener, dialog, false);
+
+            progressBar.setVisibility(View.GONE);
         }
     };
 
@@ -208,6 +210,8 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
      */
     private void updateExercisePriorities()
     {
+        progressBar.setVisibility(View.VISIBLE);
+
         new ServiceTask(updateExclusionServiceListener).execute(Constant.SERVICE_UPDATE_EXERCISE_PRIORITY,
                                                                 Constant.generateExercisePriorityListVariables(
                                                                         email, exerciseNames, exercisePriorities));

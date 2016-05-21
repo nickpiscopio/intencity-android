@@ -160,10 +160,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(
-                new HeaderDecoration(context, recyclerView, R.layout.recycler_view_header));
+        recyclerView.addItemDecoration(new HeaderDecoration(context, recyclerView, R.layout.recycler_view_header));
 
-        adapter = new ExerciseAdapter(context, currentExercises, this);
+        adapter = new ExerciseAdapter(context, routineState, currentExercises, this);
         recyclerView.setAdapter(adapter);
 
         securePreferences = new SecurePreferences(context);
