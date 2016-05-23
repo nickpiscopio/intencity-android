@@ -2,143 +2,121 @@
 <manifest package="com.intencity.intencity"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/intencity_icon"
         android:label="@string/app_name">
-
         <activity
             android:name=".view.activity.MainActivity"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".view.activity.DemoActivity"
-            android:theme="@style/AppTheme.Base"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.CreateAccountActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/title_create_account"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.ForgotPasswordActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/title_forgot_password"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.TermsActivity"
-            android:theme="@style/AppTheme.Base"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.StatActivity"
-            android:theme="@style/AppTheme.Base"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.Direction"
-            android:theme="@style/AppTheme.Base"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.SearchActivity"
-            android:theme="@style/AppTheme.Base"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.RoutineIntencityActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/title_intencity_routines"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.RoutineIntencityEditActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/edit_custom_routines_title"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.RoutineSavedActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/title_saved_routines"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.RoutineSavedEditActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/edit_saved_title"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.RoutineIntencityAddActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/add_routines_title"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.AboutActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/title_about"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.NotificationActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/title_notifications"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.MenuActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/title_menu"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.ExercisePriorityActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/edit_priority"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.EquipmentActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/edit_equipment"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.ChangePasswordActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/change_password"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.DeleteAccountActivity"
-            android:theme="@style/AppTheme.Base"
             android:label="@string/title_delete_account"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.ExerciseSearchActivity"
-            android:theme="@style/AppTheme.Base"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
         <activity
             android:name=".view.activity.ProfileActivity"
-            android:theme="@style/Overlay"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/Overlay"/>
     </application>
 
 </manifest>

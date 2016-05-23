@@ -1,0 +1,16 @@
+<resources>
+
+    <string name="app_name">Interval</string>
+
+    <string name="title_interval">Intervals</string>
+    <string name="title_interval_time">Interval Seconds</string>
+    <string name="title_interval_rest">Interval Rest Seconds</string>
+
+    <string name="start">START</string>
+
+    <string name="title_warm_up">WARM-UP</string>
+    <string name="description_warm_up">GET WARM</string>
+
+    <string name="seconds">s</string>
+
+</resources>

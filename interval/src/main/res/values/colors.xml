@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="white">#FFFFFF</color>
+    <color name="primary">#309DDB</color>
+    <color name="primary_dark">#2476A5</color>
+
+    <color name="accent">#45b29d</color>
+
+    <color name="secondary_light">#647082</color>
+    <color name="secondary_dark">#414042</color>
+
+    <color name="page_background">#F6F6FF</color>
+
+    <color name="shadow">#CECECE</color>
+    <color name="shadow_dark">#4D5665</color>
+    <color name="card_button_select">#F3F3F3</color>
+    <color name="card_button_delete_select">#FF0000</color>
+    <color name="card_button_delete_deselect">#ff3c3c</color>
+
+</resources>
