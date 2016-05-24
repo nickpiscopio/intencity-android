@@ -18,63 +18,89 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/layout_margin_half"
                 android:textAlignment="center"
                 android:textColor="@color/page_background"
                 android:textSize="@dimen/title3_size"
                 android:text="@string/title_warm_up"/>
 
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/layout_margin_half"
-                android:textAlignment="center"
-                android:textColor="@color/page_background"
-                android:textSize="@dimen/title_size"
-                android:text="@string/description_warm_up"/>
+            <!--<TextView-->
+                <!--android:id="@+id/description"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="@dimen/layout_margin_half"-->
+                <!--android:textAlignment="center"-->
+                <!--android:textColor="@color/page_background"-->
+                <!--android:textSize="@dimen/title_size"-->
+                <!--android:textStyle="bold"-->
+                <!--android:text="@string/description_warm_up"/>-->
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <android.support.wearable.view.DelayedConfirmationView
+                    android:id="@+id/delayed_confirm"
+                    android:layout_width="@dimen/progress_view_dimen"
+                    android:layout_height="@dimen/progress_view_dimen"
+                    android:layout_centerInParent="true"
+                    app:circle_border_color="@color/accent"
+                    app:circle_border_width="@dimen/progress_view_circle_border_width"
+                    app:circle_radius="@dimen/progress_view_radius"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/time_left"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/layout_margin_half"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/interval_time_size"
-                        android:text="30"/>
+                        android:paddingStart="@dimen/layout_margin_half"
+                        android:paddingEnd="0dp"
+                        android:paddingBottom="@dimen/layout_margin_half"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/layout_margin_half"
-                        android:textAlignment="center"
-                        android:textColor="@color/page_background"
-                        android:textSize="@dimen/title_size"
-                        android:text="@string/seconds"/>
+                        <TextView
+                            android:id="@+id/time_left"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/interval_time_size"
+                            android:text="30"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:textColor="@color/page_background"
+                            android:textSize="@dimen/title_size"
+                            android:text="@string/seconds"/>
+
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/pause"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/primary"/>
 
                 </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/pause"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@color/primary"/>
+            </RelativeLayout>
 
-            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_intervals"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".25"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="horizontal"
+                android:animateLayoutChanges="true"/>
 
         </LinearLayout>
 

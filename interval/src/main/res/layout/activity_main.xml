@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/layout_margin_half"
                 android:textColor="@color/page_background"
-                android:text="@string/title_interval"/>
+                android:text="@string/title_intervals"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
