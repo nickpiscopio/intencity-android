@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.content.ContextCompat;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.DelayedConfirmationView;
 import android.view.LayoutInflater;
@@ -26,7 +27,7 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
     }
 
     // 1 Minute for the WARM-UP / COOL DOWN.
-    private final int INJURY_PREVENTION_MILLIS = 60000;
+    private final int INJURY_PREVENTION_MILLIS = 12000;
 
     private Context context;
 
@@ -34,6 +35,7 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
     private int intervalSeconds = 10;
     private int intervalRestSeconds = 10;
 
+    private int intervalItem = 0;
     private int currentInterval = 0;
 
     private DelayedConfirmationView delayedView;
@@ -190,6 +192,8 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
 
             public void onFinish()
             {
+                intervalItem++;
+
                 boolean stillExercising = activityState != ActivityState.COOL_DOWN;
 
                 switch (activityState)
@@ -220,6 +224,15 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
             }
         };
 
+        if (intervalItem > 0)
+        {
+            View view = intervalLayout.findViewWithTag(intervalItem - 1);
+            view.setBackgroundColor(ContextCompat.getColor(context, android.R.color.white));
+        }
+
+        View view = intervalLayout.findViewWithTag(intervalItem);
+        view.setBackgroundColor(ContextCompat.getColor(context, R.color.accent));
+
         // Two seconds to cancel the action
         delayedView.setTotalTimeMs(interval);
         // Start the timer
@@ -233,27 +246,30 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
      */
     private void addIntervalChart()
     {
-        insertIntervalItem(ActivityState.WARM_UP);
+        // The first item will be 0, so we don't need to increment it.
+        int intervalItems = 0;
+        insertIntervalItem(ActivityState.WARM_UP, intervalItems);
 
         for (int i = 0; i < intervals; i++)
         {
-            insertIntervalItem(ActivityState.INTERVAL);
+            insertIntervalItem(ActivityState.INTERVAL, ++intervalItems);
 
             if (i != intervals - 1)
             {
-                insertIntervalItem(ActivityState.REST);
+                insertIntervalItem(ActivityState.REST, ++intervalItems);
             }
         }
 
-        insertIntervalItem(ActivityState.COOL_DOWN);
+        insertIntervalItem(ActivityState.COOL_DOWN, ++intervalItems);
     }
 
     /**
      * Inserts an interval item to the interval chart.
      *
-     * @param state     The interval item to add.
+     * @param state         The interval item to add.
+     * @param tagNumber     The incrementer to tag each interval item.
      */
-    private void insertIntervalItem(ActivityState state)
+    private void insertIntervalItem(ActivityState state, int tagNumber)
     {
         int margin = res.getDimensionPixelSize(R.dimen.chart_interval_margin);
         int height = res.getDimensionPixelSize(R.dimen.chart_interval_max_height);
@@ -279,6 +295,8 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
 //        params.weight = 1.0f;
 
         View v = inflater.inflate(R.layout.view_chart_interval, null);
+        View item = v.findViewById(R.id.item);
+        item.setTag(tagNumber);
         v.setLayoutParams(params);
 
         intervalLayout.addView(v);

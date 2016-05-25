@@ -11,10 +11,11 @@
         android:layout_weight=".25"/>
 
     <View
+        android:id="@+id/item"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@color/accent"/>
+        android:background="@android:color/white"/>
 
     <View
         android:layout_width="0dp"
