@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.support.wearable.activity.WearableActivity;
+import android.support.wearable.view.BoxInsetLayout;
 import android.support.wearable.view.DelayedConfirmationView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,12 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
         COOL_DOWN
     }
 
+    private enum IntervalState
+    {
+        ACTIVE,
+        INACTIVE
+    }
+
     // 1 Minute for the WARM-UP / COOL DOWN.
     private final int INJURY_PREVENTION_MILLIS = 12000;
 
@@ -37,6 +44,8 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
 
     private int intervalItem = 0;
     private int currentInterval = 0;
+
+    private BoxInsetLayout container;
 
     private DelayedConfirmationView delayedView;
     private TextView title;
@@ -71,6 +80,7 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
         intervalSeconds = extras.getInt(Constant.BUNDLE_INTERVAL_MILLIS);
         intervalRestSeconds = extras.getInt(Constant.BUNDLE_INTERVAL_REST_MILLIS);
 
+        container = (BoxInsetLayout) findViewById(R.id.container);
         intervalLayout = (LinearLayout) findViewById(R.id.layout_intervals);
         title = (TextView) findViewById(R.id.title);
         timeLeftTextView = (TextView) findViewById(R.id.time_left);
@@ -163,18 +173,22 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
         switch (activityState)
         {
             case WARM_UP:
+                container.setBackgroundColor(ContextCompat.getColor(context, R.color.secondary_dark));
                 title.setText(warmUpTitle);
                 interval = INJURY_PREVENTION_MILLIS;
                 break;
             case INTERVAL:
+                container.setBackgroundColor(ContextCompat.getColor(context, R.color.primary));
                 title.setText(intervalTitle);
                 interval = intervalSeconds;
                 break;
             case REST:
+                container.setBackgroundColor(ContextCompat.getColor(context, R.color.secondary_light));
                 title.setText(restTitle);
                 interval = intervalRestSeconds;
                 break;
             case COOL_DOWN:
+                container.setBackgroundColor(ContextCompat.getColor(context, R.color.secondary_dark));
                 title.setText(coolDownTitle);
                 interval = INJURY_PREVENTION_MILLIS;
                 break;
@@ -226,12 +240,10 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
 
         if (intervalItem > 0)
         {
-            View view = intervalLayout.findViewWithTag(intervalItem - 1);
-            view.setBackgroundColor(ContextCompat.getColor(context, android.R.color.white));
+            setIntervalItemColor(intervalItem - 1, IntervalState.INACTIVE);
         }
 
-        View view = intervalLayout.findViewWithTag(intervalItem);
-        view.setBackgroundColor(ContextCompat.getColor(context, R.color.accent));
+        setIntervalItemColor(intervalItem, IntervalState.ACTIVE);
 
         // Two seconds to cancel the action
         delayedView.setTotalTimeMs(interval);
@@ -239,6 +251,18 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
         delayedView.start();
 
         countDownTimer.start();
+    }
+
+    /**
+     * Sets the interval color for the chart item.
+     *
+     * @param tag       The tag of the view to set the color.
+     * @param state     The state the interval item is.
+     */
+    private void setIntervalItemColor(int tag, IntervalState state)
+    {
+        View view = intervalLayout.findViewWithTag(tag);
+        view.setBackgroundColor(ContextCompat.getColor(context, state == IntervalState.ACTIVE ? R.color.accent : android.R.color.white));
     }
 
     /**
@@ -271,7 +295,6 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
      */
     private void insertIntervalItem(ActivityState state, int tagNumber)
     {
-        int margin = res.getDimensionPixelSize(R.dimen.chart_interval_margin);
         int height = res.getDimensionPixelSize(R.dimen.chart_interval_max_height);
 
         switch (state)
@@ -290,9 +313,6 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
         }
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, height, 1.0f);
-//        params.setMarginStart(margin);
-//        params.setMarginEnd(margin);
-//        params.weight = 1.0f;
 
         View v = inflater.inflate(R.layout.view_chart_interval, null);
         View item = v.findViewById(R.id.item);
