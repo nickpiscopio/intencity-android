@@ -7,6 +7,7 @@ package com.intencity.interval.util;
  */
 public class Constant
 {
+    public static final int CODE_FAILED = -1;
     public static final int ONE_SECOND_MILLIS = 1000;
 
     public static final String BUNDLE_INTERVALS = "com.intencity.interval.intervals";

@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
                 android:textColor="@color/page_background"
-                android:textSize="@dimen/title3_size"
+                android:textSize="@dimen/title2_size"
                 android:text="@string/title_warm_up"/>
 
             <!--<TextView-->
@@ -85,9 +85,10 @@
 
                     <ImageButton
                         android:id="@+id/pause"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@color/primary"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/pause"
+                        android:background="@null"/>
 
                 </LinearLayout>
 

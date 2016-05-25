@@ -1,9 +1,14 @@
 package com.intencity.interval.view;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
@@ -16,6 +21,7 @@ import android.widget.TextView;
 
 import com.intencity.interval.R;
 import com.intencity.interval.util.Constant;
+import com.intencity.interval.util.CountDownTimer;
 
 public class IntervalActivity extends WearableActivity implements DelayedConfirmationView.DelayedConfirmationListener
 {
@@ -33,6 +39,18 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
         INACTIVE
     }
 
+    private enum ExerciseState
+    {
+        ACTIVE,
+        INACTIVE
+    }
+
+    private enum TimerState
+    {
+        INIT,
+        RESTART
+    }
+
     // 1 Minute for the WARM-UP / COOL DOWN.
     private final int INJURY_PREVENTION_MILLIS = 12000;
 
@@ -44,6 +62,7 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
 
     private int intervalItem = 0;
     private int currentInterval = 0;
+    private long millisLeft;
 
     private BoxInsetLayout container;
 
@@ -64,6 +83,8 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
 
     private LayoutInflater inflater;
     private Resources res;
+
+    private ExerciseState exerciseState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -91,6 +112,7 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
         delayedView.setListener(this);
 
         activityState = ActivityState.WARM_UP;
+        exerciseState = ExerciseState.ACTIVE;
 
         warmUpTitle = context.getString(R.string.title_warm_up);
         intervalTitle = context.getString(R.string.title_interval);
@@ -102,7 +124,7 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
 
         addIntervalChart();
 
-        startTimer();
+        startTimer(TimerState.INIT, Constant.CODE_FAILED);
     }
 
     @Override
@@ -145,7 +167,22 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
         @Override
         public void onClick(View v)
         {
-            startTimer();
+            switch (exerciseState)
+            {
+                case ACTIVE:
+                    cancelTimer();
+                    delayedView.setSelected(true);
+                    pause.setImageResource(R.mipmap.play);
+                    exerciseState = ExerciseState.INACTIVE;
+                    break;
+                case INACTIVE:
+                    startTimer(TimerState.RESTART, millisLeft);
+                    pause.setImageResource(R.mipmap.pause);
+                    exerciseState = ExerciseState.ACTIVE;
+                    break;
+                default:
+                    break;
+            }
         }
     };
 
@@ -160,47 +197,102 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
         // User canceled, abort the action
     }
 
-    private void startTimer()
+    /**
+     * Fades the new background color in.
+     *
+     * @param colorRes  The resource color of the background.
+     */
+    private void setBackgroundColor(int colorRes)
+    {
+        int fadeDuration = 750;
+        int color = Color.TRANSPARENT;
+        Drawable background = container.getBackground();
+        if (background instanceof ColorDrawable)
+        {
+            color = ((ColorDrawable)background).getColor();
+        }
+
+        ObjectAnimator colorFade = ObjectAnimator.ofObject(container, "backgroundColor", new ArgbEvaluator(), color, ContextCompat.getColor(context, colorRes));
+        colorFade.setDuration(fadeDuration);
+        colorFade.start();
+    }
+
+    /**
+     * Scales the title so the user sees a change.
+     */
+    private void scaleTitle()
+    {
+        float scale = 1.4f;
+        int duration = 300;
+
+        final ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(title, PropertyValuesHolder.ofFloat("scaleX", scale), PropertyValuesHolder.ofFloat("scaleY", scale));
+        anim.setDuration(duration);
+
+        anim.setRepeatCount(1);
+        anim.setRepeatMode(ObjectAnimator.REVERSE);
+
+        anim.start();
+    }
+
+    private void startTimer(TimerState state, long millisLeft)
     {
         // The time we are displaying on the interval count down.
         int interval = 0;
 
-        if (countDownTimer != null)
+        if (state == TimerState.INIT)
         {
-            countDownTimer.cancel();
-        }
+            if (countDownTimer != null)
+            {
+                cancelTimer();
+            }
 
-        switch (activityState)
+            switch (activityState)
+            {
+                case WARM_UP:
+                    setBackgroundColor(R.color.secondary_dark);
+                    title.setText(warmUpTitle);
+                    scaleTitle();
+                    interval = INJURY_PREVENTION_MILLIS;
+                    break;
+                case INTERVAL:
+                    setBackgroundColor(R.color.primary);
+                    title.setText(intervalTitle);
+                    scaleTitle();
+                    interval = intervalSeconds;
+                    break;
+                case REST:
+                    setBackgroundColor(R.color.secondary_light);
+                    title.setText(restTitle);
+                    scaleTitle();
+                    interval = intervalRestSeconds;
+                    break;
+                case COOL_DOWN:
+                    setBackgroundColor(R.color.secondary_dark);
+                    title.setText(coolDownTitle);
+                    scaleTitle();
+                    interval = INJURY_PREVENTION_MILLIS;
+                    break;
+                default:
+                    break;
+            }
+
+            if (intervalItem > 0)
+            {
+                setIntervalItemColor(intervalItem - 1, IntervalState.INACTIVE);
+            }
+
+            setIntervalItemColor(intervalItem, IntervalState.ACTIVE);
+        }
+        else
         {
-            case WARM_UP:
-                container.setBackgroundColor(ContextCompat.getColor(context, R.color.secondary_dark));
-                title.setText(warmUpTitle);
-                interval = INJURY_PREVENTION_MILLIS;
-                break;
-            case INTERVAL:
-                container.setBackgroundColor(ContextCompat.getColor(context, R.color.primary));
-                title.setText(intervalTitle);
-                interval = intervalSeconds;
-                break;
-            case REST:
-                container.setBackgroundColor(ContextCompat.getColor(context, R.color.secondary_light));
-                title.setText(restTitle);
-                interval = intervalRestSeconds;
-                break;
-            case COOL_DOWN:
-                container.setBackgroundColor(ContextCompat.getColor(context, R.color.secondary_dark));
-                title.setText(coolDownTitle);
-                interval = INJURY_PREVENTION_MILLIS;
-                break;
-            default:
-                break;
+            interval = (int) millisLeft;
         }
 
         countDownTimer = new CountDownTimer(interval, Constant.ONE_SECOND_MILLIS)
         {
             public void onTick(long millisUntilFinished)
             {
-
+                IntervalActivity.this.millisLeft = millisUntilFinished;
                 timeLeftTextView.setText(String.valueOf(convertToSeconds(millisUntilFinished)));
             }
 
@@ -231,19 +323,15 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
                 if (stillExercising)
                 {
                     // We start the timer over until we finish all the intervals.
-                    startTimer();
+                    startTimer(TimerState.INIT, Constant.CODE_FAILED);
                 }
-
-                timeLeftTextView.setText("0");
+                else
+                {
+                    // TODO: WILL NEED TO DO SOMETHING ELSE HERE WHEN ER ARE DONE EXERCISING.
+                    timeLeftTextView.setText("0");
+                }
             }
         };
-
-        if (intervalItem > 0)
-        {
-            setIntervalItemColor(intervalItem - 1, IntervalState.INACTIVE);
-        }
-
-        setIntervalItemColor(intervalItem, IntervalState.ACTIVE);
 
         // Two seconds to cancel the action
         delayedView.setTotalTimeMs(interval);
@@ -251,6 +339,11 @@ public class IntervalActivity extends WearableActivity implements DelayedConfirm
         delayedView.start();
 
         countDownTimer.start();
+    }
+
+    private void cancelTimer()
+    {
+        countDownTimer.cancel();
     }
 
     /**

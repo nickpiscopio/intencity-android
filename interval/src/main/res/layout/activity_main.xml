@@ -33,9 +33,10 @@
 
                 <ImageButton
                     android:id="@+id/button_decrement_interval"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@color/primary"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/subtract"
+                    android:background="@null"/>
 
                 <TextView
                     android:id="@+id/text_view_interval"
@@ -48,9 +49,10 @@
 
                 <ImageButton
                     android:id="@+id/button_increment_interval"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@color/primary"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/add"
+                    android:background="@null"/>
 
             </LinearLayout>
 
@@ -71,9 +73,10 @@
 
                 <ImageButton
                     android:id="@+id/button_decrement_interval_time"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@color/primary"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/subtract"
+                    android:background="@null"/>
 
                 <TextView
                     android:id="@+id/text_view_interval_time"
@@ -86,9 +89,10 @@
 
                 <ImageButton
                     android:id="@+id/button_increment_interval_time"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@color/primary"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/add"
+                    android:background="@null"/>
 
             </LinearLayout>
 
@@ -109,9 +113,10 @@
 
                 <ImageButton
                     android:id="@+id/button_decrement_interval_rest"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@color/primary"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/subtract"
+                    android:background="@null"/>
 
                 <TextView
                     android:id="@+id/text_view_interval_rest"
@@ -124,9 +129,10 @@
 
                 <ImageButton
                     android:id="@+id/button_increment_interval_rest"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@color/primary"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/add"
+                    android:background="@null"/>
 
             </LinearLayout>
 
