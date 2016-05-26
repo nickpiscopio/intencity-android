@@ -1,1 +1,1 @@
-include ':app', ':interval'
+include ':app'
