@@ -249,12 +249,19 @@
     <string name="intencity_communication_error_email">There was either a problem communicating with Intencity\'s server or with the email you provided. Please check your email or try again later.</string>
     <string name="try_again">TRY AGAIN</string>
 
-    <string name="finish_button">Finish</string>
-    <string name="tweet_button">Tweet</string>
+    <string name="share_processing">Exercising is tough, and so is sharing. Please wait.</string>
+
+    <!-- Overview Strings-->
+    <string name="title_overview">Overview</string>
+    <string name="header_overview">%1$s Overview</string>
+    <string name="title_finish">Finish</string>
+    <string name="title_share">Share</string>
+    <string name="storage_needed">Permission to write to external storage is needed to share your overview.</string>
+    <string name="button_preferences">SET PERMISSION</string>
+    <string name="directions_set_permissions">Select \'Permissions\' and enable \'Storage.\'</string>
+    <string name="error_processing_overview">Error processing the overview. Please try again.</string>
 
     <!-- Award Strings -->
-    <string name="completed_workout_title">You completed Intencity\'s workout!</string>
-    <string name="award_workout_completed_award_description">You\'ve earned the following awards while exercising. Good job!</string>
     <string name="award_login_description">Points for logging in.</string>
     <string name="award_exercise_description">Points for doing the next exercise.</string>
     <string name="award_completed_workout_description">Points for completing Intencity\'s workout!</string>
@@ -270,7 +277,7 @@
 
     <string name="delete_account_dialog_message">Are you sure you want to delete your account?</string>
 
-    <!--Trial acccount done-->
+    <!--Trial account done-->
     <string name="trial_account_done_title">Trial ended</string>
     <string name="trial_account_done_message">Thank you for trying Intencity!\n\nUnfortunately, your trial has ended, but you can still use Intencity for free; just sign up. If you\'re not ready to commit, just click the \"TRY INTENCITY\" button again. We\'re fine with that too.</string>
 

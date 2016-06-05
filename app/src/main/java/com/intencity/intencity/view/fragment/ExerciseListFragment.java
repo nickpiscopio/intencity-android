@@ -3,7 +3,6 @@ package com.intencity.intencity.view.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -19,8 +18,6 @@ import android.widget.Toast;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ExerciseAdapter;
-import com.intencity.intencity.handler.NotificationHandler;
-import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ExerciseListener;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.SaveRoutineListener;
@@ -41,6 +38,7 @@ import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 import com.intencity.intencity.view.activity.Direction;
 import com.intencity.intencity.view.activity.ExerciseSearchActivity;
+import com.intencity.intencity.view.activity.OverviewActivity;
 import com.intencity.intencity.view.activity.SearchActivity;
 import com.intencity.intencity.view.activity.StatActivity;
 
@@ -230,44 +228,10 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void displayFinishExercisingDialog()
     {
-        // We remove the exercises from the database here, so when we go back to
-        // the fitness log, it doesn't ask if we want to continue where we left off.
-        removeExercisesFromDatabase();
-
-        workoutFinished = true;
-
-        // Grant the user the "Kept Swimming" badge if he or she didn't skip an exercise.
-        if (!securePreferences.getBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, false))
-        {
-            Util.grantBadgeToUser(email, Badge.KEPT_SWIMMING,
-                                  new AwardDialogContent(R.mipmap.kept_swimming,
-                                                         context.getString(R.string.award_kept_swimming_description)), true);
-        }
-        else
-        {
-            // Set the user has skipped an exercise to false for next time.
-            setExerciseSkipped(false);
-        }
-
-        String finisherDescription = context.getString(R.string.award_finisher_description);
-
-        NotificationHandler notificationHandler = NotificationHandler.getInstance(null);
-        ArrayList<AwardDialogContent> awards = notificationHandler.getAwards();
-
-        AwardDialogContent finisherAward = new AwardDialogContent(R.mipmap.finisher, finisherDescription);
-        if (!notificationHandler.hasAward(finisherAward))
-        {
-            Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(
-                    R.string.award_completed_workout_description));
-            Util.grantBadgeToUser(email, Badge.FINISHER, finisherAward, true);
-        }
-
-        CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.completed_workout_title), context.getString(R.string.award_workout_completed_award_description), true);
-        dialog.setAwards(awards);
-        dialog.setPositiveButtonStringRes(R.string.tweet_button);
-        dialog.setNegativeButtonStringRes(R.string.finish_button);
-
-        new CustomDialog(context, dialogListener, dialog, true);
+        Intent intent = new Intent(context, OverviewActivity.class);
+        intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, routineName);
+        startActivity(intent);
+//        startActivityForResult(intent, Constant.REQUEST_OVERVIEW);
     }
 
     /**
@@ -384,30 +348,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             }
 
             setButtonImages();
-        }
-    };
-
-    /**
-     * The dialog listener for when the user finishes exercising.
-     */
-    private DialogListener dialogListener = new DialogListener()
-    {
-        @Override
-        public void onButtonPressed(int which)
-        {
-            switch (which)
-            {
-                case Constant.POSITIVE_BUTTON:
-                    // The user selected to tweet, so we open the twitter URI.
-                    Uri uri = Uri.parse(generateTweet());
-                    startActivityForResult(new Intent(Intent.ACTION_VIEW, uri), Constant.REQUEST_CODE_TWEET);
-                    break;
-                default:
-                    break;
-            }
-
-            // Start the routine view over again.
-            loadingListener.onFinishedLoading(Constant.ID_FRAGMENT_ROUTINE_RELOAD);
         }
     };
 

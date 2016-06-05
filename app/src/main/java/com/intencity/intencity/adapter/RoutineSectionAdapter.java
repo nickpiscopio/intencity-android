@@ -163,7 +163,7 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
                         imageView.setImageResource(R.drawable.circle_red);
                         break;
                     case RoutineKey.RANDOM:
-                        imageView.setImageResource(R.drawable.circle_accent);
+                        imageView.setImageResource(R.drawable.circle_active);
                         break;
                     case RoutineKey.CONSECUTIVE:
                         imageView.setImageResource(R.drawable.circle_primary_dark);

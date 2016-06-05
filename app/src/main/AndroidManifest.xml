@@ -4,11 +4,13 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name">
+
         <activity
             android:name=".view.activity.MainActivity"
             android:screenOrientation="portrait"
@@ -18,101 +20,129 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
+
         <activity
             android:name=".view.activity.DemoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.CreateAccountActivity"
             android:label="@string/title_create_account"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.ForgotPasswordActivity"
             android:label="@string/title_forgot_password"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.TermsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.StatActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.Direction"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.SearchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.RoutineIntencityActivity"
             android:label="@string/title_intencity_routines"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.RoutineIntencityEditActivity"
             android:label="@string/edit_custom_routines_title"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.RoutineSavedActivity"
             android:label="@string/title_saved_routines"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.RoutineSavedEditActivity"
             android:label="@string/edit_saved_title"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.RoutineIntencityAddActivity"
             android:label="@string/add_routines_title"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
-            android:name=".view.activity.AboutActivity"
-            android:label="@string/title_about"
+            android:name=".view.activity.OverviewActivity"
+            android:label="@string/title_overview"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
-        <activity
-            android:name=".view.activity.NotificationActivity"
-            android:label="@string/title_notifications"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.MenuActivity"
             android:label="@string/title_menu"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
+        <activity
+            android:name=".view.activity.AboutActivity"
+            android:label="@string/title_about"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
+
+        <activity
+            android:name=".view.activity.NotificationActivity"
+            android:label="@string/title_notifications"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.ExercisePriorityActivity"
             android:label="@string/edit_priority"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.EquipmentActivity"
             android:label="@string/edit_equipment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.ChangePasswordActivity"
             android:label="@string/change_password"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.DeleteAccountActivity"
             android:label="@string/title_delete_account"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.ExerciseSearchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
+
         <activity
             android:name=".view.activity.ProfileActivity"
             android:screenOrientation="portrait"
