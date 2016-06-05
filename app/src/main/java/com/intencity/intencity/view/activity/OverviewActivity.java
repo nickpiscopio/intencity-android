@@ -31,6 +31,7 @@ import com.intencity.intencity.notification.ToastDialog;
 import com.intencity.intencity.task.ShareTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
+import com.intencity.intencity.util.Util;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -137,6 +138,9 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         }
     }
 
+    /**
+     * Stars the task to share the overview screenshot.
+     */
     private void share()
     {
         showProgressDialog(context.getString(R.string.share_processing));
@@ -209,6 +213,9 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
 //        }
 //    };
 
+    /**
+     * Requests permission to write external storage.
+     */
     private void requestPermission()
     {
         if(ActivityCompat.shouldShowRequestPermissionRationale(OverviewActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
@@ -265,7 +272,10 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         }
     }
 
-    public void startInstalledAppDetailsActivity()
+    /**
+     * Starts the app settings screen.
+     */
+    private void startInstalledAppDetailsActivity()
     {
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -278,6 +288,35 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         context.startActivity(intent);
 
         Toast.makeText(context, context.getString(R.string.directions_set_permissions), Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Randomly generates a tweet from an array.
+     *
+     * Documentation:
+     * https://dev.twitter.com/web/tweet-button/parameters
+     *
+     * @return  The generated tweet.
+     */
+    private String generateTweet()
+    {
+        String twitterUrl = "https://twitter.com/intent/tweet?text=";
+        String[] tweetText = { "I %23dominated my %23workout with %23Intencity! %23WOD %23Fitness",
+                               "I %23finished my %23workout of the day with %23Intencity! %23WOD %23Fitness",
+                               "I made it through %23Intencity%27s %23routine! %23Fitness",
+                               "Making %23gains with %23Intencity! %23WOD %23Fitness %23Exercise %23Gainz",
+                               "%23Finished my %23Intencity %23workout! %23Retweet if you've %23exercised today. %23WOD %23Fitness",
+                               "I %23lifted with %23Intencity today! %23lift %23lifting",
+                               "%23Intencity %23trained me today!",
+                               "Getting %23strong with %23Intencity! %23GetStrong %23DoWork %23Fitness",
+                               "Getting that %23BeachBody with %23Intencity! %23Lift %23Exercise %23Fitness",
+                               "Nothing feels better than finishing a great %23workout!"};
+        String tweetUrl = "&url=www.Intencity.fit";
+        String via = "&via=IntencityApp";
+
+        int tweet = Util.getRandom(0, tweetText.length - 1);
+
+        return twitterUrl + tweetText[tweet] + tweetUrl + via;
     }
 
     /**
