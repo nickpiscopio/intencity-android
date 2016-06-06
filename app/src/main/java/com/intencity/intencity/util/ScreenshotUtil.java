@@ -1,6 +1,7 @@
 package com.intencity.intencity.util;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Environment;
 import android.view.View;
 
@@ -23,16 +24,12 @@ public class ScreenshotUtil
      */
     public Bitmap takeScreenShot(View view) throws Exception
     {
-        view.setDrawingCacheEnabled(true);
-        view.buildDrawingCache();
-
-        Bitmap b1 = view.getDrawingCache();
-
-        int width = view.getMeasuredWidth();
-        int height = view.getMeasuredHeight();
-
-        Bitmap b = Bitmap.createBitmap(b1, 0, 0, width, height);
-        view.destroyDrawingCache();
+        Bitmap b = Bitmap.createBitmap(
+                view.getWidth(),
+                view.getHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        view.draw(c);
 
         return b;
     }
