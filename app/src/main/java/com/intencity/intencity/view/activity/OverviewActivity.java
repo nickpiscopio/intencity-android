@@ -259,23 +259,23 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
     private void addHeader(Card type, LinearLayout layout)
     {
         View header = inflater.inflate(R.layout.list_item_overview_card_header, exerciseLayout, false);
+        ImageView icon = (ImageView) header.findViewById(R.id.icon);
         TextView headerText = (TextView) header.findViewById(R.id.text_view_title);
-
-        String title = "";
 
         switch (type)
         {
             case EXERCISE:
-                title = context.getString(R.string.title_exercises);
+                icon.setImageResource(R.mipmap.tab_icon_fitness_guru);
+                headerText.setText(context.getString(R.string.title_exercises));
                 break;
             case AWARD:
-                title = context.getString(R.string.awards_title).toUpperCase();
+                icon.setImageResource(R.mipmap.badge);
+                headerText.setText(context.getString(R.string.awards_title).toUpperCase());
                 break;
             default:
                 break;
         }
 
-        headerText.setText(title);
         layout.addView(header);
     }
 
