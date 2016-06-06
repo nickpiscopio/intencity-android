@@ -260,6 +260,7 @@
     <string name="button_preferences">SET PERMISSION</string>
     <string name="directions_set_permissions">Select \'Permissions\' and enable \'Storage.\'</string>
     <string name="error_processing_overview">Error processing the overview. Please try again.</string>
+    <string name="title_exercises">EXERCISES</string>
 
     <!-- Award Strings -->
     <string name="award_login_description">Points for logging in.</string>

@@ -2,7 +2,7 @@ package com.intencity.intencity.task;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 
 import com.intencity.intencity.listener.ShareListener;
 import com.intencity.intencity.util.ScreenshotUtil;
@@ -14,7 +14,7 @@ import java.io.File;
  *
  * Created by Nick Piscopio on 6/5/16.
  */
-public class ShareTask extends AsyncTask<ListView, Void, File>
+public class ShareTask extends AsyncTask<LinearLayout, Void, File>
 {
     private ShareListener shareListener;
 
@@ -24,7 +24,7 @@ public class ShareTask extends AsyncTask<ListView, Void, File>
     }
 
     @Override
-    protected File doInBackground(ListView... params)
+    protected File doInBackground(LinearLayout... params)
     {
         ScreenshotUtil ssUtil = new ScreenshotUtil();
 

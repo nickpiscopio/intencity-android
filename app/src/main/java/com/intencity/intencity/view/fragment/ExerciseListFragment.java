@@ -224,12 +224,13 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     }
 
     /**
-     * Displays the finish exercising dialog to the user.
+     * Displays the overview to the user.
      */
-    private void displayFinishExercisingDialog()
+    private void displayOverview()
     {
         Intent intent = new Intent(context, OverviewActivity.class);
         intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, routineName);
+        intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, currentExercises);
         startActivity(intent);
 //        startActivityForResult(intent, Constant.REQUEST_OVERVIEW);
     }
@@ -256,7 +257,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         @Override
         public void onClick(View v)
         {
-            displayFinishExercisingDialog();
+            displayOverview();
         }
     };
 
@@ -300,7 +301,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
                     if (currentExercises.size() == allExercises.size())
                     {
-                        displayFinishExercisingDialog();
+                        displayOverview();
                     }
                     else
                     {
