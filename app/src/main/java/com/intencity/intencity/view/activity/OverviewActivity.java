@@ -198,8 +198,11 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
     {
         addHeader(Card.EXERCISE, exerciseLayout);
 
-        for (Exercise exercise : exercises)
+        int totalExercises = exercises.size();
+        for (int i = 0; i < totalExercises; i++)
         {
+            Exercise exercise = exercises.get(i);
+
             String exerciseName = exercise.getName();
             if(exerciseName.equals(warmUphExerciseName) || exerciseName.equals(stretchExerciseName))
             {
@@ -213,9 +216,9 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
 
             ArrayList<Set> sets = exercise.getSets();
             int setSize = sets.size();
-            for (int i = 0; i < setSize; i++)
+            for (int z = 0; z < setSize; z++)
             {
-                Set set = sets.get(i);
+                Set set = sets.get(z);
 
                 View setRow = inflater.inflate(R.layout.list_item_overview_exercise_set, setLayout, false);
                 TextView setNumber = (TextView) setRow.findViewById(R.id.text_view_list_number);
@@ -233,11 +236,16 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
 
                 if (showSet(durationTextView))
                 {
-                    String setNum = (i + 1) + ".";
+                    String setNum = (z + 1) + ".";
                     setNumber.setText(setNum);
 
                     setLayout.addView(setRow);
                 }
+            }
+
+            if (i == totalExercises - 1)
+            {
+                titleRow.findViewById(R.id.divider).setVisibility(View.GONE);
             }
 
             exerciseLayout.addView(titleRow);
@@ -249,13 +257,13 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
      */
     private void addAwards()
     {
-        addHeader(Card.AWARD, awardLayout);
-
         ArrayList<AwardDialogContent> awards = NotificationHandler.getInstance(null).getAwards();
         int totalAwards = awards.size();
 
         if (totalAwards > 0)
         {
+            addHeader(Card.AWARD, awardLayout);
+
             for (int i = 0; i < totalAwards; i++)
             {
                 View row = inflater.inflate(R.layout.list_item_award, awardLayout, false);
@@ -289,8 +297,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
 
                 if (i == totalAwards - 1)
                 {
-                    View divider = row.findViewById(R.id.divider);
-                    divider.setVisibility(View.GONE);
+                    row.findViewById(R.id.divider).setVisibility(View.GONE);
                 }
 
                 awardLayout.addView(row);
