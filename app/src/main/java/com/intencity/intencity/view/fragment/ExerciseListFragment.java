@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ExerciseAdapter;
+import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ExerciseListener;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.SaveRoutineListener;
@@ -51,7 +52,7 @@ import java.util.Date;
  *
  * Created by Nick Piscopio on 12/12/15.
  */
-public class ExerciseListFragment extends android.support.v4.app.Fragment implements ExerciseListener, SaveRoutineListener
+public class ExerciseListFragment extends android.support.v4.app.Fragment implements ExerciseListener, SaveRoutineListener, LoadingListener
 {
     private enum ActiveButtonState
     {
@@ -227,11 +228,42 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void displayOverview()
     {
-        Intent intent = new Intent(context, OverviewActivity.class);
-        intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, routineName);
-        intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, currentExercises);
-        startActivityForResult(intent, Constant.REQUEST_OVERVIEW);
+        // Only display the overview screen if the user has completed 1 exercise.
+        if (currentExercises.size() > 1)
+        {
+            Intent intent = new Intent(context, OverviewActivity.class);
+            intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, routineName);
+            intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, currentExercises);
+            startActivityForResult(intent, Constant.REQUEST_OVERVIEW);
+        }
+        else
+        {
+            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.title_finish_routine), context.getString(R.string.description_finish_routine), true);
+            dialog.setPositiveButtonStringRes(R.string.title_finish);
+            dialog.setNegativeButtonStringRes(android.R.string.cancel);
+
+            new CustomDialog(context, dialogListener, dialog, true);
+        }
     }
+
+    /**
+     * The dialog listener for when the user finishes exercising.
+     */
+    private DialogListener dialogListener = new DialogListener()
+    {
+        @Override
+        public void onButtonPressed(int which)
+        {
+            switch (which)
+            {
+                case Constant.POSITIVE_BUTTON:
+                    finishedExercising();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     /**
      * The click listener for the routine name.
@@ -470,12 +502,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         super.onStop();
 
-        if (workoutFinished)
-        {
-            // Remove exercises from database since we are finished with the workout.
-            removeExercisesFromDatabase();
-        }
-        else
+        if (!workoutFinished)
         {
             // Save the exercises to the database in case the user wants
             // to continue with this routine later.
@@ -488,7 +515,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void removeExercisesFromDatabase()
     {
-        new SetExerciseTask(context).execute();
+        new SetExerciseTask(context, this).execute();
     }
 
     /**
@@ -757,8 +784,18 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         {
             // The user finished the exercise from the overview screen.
             // Start the routine view over again.
-            loadingListener.onFinishedLoading(Constant.ID_FRAGMENT_ROUTINE_RELOAD);
+            finishedExercising();
         }
+    }
+
+    /**
+     * The user is finished exercising, so we load the routine fragment again.
+     */
+    private void finishedExercising()
+    {
+        workoutFinished = true;
+
+        removeExercisesFromDatabase();
     }
 
     /**
@@ -845,6 +882,20 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                                                     + durationValue + Constant.PARAMETER_DELIMITER
                                                     + set.getDifficulty() + Constant.PARAMETER_DELIMITER
                                                     + set.getNotes();
+    }
+
+    @Override
+    public void onStartLoading()
+    {
+
+    }
+
+    @Override
+    public void onFinishedLoading(int which)
+    {
+        // Only the remove exercises gets loaded, so we don't need to switch.
+        // Starts the routine fragment over.
+        loadingListener.onFinishedLoading(Constant.ID_FRAGMENT_ROUTINE_RELOAD);
     }
 
     /**

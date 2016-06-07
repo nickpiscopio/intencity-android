@@ -8,8 +8,10 @@ import android.os.AsyncTask;
 import com.intencity.intencity.helper.DbHelper;
 import com.intencity.intencity.helper.ExerciseTable;
 import com.intencity.intencity.helper.doa.ExerciseDao;
+import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
+import com.intencity.intencity.util.Constant;
 
 import java.util.ArrayList;
 
@@ -29,9 +31,12 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
 
     private ArrayList<Exercise> exercises;
 
-    public SetExerciseTask(Context context)
+    private LoadingListener listener;
+
+    public SetExerciseTask(Context context, LoadingListener listener)
     {
         this.context = context;
+        this.listener = listener;
     }
 
     public SetExerciseTask(Context context, int routineState, String routineName, ArrayList<Exercise> exercises, int index)
@@ -55,7 +60,13 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
     }
 
     @Override
-    protected void onPostExecute(Void result) { }
+    protected void onPostExecute(Void result)
+    {
+        if (listener != null)
+        {
+            listener.onFinishedLoading(Constant.CODE_NULL);
+        }
+    }
 
     /**
      * Edits the exercises in the database.

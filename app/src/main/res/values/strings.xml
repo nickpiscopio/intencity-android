@@ -190,7 +190,6 @@
     <!-- Buttons -->
     <string name="start">START</string>
     <string name="next_exercise">NEXT EXERCISE</string>
-    <string name="finish_workout">FINISH</string>
 
     <!-- Menu Strings-->
     <string name="notifications">Notifications %1$s</string>
@@ -254,6 +253,8 @@
     <!-- Overview Strings-->
     <string name="title_overview">Overview</string>
     <string name="header_overview">%1$s Overview</string>
+    <string name="title_finish_routine">Finish Routine</string>
+    <string name="description_finish_routine">Would you like to finish exercising? This will go back to the routine screen.</string>
     <string name="title_finish">Finish</string>
     <string name="title_share">Share</string>
     <string name="storage_needed">Permission to write to external storage is needed to share your overview.</string>

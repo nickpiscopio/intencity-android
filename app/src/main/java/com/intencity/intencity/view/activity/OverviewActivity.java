@@ -32,8 +32,9 @@ import com.intencity.intencity.listener.ShareListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.notification.AwardDialogContent;
+import com.intencity.intencity.notification.CustomDialog;
+import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.notification.ToastDialog;
-import com.intencity.intencity.task.SetExerciseTask;
 import com.intencity.intencity.task.ShareTask;
 import com.intencity.intencity.util.Badge;
 import com.intencity.intencity.util.Constant;
@@ -153,7 +154,11 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
 
                 return true;
             case R.id.finish:
-                finishOverview();
+                CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.title_finish_routine), context.getString(R.string.description_finish_routine), true);
+                dialog.setPositiveButtonStringRes(R.string.title_finish);
+                dialog.setNegativeButtonStringRes(android.R.string.cancel);
+
+                new CustomDialog(OverviewActivity.this, dialogListener, dialog, true);
                 return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
@@ -247,34 +252,49 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         addHeader(Card.AWARD, awardLayout);
 
         ArrayList<AwardDialogContent> awards = NotificationHandler.getInstance(null).getAwards();
+        int totalAwards = awards.size();
 
-        for (AwardDialogContent award : awards)
+        if (totalAwards > 0)
         {
-            View row = inflater.inflate(R.layout.list_item_award, awardLayout, false);
-
-            ImageView awardImage = (ImageView) row.findViewById(R.id.image_view_award);
-            TextView title = (TextView) row.findViewById(R.id.text_view_title);
-            TextView description = (TextView) row.findViewById(R.id.text_view_description);
-
-            int awardImgRes = award.getImgRes();
-            if (awardImgRes > 0)
+            for (int i = 0; i < totalAwards; i++)
             {
-                awardImage.setImageResource(awardImgRes);
-                awardImage.setVisibility(View.VISIBLE);
+                View row = inflater.inflate(R.layout.list_item_award, awardLayout, false);
 
-                title.setVisibility(View.GONE);
+                LinearLayout layout = (LinearLayout) row.findViewById(R.id.layout);
+                ImageView awardImage = (ImageView) row.findViewById(R.id.image_view_award);
+                TextView title = (TextView) row.findViewById(R.id.text_view_title);
+                TextView description = (TextView) row.findViewById(R.id.text_view_description);
+
+                layout.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+
+                AwardDialogContent award = awards.get(i);
+
+                int awardImgRes = award.getImgRes();
+                if (awardImgRes > 0)
+                {
+                    awardImage.setImageResource(awardImgRes);
+                    awardImage.setVisibility(View.VISIBLE);
+
+                    title.setVisibility(View.GONE);
+                }
+                else
+                {
+                    title.setText(award.getTitle());
+                    title.setVisibility(View.VISIBLE);
+
+                    awardImage.setVisibility(View.GONE);
+                }
+
+                description.setText(award.getDescription());
+
+                if (i == totalAwards - 1)
+                {
+                    View divider = row.findViewById(R.id.divider);
+                    divider.setVisibility(View.GONE);
+                }
+
+                awardLayout.addView(row);
             }
-            else
-            {
-                title.setText(award.getTitle());
-                title.setVisibility(View.VISIBLE);
-
-                awardImage.setVisibility(View.GONE);
-            }
-
-            description.setText(award.getDescription());
-
-            awardLayout.addView(row);
         }
     }
 
@@ -389,10 +409,6 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
      */
     private void finishOverview()
     {
-        // We remove the exercises from the database here, so when we go back to
-        // the fitness log, it doesn't ask if we want to continue where we left off.
-        removeExercisesFromDatabase();
-
         // Grant the user the "Kept Swimming" badge if he or she didn't skip an exercise.
         if (!securePreferences.getBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, false))
         {
@@ -520,33 +536,23 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
     }
 
     /**
-     * Randomly generates a tweet from an array.
-     *
-     * Documentation:
-     * https://dev.twitter.com/web/tweet-button/parameters
-     *
-     * @return  The generated tweet.
+     * The dialog listener for when the user finishes exercising.
      */
-    private String generateTweet()
+    private DialogListener dialogListener = new DialogListener()
     {
-        String twitterUrl = "https://twitter.com/intent/tweet?text=";
-        String[] tweetText = { "I %23dominated my %23workout with %23Intencity! %23WOD %23Fitness",
-                               "I %23finished my %23workout of the day with %23Intencity! %23WOD %23Fitness",
-                               "I made it through %23Intencity%27s %23routine! %23Fitness",
-                               "Making %23gains with %23Intencity! %23WOD %23Fitness %23Exercise %23Gainz",
-                               "%23Finished my %23Intencity %23workout! %23Retweet if you've %23exercised today. %23WOD %23Fitness",
-                               "I %23lifted with %23Intencity today! %23lift %23lifting",
-                               "%23Intencity %23trained me today!",
-                               "Getting %23strong with %23Intencity! %23GetStrong %23DoWork %23Fitness",
-                               "Getting that %23BeachBody with %23Intencity! %23Lift %23Exercise %23Fitness",
-                               "Nothing feels better than finishing a great %23workout!"};
-        String tweetUrl = "&url=www.Intencity.fit";
-        String via = "&via=IntencityApp";
-
-        int tweet = Util.getRandom(0, tweetText.length - 1);
-
-        return twitterUrl + tweetText[tweet] + tweetUrl + via;
-    }
+        @Override
+        public void onButtonPressed(int which)
+        {
+            switch (which)
+            {
+                case Constant.POSITIVE_BUTTON:
+                    finishOverview();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     /**
      * Displays a progress dialog to the user.
@@ -556,13 +562,5 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
     private void showProgressDialog(String message)
     {
         progressDialog = ProgressDialog.show(this, null, message, false);
-    }
-
-    /**
-     * Starts the AsyncTask to remove the exercises from the database.
-     */
-    private void removeExercisesFromDatabase()
-    {
-        new SetExerciseTask(context).execute();
     }
 }
