@@ -60,7 +60,7 @@ public class Constant
     public static final int REQUEST_CODE_PROFILE = 30;
     public static final int REQUEST_CODE_OPEN_IMAGE = 40;
     public static final int REQUEST_CODE_CAPTURE_IMAGE = 50;
-    public static final int REQUEST_CODE_TWEET = 60;
+    public static final int REQUEST_CODE_SHARE = 60;
     public static final int REQUEST_CODE_LOG_OUT = 70;
     public static final int REQUEST_ROUTINE_UPDATED = 80;
     public static final int REQUEST_SAVED_ROUTINE_UPDATED = 90;
@@ -82,7 +82,6 @@ public class Constant
     // Bundles
     public static final String BUNDLE_SEARCH_EXERCISES = "com.intencity.intencity.bundle.search.exercises";
     public static final String BUNDLE_SET_NUMBER = "com.intencity.intencity.bundle.set.number";
-    public static final String BUNDLE_ROUTINE_SECTIONS = "com.intencity.intencity.bundle.routine.sections";
     public static final String BUNDLE_ROUTINE_ROWS = "com.intencity.intencity.bundle.routine.rows";
     public static final String BUNDLE_ROUTINE_NAME = "com.intencity.intencity.bundle.routine.name";
     public static final String BUNDLE_ROUTINE_TYPE = "com.intencity.intencity.bundle.routine.type";
@@ -90,7 +89,6 @@ public class Constant
     public static final String BUNDLE_EXERCISE = "com.intencity.intencity.bundle.exercise";
     public static final String BUNDLE_EXERCISE_SETS = "com.intencity.intencity.bundle.exercise.sets";
     public static final String BUNDLE_EXERCISE_LIST_INDEX = "com.intencity.intencity.bundle.exercise.list.index";
-    public static final String BUNDLE_RECOMMENDED_ROUTINE = "com.intencity.intencity.bundle.recommended.routine";
     public static final String BUNDLE_EXERCISE_NAME = "com.intencity.intencity.bundle.exercise.name";
     public static final String BUNDLE_ID = "com.intencity.intencity.bundle.id";
     public static final String BUNDLE_EXERCISE_TYPE = "com.intencity.intencity.exercise.type";
@@ -107,7 +105,6 @@ public class Constant
     public static final String UPLOAD_FOLDER = ENDPOINT + BUILD_TYPE + "uploads/";
     private static final String SERVICE_FOLDER = ENDPOINT + BUILD_TYPE + "services/";
     private static final String SERVICE_FOLDER_MOBILE = SERVICE_FOLDER + "mobile/";
-
     public static final String USER_PROFILE_PIC_NAME = "/user-profile.jpg";
 
     // Services

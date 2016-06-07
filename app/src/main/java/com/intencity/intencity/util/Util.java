@@ -151,6 +151,19 @@ public class Util
     }
 
     /**
+     * Sets whether the user has skipped an exercise for today.
+     *
+     * @param securePreferences     The SecurePreferences we are editing.
+     * @param skipped               Boolean of if the user ahs skipped an exercise.
+     */
+    public static void setExerciseSkipped(SecurePreferences securePreferences, boolean skipped)
+    {
+        SecurePreferences.Editor editor = securePreferences.edit();
+        editor.putBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, skipped);
+        editor.apply();
+    }
+
+    /**
      * Calls the service to grant points to the user.
      *
      * @param email         The email of the user to grant points.

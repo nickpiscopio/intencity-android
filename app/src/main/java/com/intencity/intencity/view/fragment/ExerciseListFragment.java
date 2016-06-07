@@ -51,8 +51,7 @@ import java.util.Date;
  *
  * Created by Nick Piscopio on 12/12/15.
  */
-public class ExerciseListFragment extends android.support.v4.app.Fragment implements ExerciseListener,
-                                                                                     SaveRoutineListener
+public class ExerciseListFragment extends android.support.v4.app.Fragment implements ExerciseListener, SaveRoutineListener
 {
     private enum ActiveButtonState
     {
@@ -231,8 +230,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         Intent intent = new Intent(context, OverviewActivity.class);
         intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, routineName);
         intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, currentExercises);
-        startActivity(intent);
-//        startActivityForResult(intent, Constant.REQUEST_OVERVIEW);
+        startActivityForResult(intent, Constant.REQUEST_OVERVIEW);
     }
 
     /**
@@ -521,20 +519,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         {
             // Add that the user has skipped an exercise.
             // Can't get the Kept Swimming badge.
-            setExerciseSkipped(true);
+            Util.setExerciseSkipped(securePreferences, true);
         }
-    }
-
-    /**
-     * Sets whether the user has skipped an exercise for today.
-     *
-     * @param skipped   Boolean of if the user ahs skipped an exercise.
-     */
-    private void setExerciseSkipped(boolean skipped)
-    {
-        SecurePreferences.Editor editor = securePreferences.edit();
-        editor.putBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, skipped);
-        editor.apply();
     }
 
     @Override
@@ -767,12 +753,11 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 addExerciseToList(exercise);
             }
         }
-        // Request codes are from the original startActivityForResult().
-        else if (requestCode == Constant.REQUEST_CODE_TWEET)
+        else if (resultCode  == Constant.REQUEST_OVERVIEW)
         {
-            // There will be no way we can know if they actually tweeted or not, so we will
-            // Grant points to the user for at least opening up twitter and thinking about tweeting.
-            Util.grantPointsToUser(email, Constant.POINTS_SHARING, context.getString(R.string.award_sharing_description));
+            // The user finished the exercise from the overview screen.
+            // Start the routine view over again.
+            loadingListener.onFinishedLoading(Constant.ID_FRAGMENT_ROUTINE_RELOAD);
         }
     }
 

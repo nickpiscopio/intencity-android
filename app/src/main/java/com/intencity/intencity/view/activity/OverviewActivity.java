@@ -33,7 +33,9 @@ import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.notification.AwardDialogContent;
 import com.intencity.intencity.notification.ToastDialog;
+import com.intencity.intencity.task.SetExerciseTask;
 import com.intencity.intencity.task.ShareTask;
+import com.intencity.intencity.util.Badge;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
@@ -156,6 +158,32 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
+    }
+
+    @Override
+    public void onImageProcessed(File file)
+    {
+        if (file != null)
+        {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            intent.setType(IMAGE_TYPE);
+
+            startActivityForResult(intent, Constant.REQUEST_CODE_SHARE);
+        }
+        else
+        {
+            Toast.makeText(context, context.getString(R.string.error_processing_overview), Toast.LENGTH_SHORT).show();
+        }
+
+        progressDialog.dismiss();
+    }
+
+    @Override
+    public void onButtonPressed(int which)
+    {
+        // There is only 1 button, so we aren't switching here.
+        startInstalledAppDetailsActivity();
     }
 
     /**
@@ -356,71 +384,51 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         new ShareTask(this).execute(layout);
     }
 
+    /**
+     * Calls all the methods to finish the workout.
+     */
     private void finishOverview()
     {
-//        // We remove the exercises from the database here, so when we go back to
-//        // the fitness log, it doesn't ask if we want to continue where we left off.
-//        removeExercisesFromDatabase();
-//
-//        workoutFinished = true;
-//
-//        // Grant the user the "Kept Swimming" badge if he or she didn't skip an exercise.
-//        if (!securePreferences.getBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, false))
-//        {
-//            Util.grantBadgeToUser(email, Badge.KEPT_SWIMMING,
-//                                  new AwardDialogContent(R.mipmap.kept_swimming,
-//                                                         context.getString(R.string.award_kept_swimming_description)), true);
-//        }
-//        else
-//        {
-//            // Set the user has skipped an exercise to false for next time.
-//            setExerciseSkipped(false);
-//        }
-//
-//        String finisherDescription = context.getString(R.string.award_finisher_description);
-//
-//        NotificationHandler notificationHandler = NotificationHandler.getInstance(null);
-//        ArrayList<AwardDialogContent> awards = notificationHandler.getAwards();
-//
-//        AwardDialogContent finisherAward = new AwardDialogContent(R.mipmap.finisher, finisherDescription);
-//        if (!notificationHandler.hasAward(finisherAward))
-//        {
-//            Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(
-//                    R.string.award_completed_workout_description));
-//            Util.grantBadgeToUser(email, Badge.FINISHER, finisherAward, true);
-//        }
-//
-//        CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.completed_workout_title), context.getString(R.string.award_workout_completed_award_description), true);
-//        dialog.setAwards(awards);
-//        dialog.setPositiveButtonStringRes(R.string.tweet_button);
-//        dialog.setNegativeButtonStringRes(R.string.finish_button);
-//
-//        new CustomDialog(context, dialogListener, dialog, true);
+        // We remove the exercises from the database here, so when we go back to
+        // the fitness log, it doesn't ask if we want to continue where we left off.
+        removeExercisesFromDatabase();
+
+        // Grant the user the "Kept Swimming" badge if he or she didn't skip an exercise.
+        if (!securePreferences.getBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, false))
+        {
+            Util.grantBadgeToUser(email, Badge.KEPT_SWIMMING,
+                                  new AwardDialogContent(R.mipmap.kept_swimming,
+                                                         context.getString(R.string.award_kept_swimming_description)), true);
+        }
+        else
+        {
+            // Set the user has skipped an exercise to false for next time.
+            Util.setExerciseSkipped(securePreferences, false);
+        }
+
+        String finisherDescription = context.getString(R.string.award_finisher_description);
+
+        NotificationHandler notificationHandler = NotificationHandler.getInstance(null);
+        AwardDialogContent finisherAward = new AwardDialogContent(R.mipmap.finisher, finisherDescription);
+        if (!notificationHandler.hasAward(finisherAward))
+        {
+            Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(
+                    R.string.award_completed_workout_description));
+            Util.grantBadgeToUser(email, Badge.FINISHER, finisherAward, true);
+        }
+
+        goBack();
     }
-//
-//    /**
-//     * The dialog listener for when the user finishes exercising.
-//     */
-//    private DialogListener dialogListener = new DialogListener()
-//    {
-//        @Override
-//        public void onButtonPressed(int which)
-//        {
-//            switch (which)
-//            {
-//                case Constant.POSITIVE_BUTTON:
-//                    // The user selected to tweet, so we open the twitter URI.
-//                    Uri uri = Uri.parse(generateTweet());
-//                    startActivityForResult(new Intent(Intent.ACTION_VIEW, uri), Constant.REQUEST_CODE_TWEET);
-//                    break;
-//                default:
-//                    break;
-//            }
-//
-//            // Start the routine view over again.
-//            loadingListener.onFinishedLoading(Constant.ID_FRAGMENT_ROUTINE_RELOAD);
-//        }
-//    };
+
+    /**
+     * Sets the result and goes back to the previous activity.
+     */
+    private void goBack()
+    {
+        // Call finish() to go back to the previous screen.
+        setResult(Constant.REQUEST_OVERVIEW);
+        finish();
+    }
 
     /**
      * Requests permission to write external storage.
@@ -475,9 +483,21 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
 
                     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 }
-               break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Constant.REQUEST_CODE_SHARE)
+        {
+            // There will be no way we can know if they actually shared or not, so we will
+            // Grant points to the user for at least opening up twitter and thinking about tweeting.
+            Util.grantPointsToUser(email, Constant.POINTS_SHARING, context.getString(R.string.award_sharing_description));
         }
     }
 
@@ -538,29 +558,11 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         progressDialog = ProgressDialog.show(this, null, message, false);
     }
 
-    @Override
-    public void onImageProcessed(File file)
+    /**
+     * Starts the AsyncTask to remove the exercises from the database.
+     */
+    private void removeExercisesFromDatabase()
     {
-        if (file != null)
-        {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-            intent.setType(IMAGE_TYPE);
-
-            startActivity(intent);
-        }
-        else
-        {
-            Toast.makeText(context, context.getString(R.string.error_processing_overview), Toast.LENGTH_SHORT).show();
-        }
-
-        progressDialog.dismiss();
-    }
-
-    @Override
-    public void onButtonPressed(int which)
-    {
-        // There is only 1 button, so we aren't switching here.
-        startInstalledAppDetailsActivity();
+        new SetExerciseTask(context).execute();
     }
 }
