@@ -173,15 +173,15 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
             if (includedInIntencity)
             {
                 exerciseLayout.setOnClickListener(exerciseClickListener);
+                exercise.setTextColor(ContextCompat.getColor(context, R.color.primary));
+                priorityLayout.setVisibility(routineState == RoutineState.INTENCITY ? View.VISIBLE : View.GONE);
             }
             else
             {
                 exerciseLayout.setClickable(false);
+                exercise.setTextColor(ContextCompat.getColor(context, R.color.secondary_dark));
+                priorityLayout.setVisibility(View.GONE);
             }
-
-            exercise.setBackgroundResource(includedInIntencity ? R.drawable.button_card : 0);
-            exercise.setTextColor(ContextCompat.getColor(context, includedInIntencity ? R.color.primary : R.color.secondary_dark));
-            priorityLayout.setVisibility(routineState == RoutineState.INTENCITY && includedInIntencity ? View.VISIBLE : View.GONE);
         }
 
         exercise.setText(exerciseName);
