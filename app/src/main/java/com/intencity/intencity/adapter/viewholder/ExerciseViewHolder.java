@@ -71,7 +71,6 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         morePriority = (ImageButton) view.findViewById(R.id.button_more_priority);
         lessPriority = (ImageButton) view.findViewById(R.id.button_less_priority);
 
-        exerciseLayout.setOnClickListener(exerciseClickListener);
         lastSetLayout.setOnClickListener(setClickListener);
         hide.setOnClickListener(hideClicked);
         morePriority.setOnClickListener(morePriorityClicked);
@@ -171,7 +170,15 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
             this.exerciseEditLayout.setVisibility(View.VISIBLE);
             this.hide.setVisibility(View.VISIBLE);
 
-            exercise.setClickable(!includedInIntencity);
+            if (includedInIntencity)
+            {
+                exerciseLayout.setOnClickListener(exerciseClickListener);
+            }
+            else
+            {
+                exerciseLayout.setClickable(false);
+            }
+
             exercise.setBackgroundResource(includedInIntencity ? R.drawable.button_card : 0);
             exercise.setTextColor(ContextCompat.getColor(context, includedInIntencity ? R.color.primary : R.color.secondary_dark));
             priorityLayout.setVisibility(routineState == RoutineState.INTENCITY && includedInIntencity ? View.VISIBLE : View.GONE);
