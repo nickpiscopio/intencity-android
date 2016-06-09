@@ -46,6 +46,6 @@
     <dimen name="save_dialog_edit_text_margin">21dp</dimen>
 
     <dimen name="overview_icon_size">16dp</dimen>
-    <dimen name="overview_logo_size">40dp</dimen>
+    <dimen name="overview_logo_size">25dp</dimen>
 
 </resources>

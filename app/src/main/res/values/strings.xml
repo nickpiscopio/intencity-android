@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Intencity</string>
+    <string name="app_name_prefix">Inten</string>
+    <string name="app_name_suffix">city</string>
+    <string name="website_suffix">.fit</string>
     <string name="copyright">&#169; Intencity 2016. All Rights Reserved.</string>
 
     <string name="welcome_title">Welcome!</string>

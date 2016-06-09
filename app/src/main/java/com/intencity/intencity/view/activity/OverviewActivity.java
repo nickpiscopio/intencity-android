@@ -113,7 +113,9 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         String routineTitle = extras.getString(Constant.BUNDLE_ROUTINE_NAME);
         exercises = extras.getParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST);
 
-        title.setText(context.getString(R.string.header_overview, routineTitle));
+        routineTitle = context.getString(R.string.header_overview, routineTitle);
+
+        title.setText(routineTitle.toUpperCase());
         // Alternate date format EEE, MMM d, yyyy
         date.setText(new SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(new Date()));
 
@@ -199,56 +201,63 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         addHeader(Card.EXERCISE, exerciseLayout);
 
         int totalExercises = exercises.size();
+        int lastExercise = totalExercises - 1;
+
+        // Remove the last exercise from the list if it is a stretch.
+        if (exercises.get(lastExercise).getName().equals(stretchExerciseName))
+        {
+            exercises.remove(lastExercise);
+            totalExercises--;
+        }
+
         for (int i = 0; i < totalExercises; i++)
         {
             Exercise exercise = exercises.get(i);
 
             String exerciseName = exercise.getName();
-            if(exerciseName.equals(warmUphExerciseName) || exerciseName.equals(stretchExerciseName))
+            if(!exerciseName.equals(warmUphExerciseName))
             {
-                continue;
-            }
+                View titleRow = inflater.inflate(R.layout.list_item_overview_exercise_title, exerciseLayout, false);
+                TextView title = (TextView) titleRow.findViewById(R.id.text_view_title);
+                LinearLayout setLayout = (LinearLayout) titleRow.findViewById(R.id.layout_set);
+                setExerciseTitle(exerciseName, exercise.isIncludedInIntencity(), title);
 
-            View titleRow = inflater.inflate(R.layout.list_item_overview_exercise_title, exerciseLayout, false);
-            TextView title = (TextView) titleRow.findViewById(R.id.text_view_title);
-            LinearLayout setLayout = (LinearLayout) titleRow.findViewById(R.id.layout_set);
-            setExerciseTitle(exerciseName, exercise.isIncludedInIntencity(), title);
-
-            ArrayList<Set> sets = exercise.getSets();
-            int setSize = sets.size();
-            for (int z = 0; z < setSize; z++)
-            {
-                Set set = sets.get(z);
-
-                View setRow = inflater.inflate(R.layout.list_item_overview_exercise_set, setLayout, false);
-                TextView setNumber = (TextView) setRow.findViewById(R.id.text_view_list_number);
-                TextView weight = (TextView) setRow.findViewById(R.id.weight);
-                TextView weightSuffix = (TextView) setRow.findViewById(R.id.weight_suffix);
-                TextView slash = (TextView) setRow.findViewById(R.id.slash);
-                TextView durationTextView = (TextView) setRow.findViewById(R.id.duration);
-                TextView repsTextView = (TextView) setRow.findViewById(R.id.suffix);
-
-                setWeight(set.getWeight(), weight, weightSuffix, slash);
-
-                String reps = String.valueOf(set.getReps());
-                String duration = set.getDuration();
-                setDuration(duration == null || duration.equals(Constant.RETURN_NULL) ? reps : duration, repsTextView, durationTextView);
-
-                if (showSet(durationTextView))
+                ArrayList<Set> sets = exercise.getSets();
+                int setSize = sets.size();
+                for (int z = 0; z < setSize; z++)
                 {
-                    String setNum = (z + 1) + ".";
-                    setNumber.setText(setNum);
+                    Set set = sets.get(z);
 
-                    setLayout.addView(setRow);
+                    View setRow = inflater.inflate(R.layout.list_item_overview_exercise_set, setLayout, false);
+                    TextView setNumber = (TextView) setRow.findViewById(R.id.text_view_list_number);
+                    TextView weight = (TextView) setRow.findViewById(R.id.weight);
+                    TextView weightSuffix = (TextView) setRow.findViewById(R.id.weight_suffix);
+                    TextView slash = (TextView) setRow.findViewById(R.id.slash);
+                    TextView durationTextView = (TextView) setRow.findViewById(R.id.duration);
+                    TextView repsTextView = (TextView) setRow.findViewById(R.id.suffix);
+
+                    setWeight(set.getWeight(), weight, weightSuffix, slash);
+
+                    String reps = String.valueOf(set.getReps());
+                    String duration = set.getDuration();
+                    setDuration(duration == null || duration.equals(Constant.RETURN_NULL) ? reps : duration, repsTextView, durationTextView);
+
+                    if (showSet(durationTextView))
+                    {
+                        String setNum = (z + 1) + ".";
+                        setNumber.setText(setNum);
+
+                        setLayout.addView(setRow);
+                    }
                 }
-            }
 
-            if (i == totalExercises - 1)
-            {
-                titleRow.findViewById(R.id.divider).setVisibility(View.GONE);
-            }
+                if (i == totalExercises - 1)
+                {
+                    titleRow.findViewById(R.id.divider).setVisibility(View.GONE);
+                }
 
-            exerciseLayout.addView(titleRow);
+                exerciseLayout.addView(titleRow);
+            }
         }
     }
 
@@ -302,6 +311,8 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
 
                 awardLayout.addView(row);
             }
+
+            awardLayout.setVisibility(View.VISIBLE);
         }
     }
 
