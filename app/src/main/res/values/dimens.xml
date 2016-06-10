@@ -13,7 +13,7 @@
     <dimen name="rounded_corner_radius">4dp</dimen>
     <dimen name="negative_shadow">-10dp</dimen>
     <dimen name="shadow">2dp</dimen>
-    <dimen name="shadow_small">1dp</dimen>
+    <dimen name="shadow_small">0.5dp</dimen>
     <dimen name="element_margin">14dp</dimen>
     <dimen name="related_item_margin">5dp</dimen>
 

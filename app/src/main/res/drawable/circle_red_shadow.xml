@@ -21,6 +21,10 @@
 
             <solid android:color="@color/card_button_delete_deselect" />
 
+            <stroke
+                android:color="@color/card_button_delete_select"
+                android:width="@dimen/shadow_small"/>
+
         </shape>
 
     </item>
