@@ -82,6 +82,8 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
 
     private LayoutInflater inflater;
 
+    private NotificationHandler notificationHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -120,6 +122,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         // Alternate date format EEE, MMM d, yyyy
         date.setText(new SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(new Date()));
 
+        grantAwards();
         addExercises();
         addAwards();
     }
@@ -192,6 +195,29 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
     {
         // There is only 1 button, so we aren't switching here.
         startInstalledAppDetailsActivity();
+    }
+
+    /**
+     * Grants awards to the user for completing the workout.
+     */
+    private void grantAwards()
+    {
+        // Grant the user the "Kept Swimming" badge if he or she didn't skip an exercise.
+        if (!securePreferences.getBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, false))
+        {
+            Util.grantBadgeToUser(email, Badge.KEPT_SWIMMING,
+                                  new AwardDialogContent(R.mipmap.kept_swimming,
+                                                         context.getString(R.string.award_kept_swimming_description)), true);
+        }
+
+        String finisherDescription = context.getString(R.string.award_finisher_description);
+        AwardDialogContent finisherAward = new AwardDialogContent(R.mipmap.finisher, finisherDescription);
+        notificationHandler = NotificationHandler.getInstance(null);
+        if (notificationHandler.getAward(finisherAward) == null)
+        {
+            Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(R.string.award_completed_workout_description));
+            Util.grantBadgeToUser(email, Badge.FINISHER, finisherAward, true);
+        }
     }
 
     /**
@@ -407,42 +433,17 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
     }
 
     /**
-     * Calls all the methods to finish the workout.
-     */
-    private void finishOverview()
-    {
-        // Grant the user the "Kept Swimming" badge if he or she didn't skip an exercise.
-        if (!securePreferences.getBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, false))
-        {
-            Util.grantBadgeToUser(email, Badge.KEPT_SWIMMING,
-                                  new AwardDialogContent(R.mipmap.kept_swimming,
-                                                         context.getString(R.string.award_kept_swimming_description)), true);
-        }
-        else
-        {
-            // Set the user has skipped an exercise to false for next time.
-            Util.setExerciseSkipped(securePreferences, false);
-        }
-
-        String finisherDescription = context.getString(R.string.award_finisher_description);
-
-        NotificationHandler notificationHandler = NotificationHandler.getInstance(null);
-        AwardDialogContent finisherAward = new AwardDialogContent(R.mipmap.finisher, finisherDescription);
-        if (notificationHandler.getAward(finisherAward) == null)
-        {
-            Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(
-                    R.string.award_completed_workout_description));
-            Util.grantBadgeToUser(email, Badge.FINISHER, finisherAward, true);
-        }
-
-        goBack();
-    }
-
-    /**
-     * Sets the result and goes back to the previous activity.
+     * Cleans up the awards, and sets the result and goes back to the previous activity.
      */
     private void goBack()
     {
+        // Remove all the awards just in case the user comes back to the app later.
+        // This is so the user doesn't see awards he or she already earned before.
+        notificationHandler.clearAwards();
+
+        // Set the user has skipped an exercise to false for next time.
+        Util.setExerciseSkipped(securePreferences, false);
+
         // Call finish() to go back to the previous screen.
         setResult(Constant.REQUEST_OVERVIEW);
         finish();
@@ -548,7 +549,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
             switch (which)
             {
                 case Constant.POSITIVE_BUTTON:
-                    finishOverview();
+                    goBack();
                     break;
                 default:
                     break;

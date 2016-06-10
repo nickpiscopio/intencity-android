@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
                 startActivityForResult(new Intent(this, MenuActivity.class),
                                        Constant.REQUEST_CODE_LOG_OUT);
 
-                menuItem.setIcon(ContextCompat.getDrawable(context, R.mipmap.menu));
+                resetIcon();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -283,6 +283,14 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         showDemo(DemoActivity.LOG_IN);
     }
 
+    /**
+     * Resets the icon back to its original state.
+     */
+    private void resetIcon()
+    {
+        menuItem.setIcon(ContextCompat.getDrawable(context, R.mipmap.menu));
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -303,6 +311,12 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
 
             ((AnimationDrawable)menuItem.getIcon()).start();
         }
+    }
+
+    @Override
+    public void onNotificationsCleared()
+    {
+        resetIcon();
     }
 
     @Override

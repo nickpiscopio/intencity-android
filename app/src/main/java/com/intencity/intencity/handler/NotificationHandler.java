@@ -110,6 +110,8 @@ public class NotificationHandler
         awards.clear();
 
         instantiateAwards();
+
+        listener.onNotificationsCleared();
     }
 
     public int getAwardCount()
