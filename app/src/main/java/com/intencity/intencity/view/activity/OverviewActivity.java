@@ -43,7 +43,7 @@ import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -119,8 +119,10 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         routineTitle = context.getString(R.string.header_overview, routineTitle);
 
         title.setText(routineTitle.toUpperCase());
-        // Alternate date format EEE, MMM d, yyyy
-        date.setText(new SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(new Date()));
+        
+        Date now = new Date();
+        DateFormat format = DateFormat.getDateInstance(DateFormat.FULL, Locale.getDefault());
+        date.setText(format.format(now));
 
         grantAwards();
         addExercises();
