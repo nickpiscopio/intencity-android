@@ -288,6 +288,11 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
                                      (TextView) row.findViewById(R.id.text_view_description),
                                      (TextView) row.findViewById(R.id.amount));
 
+                if (i == totalAwards - 1)
+                {
+                    row.findViewById(R.id.divider).setVisibility(View.GONE);
+                }
+
                 awardLayout.addView(row);
             }
 
