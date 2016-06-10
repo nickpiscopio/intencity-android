@@ -13,6 +13,7 @@
     <dimen name="rounded_corner_radius">4dp</dimen>
     <dimen name="negative_shadow">-10dp</dimen>
     <dimen name="shadow">2dp</dimen>
+    <dimen name="shadow_small">1dp</dimen>
     <dimen name="element_margin">14dp</dimen>
     <dimen name="related_item_margin">5dp</dimen>
 
@@ -22,6 +23,7 @@
     <dimen name="demo_text_size">16sp</dimen>
 
     <dimen name="card_continue_title_size">14sp</dimen>
+    <dimen name="card_title_size_plus">28sp</dimen>
     <dimen name="card_title_size">16sp</dimen>
     <dimen name="card_title2_size">12sp</dimen>
     <dimen name="card_title3_size">10sp</dimen>
@@ -47,5 +49,7 @@
 
     <dimen name="overview_icon_size">16dp</dimen>
     <dimen name="overview_logo_size">25dp</dimen>
+    <dimen name="badge_amount_size">26dp</dimen>
+    <dimen name="badge_amount_padding">-15dp</dimen>
 
 </resources>

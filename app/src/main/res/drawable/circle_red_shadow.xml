@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Shadow -->
+    <item>
+
+        <shape android:shape="oval">
+
+            <solid android:color="@color/shadow" />
+
+        </shape>
+
+    </item>
+
+    <!-- Top color -->
+    <item
+        android:bottom="@dimen/shadow_small"
+        android:right="@dimen/shadow_small">
+
+        <shape android:shape="oval">
+
+            <solid android:color="@color/card_button_delete_deselect" />
+
+        </shape>
+
+    </item>
+
+</layer-list>

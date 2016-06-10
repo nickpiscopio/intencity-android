@@ -38,6 +38,7 @@ import com.intencity.intencity.notification.ToastDialog;
 import com.intencity.intencity.task.ShareTask;
 import com.intencity.intencity.util.Badge;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.NotificationUtil;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 
@@ -278,36 +279,14 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
                 View row = inflater.inflate(R.layout.list_item_award, awardLayout, false);
 
                 LinearLayout layout = (LinearLayout) row.findViewById(R.id.layout);
-                ImageView awardImage = (ImageView) row.findViewById(R.id.image_view_award);
-                TextView title = (TextView) row.findViewById(R.id.text_view_title);
-                TextView description = (TextView) row.findViewById(R.id.text_view_description);
-
                 layout.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
 
-                AwardDialogContent award = awards.get(i);
-
-                int awardImgRes = award.getImgRes();
-                if (awardImgRes > 0)
-                {
-                    awardImage.setImageResource(awardImgRes);
-                    awardImage.setVisibility(View.VISIBLE);
-
-                    title.setVisibility(View.GONE);
-                }
-                else
-                {
-                    title.setText(award.getTitle());
-                    title.setVisibility(View.VISIBLE);
-
-                    awardImage.setVisibility(View.GONE);
-                }
-
-                description.setText(award.getDescription());
-
-                if (i == totalAwards - 1)
-                {
-                    row.findViewById(R.id.divider).setVisibility(View.GONE);
-                }
+                new NotificationUtil(awards.get(i),
+                                     (ImageView) row.findViewById(R.id.image_view_award),
+                                     (LinearLayout) row.findViewById(R.id.layout_badge_amount),
+                                     (TextView) row.findViewById(R.id.text_view_title),
+                                     (TextView) row.findViewById(R.id.text_view_description),
+                                     (TextView) row.findViewById(R.id.amount));
 
                 awardLayout.addView(row);
             }
@@ -444,7 +423,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
 
         NotificationHandler notificationHandler = NotificationHandler.getInstance(null);
         AwardDialogContent finisherAward = new AwardDialogContent(R.mipmap.finisher, finisherDescription);
-        if (!notificationHandler.hasAward(finisherAward))
+        if (notificationHandler.getAward(finisherAward) == null)
         {
             Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(
                     R.string.award_completed_workout_description));

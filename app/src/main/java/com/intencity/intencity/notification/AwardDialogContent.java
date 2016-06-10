@@ -11,6 +11,8 @@ public class AwardDialogContent
     private String description;
 
     private int imgRes;
+    // The number of times this award shows up in the list.
+    private int amount = 1;
 
     public AwardDialogContent(String title, String description)
     {
@@ -52,8 +54,16 @@ public class AwardDialogContent
         return imgRes;
     }
 
-    public void setImgRes(int imgRes)
+    public int getAmount()
     {
-        this.imgRes = imgRes;
+        return amount;
+    }
+
+    /**
+     * Increments the amount of times this award is shown in the notifications.
+     */
+    public void incrementAmount()
+    {
+        amount++;
     }
 }

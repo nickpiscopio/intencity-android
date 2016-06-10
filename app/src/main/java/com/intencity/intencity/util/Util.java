@@ -215,7 +215,7 @@ public class Util
         // Only grant the badge to the user if he or she doesn't have it
         if (onlyAllowOne)
         {
-            if (!notificationHandler.hasAward(content))
+            if (notificationHandler.getAward(content) == null)
             {
                 grantBadgeToUser(email, badgeName, content);
             }

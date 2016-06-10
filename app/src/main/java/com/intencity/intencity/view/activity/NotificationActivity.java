@@ -35,8 +35,7 @@ public class NotificationActivity extends AppCompatActivity
 
         ArrayList<AwardDialogContent> awards = NotificationHandler.getInstance(null).getAwards();
 
-        NotificationAdapter settingsAdapter =
-                new NotificationAdapter(getApplicationContext(), R.layout.list_item_award, awards);
+        NotificationAdapter settingsAdapter =new NotificationAdapter(getApplicationContext(), R.layout.list_item_award, awards);
 
         ListView listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(settingsAdapter);

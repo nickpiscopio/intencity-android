@@ -14,19 +14,58 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/image_view_award"
-            android:layout_width="@dimen/ranking_badge_size"
-            android:layout_height="@dimen/ranking_badge_size"/>
-
-        <TextView
-            android:id="@+id/text_view_title"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/card_title_size"
-            android:textStyle="bold"
-            android:text="+100"
-            android:textColor="@color/secondary_dark"/>
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/layout_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/image_view_award"
+                    android:layout_width="@dimen/ranking_badge_size"
+                    android:layout_height="@dimen/ranking_badge_size"/>
+
+                <TextView
+                    android:id="@+id/text_view_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/card_title_size_plus"
+                    android:textStyle="bold"
+                    android:text="+100"
+                    android:textColor="@color/secondary_dark"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_badge_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/badge_amount_padding"
+                android:layout_marginTop="@dimen/badge_amount_padding"
+                android:layout_below="@id/layout_badge"
+                android:layout_toRightOf="@id/layout_badge"
+                android:background="@drawable/circle_red_shadow">
+
+                <TextView
+                    android:id="@+id/amount"
+                    android:layout_width="@dimen/badge_amount_size"
+                    android:layout_height="@dimen/badge_amount_size"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/card_title3_size"
+                    android:layout_marginBottom="@dimen/shadow_small"
+                    android:layout_marginRight="@dimen/shadow_small"
+                    android:text="x99"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/text_view_description"

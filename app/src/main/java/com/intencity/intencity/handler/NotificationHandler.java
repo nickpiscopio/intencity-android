@@ -55,22 +55,37 @@ public class NotificationHandler
         awards = new ArrayList<>();
     }
 
+    /**
+     * Adds an award to the list if it is not in the list already.
+     * If it is in the list, then we increment the count.
+     *
+     * @param award     The award to add.
+     */
     public void addAward(AwardDialogContent award)
     {
-        // Adds the award to the first index so we can display them in reverse order.
-        awards.add(0, award);
+        AwardDialogContent adc = getAward(award);
+
+        if (adc != null)
+        {
+            adc.incrementAmount();
+        }
+        else
+        {
+            // Adds the award to the first index so we can display them in reverse order.
+            awards.add(0, award);
+        }
 
         listener.onNotificationAdded();
     }
 
     /**
-     * Checks to see if the award is already granted to the user.
+     * Gets the award if it is in the award list.
      *
-     * @param award     The award to check.
+     * @param award     The award to get.
      *
-     * @return  Boolean value if the user has already received a certain award.
+     * @return An award from the award list.
      */
-    public boolean hasAward(AwardDialogContent award)
+    public AwardDialogContent getAward(AwardDialogContent award)
     {
         String awardDescription = award.getDescription();
 
@@ -80,13 +95,16 @@ public class NotificationHandler
 
             if (awardDescription.equals(description))
             {
-                return true;
+                return adc;
             }
         }
 
-        return false;
+        return null;
     }
 
+    /**
+     * Clears the awards and reinstantiates the list.
+     */
     public void clearAwards()
     {
         awards.clear();
