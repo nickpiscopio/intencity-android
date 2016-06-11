@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.adapter.RankingListAdapter;
+import com.intencity.intencity.adapter.LeaderboardAdapter;
 import com.intencity.intencity.adapter.SearchExerciseListAdapter;
 import com.intencity.intencity.helper.doa.ExerciseDao;
 import com.intencity.intencity.helper.doa.UserDao;
@@ -224,7 +224,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             else
             {
                 users = new UserDao().parseJson(response);
-                arrayAdapter  = new RankingListAdapter(context, R.layout.list_item_ranking, users, true);
+                arrayAdapter  = new LeaderboardAdapter(context, R.layout.list_item_ranking, users, true);
                 listView.setAdapter(arrayAdapter);
             }
 

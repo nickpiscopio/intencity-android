@@ -1,7 +1,5 @@
 package com.intencity.intencity.listener;
 
-import java.io.File;
-
 /**
  * Public interface to listen for when the share finishes processing the image.
  *
@@ -9,5 +7,5 @@ import java.io.File;
  */
 public interface ShareListener
 {
-    void onImageProcessed(File file);
+    void onImageProcessed();
 }

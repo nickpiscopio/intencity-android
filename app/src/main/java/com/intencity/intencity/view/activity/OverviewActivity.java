@@ -1,19 +1,13 @@
 package com.intencity.intencity.view.activity;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,11 +28,11 @@ import com.intencity.intencity.model.Set;
 import com.intencity.intencity.notification.AwardDialogContent;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
-import com.intencity.intencity.notification.ToastDialog;
 import com.intencity.intencity.task.ShareTask;
 import com.intencity.intencity.util.Badge;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.NotificationUtil;
+import com.intencity.intencity.util.ScreenshotUtil;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 
@@ -53,7 +47,7 @@ import java.util.Locale;
  *
  * Created by Nick Piscopio on 6/5/16.
  */
-public class OverviewActivity extends AppCompatActivity implements ShareListener, DialogListener
+public class OverviewActivity extends AppCompatActivity implements ShareListener
 {
     private enum Card
     {
@@ -119,7 +113,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         routineTitle = context.getString(R.string.header_overview, routineTitle);
 
         title.setText(routineTitle.toUpperCase());
-        
+
         Date now = new Date();
         DateFormat format = DateFormat.getDateInstance(DateFormat.FULL, Locale.getDefault());
         date.setText(format.format(now));
@@ -147,19 +141,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
                 onBackPressed();
                 return true;
             case R.id.share:
-                if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
-                {
-                    // RUNTIME PERMISSION Android M
-                    if (PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                    {
-                        share();
-                    }
-                    else
-                    {
-                        requestPermission();
-                    }
-                }
-
+                share();
                 return true;
             case R.id.finish:
                 CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.title_finish_routine), context.getString(R.string.description_finish_routine), true);
@@ -174,29 +156,31 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
     }
 
     @Override
-    public void onImageProcessed(File file)
+    public void onImageProcessed()
     {
-        if (file != null)
-        {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-            intent.setType(IMAGE_TYPE);
+        File imagePath = new File(context.getCacheDir(), ScreenshotUtil.DIRECTORY);
+        File newFile = new File(imagePath, ScreenshotUtil.IMAGE_NAME);
+        Uri contentUri = FileProvider.getUriForFile(context, ScreenshotUtil.AUTHORITY, newFile);
 
-            startActivityForResult(intent, Constant.REQUEST_CODE_SHARE);
+        if (contentUri != null)
+        {
+            // DOCUMENTATION:
+            // http://stackoverflow.com/questions/9049143/android-share-intent-for-a-bitmap-is-it-possible-not-to-save-it-prior-sharing
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
+            shareIntent.setDataAndType(contentUri, getContentResolver().getType(contentUri));
+            shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+
+            startActivityForResult(shareIntent, Constant.REQUEST_CODE_SHARE);
         }
         else
         {
+            // TODO: Tweet instead
             Toast.makeText(context, context.getString(R.string.error_processing_overview), Toast.LENGTH_SHORT).show();
         }
 
         progressDialog.dismiss();
-    }
-
-    @Override
-    public void onButtonPressed(int which)
-    {
-        // There is only 1 button, so we aren't switching here.
-        startInstalledAppDetailsActivity();
     }
 
     /**
@@ -431,7 +415,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
     private void share()
     {
         showProgressDialog(context.getString(R.string.share_processing));
-        new ShareTask(this).execute(layout);
+        new ShareTask(context, this).execute(layout);
     }
 
     /**
@@ -451,64 +435,6 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         finish();
     }
 
-    /**
-     * Requests permission to write external storage.
-     */
-    private void requestPermission()
-    {
-        if(ActivityCompat.shouldShowRequestPermissionRationale(OverviewActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-        {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example if the user has previously denied the permission.
-            new AlertDialog.Builder(OverviewActivity.this)
-                    .setMessage(context.getResources().getString(R.string.storage_needed))
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                            ActivityCompat.requestPermissions(OverviewActivity.this,
-                                                              new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                                              REQUEST_WRITE_EXTERNAL_STORAGE);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) { }
-                    }).show();
-        }
-        else
-        {
-            // permission has not been granted yet. Request it directly.
-            ActivityCompat.requestPermissions(OverviewActivity.this,
-                                              new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
-                                              REQUEST_WRITE_EXTERNAL_STORAGE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
-    {
-        switch (requestCode)
-        {
-            case REQUEST_WRITE_EXTERNAL_STORAGE:
-                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                   share();
-                }
-                else
-                {
-                    new ToastDialog(OverviewActivity.this, this);
-
-                    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                }
-            default:
-                break;
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -520,24 +446,6 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
             // Grant points to the user for at least opening up twitter and thinking about tweeting.
             Util.grantPointsToUser(email, Constant.POINTS_SHARING, context.getString(R.string.award_sharing_description));
         }
-    }
-
-    /**
-     * Starts the app settings screen.
-     */
-    private void startInstalledAppDetailsActivity()
-    {
-        Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.setData(Uri.parse("package:" + context.getPackageName()));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-
-        context.startActivity(intent);
-
-        Toast.makeText(context, context.getString(R.string.directions_set_permissions), Toast.LENGTH_LONG).show();
     }
 
     /**

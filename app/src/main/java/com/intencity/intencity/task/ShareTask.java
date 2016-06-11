@@ -1,5 +1,6 @@
 package com.intencity.intencity.task;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.LinearLayout;
@@ -7,45 +8,44 @@ import android.widget.LinearLayout;
 import com.intencity.intencity.listener.ShareListener;
 import com.intencity.intencity.util.ScreenshotUtil;
 
-import java.io.File;
-
 /**
  * This async task to share a user's fitness overview.
  *
  * Created by Nick Piscopio on 6/5/16.
  */
-public class ShareTask extends AsyncTask<LinearLayout, Void, File>
+public class ShareTask extends AsyncTask<LinearLayout, Void, Void>
 {
+    private Context context;
+
     private ShareListener shareListener;
 
-    public ShareTask(ShareListener shareListener)
+    public ShareTask(Context context, ShareListener shareListener)
     {
+        this.context = context;
         this.shareListener = shareListener;
     }
 
     @Override
-    protected File doInBackground(LinearLayout... params)
+    protected Void doInBackground(LinearLayout... params)
     {
         ScreenshotUtil ssUtil = new ScreenshotUtil();
-
-        File file = null;
 
         try
         {
             Bitmap screenshot = ssUtil.takeScreenShot(params[0]);
-            file = ssUtil.saveImage(screenshot, "intencity_overview");
+            ssUtil.saveImage(context, screenshot);
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
 
-        return file;
+        return null;
     }
 
     @Override
-    protected void onPostExecute(File file)
+    protected void onPostExecute(Void result)
     {
-        shareListener.onImageProcessed(file);
+        shareListener.onImageProcessed();
     }
 }

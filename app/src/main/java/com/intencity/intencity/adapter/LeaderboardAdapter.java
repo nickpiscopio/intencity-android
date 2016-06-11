@@ -22,7 +22,7 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 12/18/15.
  */
-public class RankingListAdapter extends ArrayAdapter<User>
+public class LeaderboardAdapter extends ArrayAdapter<User>
 {
     private Context context;
 
@@ -55,7 +55,7 @@ public class RankingListAdapter extends ArrayAdapter<User>
      * @param users             The list of users to populate the list.
      * @param isSearch          A boolean value of whether or not we are searching for a user.
      */
-    public RankingListAdapter(Context context, int layoutResourceId, ArrayList<User> users, boolean isSearch)
+    public LeaderboardAdapter(Context context, int layoutResourceId, ArrayList<User> users, boolean isSearch)
     {
         super(context, layoutResourceId, users);
 

@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.adapter.RankingListAdapter;
+import com.intencity.intencity.adapter.LeaderboardAdapter;
 import com.intencity.intencity.helper.doa.UserDao;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.User;
@@ -36,11 +36,11 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * The Ranking Fragment for Intencity.
+ * The Leaderboard Fragment for Intencity.
  *
  * Created by Nick Piscopio on 12/12/15.
  */
-public class RankingFragment extends android.support.v4.app.Fragment implements ServiceListener
+public class LeaderboardFragment extends android.support.v4.app.Fragment implements ServiceListener
 {
     private Context context;
 
@@ -56,7 +56,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
 
     private ArrayList<User> users;
 
-    private RankingListAdapter arrayAdapter;
+    private LeaderboardAdapter arrayAdapter;
 
     private ImageLoader imageLoaderInstance;
 
@@ -165,7 +165,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
             Bundle bundle = new Bundle();
             bundle.putBoolean(Constant.BUNDLE_SEARCH_EXERCISES, false);
 
-            Intent intent = new Intent(RankingFragment.this.getActivity(), SearchActivity.class);
+            Intent intent = new Intent(LeaderboardFragment.this.getActivity(), SearchActivity.class);
             intent.putExtras(bundle);
             startActivityForResult(intent, Constant.REQUEST_CODE_SEARCH);
         }
@@ -205,7 +205,7 @@ public class RankingFragment extends android.support.v4.app.Fragment implements 
      */
     private void populateRankingList()
     {
-        arrayAdapter = new RankingListAdapter(context, R.layout.list_item_ranking, users, false);
+        arrayAdapter = new LeaderboardAdapter(context, R.layout.list_item_ranking, users, false);
         ranking.setAdapter(arrayAdapter);
 
         // The size will be 1 if there are no followers because

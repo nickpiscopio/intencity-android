@@ -25,7 +25,7 @@ import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 import com.intencity.intencity.view.fragment.FitnessLogFragment;
-import com.intencity.intencity.view.fragment.RankingFragment;
+import com.intencity.intencity.view.fragment.LeaderboardFragment;
 
 import java.util.Date;
 
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     };
 
     private FitnessLogFragment fitnessLogFragment;
-    private RankingFragment rankingFragment;
+    private LeaderboardFragment rankingFragment;
 
     private Context context;
 
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         fitnessLogFragment = new FitnessLogFragment();
         adapter.addFrag(fitnessLogFragment, context.getString(R.string.app_name));
 
-        rankingFragment = new RankingFragment();
+        rankingFragment = new LeaderboardFragment();
         adapter.addFrag(rankingFragment, context.getString(R.string.title_rankings));
 
         viewPager.setAdapter(adapter);
