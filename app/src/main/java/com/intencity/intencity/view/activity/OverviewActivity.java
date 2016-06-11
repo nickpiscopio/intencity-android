@@ -445,7 +445,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
      */
     private String generateShareText()
     {
-        // Each can only be 32 characters in length.      |
+        // Each can only be 78 characters in length.
         String[] text = { "#Dominated my #workout! #fitness",
                           "Finished my #workout of the day!",
                           "Made it through #Intencity!",
