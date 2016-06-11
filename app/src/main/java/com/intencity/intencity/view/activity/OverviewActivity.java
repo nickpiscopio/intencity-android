@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.handler.NotificationHandler;
@@ -55,9 +54,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         AWARD
     }
 
-    private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1;
-
-    private final String IMAGE_TYPE = "image/png";
+    private final String TEXT_TYPE = "text/plain";
 
     private Context context;
 
@@ -162,23 +159,27 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         File newFile = new File(imagePath, ScreenshotUtil.IMAGE_NAME);
         Uri contentUri = FileProvider.getUriForFile(context, ScreenshotUtil.AUTHORITY, newFile);
 
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+
         if (contentUri != null)
         {
             // DOCUMENTATION:
             // http://stackoverflow.com/questions/9049143/android-share-intent-for-a-bitmap-is-it-possible-not-to-save-it-prior-sharing
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
-            shareIntent.setDataAndType(contentUri, getContentResolver().getType(contentUri));
-            shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-
-            startActivityForResult(shareIntent, Constant.REQUEST_CODE_SHARE);
+            // Temp permission for receiving app to read this file.
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setType("*/*");
+            intent.putExtra(Intent.EXTRA_TEXT, generateShareText());
+            intent.putExtra(Intent.EXTRA_STREAM, contentUri);
         }
         else
         {
-            // TODO: Tweet instead
-            Toast.makeText(context, context.getString(R.string.error_processing_overview), Toast.LENGTH_SHORT).show();
+            // Shares text instead because the image didn't work.
+            intent.setType(TEXT_TYPE);
+            intent.putExtra(Intent.EXTRA_TEXT, generateShareText());
         }
+
+        startActivityForResult(intent, Constant.REQUEST_CODE_SHARE);
 
         progressDialog.dismiss();
     }
@@ -433,6 +434,39 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         // Call finish() to go back to the previous screen.
         setResult(Constant.REQUEST_OVERVIEW);
         finish();
+    }
+
+    /**
+     * Randomly generates a text to share.
+     *
+     * Text length needs to total 110 to work with inmages on twitter.
+     *
+     * @return  The generated text.
+     */
+    private String generateShareText()
+    {
+        // Each can only be 32 characters in length.      |
+        String[] text = { "#Dominated my #workout! #fitness",
+                          "Finished my #workout of the day!",
+                          "Made it through #Intencity!",
+                          "Making #gains with #Intencity!",
+                          "#Exercising completed! #WOD",
+                          "Share if you've #exercised today",
+                          "#Lifted with #Intencity! #lift",
+                          "#Intencity #trained me today!",
+                          "Getting #strong with #Intencity!",
+                          "Getting that #BeachBody! #fit",
+                          "#Hurt so good! #FitnessPain"};
+
+        // 18 characters.
+        String url = " www.Intencity.fit";
+
+        // 14 characters.
+        String via = " @IntencityApp";
+
+        int index = Util.getRandom(0, text.length - 1);
+
+        return text[index] + url + via;
     }
 
     @Override

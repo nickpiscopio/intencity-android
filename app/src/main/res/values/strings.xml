@@ -260,10 +260,6 @@
     <string name="description_finish_routine">Would you like to finish exercising? This will go back to the routine screen.</string>
     <string name="title_finish">Finish</string>
     <string name="title_share">Share</string>
-    <string name="storage_needed">Permission to write to external storage is needed to share your overview.</string>
-    <string name="button_preferences">SET PERMISSION</string>
-    <string name="directions_set_permissions">Select \'Permissions\' and enable \'Storage.\'</string>
-    <string name="error_processing_overview">Error processing the overview. Please try again.</string>
     <string name="title_exercises">EXERCISES</string>
 
     <!-- Award Strings -->
