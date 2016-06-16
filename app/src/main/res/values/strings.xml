@@ -192,7 +192,6 @@
 
     <!-- Buttons -->
     <string name="start">START</string>
-    <string name="next_exercise">NEXT EXERCISE</string>
 
     <!-- Menu Strings-->
     <string name="notifications">Notifications %1$s</string>
@@ -253,7 +252,7 @@
 
     <string name="share_processing">Exercising is tough, and so is sharing. Please wait.</string>
 
-    <!-- Overview Strings-->
+    <!-- Overview Strings -->
     <string name="title_overview">Overview</string>
     <string name="header_overview">%1$s Overview</string>
     <string name="title_finish_routine">Finish Routine</string>

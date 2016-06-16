@@ -64,7 +64,6 @@ public class NotificationHandler
     public void addAward(AwardDialogContent award)
     {
         AwardDialogContent adc = getAward(award);
-
         if (adc != null)
         {
             adc.incrementAmount();

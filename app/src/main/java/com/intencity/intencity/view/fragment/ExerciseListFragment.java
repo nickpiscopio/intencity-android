@@ -239,8 +239,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         else
         {
             CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.title_finish_routine), context.getString(R.string.description_finish_routine), true);
-            dialog.setPositiveButtonStringRes(R.string.title_finish);
-            dialog.setNegativeButtonStringRes(android.R.string.cancel);
+            dialog.setPositiveButtonStringRes(android.R.string.cancel);
+            dialog.setNegativeButtonStringRes(R.string.title_finish);
 
             new CustomDialog(context, dialogListener, dialog, true);
         }
@@ -256,7 +256,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         {
             switch (which)
             {
-                case Constant.POSITIVE_BUTTON:
+                case Constant.NEGATIVE_BUTTON:
                     finishedExercising();
                     break;
                 default:
