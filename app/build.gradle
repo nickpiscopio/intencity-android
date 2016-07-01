@@ -9,7 +9,7 @@ android {
         targetSdkVersion 23
         // Intencity's version for Google Play.
         versionCode 54
-        versionName "2.5"
+        versionName "2.5.1"
     }
     buildTypes {
         release {

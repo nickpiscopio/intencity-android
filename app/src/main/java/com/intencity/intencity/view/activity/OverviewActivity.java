@@ -142,8 +142,8 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
                 return true;
             case R.id.finish:
                 CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.title_finish_routine), context.getString(R.string.description_finish_routine), true);
-                dialog.setPositiveButtonStringRes(android.R.string.cancel);
-                dialog.setNegativeButtonStringRes(R.string.title_finish);
+                dialog.setPositiveButtonStringRes(R.string.title_finish);
+                dialog.setNegativeButtonStringRes(R.string.title_share);
 
                 new CustomDialog(OverviewActivity.this, dialogListener, dialog, true);
                 return true;
@@ -492,8 +492,11 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         {
             switch (which)
             {
-                case Constant.NEGATIVE_BUTTON:
+                case Constant.POSITIVE_BUTTON:
                     goBack();
+                    break;
+                case Constant.NEGATIVE_BUTTON:
+                    share();
                     break;
                 default:
                     break;
