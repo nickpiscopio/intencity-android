@@ -71,13 +71,14 @@ public class SearchExerciseListAdapter extends ArrayAdapter<Exercise>
         boolean includedInIntencity = exercise.isIncludedInIntencity();
 
         LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout);
+        LinearLayout layoutExerciseName = (LinearLayout) view.findViewById(R.id.layout_exercise_name);
         TextView name = (TextView) view.findViewById(R.id.text_view_name);
         TextView description = (TextView) view.findViewById(R.id.text_view_description);
         name.setText(exerciseName);
 
         if (includedInIntencity)
         {
-            name.setOnClickListener(new View.OnClickListener()
+            layoutExerciseName.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)

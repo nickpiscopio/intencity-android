@@ -17,10 +17,12 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/layout_exercise_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="@dimen/layout_margin"
+            android:background="@drawable/button_card"
             android:orientation="vertical">
 
             <TextView
@@ -29,7 +31,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/card_title_size"
                 android:textColor="@color/secondary_dark"
-                android:background="@drawable/button_card"
                 android:text="Dumbbell Curl"/>
 
             <TextView
