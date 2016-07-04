@@ -1,6 +1,7 @@
 package com.intencity.intencity.view.activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 
 import org.json.JSONArray;
@@ -76,6 +78,8 @@ public class EquipmentActivity extends AppCompatActivity
 
         new ServiceTask(getEquipmentServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                 Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EQUIPMENT, email));
+
+        setUserSetEquipment();
     }
 
     @Override
@@ -259,4 +263,16 @@ public class EquipmentActivity extends AppCompatActivity
             finish();
         }
     };
+
+    /**
+     * Saves the user set the equipment.
+     */
+    private void setUserSetEquipment()
+    {
+        SecurePreferences sp = new SecurePreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+
+        editor.putBoolean(Constant.USER_SET_EQUIPMENT, true);
+        editor.apply();
+    }
 }

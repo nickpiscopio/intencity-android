@@ -15,6 +15,11 @@ public class CustomDialogContent
     private int positiveButtonStringRes;
     private int negativeButtonStringRes;
 
+    public CustomDialogContent(String title)
+    {
+        this.title = title;
+    }
+
     public CustomDialogContent(String title, String message, boolean includeNegativeButton)
     {
         this.title = title;

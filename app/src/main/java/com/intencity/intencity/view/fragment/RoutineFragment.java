@@ -16,18 +16,23 @@ import com.intencity.intencity.helper.doa.ExerciseDao;
 import com.intencity.intencity.helper.doa.IntencityRoutineDao;
 import com.intencity.intencity.helper.doa.UserRoutineDao;
 import com.intencity.intencity.listener.DatabaseListener;
+import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
-import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.model.RoutineSection;
+import com.intencity.intencity.model.SelectableListItem;
+import com.intencity.intencity.notification.CustomDialogContent;
+import com.intencity.intencity.notification.ToastDialog;
 import com.intencity.intencity.task.GetExerciseTask;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.RoutineKey;
 import com.intencity.intencity.util.RoutineState;
 import com.intencity.intencity.util.RoutineType;
+import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
+import com.intencity.intencity.view.activity.EquipmentActivity;
 import com.intencity.intencity.view.activity.RoutineIntencityActivity;
 import com.intencity.intencity.view.activity.RoutineSavedActivity;
 
@@ -40,7 +45,8 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 12/12/15.
  */
-public class RoutineFragment extends android.support.v4.app.Fragment implements DatabaseListener
+public class RoutineFragment extends android.support.v4.app.Fragment implements DatabaseListener,
+                                                                                DialogListener
 {
     private Context context;
 
@@ -60,6 +66,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     private ArrayList<RoutineSection> sections;
 
     private int sectionSelected;
+
+    private SecurePreferences securePreferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -87,6 +95,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         listView.addHeaderView(header, null, false);
         listView.addFooterView(footer, null, false);
         listView.setOnItemClickListener(routineClickListener);
+
+        showEquipmentToastIfNeeded();
 
         return view;
     }
@@ -125,9 +135,27 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     }
 
     /**
+     * Checks if the user set his or her equipment yet. If not, we show the set equipment toast.
+     */
+    private void showEquipmentToastIfNeeded()
+    {
+        securePreferences = new SecurePreferences(context);
+
+        boolean userHasSetEquipment = securePreferences.getBoolean(Constant.USER_SET_EQUIPMENT, false);
+
+        if (!userHasSetEquipment)
+        {
+            CustomDialogContent content = new CustomDialogContent(context.getString(R.string.title_set_equipment));
+            content.setPositiveButtonStringRes(R.string.title_button_set_equipment);
+
+            new ToastDialog(context, content, this);
+        }
+    }
+
+    /**
      * The service listener for getting the Intencity Routine names.
      */
-    public ServiceListener intencityRoutineServiceListener = new ServiceListener()
+    private ServiceListener intencityRoutineServiceListener = new ServiceListener()
     {
         @Override
         public void onRetrievalSuccessful(String response)
@@ -158,7 +186,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     /**
      * The service listener for getting the Intencity Routine names.
      */
-    public ServiceListener savedRoutineServiceListener = new ServiceListener()
+    private ServiceListener savedRoutineServiceListener = new ServiceListener()
     {
         @Override
         public void onRetrievalSuccessful(String response)
@@ -340,5 +368,18 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     public int getRoutineState()
     {
         return routineState;
+    }
+
+    @Override
+    public void onButtonPressed(int which)
+    {
+        switch (which)
+        {
+            case Constant.POSITIVE_BUTTON:
+                startActivity(new Intent(context, EquipmentActivity.class));
+                break;
+            default:
+                break;
+        }
     }
 }
