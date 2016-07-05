@@ -50,7 +50,7 @@
     <string name="title_terms">Terms of Use</string>
     <string name="title_privacy_policy">Privacy Policy</string>
 
-    <string name="title_set_equipment">You are using default equipment.</string>
+    <string name="title_set_equipment">You're using default exercise equipment.</string>
     <string name="title_button_set_equipment">SET EQUIPMENT</string>
 
     <!-- Login Strings -->
