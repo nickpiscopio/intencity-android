@@ -30,6 +30,7 @@ public class ExerciseTable implements BaseColumns
     public static final String COLUMN_REP = "ExerciseRep";
     public static final String COLUMN_DURATION = "ExerciseDuration";
     public static final String COLUMN_DIFFICULTY = "ExerciseDifficulty";
+    public static final String COLUMN_PRIORITY = "ExercisePriority";
     public static final String COLUMN_NOTES = "Notes";
     // Whether a search result is from Intencity or the user typed it in.
     public static final String COLUMN_FROM_INTENCITY = "FromIntencity";

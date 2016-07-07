@@ -91,12 +91,18 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
                     values.put(ExerciseTable.COLUMN_DESCRIPTION, exercise.getDescription());
                     values.put(ExerciseTable.COLUMN_FROM_INTENCITY, exercise.isIncludedInIntencity());
 
+                    int priority = exercise.getPriority();
                     int webId = set.getWebId();
                     float weight = set.getWeight();
                     int reps = set.getReps();
                     int difficulty = set.getDifficulty();
                     String duration = set.getDuration();
                     String notes = set.getNotes();
+
+                    if (priority >= 0)
+                    {
+                        values.put(ExerciseTable.COLUMN_PRIORITY, priority);
+                    }
 
                     if (webId > 0)
                     {

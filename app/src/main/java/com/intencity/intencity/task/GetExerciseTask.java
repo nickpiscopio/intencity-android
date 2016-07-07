@@ -87,6 +87,7 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
 
                 String name = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_NAME));
                 String description = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_DESCRIPTION));
+                int priority = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_PRIORITY));
                 boolean includedInIntencity = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_FROM_INTENCITY)) == 1;
 
                 // If the last exercise name is equal to the last exercise we just got,
@@ -99,6 +100,7 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
                     exercise = new Exercise(new ArrayList<Set>());
                     exercise.setName(name);
                     exercise.setDescription(description);
+                    exercise.setPriority(priority);
                     exercise.setIncludedInIntencity(includedInIntencity);
 
                     exercises.add(exercise);

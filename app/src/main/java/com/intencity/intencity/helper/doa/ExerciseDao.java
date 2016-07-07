@@ -7,6 +7,7 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.ExercisePriorityUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -106,6 +107,16 @@ public class ExerciseDao
                 exercise.setSets(sets);
                 exercise.setIncludedInIntencity(exerciseTableExerciseName.equals("") || !exerciseTableExerciseName.equalsIgnoreCase(Constant.RETURN_NULL));
 
+                // There is a possibility that this will be null.
+                // If it is, then we just don't set the priority.
+                try
+                {
+                    String priority = object.getString(Constant.COLUMN_PRIORITY);
+                    exercise.setPriority(priority.equalsIgnoreCase(Constant.RETURN_NULL) ?
+                                                 ExercisePriorityUtil.PRIORITY_LIMIT_UPPER / 2 : Integer.parseInt(priority));
+                }
+                catch (Exception e) { }
+
                 // This determines if what we searched for has been returned from the database.
                 // This is not case sensitive.
                 if (!searchString.equals("") && !foundSearchResult && name.equalsIgnoreCase(searchString))
@@ -136,11 +147,12 @@ public class ExerciseDao
     public Exercise getInjuryPreventionExercise(ExerciseType type)
     {
         Exercise exercise = getNewExercise(context.getString(type == ExerciseType.WARM_UP ? R.string.warm_up : R.string.stretch),
-                                             Constant.RETURN_NULL,
-                                             Constant.RETURN_NULL,
-                                             Constant.RETURN_NULL,
-                                             Constant.RETURN_NULL,
-                                             true);
+                                           Constant.RETURN_NULL,
+                                           Constant.RETURN_NULL,
+                                           Constant.RETURN_NULL,
+                                           Constant.RETURN_NULL,
+                                           Constant.RETURN_NULL,
+                                           true);
 
         exercise.setDescription(context.getString(type == ExerciseType.WARM_UP ? R.string.warm_up_description : R.string.stretch_description));
 
@@ -157,7 +169,7 @@ public class ExerciseDao
      */
     public Exercise getExercise(String exerciseName, boolean includedInIntencity)
     {
-        return getNewExercise(exerciseName, Constant.RETURN_NULL, Constant.RETURN_NULL, Constant.RETURN_NULL, Constant.RETURN_NULL, includedInIntencity);
+        return getNewExercise(exerciseName, Constant.RETURN_NULL, Constant.RETURN_NULL, Constant.RETURN_NULL, Constant.RETURN_NULL, Constant.RETURN_NULL, includedInIntencity);
     }
 
     /**
@@ -169,11 +181,12 @@ public class ExerciseDao
      * @param duration              The duration the user did.
      *                              Usually in 00:00:00 format.
      * @param difficulty            The difficulty from 1-10.
+     * @param priority              The priority of the exercise from the web database.
      * @param includedInIntencity   Boolean value of whether the exercise is from Intencity.
      *
      * @return  The new exercise.
      */
-    public Exercise getNewExercise(String name, String weight, String reps, String duration, String difficulty, boolean includedInIntencity)
+    public Exercise getNewExercise(String name, String weight, String reps, String duration, String difficulty, String priority, boolean includedInIntencity)
     {
         Set set = new Set();
         set.setWeight(weight.equalsIgnoreCase(Constant.RETURN_NULL) ? (int) Constant.CODE_FAILED :
@@ -189,6 +202,7 @@ public class ExerciseDao
         Exercise exercise = new Exercise();
         exercise.setName(name);
         exercise.setSets(sets);
+        exercise.setPriority(priority.equalsIgnoreCase(Constant.RETURN_NULL) ? (int) Constant.CODE_FAILED : Integer.valueOf(weight));
         exercise.setIncludedInIntencity(includedInIntencity);
 
         return exercise;

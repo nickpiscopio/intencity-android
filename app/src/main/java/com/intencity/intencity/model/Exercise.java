@@ -17,6 +17,7 @@ public class Exercise implements Parcelable
 
     private String name;
     private String description;
+    private int priority;
 
     private ArrayList<Set> sets;
 
@@ -37,7 +38,9 @@ public class Exercise implements Parcelable
         sets = new ArrayList<>();
         in.readTypedList(sets, Set.CREATOR);
 
-        includedInIntencity = in.readInt() == 1;
+        includedInIntencity = in.readByte() != 0;
+
+        priority = in.readInt();
     }
 
     public static final Creator<Exercise> CREATOR = new Creator<Exercise>()
@@ -67,7 +70,8 @@ public class Exercise implements Parcelable
         dest.writeString(name);
         dest.writeString(description);
         dest.writeTypedList(sets);
-        dest.writeInt(includedInIntencity ? 1 : 0);
+        dest.writeByte((byte) (includedInIntencity ? 1 : 0));
+        dest.writeInt(priority);
     }
 
     /**
@@ -101,6 +105,16 @@ public class Exercise implements Parcelable
     public void setDescription(String description)
     {
         this.description = description;
+    }
+
+    public int getPriority()
+    {
+        return priority;
+    }
+
+    public void setPriority(int priority)
+    {
+        this.priority = priority;
     }
 
     public ArrayList<Set> getSets()
