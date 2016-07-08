@@ -448,7 +448,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             updateRoutineName(completedExerciseNum);
             currentExercises.add(allExercises.get(autoFillTo++));
 
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemInserted(position + 1);
         }
 
         // Scroll to the bottom of the list.
