@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.ExerciseListener;
+import com.intencity.intencity.util.ExercisePriorityUtil;
 import com.intencity.intencity.util.RoutineState;
 
 /**
@@ -121,7 +122,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         @Override
         public void onClick(View v)
         {
-            listener.onSetExercisePriority(position, true);
+            listener.onSetExercisePriority(position, morePriority, lessPriority, true);
         }
     };
 
@@ -133,7 +134,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
         @Override
         public void onClick(View v)
         {
-            listener.onSetExercisePriority(position, false);
+            listener.onSetExercisePriority(position, morePriority, lessPriority, false);
         }
     };
 
@@ -154,7 +155,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
      *                              i.e. Custom, Intencity, Saved
      * @param includedInIntencity   Boolean value of whether the exercise is included in Intencity. 
      */
-    public void setExercise(String exerciseName, String description, int routineState, boolean includedInIntencity)
+    public void setExercise(String exerciseName, String description, int routineState, int priority, boolean includedInIntencity)
     {
         if (description != null)
         {
@@ -175,6 +176,8 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
                 exerciseLayout.setOnClickListener(exerciseClickListener);
                 exercise.setTextColor(ContextCompat.getColor(context, R.color.primary));
                 priorityLayout.setVisibility(routineState == RoutineState.INTENCITY ? View.VISIBLE : View.GONE);
+
+                ExercisePriorityUtil.setPriorityButtons(priority, morePriority, lessPriority);
             }
             else
             {

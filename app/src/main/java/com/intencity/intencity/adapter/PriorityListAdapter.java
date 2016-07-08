@@ -133,6 +133,8 @@ public class PriorityListAdapter extends ArrayAdapter<String>
                     break;
             }
 
+            ExercisePriorityUtil.setPriorityButtons(priority, holder.morePriority, holder.lessPriority);
+
             holder.morePriority.setOnClickListener(new View.OnClickListener()
             {
                 @Override

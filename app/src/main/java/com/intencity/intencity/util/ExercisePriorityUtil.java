@@ -1,5 +1,10 @@
 package com.intencity.intencity.util;
 
+import android.view.View;
+import android.widget.ImageButton;
+
+import com.intencity.intencity.R;
+
 /**
  * A utility class for the exercise priorities.
  *
@@ -19,7 +24,7 @@ public class ExercisePriorityUtil
      *
      * @return The new exercise priority.
      */
-    public int getExercisePriority(int priority, boolean increment)
+    public static int getExercisePriority(int priority, boolean increment)
     {
         if (priority < PRIORITY_LIMIT_UPPER && increment)
         {
@@ -31,5 +36,47 @@ public class ExercisePriorityUtil
         }
 
         return priority;
+    }
+
+    /**
+     * Sets the exercise priority buttons.
+     *
+     * @param priority          The current priority for the exercise.
+     * @param morePriority      The more priority ImageButton.
+     * @param lessPriority      The less priority ImageButton.
+     */
+    public static void setPriorityButtons(int priority, ImageButton morePriority, ImageButton lessPriority)
+    {
+        switch (priority)
+        {
+            case PRIORITY_LIMIT_UPPER:
+                morePriority.setVisibility(View.INVISIBLE);
+                lessPriority.setVisibility(View.VISIBLE);
+                lessPriority.setImageResource(R.mipmap.thumb_down_outline);
+                break;
+            case PRIORITY_LIMIT_UPPER -  INCREMENTAL_VALUE:
+                morePriority.setVisibility(View.VISIBLE);
+                morePriority.setImageResource(R.mipmap.thumb_up);
+                lessPriority.setVisibility(View.VISIBLE);
+                lessPriority.setImageResource(R.mipmap.thumb_down_outline);
+                break;
+            case PRIORITY_LIMIT_LOWER + INCREMENTAL_VALUE:
+                morePriority.setVisibility(View.VISIBLE);
+                morePriority.setImageResource(R.mipmap.thumb_up_outline);
+                lessPriority.setVisibility(View.VISIBLE);
+                lessPriority.setImageResource(R.mipmap.thumb_down);
+                break;
+            case PRIORITY_LIMIT_LOWER:
+                morePriority.setVisibility(View.VISIBLE);
+                morePriority.setImageResource(R.mipmap.thumb_up_outline);
+                lessPriority.setVisibility(View.INVISIBLE);
+                break;
+            default:
+                morePriority.setVisibility(View.VISIBLE);
+                morePriority.setImageResource(R.mipmap.thumb_up_outline);
+                lessPriority.setVisibility(View.VISIBLE);
+                lessPriority.setImageResource(R.mipmap.thumb_down_outline);
+                break;
+        }
     }
 }

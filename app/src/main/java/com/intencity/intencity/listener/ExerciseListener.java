@@ -1,5 +1,7 @@
 package com.intencity.intencity.listener;
 
+import android.widget.ImageButton;
+
 import java.io.Serializable;
 
 /**
@@ -12,5 +14,5 @@ public interface ExerciseListener extends Serializable
     void onExerciseClicked(int position);
     void onStatClicked(int position);
     void onHideClicked(int position);
-    void onSetExercisePriority(int position, boolean increasing);
+    void onSetExercisePriority(int position, ImageButton morePriority, ImageButton lessPriority, boolean increment);
 }

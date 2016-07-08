@@ -34,6 +34,7 @@ import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.task.SetExerciseTask;
 import com.intencity.intencity.util.Badge;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.ExercisePriorityUtil;
 import com.intencity.intencity.util.RoutineState;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
@@ -603,26 +604,33 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     }
 
     @Override
-    public void onSetExercisePriority(int position, boolean increasing)
+    public void onSetExercisePriority(int position, ImageButton morePriority, ImageButton lessPriority, boolean increment)
     {
         this.position = position;
 
-        String exerciseName = currentExercises.get(position).getName();
+        Exercise exercise = currentExercises.get(position);
+
+        String exerciseName = exercise.getName();
+
+        int priority = ExercisePriorityUtil.getExercisePriority(exercise.getPriority(), increment);
+        exercise.setPriority(priority);
+        ExercisePriorityUtil.setPriorityButtons(priority, morePriority, lessPriority);
 
         // Set the exercise priority on the web server.
         // The ServiceListener is null because we don't care if it reached the server.
         // The worst that will happen is a user will have to click the exercise priority again.
         new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_SET_EXERCISE_PRIORITY,
-                                                                                 email, exerciseName, increasing ? "1" : "0"));
+                                                                                 email, exerciseName, increment ? "1" : "0"));
 
-        if (!increasing)
+        // Remove the exercise if the user decremented it and it is less than 0.
+        if (priority == ExercisePriorityUtil.PRIORITY_LIMIT_LOWER && !increment)
         {
             animateRemoveItem(this.position, false);
         }
 
         // Displays a toast to the user telling them they will see an exercise more or less.
-        Toast.makeText(context, context.getString(increasing ? R.string.more_priority_string : R.string.less_priority_string, exerciseName), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, context.getString(increment ? R.string.more_priority_string : R.string.less_priority_string, exerciseName), Toast.LENGTH_LONG).show();
     }
 
     @Override

@@ -53,8 +53,6 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
 
     private ArrayAdapter<String> adapter;
 
-    private ExercisePriorityUtil exercisePriorityUtil;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -77,8 +75,6 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
 
         SecurePreferences securePreferences = new SecurePreferences(context);
         email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
-
-        exercisePriorityUtil = new ExercisePriorityUtil();
 
         new ServiceTask(getExclusionService).execute(Constant.SERVICE_STORED_PROCEDURE,
                 Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EXERCISE_PRIORITIES, email));
@@ -233,7 +229,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
     @Override
     public void onSetExercisePriority(int position, int priority, boolean increment)
     {
-        priority = exercisePriorityUtil.getExercisePriority(priority, increment);
+        priority = ExercisePriorityUtil.getExercisePriority(priority, increment);
 
         exercisePriorities.set(position, String.valueOf(priority));
 
