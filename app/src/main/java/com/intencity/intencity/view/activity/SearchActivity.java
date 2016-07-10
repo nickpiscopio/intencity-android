@@ -3,6 +3,7 @@ package com.intencity.intencity.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -42,6 +43,10 @@ import java.util.ArrayList;
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
                                                                  SearchListener
 {
+    // The milliseconds it takes to search for an exercise.
+    // We want this because the user might be typing, and we don't want to flood the server with searches.
+    private final long SEARCH_EXECUTE_MILLIS = 1300;
+
     private LinearLayout connectionIssue;
 
     private ProgressBar progressBar;
@@ -64,6 +69,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     private String searchString;
 
     private ArrayAdapter arrayAdapter = null;
+
+    private Handler searchExecutionHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -116,18 +123,34 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     @Override
-    public boolean onQueryTextChange(String newText)
+    public boolean onQueryTextChange(final String query)
     {
+        progressBar.setVisibility(View.VISIBLE);
+
+        connectionIssue.setVisibility(View.GONE);
+
+        if (searchExecutionHandler != null)
+        {
+            searchExecutionHandler.removeMessages(0);
+        }
+
+        // Get a handler that can be used to post to the main thread
+        searchExecutionHandler = new Handler(context.getMainLooper());
+        searchExecutionHandler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                onQueryTextSubmit(query);
+            }
+        }, SEARCH_EXECUTE_MILLIS);
+
         return false;
     }
 
     @Override
     public boolean onQueryTextSubmit(String query)
     {
-        progressBar.setVisibility(View.VISIBLE);
-
-        connectionIssue.setVisibility(View.GONE);
-
         searchString = query;
 
         SecurePreferences securePreferences = new SecurePreferences(context);
