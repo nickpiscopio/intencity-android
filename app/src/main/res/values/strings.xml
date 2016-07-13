@@ -136,6 +136,8 @@
 
     <string name="routine_total_description">Completed Exercises: %1$s\nExercises in Routine: %2$s</string>
 
+    <string name="action_button_search_directions">HOLD</string>
+
     <!-- Exercise List Strings -->
     <string name="more_priority_string">You will see %1$s more.</string>
     <string name="less_priority_string">You will see %1$s less.</string>

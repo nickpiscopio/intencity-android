@@ -95,20 +95,7 @@
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/button_inactive"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginRight="@dimen/inactive_button_margin_right"
-        android:layout_marginBottom="@dimen/inactive_button_margin_bottom"
-        android:src="@mipmap/ic_plus_white"
-        android:scaleX="0.5"
-        android:scaleY="0.5"
-        app:layout_anchor="@id/recycler_view"
-        app:layout_anchorGravity="bottom|right|end"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/button_active"
+        android:id="@+id/button_add_exercise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
@@ -116,6 +103,35 @@
         android:src="@mipmap/ic_plus_white"
         app:layout_anchor="@id/recycler_view"
         app:layout_anchorGravity="bottom|right|end"/>
+
+    <LinearLayout
+        android:id="@+id/layout_search_exercise_directions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/layout_margin_three_quarters"
+        android:gravity="center_vertical"
+
+        android:orientation="horizontal"
+        app:layout_anchor="@id/button_add_exercise"
+        app:layout_anchorGravity="bottom|center_horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/magnifying_margin"
+            android:alpha=".215"
+            android:src="@mipmap/magnifying_glass"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_button_search_directions"
+            android:alpha=".2"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="@dimen/card_title4_size"/>
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
 

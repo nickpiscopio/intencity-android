@@ -8,6 +8,7 @@
     <dimen name="logo_margin">32dp</dimen>
 
     <dimen name="layout_margin">16dp</dimen>
+    <dimen name="layout_margin_three_quarters">12dp</dimen>
     <dimen name="layout_margin_half">8dp</dimen>
     <dimen name="layout_margin_quarter">4dp</dimen>
     <dimen name="rounded_corner_radius">4dp</dimen>
@@ -27,6 +28,7 @@
     <dimen name="card_title_size">16sp</dimen>
     <dimen name="card_title2_size">12sp</dimen>
     <dimen name="card_title3_size">10sp</dimen>
+    <dimen name="card_title4_size">8sp</dimen>
     <dimen name="card_text_size">14sp</dimen>
 
     <!-- Needs to add up to @dimen/layout_margin-->
@@ -51,5 +53,8 @@
     <dimen name="overview_logo_size">25dp</dimen>
     <dimen name="badge_amount_size">26dp</dimen>
     <dimen name="badge_amount_padding">-15dp</dimen>
+
+    <!-- Exercise List -->
+    <dimen name="magnifying_margin">3dp</dimen>
 
 </resources>

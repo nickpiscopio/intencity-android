@@ -2,10 +2,8 @@ package com.intencity.intencity.view.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -55,7 +53,7 @@ import java.util.Date;
  */
 public class ExerciseListFragment extends android.support.v4.app.Fragment implements ExerciseListener, SaveRoutineListener, LoadingListener
 {
-    private enum ActiveButtonState
+    private enum AddExerciseButtonState
     {
         INTENCITY,
         SEARCH
@@ -72,8 +70,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     private ImageButton save;
 
-    private FloatingActionButton activeButton;
-    private FloatingActionButton inactiveButton;
+    private FloatingActionButton addExerciseButton;
+
+    private LinearLayout searchDirectionsLayout;
 
     private RecyclerView recyclerView;
 
@@ -101,7 +100,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     private int routineState;
 
-    private ActiveButtonState activeButtonState = ActiveButtonState.INTENCITY;
+    private AddExerciseButtonState addExerciseButtonState = AddExerciseButtonState.INTENCITY;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -112,8 +111,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         ImageButton finish = (ImageButton) view.findViewById(R.id.finish);
         ImageButton info = (ImageButton) view.findViewById(R.id.info);
         save = (ImageButton) view.findViewById(R.id.save);
-        activeButton = (FloatingActionButton)  view.findViewById(R.id.button_active);
-        inactiveButton = (FloatingActionButton)  view.findViewById(R.id.button_inactive);
+        addExerciseButton = (FloatingActionButton) view.findViewById(R.id.button_add_exercise);
+        searchDirectionsLayout = (LinearLayout) view.findViewById(R.id.layout_search_exercise_directions);
 
         context = getContext();
 
@@ -126,9 +125,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         finish.setOnClickListener(finishClickListener);
         info.setOnClickListener(infoClickListener);
         save.setOnClickListener(saveClickListener);
-        activeButton.setOnClickListener(activeButtonClickListener);
-        inactiveButton.setOnClickListener(inactiveButtonClickListener);
-        inactiveButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.page_background)));
+        addExerciseButton.setOnClickListener(addExerciseButtonClickListener);
 
         Bundle bundle = getArguments();
 
@@ -192,34 +189,13 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         switch (routineState)
         {
             case RoutineState.CUSTOM:
-                activeButtonState = ActiveButtonState.SEARCH;
-                inactiveButton.setVisibility(View.GONE);
+                addExerciseButtonState = AddExerciseButtonState.SEARCH;
+                searchDirectionsLayout.setVisibility(View.GONE);
                 break;
             case RoutineState.SAVED:
                 TOTAL_EXERCISE_NUM = allExercises.size();
             default:
-                break;
-        }
-
-        setButtonImages();
-    }
-
-    /**
-     * Sets the button images for the active and inactive buttons.
-     */
-    private void setButtonImages()
-    {
-        switch (activeButtonState)
-        {
-            case INTENCITY:
-                activeButton.setImageResource(R.mipmap.next_light);
-                inactiveButton.setImageResource(R.mipmap.magnyfying_dark);
-                break;
-            case SEARCH:
-                activeButton.setImageResource(R.mipmap.ic_magnify_white);
-                inactiveButton.setImageResource(R.mipmap.next_dark);
-                break;
-            default:
+                addExerciseButton.setOnLongClickListener(addExerciseButtonLongClickListener);
                 break;
         }
     }
@@ -319,14 +295,14 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     };
 
     /**
-     * The active button exercise click listener.
+     * The add exercise button click listener.
      */
-    private View.OnClickListener activeButtonClickListener = new View.OnClickListener()
+    private View.OnClickListener addExerciseButtonClickListener = new View.OnClickListener()
     {
         @Override
         public void onClick(View v)
         {
-            switch (activeButtonState)
+            switch (addExerciseButtonState)
             {
                 case INTENCITY:
 
@@ -343,13 +319,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
                 case SEARCH:
 
-                    // Open the search to search for a new exercise.
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean(Constant.BUNDLE_SEARCH_EXERCISES, true);
-                    bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, currentExercises);
-                    Intent intent = new Intent(ExerciseListFragment.this.getActivity(), SearchActivity.class);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, Constant.REQUEST_CODE_SEARCH);
+                    openSearchScreen();
 
                     break;
 
@@ -360,28 +330,30 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     };
 
     /**
-     * The inactive button exercise click listener.
+     * The long click listener for the add exercise button click.
      */
-    private View.OnClickListener inactiveButtonClickListener = new View.OnClickListener()
+    private View.OnLongClickListener addExerciseButtonLongClickListener = new View.OnLongClickListener()
     {
         @Override
-        public void onClick(View v)
+        public boolean onLongClick(View v)
         {
-            switch (activeButtonState)
-            {
-                case INTENCITY:
-                    activeButtonState = ActiveButtonState.SEARCH;
-                    break;
-                case SEARCH:
-                    activeButtonState = ActiveButtonState.INTENCITY;
-                    break;
-                default:
-                    break;
-            }
-
-            setButtonImages();
+            openSearchScreen();
+            return false;
         }
     };
+
+    /**
+     * Opens the search screen to search for an exercise.
+     */
+    private void openSearchScreen()
+    {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(Constant.BUNDLE_SEARCH_EXERCISES, true);
+        bundle.putParcelableArrayList(Constant.BUNDLE_EXERCISE_LIST, currentExercises);
+        Intent intent = new Intent(ExerciseListFragment.this.getActivity(), SearchActivity.class);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, Constant.REQUEST_CODE_SEARCH);
+    }
 
     /**
      * The service listener for saving a routine.
