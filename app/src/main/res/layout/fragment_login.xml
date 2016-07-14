@@ -137,9 +137,10 @@
 
             <TextView
                 android:id="@+id/btn_try_intencity"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/try_intencity"
+                android:gravity="center_horizontal"
                 android:background="@drawable/button_card"
                 android:padding="@dimen/card_button_padding"
                 android:layout_marginLeft="@dimen/layout_margin"

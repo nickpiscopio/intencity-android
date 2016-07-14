@@ -163,6 +163,7 @@ public class ExerciseViewHolder extends RecyclerView.ViewHolder
             this.description.setVisibility(View.VISIBLE);
             this.exerciseEditLayout.setVisibility(View.GONE);
             this.hide.setVisibility(View.GONE);
+            exerciseLayout.setOnClickListener(exerciseClickListener);
             this.exercise.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
         }
         else

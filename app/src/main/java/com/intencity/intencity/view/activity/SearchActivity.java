@@ -284,7 +284,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         try
         {
             ArrayList<Exercise> searchedExerciseResults = dao.parseJson(response, searchString);
-            arrayAdapter  = new SearchExerciseListAdapter(context, R.layout.list_item_search_exercise, searchedExerciseResults, exercises, SearchActivity.this);
+            arrayAdapter  = new SearchExerciseListAdapter(context, searchedExerciseResults, exercises, SearchActivity.this);
             listView.setAdapter(arrayAdapter);
         }
         catch (JSONException e)

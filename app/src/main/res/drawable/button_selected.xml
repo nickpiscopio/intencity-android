@@ -4,6 +4,6 @@
     <corners
         android:radius="@dimen/rounded_corner_radius" />
 
-    <solid android:color="@color/card_button_delete_deselect" />
+    <solid android:color="@color/button_select" />
 
 </shape>

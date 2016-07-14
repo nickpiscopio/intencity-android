@@ -21,9 +21,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:dividerHeight="@dimen/divider_height"
+        android:dividerHeight="@dimen/divider_height_search"
         android:divider="@color/shadow"/>
 
-    <include layout="@layout/divider"/>
+    <View
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height_search"
+        android:background="@color/shadow"/>
 
 </LinearLayout>

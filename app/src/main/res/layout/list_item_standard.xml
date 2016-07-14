@@ -13,13 +13,7 @@
         android:background="?android:attr/selectableItemBackground"
         android:padding="@dimen/layout_margin">
 
-        <TextView
-            android:id="@+id/text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/card_title_size"
-            android:paddingLeft="@dimen/layout_margin_half"
-            android:textColor="@color/secondary_dark"/>
+        <include layout="@layout/text_view_standard"/>
 
     </FrameLayout>
 

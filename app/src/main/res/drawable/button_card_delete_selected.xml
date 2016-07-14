@@ -1,9 +1,0 @@
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-       android:shape="rectangle" >
-
-    <corners
-        android:radius="@dimen/rounded_corner_radius" />
-
-    <solid android:color="@color/card_button_delete_select" />
-
-</shape>

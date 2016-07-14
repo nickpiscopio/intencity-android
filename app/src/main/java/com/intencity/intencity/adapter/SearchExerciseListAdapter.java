@@ -37,14 +37,13 @@ public class SearchExerciseListAdapter extends ArrayAdapter<Exercise>
      * The constructor.
      *
      * @param context                   The application context.
-     * @param resId                     The layout resource id for the list item.
      * @param searchExerciseResults     The list of exercises from the search.
      * @param currentExercises          The list of exercises the user has currently completed.
      * @param listener                  The SearchListener to call when we click on the add button.
      */
-    public SearchExerciseListAdapter(Context context, int resId, ArrayList<Exercise> searchExerciseResults, ArrayList<Exercise> currentExercises, SearchListener listener)
+    public SearchExerciseListAdapter(Context context, ArrayList<Exercise> searchExerciseResults, ArrayList<Exercise> currentExercises, SearchListener listener)
     {
-        super(context, resId, searchExerciseResults);
+        super(context, 0, searchExerciseResults);
 
         this.context = context;
 

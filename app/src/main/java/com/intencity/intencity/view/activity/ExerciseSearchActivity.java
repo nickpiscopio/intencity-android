@@ -127,7 +127,7 @@ public class ExerciseSearchActivity extends AppCompatActivity implements Service
                 exercises.add(exerciseName);
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, exercises);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.list_item_standard, R.id.text_view, exercises);
             listView.setAdapter(adapter);
 
             divider.setVisibility(View.VISIBLE);
@@ -157,7 +157,7 @@ public class ExerciseSearchActivity extends AppCompatActivity implements Service
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            TextView textView = (TextView) view.findViewById(android.R.id.text1);
+            TextView textView = (TextView) view.findViewById(R.id.text_view);
 
             Intent intent = new Intent(context, Direction.class);
             intent.putExtra(Constant.BUNDLE_EXERCISE_NAME, textView.getText().toString());

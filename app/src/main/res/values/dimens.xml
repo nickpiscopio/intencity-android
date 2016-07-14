@@ -19,6 +19,7 @@
     <dimen name="related_item_margin">5dp</dimen>
 
     <dimen name="divider_height">0.5dp</dimen>
+    <dimen name="divider_height_search">0.01dp</dimen>
 
     <dimen name="demo_title_size">26sp</dimen>
     <dimen name="demo_text_size">16sp</dimen>
