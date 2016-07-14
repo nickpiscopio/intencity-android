@@ -502,7 +502,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         allExercises.remove(position);
         adapter.animateRemoveItem(position);
 
-        if (fromSearch || currentExercises.size() < allExercises.size())
+        if (fromSearch)
         {
             currentExercises.add(allExercises.get(autoFillTo - 1));
         }
