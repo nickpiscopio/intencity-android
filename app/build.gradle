@@ -8,8 +8,8 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         // Intencity's version for Google Play.
-        versionCode 58
-        versionName "2.5.4"
+        versionCode 59
+        versionName "2.5.5"
     }
     buildTypes {
         release {
