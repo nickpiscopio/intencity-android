@@ -55,7 +55,7 @@
                     android:id="@+id/amount"
                     android:layout_width="@dimen/badge_amount_size"
                     android:layout_height="@dimen/badge_amount_size"
-                    android:textColor="@color/white"
+                    android:textColor="@android:color/white"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:textSize="@dimen/card_title3_size"

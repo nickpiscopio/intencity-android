@@ -53,12 +53,6 @@ import java.util.Date;
  */
 public class ExerciseListFragment extends android.support.v4.app.Fragment implements ExerciseListener, SaveRoutineListener, LoadingListener
 {
-    private enum AddExerciseButtonState
-    {
-        INTENCITY,
-        SEARCH
-    }
-
     private final int EXERCISE_MIN_SAVE_THRESHOLD = 2;
     private int TOTAL_EXERCISE_NUM = 7;
 
@@ -99,8 +93,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private ArrayList<String> awards = new ArrayList<>();
 
     private int routineState;
-
-    private AddExerciseButtonState addExerciseButtonState = AddExerciseButtonState.INTENCITY;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -189,7 +181,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         switch (routineState)
         {
             case RoutineState.CUSTOM:
-                addExerciseButtonState = AddExerciseButtonState.SEARCH;
                 searchDirectionsLayout.setVisibility(View.GONE);
                 break;
             case RoutineState.SAVED:
@@ -302,10 +293,15 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         @Override
         public void onClick(View v)
         {
-            switch (addExerciseButtonState)
+            switch (routineState)
             {
-                case INTENCITY:
+                case RoutineState.CUSTOM:
 
+                    openSearchScreen();
+
+                    break;
+
+                default:
                     if (currentExercises.size() == allExercises.size())
                     {
                         displayOverview();
@@ -315,15 +311,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                         addExercise(false);
                     }
 
-                    break;
-
-                case SEARCH:
-
-                    openSearchScreen();
-
-                    break;
-
-                default:
                     break;
             }
         }
