@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -486,7 +488,23 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void animateRemoveItem(int position, boolean fromSearch)
     {
-        allExercises.remove(position);
+        Exercise exerciseToRemove = allExercises.get(position);
+
+        String title = context.getString(R.string.undo_hide_exercise_title, exerciseToRemove.getName());
+
+        Snackbar snackbar = Snackbar
+                .make(recyclerView, title, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.undo_hide_button, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                    }
+                })
+                .setActionTextColor(ContextCompat.getColor(context, R.color.accent));
+        snackbar.show();
+
+        allExercises.remove(exerciseToRemove);
         adapter.animateRemoveItem(position);
 
         if (fromSearch)

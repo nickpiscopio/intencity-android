@@ -40,7 +40,7 @@ public class ToastDialog
         int dialogTimeout = 4000;
 
         final Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.dialog_clickable_toast);
+        dialog.setContentView(R.layout.dialog_toast_clickable);
 
         Window window = dialog.getWindow();
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

@@ -138,6 +138,9 @@
 
     <string name="action_button_search_directions">HOLD</string>
 
+    <string name="undo_hide_exercise_title">You removed %1$s from today\'s workout.</string>
+    <string name="undo_hide_button">UNDO</string>
+
     <!-- Exercise List Strings -->
     <string name="more_priority_string">You will see %1$s more.</string>
     <string name="less_priority_string">You will see %1$s less.</string>
