@@ -24,6 +24,7 @@ import com.intencity.intencity.listener.LoadingListener;
 import com.intencity.intencity.listener.SaveRoutineListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
+import com.intencity.intencity.model.IndexedExercise;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.notification.AwardDialogContent;
 import com.intencity.intencity.notification.CustomDialog;
@@ -55,11 +56,15 @@ import java.util.Date;
  */
 public class ExerciseListFragment extends android.support.v4.app.Fragment implements ExerciseListener, SaveRoutineListener, LoadingListener
 {
-    private final int EXERCISE_MIN_SAVE_THRESHOLD = 2;
+    private static final int EXERCISE_MIN_SAVE_THRESHOLD = 2;
     private int TOTAL_EXERCISE_NUM = 7;
 
     private ArrayList<Exercise> allExercises;
     private ArrayList<Exercise> currentExercises;
+
+    private ArrayList<String> awards = new ArrayList<>();
+
+    private Context context;
 
     private TextView routineProgress;
     private TextView routine;
@@ -74,11 +79,12 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     private ExerciseAdapter adapter;
 
-    private Context context;
+    private Snackbar snackbar;
 
     private int completedExerciseNum = 0;
     private int position;
     private int autoFillTo;
+    private int routineState;
 
     private LoadingListener loadingListener;
 
@@ -92,13 +98,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private String stretchExerciseName;
     private String savedRoutineName;
 
-    private ArrayList<String> awards = new ArrayList<>();
-
-    private int routineState;
-
-    private int removedExerciseIndex = (int)Constant.CODE_FAILED;
-
-    private Snackbar snackbar;
+    private IndexedExercise indexedExercise;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -375,11 +375,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void addExercise(boolean addingExerciseFromSearch)
     {
-        if (removedExerciseIndex > (int)Constant.CODE_FAILED)
-        {
-            removeExerciseFromList(removedExerciseIndex);
-        }
-
         // If there is 1 exercise left, we want to display the stretch.
         // We remove all the unnecessary exercises.
         if (!addingExerciseFromSearch && TOTAL_EXERCISE_NUM - completedExerciseNum <= 1)
@@ -414,8 +409,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         }
         else
         {
-            completedExerciseNum++;
-            updateRoutineName(completedExerciseNum);
+            updateRoutineName(++completedExerciseNum);
             currentExercises.add(allExercises.get(autoFillTo++));
 
             adapter.notifyItemInserted(position + 1);
@@ -490,6 +484,25 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     }
 
     /**
+     * Insert an exercise back into the array.
+     *
+     * @param indexedExercise   The exercise with an index that is being inserted into the array.
+     */
+    private void insertExercise(IndexedExercise indexedExercise)
+    {
+        Exercise exercise = indexedExercise.getExercise();
+        int index = indexedExercise.getIndex();
+
+        allExercises.add(index, exercise);
+        currentExercises.add(index, exercise);
+
+        adapter.insertItem(indexedExercise);
+
+        updateRoutineName(++completedExerciseNum);
+        autoFillTo++;
+    }
+
+    /**
      * Animates the removal of an item from the exercise list.
      *
      * @param position      The position in the list to remove.
@@ -497,11 +510,12 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void animateRemoveItem(int position, boolean fromSearch)
     {
-        removedExerciseIndex = position;
+        final Exercise exerciseToRemove = allExercises.get(position);
 
-        final Exercise exerciseToRemove = allExercises.get(removedExerciseIndex);
+        indexedExercise = new IndexedExercise(position, exerciseToRemove);
 
-        adapter.animateRemoveItem(removedExerciseIndex);
+        allExercises.remove(exerciseToRemove);
+        adapter.animateRemoveItem(position);
 
         if (fromSearch)
         {
@@ -520,10 +534,10 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                         @Override
                         public void onClick(View view)
                         {
-                            // Reset the index so we can add the same exercise back.
-                            removedExerciseIndex = (int)Constant.CODE_FAILED;
+                            insertExercise(indexedExercise);
 
-                            addExercise(false);
+                            // Reset the model so we can use it again later.
+                            indexedExercise = null;
                         }
                     })
                     .setActionTextColor(ContextCompat.getColor(context, R.color.accent));

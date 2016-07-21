@@ -12,6 +12,7 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.viewholder.ExerciseViewHolder;
 import com.intencity.intencity.listener.ExerciseListener;
 import com.intencity.intencity.model.Exercise;
+import com.intencity.intencity.model.IndexedExercise;
 import com.intencity.intencity.model.Set;
 import com.intencity.intencity.util.Constant;
 
@@ -102,6 +103,21 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     /**
+     * Insert an item into the array and updates the array indicies.
+     *
+     * @param indexedExercise   The exercise that was inserted into the array.
+     */
+    public void insertItem(IndexedExercise indexedExercise)
+    {
+        int pos = indexedExercise.getIndex();
+
+        lastPosition++;
+
+        notifyItemInserted(pos);
+        notifyArrayChanged(pos);
+    }
+
+    /**
      * Animates an item being removed from the adapter.
      *
      * @param pos   The position of the item being removed.
@@ -115,6 +131,19 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         exercises.remove(exercise);
 
         notifyItemRemoved(pos);
+        notifyArrayChanged(pos);
+    }
+
+    /**
+     * Notifies the range has changed in the array from a certain position.
+     *
+     * This updates the indexes of the rest of the items, so we can add and remove items successfully.
+     * If this isn't here then we will hit X on items and it will remove the exercise below or above because the indexes are wrong.
+     *
+     * @param pos   The position in the array that was changed.
+     */
+    private void notifyArrayChanged(int pos)
+    {
         notifyItemRangeChanged(pos, getItemCount() - 1);
     }
 }
