@@ -106,7 +106,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      *
      * @param pos   The position of the item being removed.
      */
-    public void animateRemoveItem(final int pos)
+    public void animateRemoveItem(int pos)
     {
         Exercise exercise = exercises.get(pos);
 

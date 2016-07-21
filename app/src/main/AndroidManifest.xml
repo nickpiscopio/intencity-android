@@ -60,7 +60,7 @@
 
         <activity
             android:name=".view.activity.RoutineIntencityActivity"
-            android:label="@string/title_intencity_routines"
+            android:label="@string/title_featured_routines"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
 

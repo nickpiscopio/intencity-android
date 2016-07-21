@@ -162,7 +162,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         {
             try
             {
-                sections.add(new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_intencity_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, new IntencityRoutineDao().parseJson(context, response)));
+                sections.add(new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_featured_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, new IntencityRoutineDao().parseJson(context, response)));
 
                 adapter.notifyDataSetChanged();
 
@@ -320,7 +320,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
             if (resultCode == Constant.REQUEST_ROUTINE_UPDATED)
             {
-                sections.add(sectionSelected, new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_intencity_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, rows));
+                sections.add(sectionSelected, new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_featured_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, rows));
             }
             else
             {

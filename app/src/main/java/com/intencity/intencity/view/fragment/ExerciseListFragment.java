@@ -96,6 +96,10 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     private int routineState;
 
+    private int removedExerciseIndex = (int)Constant.CODE_FAILED;
+
+    private Snackbar snackbar;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -371,6 +375,11 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void addExercise(boolean addingExerciseFromSearch)
     {
+        if (removedExerciseIndex > (int)Constant.CODE_FAILED)
+        {
+            removeExerciseFromList(removedExerciseIndex);
+        }
+
         // If there is 1 exercise left, we want to display the stretch.
         // We remove all the unnecessary exercises.
         if (!addingExerciseFromSearch && TOTAL_EXERCISE_NUM - completedExerciseNum <= 1)
@@ -488,24 +497,11 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void animateRemoveItem(int position, boolean fromSearch)
     {
-        Exercise exerciseToRemove = allExercises.get(position);
+        removedExerciseIndex = position;
 
-        String title = context.getString(R.string.undo_hide_exercise_title, exerciseToRemove.getName());
+        final Exercise exerciseToRemove = allExercises.get(removedExerciseIndex);
 
-        Snackbar snackbar = Snackbar
-                .make(recyclerView, title, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.undo_hide_button, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                    }
-                })
-                .setActionTextColor(ContextCompat.getColor(context, R.color.accent));
-        snackbar.show();
-
-        allExercises.remove(exerciseToRemove);
-        adapter.animateRemoveItem(position);
+        adapter.animateRemoveItem(removedExerciseIndex);
 
         if (fromSearch)
         {
@@ -513,6 +509,26 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         }
         else
         {
+            String title = context.getString(R.string.undo_hide_exercise_title, exerciseToRemove.getName());
+
+            // Show the message that the exercise was removed.
+            // This allows users to undo removing the exercise.
+            snackbar = Snackbar
+                    .make(recyclerView, title, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.undo_hide_button, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            // Reset the index so we can add the same exercise back.
+                            removedExerciseIndex = (int)Constant.CODE_FAILED;
+
+                            addExercise(false);
+                        }
+                    })
+                    .setActionTextColor(ContextCompat.getColor(context, R.color.accent));
+            snackbar.show();
+
             autoFillTo--;
 
             updateTotalExercises();
@@ -526,6 +542,17 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             // Can't get the Kept Swimming badge.
             Util.setExerciseSkipped(securePreferences, true);
         }
+    }
+
+    private void undoRemovalOfExercise()
+    {
+
+    }
+
+    private void removeExerciseFromList(int pos)
+    {
+        allExercises.remove(pos);
+        snackbar.dismiss();
     }
 
     @Override

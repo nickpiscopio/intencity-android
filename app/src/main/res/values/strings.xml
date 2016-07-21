@@ -101,17 +101,17 @@
     <string name="routine_continue">CONTINUE %1$s</string>
     <string name="title_custom_routine">Custom Routine</string>
     <string name="title_custom_routines">Custom Routines</string>
-    <string name="title_intencity_routines">Intencity Routines</string>
+    <string name="title_featured_routines">Featured Routines</string>
     <string name="title_default_routines">Default Routines</string>
     <string name="title_saved_routines">Saved Routines</string>
     <string name="description_custom_routines">BUILD A ROUTINE AS YOU EXERCISE</string>
     <string name="description_default_routine">SELECT FROM %1$s ROUTINE</string>
     <string name="description_default_routines">SELECT FROM %1$s ROUTINES</string>
     <string name="key_user_selected">Users can input their own exercises.</string>
-    <string name="key_random">Utilizes Intencity\'s algorithm to select exercises.</string>
+    <string name="key_random">Intencity\'s algorithm is utilized to generate routines.</string>
     <string name="key_consecutive">Consecutive list of exercises.</string>
-    <string name="intencity_routine_description">These routines utilize Intencity\'s algorithm to select exercises. They also allow users to input exercises.</string>
-    <string name="user_routine_description">These routines have a consecutive set of exercises. They also allow users to input exercises.</string>
+    <string name="intencity_routine_description">Intencity\'s algorithm is utilized to generate routines. Users also have the ability to input exercises.</string>
+    <string name="user_routine_description">These routines have a consecutive set of exercises. Users also have the ability to input exercises.</string>
 
     <string name="edit_custom_routines_title">Edit Custom Routines</string>
     <string name="edit_routines_description1">Below are the custom routines you have created.</string>
