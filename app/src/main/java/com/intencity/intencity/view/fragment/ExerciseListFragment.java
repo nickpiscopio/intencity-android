@@ -375,6 +375,12 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
      */
     private void addExercise(boolean addingExerciseFromSearch)
     {
+        // Dismiss the snackbar if it is being shown.
+        if (snackbar != null && snackbar.isShown())
+        {
+            snackbar.dismiss();
+        }
+
         // If there is 1 exercise left, we want to display the stretch.
         // We remove all the unnecessary exercises.
         if (!addingExerciseFromSearch && TOTAL_EXERCISE_NUM - completedExerciseNum <= 1)
@@ -556,17 +562,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             // Can't get the Kept Swimming badge.
             Util.setExerciseSkipped(securePreferences, true);
         }
-    }
-
-    private void undoRemovalOfExercise()
-    {
-
-    }
-
-    private void removeExerciseFromList(int pos)
-    {
-        allExercises.remove(pos);
-        snackbar.dismiss();
     }
 
     @Override
