@@ -27,7 +27,6 @@ import com.intencity.intencity.notification.ToastDialog;
 import com.intencity.intencity.task.GetExerciseTask;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.RoutineKey;
 import com.intencity.intencity.util.RoutineState;
 import com.intencity.intencity.util.RoutineType;
 import com.intencity.intencity.util.SecurePreferences;
@@ -74,7 +73,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     {
         View view = inflater.inflate(R.layout.fragment_routine, container, false);
         View header = inflater.inflate(R.layout.list_item_routine_header, null);
-        View footer = inflater.inflate(R.layout.list_item_routine_footer, null);
 
         listView = (ListView) view.findViewById(R.id.list_view);
 
@@ -93,7 +91,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         adapter  = new RoutineSectionAdapter(context, R.layout.list_item_routine, sections);
         listView.setAdapter(adapter);
         listView.addHeaderView(header, null, false);
-        listView.addFooterView(footer, null, false);
         listView.setOnItemClickListener(routineClickListener);
 
         showEquipmentToastIfNeeded();
@@ -119,15 +116,15 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
             sections.clear();
         }
 
-        sections.add(new RoutineSection(RoutineType.CUSTOM_ROUTINE, getString(R.string.title_custom_routine), new int[] { RoutineKey.USER_SELECTED }, null));
+        sections.add(new RoutineSection(RoutineType.CUSTOM_ROUTINE, getString(R.string.title_custom_routine), null));
 
-        // Get the Intencity Routines
+        // Get the Featured Routines
         new ServiceTask(intencityRoutineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                                  Constant.generateStoredProcedureParameters(
                                                                     Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS,
                                                                     email));
 
-        // Get the saved routines
+        // Get the Saved Routines
         new ServiceTask(savedRoutineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                                  Constant.generateStoredProcedureParameters(
                                                                     Constant.STORED_PROCEDURE_GET_USER_ROUTINE,
@@ -162,7 +159,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         {
             try
             {
-                sections.add(new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_featured_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, new IntencityRoutineDao().parseJson(context, response)));
+                sections.add(new RoutineSection(RoutineType.FEATURED_ROUTINE, getString(R.string.title_featured_routines), new IntencityRoutineDao().parseJson(context, response)));
 
                 adapter.notifyDataSetChanged();
 
@@ -195,7 +192,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
             {
                 if (!response.equalsIgnoreCase(Constant.RETURN_NULL))
                 {
-                    sections.add(new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.CONSECUTIVE }, new UserRoutineDao().parseJson(response)));
+                    sections.add(new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new UserRoutineDao().parseJson(response)));
 
                     adapter.notifyDataSetChanged();
                 }
@@ -255,7 +252,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
                     break;
 
-                case INTENCITY_ROUTINE:
+                case FEATURED_ROUTINE:
 
                     routineState = RoutineState.INTENCITY;
 
@@ -301,7 +298,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
             this.routineName = routineName;
             this.previousExercises = (ArrayList<Exercise>)results;
 
-            sections.add(0, new RoutineSection(RoutineType.CONTINUE, getString(R.string.routine_continue, routineName.toUpperCase()), null, null));
+            sections.add(0, new RoutineSection(RoutineType.CONTINUE, getString(R.string.routine_continue, routineName.toUpperCase()), null));
 
             adapter.notifyDataSetChanged();
         }
@@ -320,13 +317,13 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
             if (resultCode == Constant.REQUEST_ROUTINE_UPDATED)
             {
-                sections.add(sectionSelected, new RoutineSection(RoutineType.INTENCITY_ROUTINE, getString(R.string.title_featured_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.RANDOM }, rows));
+                sections.add(sectionSelected, new RoutineSection(RoutineType.FEATURED_ROUTINE, getString(R.string.title_featured_routines), rows));
             }
             else
             {
                 if (rows.size() > 0)
                 {
-                    sections.add(sectionSelected, new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new int[] { RoutineKey.USER_SELECTED, RoutineKey.CONSECUTIVE }, rows));
+                    sections.add(sectionSelected, new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), rows));
                 }
             }
 

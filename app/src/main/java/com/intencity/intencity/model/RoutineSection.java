@@ -18,8 +18,6 @@ public class RoutineSection implements Parcelable
 
     private String title;
 
-    private int[] keys;
-
     private ArrayList<SelectableListItem> rows;
 
     /**
@@ -27,14 +25,12 @@ public class RoutineSection implements Parcelable
      *
      * @param type      The type of rotine.
      * @param title     The title of the section.
-     * @param keys      The int equivalents to what dot is being shown for each routine, which will correlate to the routine key.
      * @param rows      The routine rows for each section.
      */
-    public RoutineSection(RoutineType type, String title, int[] keys, ArrayList<SelectableListItem> rows)
+    public RoutineSection(RoutineType type, String title, ArrayList<SelectableListItem> rows)
     {
         this.type = type;
         this.title = title;
-        this.keys = keys;
         this.rows = rows;
     }
 
@@ -42,8 +38,6 @@ public class RoutineSection implements Parcelable
     {
         type = RoutineType.valueOf(in.readString());
         title = in.readString();
-
-        in.readIntArray(keys);
 
         rows = new ArrayList<>();
         in.readTypedList(rows, SelectableListItem.CREATOR);
@@ -75,7 +69,6 @@ public class RoutineSection implements Parcelable
     {
         dest.writeString(type.name());
         dest.writeString(title);
-        dest.writeIntArray(keys);
         dest.writeTypedList(rows);
     }
 
@@ -100,11 +93,6 @@ public class RoutineSection implements Parcelable
     public void setTitle(String title)
     {
         this.title = title;
-    }
-
-    public int[] getKeys()
-    {
-        return keys;
     }
 
     public ArrayList<SelectableListItem> getRoutineRows()

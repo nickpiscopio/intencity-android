@@ -16,10 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.model.RoutineSection;
+import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.RoutineKey;
 import com.intencity.intencity.util.RoutineType;
 
 import java.util.ArrayList;
@@ -69,9 +68,7 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
 
         this.context = context;
         this.res = context.getResources();
-
         this.layoutResId = layoutResId;
-
         this.sections = sections;
 
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -111,7 +108,6 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
 
         ArrayList<SelectableListItem> rows = section.getRoutineRows();
 
-        int[] keys = section.getKeys();
         String description;
 
         if (rows != null)
@@ -120,7 +116,7 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
 
             routineTotal += rows.size();
 
-            if (type == RoutineType.INTENCITY_ROUTINE)
+            if (type == RoutineType.FEATURED_ROUTINE)
             {
                 for (int i = 0; i < 2; i++)
                 {
@@ -142,8 +138,15 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
 
         holder.title.setText(section.getTitle());
 
-        // This means we aren't using the continue routine card.
-        if (keys != null)
+        if (section.getType() == RoutineType.CONTINUE)
+        {
+            holder.title.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
+            holder.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimension(R.dimen.card_continue_title_size));
+            holder.description.setVisibility(View.GONE);
+            holder.imageView.setVisibility(View.GONE);
+            holder.nextImage.setVisibility(View.VISIBLE);
+        }
+        else
         {
             holder.title.setTextColor(ContextCompat.getColor(context, android.R.color.white));
             holder.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimension(R.dimen.card_title_size));
@@ -153,56 +156,23 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
             holder.imageView.setVisibility(View.VISIBLE);
             holder.nextImage.setVisibility(View.GONE);
 
-            for (int key : keys)
-            {
-                ImageView imageView = new ImageView(context);
-
-                switch (key)
-                {
-                    case RoutineKey.USER_SELECTED:
-                        imageView.setImageResource(R.drawable.circle_red);
-                        break;
-                    case RoutineKey.RANDOM:
-                        imageView.setImageResource(R.drawable.circle_active);
-                        break;
-                    case RoutineKey.CONSECUTIVE:
-                        imageView.setImageResource(R.drawable.circle_primary_dark);
-                        break;
-                    default:
-                        break;
-                }
-
-                imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                imageView.setPadding(res.getDimensionPixelSize(R.dimen.layout_margin_quarter), 0, 0, 0);
-
-                holder.indicatorLayout.addView(imageView);
-            }
-
             switch (type)
             {
                 case CUSTOM_ROUTINE:
                     holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.secondary_dark));
                     holder.imageView.setImageResource(R.mipmap.custom_routine_background);
                     break;
-                case INTENCITY_ROUTINE:
-                    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.secondary_light));
+                case FEATURED_ROUTINE:
+                    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.accent));
                     holder.imageView.setImageResource(R.mipmap.intencity_routine_background);
                     break;
                 case SAVED_ROUTINE:
-                    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.primary));
+                    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.primary_dark));
                     holder.imageView.setImageResource(R.mipmap.saved_routine_background);
                     break;
                 default:
                     break;
             }
-        }
-        else
-        {
-            holder.title.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
-            holder.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimension(R.dimen.card_continue_title_size));
-            holder.description.setVisibility(View.GONE);
-            holder.imageView.setVisibility(View.GONE);
-            holder.nextImage.setVisibility(View.VISIBLE);
         }
 
         setAnimation(holder.cardView, position);

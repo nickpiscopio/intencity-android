@@ -9,6 +9,6 @@ public enum RoutineType
 {
     CONTINUE,
     CUSTOM_ROUTINE,
-    INTENCITY_ROUTINE,
+    FEATURED_ROUTINE,
     SAVED_ROUTINE
 }
