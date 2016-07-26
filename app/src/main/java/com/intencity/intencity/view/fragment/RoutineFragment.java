@@ -38,6 +38,8 @@ import com.intencity.intencity.view.activity.RoutineSavedActivity;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * The Routine Fragment for Intencity.
@@ -62,6 +64,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
     private RoutineSectionAdapter adapter;
 
+    private Map<Integer, RoutineSection> sectionMap;
     private ArrayList<RoutineSection> sections;
 
     private int sectionSelected;
@@ -80,6 +83,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
         email = Util.getSecurePreferencesEmail(context);
 
+        sectionMap = new TreeMap<>();
         sections = new ArrayList<>();
 
         initRoutineCards();
@@ -105,18 +109,19 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     {
         listener.onStartLoading();
 
-        int size = sections.size();
+        sectionMap.clear();
 
+        int size = sections.size();
         if (size > 0 && sections.get(0).getType() == RoutineType.CONTINUE)
         {
-            sections.removeAll(sections.subList(1, size));
+            sections.removeAll(sections.subList(RoutineType.CONTINUE.ordinal(), size));
         }
         else
         {
             sections.clear();
         }
 
-        sections.add(new RoutineSection(RoutineType.CUSTOM_ROUTINE, getString(R.string.title_custom_routine), null));
+        insertSection(RoutineType.CUSTOM_ROUTINE, new RoutineSection(RoutineType.CUSTOM_ROUTINE, getString(R.string.title_custom_routine), null), false);
 
         // Get the Featured Routines
         new ServiceTask(intencityRoutineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
@@ -159,9 +164,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         {
             try
             {
-                sections.add(new RoutineSection(RoutineType.FEATURED_ROUTINE, getString(R.string.title_featured_routines), new IntencityRoutineDao().parseJson(context, response)));
-
-                adapter.notifyDataSetChanged();
+                insertSection(RoutineType.FEATURED_ROUTINE, new RoutineSection(RoutineType.FEATURED_ROUTINE, getString(R.string.title_featured_routines), new IntencityRoutineDao().parseJson(context, response)), true);
 
                 listener.onFinishedLoading(Constant.CODE_NULL);
             }
@@ -192,9 +195,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
             {
                 if (!response.equalsIgnoreCase(Constant.RETURN_NULL))
                 {
-                    sections.add(new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new UserRoutineDao().parseJson(response)));
-
-                    adapter.notifyDataSetChanged();
+                    insertSection(RoutineType.SAVED_ROUTINE, new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new UserRoutineDao().parseJson(response)), true);
                 }
 
                 listener.onFinishedLoading(Constant.CODE_NULL);
@@ -298,9 +299,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
             this.routineName = routineName;
             this.previousExercises = (ArrayList<Exercise>)results;
 
-            sections.add(0, new RoutineSection(RoutineType.CONTINUE, getString(R.string.routine_continue, routineName.toUpperCase()), null));
-
-            adapter.notifyDataSetChanged();
+            insertSection(RoutineType.CONTINUE, new RoutineSection(RoutineType.CONTINUE, getString(R.string.routine_continue, routineName.toUpperCase()), null), true);
         }
     }
 
@@ -336,6 +335,28 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
             previousExercises = data.getParcelableArrayListExtra(Constant.BUNDLE_EXERCISE_LIST);
 
             listener.onFinishedLoading(Constant.ID_FRAGMENT_EXERCISE_LIST);
+        }
+    }
+
+    /**
+     * Inserts a routine section into the map and then into the section ArrayList.
+     * We do this so we can give an order to the sections.
+     *
+     * @param routineType       The RoutineType of the section. This will be it's index.
+     * @param routineSection    The RoutineSection we are adding.
+     * @param notifyChange      Boolean value of whether we are notifying the adapter that we've added an item.
+     */
+    private void insertSection(RoutineType routineType, RoutineSection routineSection, boolean notifyChange)
+    {
+        sectionMap.put(routineType.ordinal(), routineSection);
+
+        // sort and add to sections.
+        sections.clear();
+        sections.addAll(new ArrayList<>(sectionMap.values()));
+
+        if (notifyChange)
+        {
+            adapter.notifyDataSetChanged();
         }
     }
 

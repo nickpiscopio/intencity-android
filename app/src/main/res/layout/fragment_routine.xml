@@ -8,6 +8,8 @@
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/layout_margin_half"
+        android:clipToPadding="false"
         android:listSelector="@android:color/transparent"
         android:divider="@null"
         android:dividerHeight="0dp"/>

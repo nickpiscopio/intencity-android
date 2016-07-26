@@ -8,7 +8,7 @@ package com.intencity.intencity.util;
 public enum RoutineType
 {
     CONTINUE,
-    CUSTOM_ROUTINE,
     FEATURED_ROUTINE,
-    SAVED_ROUTINE
+    SAVED_ROUTINE,
+    CUSTOM_ROUTINE
 }

@@ -18,6 +18,8 @@ public class RoutineSection implements Parcelable
 
     private String title;
 
+    private boolean shouldAnimate;
+
     private ArrayList<SelectableListItem> rows;
 
     /**
@@ -32,6 +34,7 @@ public class RoutineSection implements Parcelable
         this.type = type;
         this.title = title;
         this.rows = rows;
+        this.shouldAnimate = true;
     }
 
     private RoutineSection(Parcel in)
@@ -41,6 +44,8 @@ public class RoutineSection implements Parcelable
 
         rows = new ArrayList<>();
         in.readTypedList(rows, SelectableListItem.CREATOR);
+
+        shouldAnimate = in.readByte() == 1;
     }
 
     public static final Creator<RoutineSection> CREATOR = new Creator<RoutineSection>()
@@ -70,6 +75,7 @@ public class RoutineSection implements Parcelable
         dest.writeString(type.name());
         dest.writeString(title);
         dest.writeTypedList(rows);
+        dest.writeByte(shouldAnimate ? 1 : (byte)0);
     }
 
     /**
@@ -93,6 +99,16 @@ public class RoutineSection implements Parcelable
     public void setTitle(String title)
     {
         this.title = title;
+    }
+
+    public boolean shouldAnimate()
+    {
+        return shouldAnimate;
+    }
+
+    public void shouldAnimate(boolean shouldAnimate)
+    {
+        this.shouldAnimate = shouldAnimate;
     }
 
     public ArrayList<SelectableListItem> getRoutineRows()
