@@ -86,8 +86,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         sectionMap = new TreeMap<>();
         sections = new ArrayList<>();
 
-        initRoutineCards();
-
         // Gets routines from the device database if it has any.
         // This will be added to the CONTINUE Card.
         new GetExerciseTask(context, this).execute();
@@ -96,6 +94,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         listView.setAdapter(adapter);
         listView.addHeaderView(header, null, false);
         listView.setOnItemClickListener(routineClickListener);
+
+        initRoutineCards();
 
         showEquipmentToastIfNeeded();
 
@@ -109,19 +109,20 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     {
         listener.onStartLoading();
 
+        // Clear the entire map because we are reinitializing it.
         sectionMap.clear();
 
         int size = sections.size();
-        if (size > 0 && sections.get(0).getType() == RoutineType.CONTINUE)
+        if (size > 0 && sections.get(RoutineType.CONTINUE.ordinal()).getType() == RoutineType.CONTINUE)
         {
-            sections.removeAll(sections.subList(RoutineType.CONTINUE.ordinal(), size));
-        }
-        else
-        {
-            sections.clear();
+            // Only reinsert the first section because it is the CONTINUE card.
+            insertSection(RoutineType.CONTINUE, sections.get(RoutineType.CONTINUE.ordinal()), false);
         }
 
-        insertSection(RoutineType.CUSTOM_ROUTINE, new RoutineSection(RoutineType.CUSTOM_ROUTINE, getString(R.string.title_custom_routine), null), false);
+        // Clear the entire section array because we are reinitializing it.
+        sections.clear();
+
+        insertSection(RoutineType.CUSTOM_ROUTINE, new RoutineSection(RoutineType.CUSTOM_ROUTINE, getString(R.string.title_custom_routine), null), true);
 
         // Get the Featured Routines
         new ServiceTask(intencityRoutineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
