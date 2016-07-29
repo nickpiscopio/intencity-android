@@ -17,6 +17,7 @@
     <dimen name="shadow_small">0.5dp</dimen>
     <dimen name="element_margin">14dp</dimen>
     <dimen name="related_item_margin">5dp</dimen>
+    <dimen name="routine_level_margin">-2dp</dimen>
 
     <dimen name="divider_height">0.5dp</dimen>
     <dimen name="divider_height_search">0.01dp</dimen>

@@ -46,6 +46,7 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
     {
         CardView cardView;
         LinearLayout indicatorLayout;
+        TextView routineLevel;
         TextView title;
         TextView description;
         ImageView nextImage;
@@ -89,6 +90,7 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
             holder = new RoutineHolder();
             holder.cardView = (CardView) convertView.findViewById(R.id.card_view);
             holder.indicatorLayout = (LinearLayout) convertView.findViewById(R.id.layout_indicator);
+            holder.routineLevel = (TextView) convertView.findViewById(R.id.text_view_routine_level);
             holder.title = (TextView) convertView.findViewById(R.id.title);
             holder.description = (TextView) convertView.findViewById(R.id.description);
             holder.nextImage = (ImageView) convertView.findViewById(R.id.image_next);
@@ -155,17 +157,20 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
 
             switch (type)
             {
-                case CUSTOM_ROUTINE:
-                    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.secondary_dark));
-                    holder.imageView.setImageResource(R.mipmap.custom_routine_background);
-                    break;
                 case FEATURED_ROUTINE:
                     holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.accent));
                     holder.imageView.setImageResource(R.mipmap.intencity_routine_background);
+                    holder.routineLevel.setText(R.string.routine_level_beginner);
                     break;
                 case SAVED_ROUTINE:
                     holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.primary_dark));
                     holder.imageView.setImageResource(R.mipmap.saved_routine_background);
+                    holder.routineLevel.setText(R.string.routine_level_intermediate);
+                    break;
+                case CUSTOM_ROUTINE:
+                    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.secondary_dark));
+                    holder.imageView.setImageResource(R.mipmap.custom_routine_background);
+                    holder.routineLevel.setText(R.string.routine_level_expert);
                     break;
                 default:
                     break;

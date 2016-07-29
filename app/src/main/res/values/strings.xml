@@ -96,6 +96,9 @@
     <string name="empty_profile_awards">No activity found.</string>
 
     <!-- Routine Strings -->
+    <string name="routine_level_beginner">BEGINNER</string>
+    <string name="routine_level_intermediate">INTERMEDIATE</string>
+    <string name="routine_level_expert">EXPERT</string>
     <string name="menu_save">SAVE</string>
     <string name="title_routine">What routine would you like to do?</string>
     <string name="routine_continue">CONTINUE %1$s</string>
