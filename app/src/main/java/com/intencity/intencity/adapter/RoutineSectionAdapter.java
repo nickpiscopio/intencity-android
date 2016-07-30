@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
@@ -45,6 +46,7 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
     static class RoutineHolder
     {
         CardView cardView;
+        RelativeLayout routineLevelLayout;
         LinearLayout indicatorLayout;
         TextView routineLevel;
         TextView title;
@@ -89,6 +91,7 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
             // Create a ViewHolder and store references to the two children views
             holder = new RoutineHolder();
             holder.cardView = (CardView) convertView.findViewById(R.id.card_view);
+            holder.routineLevelLayout = (RelativeLayout) convertView.findViewById(R.id.layout_routine_level);
             holder.indicatorLayout = (LinearLayout) convertView.findViewById(R.id.layout_indicator);
             holder.routineLevel = (TextView) convertView.findViewById(R.id.text_view_routine_level);
             holder.title = (TextView) convertView.findViewById(R.id.title);
@@ -139,6 +142,7 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
 
         if (section.getType() == RoutineType.CONTINUE)
         {
+            holder.routineLevelLayout.setVisibility(View.GONE);
             holder.title.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
             holder.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimension(R.dimen.card_continue_title_size));
             holder.description.setVisibility(View.GONE);
@@ -147,6 +151,7 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
         }
         else
         {
+            holder.routineLevelLayout.setVisibility(View.VISIBLE);
             holder.title.setTextColor(ContextCompat.getColor(context, android.R.color.white));
             holder.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimension(R.dimen.card_title_size));
             holder.description.setVisibility(View.VISIBLE);
@@ -165,7 +170,7 @@ public class RoutineSectionAdapter extends ArrayAdapter<RoutineSection>
                 case SAVED_ROUTINE:
                     holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.primary_dark));
                     holder.imageView.setImageResource(R.mipmap.saved_routine_background);
-                    holder.routineLevel.setText(R.string.routine_level_intermediate);
+                    holder.routineLevel.setText(R.string.routine_level_advanced);
                     break;
                 case CUSTOM_ROUTINE:
                     holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.secondary_dark));
