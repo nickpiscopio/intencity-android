@@ -518,8 +518,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     {
         final Exercise exerciseToRemove = allExercises.get(position);
 
-        indexedExercise = new IndexedExercise(position, exerciseToRemove);
-
         allExercises.remove(exerciseToRemove);
         adapter.animateRemoveItem(position);
 
@@ -529,6 +527,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         }
         else
         {
+            indexedExercise = new IndexedExercise(position, exerciseToRemove);
+
             String title = context.getString(R.string.undo_hide_exercise_title, exerciseToRemove.getName());
 
             // Show the message that the exercise was removed.
@@ -554,10 +554,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             updateTotalExercises();
 
             updateRoutineName(--completedExerciseNum);
-        }
 
-        if (!fromSearch)
-        {
             // Add that the user has skipped an exercise.
             // Can't get the Kept Swimming badge.
             Util.setExerciseSkipped(securePreferences, true);
