@@ -208,12 +208,15 @@
                 android:id="@+id/terms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/button_card"
                 android:text="@string/terms_create_account"
                 android:textColor="@color/secondary_dark"
-                android:layout_marginTop="@dimen/related_item_margin"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/card_button_padding"
+                android:layout_marginTop="@dimen/layout_margin"
                 android:layout_marginLeft="@dimen/layout_margin"
                 android:layout_marginRight="@dimen/layout_margin"
-                android:layout_gravity="left"/>
+                android:textSize="@dimen/card_title2_size"/>
 
             <Button
                 android:id="@+id/btn_create_account"
@@ -222,7 +225,7 @@
                 android:text="@string/create_account"
                 android:background="@drawable/button_full"
                 android:textColor="@color/page_background"
-                android:layout_marginTop="@dimen/layout_margin"
+                android:layout_marginTop="@dimen/layout_margin_half"
                 android:layout_marginLeft="@dimen/layout_margin"
                 android:layout_marginRight="@dimen/layout_margin"
                 android:layout_marginBottom="@dimen/layout_margin"

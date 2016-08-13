@@ -4,6 +4,6 @@
     <corners
         android:radius="@dimen/rounded_corner_radius" />
 
-    <solid android:color="@color/secondary_dark"/>
+    <solid android:color="@color/accent"/>
 
 </shape>

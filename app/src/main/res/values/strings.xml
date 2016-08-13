@@ -27,10 +27,11 @@
     <string name="confirm_password">Confirm Password</string>
 
     <string name="terms_button">Terms of Use &amp; Privacy Policy</string>
+    <string name="terms_agreement">By using Intencity, you agree to the @Terms of Use@ and @Privacy Policy@.</string>
     <string name="terms_login">By signing in, you agree to the @Terms of Use@ and @Privacy Policy@.</string>
     <string name="terms_create_account">By creating an account, you agree to the @Terms of Use@ and @Privacy Policy@.</string>
-    <string name="sign_in">SIGN IN</string>
-    <string name="try_intencity">SKIP</string>
+    <string name="have_an_account">Already have an account?</string>
+    <string name="sign_in">Sign In</string>
     <string name="title_forgot_password">Forgot Password</string>
     <string name="reset_password_message">Enter your email, and we\'ll send you a new password.</string>
     <string name="forgot_password_email_sent_title">Password reset</string>
@@ -39,10 +40,6 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="separator">&#183;</string>
     <string name="create_account">Create an account</string>
-
-    <string name="trial_account_title">You are creating a trial account</string>
-    <string name="trial_account_message">By creating a trial account, you agree to the Terms of Use and Privacy Policy. This account will be automatically deleted after 1 week.</string>
-    <string name="create_trial">Create trial account</string>
 
     <string name="title_create_account">Create Account</string>
     <string name="create_account_description">Sign up below for the best possible experience with Intencity.</string>

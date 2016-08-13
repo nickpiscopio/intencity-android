@@ -1,17 +1,17 @@
-package com.intencity.intencity.view.fragment;
+package com.intencity.intencity.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -19,28 +19,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
-import com.intencity.intencity.notification.CustomDialog;
-import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
-import com.intencity.intencity.view.activity.CreateAccountActivity;
-import com.intencity.intencity.view.activity.ForgotPasswordActivity;
-import com.intencity.intencity.view.activity.TermsActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Date;
 
 /**
  * The Login Fragment for Intencity.
  *
  * Created by Nick Piscopio on 12/9/15.
  */
-public class LoginFragment extends android.support.v4.app.Fragment implements ServiceListener
+public class LoginActivity extends AppCompatActivity implements ServiceListener
 {
     private EditText email;
     private EditText password;
@@ -54,32 +46,31 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
     private Context context;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
-        email = (EditText) view.findViewById(R.id.edit_text_email);
-        password = (EditText) view.findViewById(R.id.edit_text_password);
+        email = (EditText) findViewById(R.id.edit_text_email);
+        password = (EditText) findViewById(R.id.edit_text_password);
 
-        loadingProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar_loading);
+        loadingProgressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
 
-        loginForm = (LinearLayout) view.findViewById(R.id.linear_layout_login_form);
+        loginForm = (LinearLayout) findViewById(R.id.linear_layout_login_form);
 
-        terms = (TextView) view.findViewById(R.id.terms);
+        terms = (TextView) findViewById(R.id.terms);
 
-        Button signIn = (Button) view.findViewById(R.id.btn_sign_in);
-        TextView tryIntencity = (TextView) view.findViewById(R.id.btn_try_intencity);
-        TextView forgotPassword = (TextView) view.findViewById(R.id.forgot_password);
-        TextView createAccount = (TextView) view.findViewById(R.id.btn_create_account);
+        Button signIn = (Button) findViewById(R.id.btn_sign_in);
+        TextView forgotPassword = (TextView) findViewById(R.id.forgot_password);
+        TextView createAccount = (TextView) findViewById(R.id.btn_create_account);
 
         password.setTypeface(Typeface.DEFAULT);
 
         signIn.setOnClickListener(signInListener);
-        tryIntencity.setOnClickListener(tryIntencityListener);
         forgotPassword.setOnClickListener(forgotPasswordListener);
         createAccount.setOnClickListener(createAccountListener);
 
-        context = getContext();
+        context = getApplicationContext();
 
         // Sets the progress bar color.
         Util.setProgressBarColor(context, loadingProgressBar);
@@ -110,7 +101,12 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
             terms.setOnClickListener(termsClickListener);
         }
 
-        return view;
+        // Add the back button to the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+        {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     View.OnClickListener signInListener = new View.OnClickListener()
@@ -130,19 +126,6 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
             {
                 checkCredentials(userEmail, userPassword);
             }
-        }
-    };
-
-    View.OnClickListener tryIntencityListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v)
-        {
-            CustomDialogContent dialogContent = new CustomDialogContent(getString(R.string.trial_account_title), getString(R.string.trial_account_message), true);
-            dialogContent.setPositiveButtonStringRes(R.string.create_trial);
-            dialogContent.setNegativeButtonStringRes(R.string.terms_button);
-
-            new CustomDialog(context, trialDialogListener, dialogContent, true);
         }
     };
 
@@ -197,7 +180,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         loadingProgressBar.setVisibility(View.GONE);
         loginForm.setVisibility(View.VISIBLE);
 
-        Util.showMessage(context, title, message);
+        Util.showMessage(LoginActivity.this, title, message);
     }
 
     @Override
@@ -210,7 +193,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
             String email = json.getString(Constant.COLUMN_EMAIL);
             String accountType = json.getString(Constant.COLUMN_ACCOUNT_TYPE);
 
-            Util.loadIntencity(LoginFragment.this.getActivity(), email, accountType, 0);
+            Util.loadIntencity(LoginActivity.this, email, accountType, 0);
         }
         catch (JSONException e)
         {
@@ -243,60 +226,4 @@ public class LoginFragment extends android.support.v4.app.Fragment implements Se
         intent.putExtra(TermsActivity.SHOW_PRIVACY_POLICY, true);
         startActivity(intent);
     }
-
-    /**
-     * The dialog listener for the "Try Intencity" button.
-     */
-    private DialogListener trialDialogListener = new DialogListener()
-    {
-        @Override
-        public void onButtonPressed(int which)
-        {
-            switch (which)
-            {
-                case Constant.POSITIVE_BUTTON: // Create Trial Account
-                    final long createdDate = new Date().getTime();
-
-                    String firstName = "Anonymous";
-                    String lastName = "User";
-                    final String email = lastName + createdDate + "@intencity.fit";
-                    String password = String.valueOf(createdDate);
-
-                    loadingProgressBar.setVisibility(View.VISIBLE);
-                    loginForm.setVisibility(View.GONE);
-
-                    new ServiceTask(new ServiceListener() {
-                        @Override
-                        public void onRetrievalSuccessful(String response)
-                        {
-                            response = response.replaceAll("\"", "");
-
-                            if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
-                            {
-                                Util.loadIntencity(LoginFragment.this.getActivity(), email, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
-                            }
-                            else
-                            {
-                                showMessage(context.getString(R.string.login_error_title),
-                                            context.getString(
-                                                    R.string.intencity_communication_error));
-                            }
-                        }
-
-                        @Override
-                        public void onRetrievalFailed() { }
-                    }).execute(Constant.SERVICE_CREATE_ACCOUNT,
-                               Constant.getAccountParameters(firstName, lastName, email, password,
-                                                             Constant.ACCOUNT_TYPE_MOBILE_TRIAL));
-                    break;
-                case Constant.NEGATIVE_BUTTON: // Open terms
-
-                    openTerms();
-
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 }

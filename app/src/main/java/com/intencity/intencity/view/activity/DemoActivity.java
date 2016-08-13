@@ -1,18 +1,18 @@
 package com.intencity.intencity.view.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.ViewPagerAdapter;
-import com.intencity.intencity.view.fragment.LoginFragment;
-import com.intencity.intencity.view.fragment.PagerFragment;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.view.fragment.GetStartedFragment;
+import com.intencity.intencity.view.fragment.PagerFragment;
 
 /**
  * Screens to demo the application before the user logs into Intencity.
@@ -41,7 +41,7 @@ public class DemoActivity extends FragmentActivity
     private ImageView pager3;
     private ImageView pager4;
 
-    private ImageButton next;
+    private FloatingActionButton next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -56,7 +56,7 @@ public class DemoActivity extends FragmentActivity
         adapter.addFrag(getNewPagerFragment(FITNESS_DIRECTION), "");
         adapter.addFrag(getNewPagerFragment(FITNESS_LOG), "");
         adapter.addFrag(getNewPagerFragment(RANKING), "");
-        adapter.addFrag(new LoginFragment(), "");
+        adapter.addFrag(new GetStartedFragment(), "");
 
         Bundle extras = getIntent().getExtras();
         int pageToStart = extras.getInt(Constant.EXTRA_DEMO_PAGE);
@@ -69,7 +69,7 @@ public class DemoActivity extends FragmentActivity
         pager3 = (ImageView) findViewById(R.id.pager_3);
         pager4 = (ImageView) findViewById(R.id.pager_4);
 
-        next = (ImageButton) findViewById(R.id.button_next);
+        next = (FloatingActionButton) findViewById(R.id.button_next);
         next.setOnClickListener(nextListener);
 
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -160,9 +160,11 @@ public class DemoActivity extends FragmentActivity
                     pager3.setImageResource(PAGER_UNSELECTED_RESOURCE);
                     pager4.setImageResource(PAGER_SELECTED_RESOURCE);
 
+                    next.setVisibility(View.VISIBLE);
                     navigation.setVisibility(View.VISIBLE);
                     break;
                 case LOG_IN:
+                    next.setVisibility(View.GONE);
                     navigation.setVisibility(View.GONE);
                     break;
                 default:
