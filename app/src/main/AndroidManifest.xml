@@ -32,9 +32,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
 
+        <!-- We set the title in the activity -->
         <activity
             android:name=".view.activity.CreateAccountActivity"
-            android:label="@string/title_create_account"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
 

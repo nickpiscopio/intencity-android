@@ -155,7 +155,7 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
 
         recyclerView = (TwoWayView) findViewById(R.id.list);
 
-        adapter = new ProfileAdapter(context, profileSections);
+        adapter = new ProfileAdapter(profileSections);
 
         recyclerView.setAdapter(adapter);
 

@@ -68,6 +68,11 @@ public class MenuActivity extends AppCompatActivity
         {
             menuItems.add(new MenuItem(getString(R.string.change_password), ChangePasswordActivity.class));
         }
+        else
+        {
+            menuItems.add(new MenuItem(getString(R.string.convert_account), CreateAccountActivity.class, getCreateAccountBundle()));
+        }
+
         menuItems.add(new MenuItem(logOutTitle, null));
         menuItems.add(new MenuItem(getString(R.string.title_app), null));
         menuItems.add(new MenuItem(getString(R.string.title_about), AboutActivity.class));
@@ -167,6 +172,18 @@ public class MenuActivity extends AppCompatActivity
         Bundle bundle = new Bundle();
         bundle.putBoolean(TermsActivity.IS_TERMS, isTerms);
         bundle.putBoolean(TermsActivity.SHOW_PRIVACY_POLICY, false);
+        return bundle;
+    }
+
+    /**
+     * Gets the bundle for the create account activity.
+
+     * @return  The bundle for the create account activity.
+     */
+    private Bundle getCreateAccountBundle()
+    {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(CreateAccountActivity.BUNDLE_CREATE_ACCOUNT_FROM_TRIAL, true);
         return bundle;
     }
 

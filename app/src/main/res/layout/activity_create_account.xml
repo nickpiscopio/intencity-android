@@ -222,7 +222,6 @@
                 android:id="@+id/btn_create_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create_account"
                 android:background="@drawable/button_full"
                 android:textColor="@color/page_background"
                 android:layout_marginTop="@dimen/layout_margin_half"

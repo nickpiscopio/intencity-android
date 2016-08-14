@@ -20,8 +20,6 @@ public class DirectionListAdapter extends ArrayAdapter<String>
 {
     private ArrayList<String> steps;
 
-    private Context context;
-
     /**
      * The constructor.
      *
@@ -31,8 +29,6 @@ public class DirectionListAdapter extends ArrayAdapter<String>
     public DirectionListAdapter(Context context, ArrayList<String> steps)
     {
         super(context, 0, steps);
-
-        this.context = context;
 
         this.steps = steps;
     }
@@ -54,11 +50,6 @@ public class DirectionListAdapter extends ArrayAdapter<String>
 
         number.setText(String.valueOf(position + 1) + ".");
         directionTextView.setText(step);
-
-        // Commenting this out to decide later if I really want to animate the steps.
-//        Animation animation = AnimationUtils
-//                .loadAnimation(context, R.anim.anim_slide_in_up);
-//        view.startAnimation(animation);
 
         return view;
     }

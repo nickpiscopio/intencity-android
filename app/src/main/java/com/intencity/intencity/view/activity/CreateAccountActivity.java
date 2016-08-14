@@ -33,6 +33,8 @@ import com.intencity.intencity.util.Util;
  */
 public class CreateAccountActivity extends AppCompatActivity implements ServiceListener
 {
+    public static final String BUNDLE_CREATE_ACCOUNT_FROM_TRIAL = "com.intencity.intencity.create.account.from.trial";
+
     private LinearLayout loadingLayout;
     private LinearLayout formLayout;
 
@@ -50,6 +52,8 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
     private Button createAccount;
 
     private Context context;
+
+    boolean createAccountFromTrial = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -107,13 +111,24 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
             terms.setOnClickListener(termsClickListener);
         }
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null)
+        {
+            createAccountFromTrial = extras.getBoolean(BUNDLE_CREATE_ACCOUNT_FROM_TRIAL, false);
+        }
+
+        String title = context.getString(createAccountFromTrial ? R.string.title_convert_account : R.string.title_create_account);
+
         createAccount.setOnClickListener(createAccountClickListener);
+        createAccount.setText(title);
 
         // Add the back button to the action bar.
+        // Add the title to the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)
         {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(title);
         }
     }
 

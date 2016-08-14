@@ -1,6 +1,5 @@
 package com.intencity.intencity.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +15,10 @@ import java.util.List;
 
 public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    // Going to need this for the math.
-    private final Context context;
     private final List<ProfileRow> rows;
 
-    public ProfileAdapter(Context context, ArrayList<ProfileRow> rows)
+    public ProfileAdapter(ArrayList<ProfileRow> rows)
     {
-        this.context = context;
         this.rows = rows;
     }
 

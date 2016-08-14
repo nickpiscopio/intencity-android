@@ -40,6 +40,8 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="separator">&#183;</string>
     <string name="create_account">Create an account</string>
+    <string name="convert_account">Convert Trial Account to Full Account</string>
+    <string name="title_convert_account">Convert Account</string>
 
     <string name="title_create_account">Create Account</string>
     <string name="create_account_description">Sign up below for the best possible experience with Intencity.</string>
