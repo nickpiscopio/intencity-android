@@ -25,6 +25,8 @@ import java.util.TimerTask;
  */
 public class ToastDialog
 {
+    private Dialog dialog;
+
     /**
      * The ToastDialog constructor.
      *
@@ -39,7 +41,7 @@ public class ToastDialog
         // The timeout for when the dialog should be dismissed.
         int dialogTimeout = 4000;
 
-        final Dialog dialog = new Dialog(context);
+        dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_toast_clickable);
 
         Window window = dialog.getWindow();
@@ -78,8 +80,16 @@ public class ToastDialog
         {
             public void run()
             {
-                dialog.dismiss();
+                dismiss();
             }
         }, dialogTimeout);
+    }
+
+    /**
+     * Dismisses the dialog.
+     */
+    public void dismiss()
+    {
+        dialog.dismiss();
     }
 }

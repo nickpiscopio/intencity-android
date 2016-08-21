@@ -155,6 +155,9 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         // Instantiate the NotificationHandler.
         // We reset it because it won't work properly if we log out and log back in.
         NotificationHandler.getInstance(this).resetInstance();
+
+        // We need to do this again because resetInstance() removes the singleton reference.
+        // This will generate a new singleton reference.
         NotificationHandler.getInstance(this);
     }
 

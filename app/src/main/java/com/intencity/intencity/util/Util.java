@@ -80,6 +80,7 @@ public class Util
     /**
      * Saves the login information for Intencity.
      *
+     * @param activity              The activity that called this method.
      * @param email                 The email of the user.
      * @param accountType           The account type of the user.
      * @param trialCreatedDate      The long value of the date the trial account was created.
@@ -105,11 +106,49 @@ public class Util
         }
         editor.apply();
 
+        loadIntencity(activity);
+    }
+
+    /**
+     * Loads the MainActivity from the beginning.
+     *
+     * @param activity              The activity that called this method.
+     */
+    public static void loadIntencity(Activity activity)
+    {
+        Context context = activity.getApplicationContext();
+
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         context.startActivity(intent);
         activity.finish();
+    }
+
+    /**
+     * Saves the user information for Intencity when converting to a full account.
+     *
+     * @param activity      The activity that called this method.
+     * @param email         The email of the user.
+     */
+    public static void convertAccount(Activity activity, String email)
+    {
+        Context context = activity.getApplicationContext();
+
+        // Clear the database because when uninstalling it doesn't do that.
+        DbHelper dbHelper = new DbHelper(context);
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        dbHelper.resetDb(database);
+
+        // Set the email and account type in the SecurePreferences.
+        SecurePreferences securePreferences = new SecurePreferences(context);
+        SecurePreferences.Editor editor = securePreferences.edit();
+
+        editor.putString(Constant.USER_ACCOUNT_EMAIL, Util.replacePlus(email));
+        editor.putString(Constant.USER_ACCOUNT_TYPE, Constant.ACCOUNT_TYPE_NORMAL);
+        // We remove this because we no longer are using a trial account.
+        editor.remove(Constant.USER_TRIAL_CREATED_DATE);
+        editor.apply();
     }
 
     /**

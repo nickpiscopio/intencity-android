@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
+import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
@@ -152,7 +153,8 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
      */
     private View.OnClickListener createAccountClickListener = new View.OnClickListener()
     {
-        @Override public void onClick(View v)
+        @Override
+        public void onClick(View v)
         {
             String firstName = firstNameEditText.getText().toString();
             String lastName = lastNameEditText.getText().toString();
@@ -199,10 +201,22 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
                 loadingLayout.setVisibility(View.VISIBLE);
                 formLayout.setVisibility(View.GONE);
 
-                new ServiceTask(CreateAccountActivity.this).execute(
-                        Constant.SERVICE_CREATE_ACCOUNT,
-                        Constant.getAccountParameters(Util.replaceApostrophe(firstName), Util.replaceApostrophe(
-                                lastName), Util.replacePlus(email), Util.replaceApostrophe(password), Constant.ACCOUNT_TYPE_NORMAL));
+                if (createAccountFromTrial)
+                {
+                    // Upgrade a trial account to a full account.
+                    new ServiceTask(CreateAccountActivity.this).execute(
+                            Constant.SERVICE_UPDATE_ACCOUNT,
+                            Constant.getUpdateAccountParameters(Util.getSecurePreferencesEmail(context), Util.replaceApostrophe(firstName), Util.replaceApostrophe(
+                                    lastName), Util.replacePlus(email), Util.replaceApostrophe(password)));
+                }
+                else
+                {
+                    // Create an account.
+                    new ServiceTask(CreateAccountActivity.this).execute(
+                            Constant.SERVICE_CREATE_ACCOUNT,
+                            Constant.getAccountParameters(Util.replaceApostrophe(firstName), Util.replaceApostrophe(
+                                    lastName), Util.replacePlus(email), Util.replaceApostrophe(password), Constant.ACCOUNT_TYPE_NORMAL));
+                }
             }
         }
     };
@@ -212,12 +226,23 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
      */
     private void showErrorMessage(String message)
     {
-        CustomDialogContent
-                dialog = new CustomDialogContent(context.getString(R.string.generic_error), message, false);
+        CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), message, false);
 
         new CustomDialog(CreateAccountActivity.this, null, dialog, true);
     }
 
+    /**
+     * The dialog listener for converting an account to a full account.
+     */
+    private DialogListener accountConvertedDialogListener = new DialogListener()
+    {
+        @Override
+        public void onButtonPressed(int which)
+        {
+            // There is only one button here, so we aren't switching.
+            Util.loadIntencity(CreateAccountActivity.this);
+        }
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem)
@@ -235,6 +260,8 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
     @Override
     public void onRetrievalSuccessful(String response)
     {
+        String email = emailEditText.getText().toString();
+
         response = response.replaceAll("\"", "");
 
         if (response.equalsIgnoreCase(Constant.EMAIL_EXISTS))
@@ -246,7 +273,15 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
         }
         else if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
         {
-            Util.loadIntencity(CreateAccountActivity.this, emailEditText.getText().toString(), Constant.ACCOUNT_TYPE_NORMAL, 0);
+            Util.loadIntencity(CreateAccountActivity.this, email, Constant.ACCOUNT_TYPE_NORMAL, 0);
+        }
+        else if (response.equalsIgnoreCase(Constant.ACCOUNT_UPDATED))
+        {
+            Util.convertAccount(CreateAccountActivity.this, email);
+
+            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.success), context.getString(R.string.account_converted), false);
+
+            new CustomDialog(CreateAccountActivity.this, accountConvertedDialogListener, dialog, false);
         }
         else
         {

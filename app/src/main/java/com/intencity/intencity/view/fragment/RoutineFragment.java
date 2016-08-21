@@ -71,6 +71,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
     private SecurePreferences securePreferences;
 
+    private ToastDialog toastDialog;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -100,6 +102,17 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         showEquipmentToastIfNeeded();
 
         return view;
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        if (toastDialog != null)
+        {
+            toastDialog.dismiss();
+        }
+
+        super.onDestroy();
     }
 
     /**
@@ -151,7 +164,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
             CustomDialogContent content = new CustomDialogContent(context.getString(R.string.title_set_equipment));
             content.setPositiveButtonStringRes(R.string.title_button_set_equipment);
 
-            new ToastDialog(context, content, this);
+            toastDialog = new ToastDialog(context, content, this);
         }
     }
 

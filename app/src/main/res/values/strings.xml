@@ -65,6 +65,8 @@
     <string name="password_match_error">Passwords do not match.</string>
     <string name="password_validation_error">Passwords must be between 8 and 40 characters and cannot contain &lt; &gt; " = +</string>
     <string name="field_validation_error">Fields cannot contain &lt; &gt; " = +</string>
+    <string name="success">Success</string>
+    <string name="account_converted">Your trial account has been converted into a full account!</string>
 
     <!-- Intencity Strings-->
     <string name="title_rankings">Leaderboard</string>

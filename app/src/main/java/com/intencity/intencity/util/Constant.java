@@ -45,6 +45,7 @@ public class Constant
     public static final String COULD_NOT_FIND_EMAIL = "Could not find email";
     public static final String INVALID_PASSWORD = "Invalid password";
     public static final String ACCOUNT_CREATED = "Account created";
+    public static final String ACCOUNT_UPDATED = "Account updated";
 
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences
@@ -122,6 +123,7 @@ public class Constant
     public static final String SERVICE_UPDATE_EXERCISE_PRIORITY = SERVICE_FOLDER_MOBILE + "update_priority.php";
     public static final String SERVICE_UPLOAD_PROFILE_PIC = SERVICE_FOLDER_MOBILE + "upload_image.php";
     public static final String SERVICE_CHANGE_PASSWORD = SERVICE_FOLDER_MOBILE + "change_password.php";
+    public static final String SERVICE_UPDATE_ACCOUNT = SERVICE_FOLDER_MOBILE + "update_account.php";
     public static final String SERVICE_FORGOT_PASSWORD = SERVICE_FOLDER + "forgot_password.php";
 
     // Parameters
@@ -132,6 +134,7 @@ public class Constant
     // i.e. &table0
     public static final String PARAMETER_TABLE = "table";
     public static final String PARAMETER_EMAIL = "email=";
+    private static final String PARAMETER_TRIAL_EMAIL = "trial_email=";
     private static final String PARAMETER_PASSWORD = "password=";
     private static final String PARAMETER_CURRENT_PASSWORD = "oldPassword=";
     private static final String PARAMETER_DATA = "d=";
@@ -259,6 +262,27 @@ public class Constant
                PARAMETER_EMAIL + email + PARAMETER_AMPERSAND +
                PARAMETER_PASSWORD + password + PARAMETER_AMPERSAND +
                PARAMETER_ACCOUNT_TYPE + accountType;
+    }
+
+    /**
+     * Generates the update account parameters to convert a trial account to a full account.
+     *
+     * @param trialEmail    The email used when for the trial account.
+     *                      This is the email we are converting to the user's real email.
+     * @param firstName     The first name of the user.
+     * @param lastName      The last name of the user.
+     * @param email         The user's email.
+     * @param password      The password of the user.
+     *
+     * @return  The parameters for updating an account.
+     */
+    public static String getUpdateAccountParameters(String trialEmail, String firstName, String lastName, String email, String password)
+    {
+        return PARAMETER_TRIAL_EMAIL + trialEmail + PARAMETER_AMPERSAND +
+               PARAMETER_FIRST_NAME + firstName + PARAMETER_AMPERSAND +
+               PARAMETER_LAST_NAME + lastName + PARAMETER_AMPERSAND +
+               PARAMETER_EMAIL + email + PARAMETER_AMPERSAND +
+               PARAMETER_PASSWORD + password;
     }
 
     /**
