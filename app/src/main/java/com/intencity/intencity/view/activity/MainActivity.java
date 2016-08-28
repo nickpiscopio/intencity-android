@@ -21,6 +21,7 @@ import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.NotificationListener;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
+import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
@@ -182,6 +183,14 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
 
             editor.putLong(Constant.USER_LAST_LOGIN, now);
             editor.apply();
+
+            // Update the web database that the user logged in.
+            // We do this so we don't delete trial users that are still using their account.
+            // We don't need a callback for this because we don't care if it reaches the server.
+            // If it doesn't reach the server, then we try again when the user logs back in.
+            new ServiceTask(null).execute(
+                    Constant.SERVICE_UPDATE_USER_LOGIN_DATE,
+                    Constant.getStandardServiceUrlParams(email));
         }
 
         if (lastLogin == 0)

@@ -80,7 +80,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
 
                 new ServiceTask(ForgotPasswordActivity.this).execute(
                         Constant.SERVICE_FORGOT_PASSWORD,
-                        Constant.getForgotPasswordParameter(emailString));
+                        Constant.getStandardServiceUrlParams(emailString));
             }
             else
             {

@@ -112,6 +112,7 @@ public class Constant
     // Services
     public static final String SERVICE_VALIDATE_USER_CREDENTIALS = SERVICE_FOLDER_MOBILE + "user_credentials.php";
     public static final String SERVICE_CREATE_ACCOUNT = SERVICE_FOLDER_MOBILE + "account.php";
+    public static final String SERVICE_UPDATE_USER_LOGIN_DATE = SERVICE_FOLDER_MOBILE + "update_user_login_date.php";
     public static final String SERVICE_STORED_PROCEDURE = SERVICE_FOLDER_MOBILE + "stored_procedure.php";
     public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER_MOBILE + "complex_insert.php";
     public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
@@ -233,13 +234,13 @@ public class Constant
     }
 
     /**
-     * Generates the forgot password parameter to send to the server.
+     * Generates the standard parameters for a service.
      *
      * @param email     The user's email to add to the url.
      *
      * @return  The generated url parameter.
      */
-    public static String getForgotPasswordParameter(String email)
+    public static String getStandardServiceUrlParams(String email)
     {
         return PARAMETER_EMAIL + email;
     }
@@ -410,7 +411,7 @@ public class Constant
     /**
      * Generates the URL string for a list of variables.
      *
-     * @param variableName  The name of the variable to add to teh URL string.
+     * @param variableName  The name of the variable to add to the URL string.
      * @param variables     The variables to add to the URL string.
      *
      * @return  The generated URL string.
