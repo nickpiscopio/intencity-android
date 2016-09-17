@@ -11,8 +11,6 @@ import com.intencity.intencity.listener.DatabaseListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.Set;
 
-import org.json.JSONException;
-
 import java.util.ArrayList;
 
 /**
@@ -54,8 +52,6 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
      * Gets exercises from the database if it has them.
      *
      * @return The array list of exercises from the database.
-     *
-     * @throws JSONException
      */
     private ArrayList<Exercise> getExercises()
     {

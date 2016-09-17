@@ -180,7 +180,7 @@ public class ExerciseSetAdapter extends ArrayAdapter<Set> implements ViewChangeL
      *
      * @param input     The value to convert to a time format.
      *
-     * @return  The vlue in a time format.
+     * @return  The value in a time format.
      */
     private String getTimeFormat(String input)
     {

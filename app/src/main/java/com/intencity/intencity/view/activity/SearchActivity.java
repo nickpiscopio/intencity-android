@@ -210,7 +210,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     /**
-     * The click listener for each user clicked in the listview.
+     * The click listener for each user clicked in the ListView.
      */
     private AdapterView.OnItemClickListener userClickListener = new AdapterView.OnItemClickListener()
     {

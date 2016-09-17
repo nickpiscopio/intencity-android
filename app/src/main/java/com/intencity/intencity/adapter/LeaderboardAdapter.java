@@ -80,7 +80,6 @@ public class LeaderboardAdapter extends ArrayAdapter<User>
 
         if (this.position != position || convertView == null)
         {
-            final int index = position;
             this.position = position;
 
             convertView = inflater.inflate(layoutResourceId, parent, false);

@@ -41,7 +41,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ProfileRow row = rows.get(position);
 
         // TODO: Do math to get the real column span needed for the awards.
-        int colSpan = (row.getAmount() != "" ? 1 : 5);
+        int colSpan = (row.getAmount().equals("") ? 5 : 1);
         // This should probably be the same value as the column span.
         // It appears if it is larger than the default span, then the view wraps content properly.
         int rowSpan = 5;
@@ -65,19 +65,16 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         else
         {
             String amount = row.getAmount();
-
-            if (amount != "")
+            if (amount.equals(""))
             {
-                //set as award item
+                // Set as routine list item.
+                profileHolder.setAsRoutineView(row.getTitle());
 
-                profileHolder.setAsAwardView(title, amount);
             }
             else
             {
-                //set as routine list item
-
-                profileHolder.setAsRoutineView(row.getTitle());
-
+                // Set as award item.
+                profileHolder.setAsAwardView(title, amount);
             }
         }
     }

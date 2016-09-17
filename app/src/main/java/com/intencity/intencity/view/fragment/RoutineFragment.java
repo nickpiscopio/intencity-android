@@ -292,7 +292,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
      * Starts an activity.
      *
      * @param cls       The class to start.
-     * @param rows      The array list of rows for the listview in the new class.
+     * @param rows      The array list of rows for the ListView in the new class.
      */
     private void startActivity(Class cls, ArrayList<?> rows)
     {

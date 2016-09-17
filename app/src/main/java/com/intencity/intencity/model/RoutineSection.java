@@ -25,7 +25,7 @@ public class RoutineSection implements Parcelable
     /**
      * The constructor for the RoutineSection.
      *
-     * @param type      The type of rotine.
+     * @param type      The type of routine.
      * @param title     The title of the section.
      * @param rows      The routine rows for each section.
      */

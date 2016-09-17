@@ -439,7 +439,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
     /**
      * Randomly generates a text to share.
      *
-     * Text length needs to total 110 to work with inmages on twitter.
+     * Text length needs to total 110 to work with images on twitter.
      *
      * @return  The generated text.
      */

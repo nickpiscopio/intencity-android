@@ -97,7 +97,7 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
     }
 
     /**
-     * The refresh listener for the listview.
+     * The refresh listener for the ListView.
      */
     private SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener()
     {
@@ -231,7 +231,7 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
     }
 
     /**
-     * The click listener for each user clicked in the listview.
+     * The click listener for each user clicked in the ListView.
      */
     private AdapterView.OnItemClickListener userClickListener = new AdapterView.OnItemClickListener()
     {

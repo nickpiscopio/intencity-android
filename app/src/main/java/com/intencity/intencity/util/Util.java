@@ -245,7 +245,7 @@ public class Util
      * @param email         The email of the user to grant points.
      * @param badgeName     The name of the badge that is being awarded.
      * @param content       The content that will be displayed to the user.
-     * @param onlyAllowOne  Boolean value to only allow one instance of a specifed badge.
+     * @param onlyAllowOne  Boolean value to only allow one instance of a specified badge.
      */
     public static void grantBadgeToUser(String email, String badgeName, AwardDialogContent content, boolean onlyAllowOne)
     {
