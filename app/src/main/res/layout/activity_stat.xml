@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:paddingRight="@dimen/layout_margin"
             android:paddingLeft="@dimen/layout_margin"
+            android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
             <View
