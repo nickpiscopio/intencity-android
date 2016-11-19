@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -45,6 +47,8 @@ public class EquipmentActivity extends AppCompatActivity
 
     private ListView listView;
 
+    private MenuItem menuCheckBox;
+
     private String email;
 
     private ArrayList<SelectableListItem> equipmentList;
@@ -53,6 +57,8 @@ public class EquipmentActivity extends AppCompatActivity
     private Context context;
 
     private CheckboxAdapter adapter;
+
+    private boolean selectAll = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -83,12 +89,28 @@ public class EquipmentActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.checkbox_menu, menu);
+
+        menuCheckBox = menu.findItem(R.id.checkbox);
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem)
     {
         switch (menuItem.getItemId())
         {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.checkbox:
+                setCheckboxTick(selectAll = !selectAll);
+
+                updateEquipmentList();
                 return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
@@ -131,6 +153,9 @@ public class EquipmentActivity extends AppCompatActivity
                         userEquipment.add(equipmentName);
                     }
                 }
+
+                // We set the checkbox to checked if the user has all the equipment in the equipment list.
+                setCheckboxTick(userEquipment.size() == equipmentList.size());
 
                 populateEquipmentListView();
             }
@@ -188,6 +213,41 @@ public class EquipmentActivity extends AppCompatActivity
     }
 
     /**
+     * Selects or deselects all of the equipment based on the checkbox that is checked in the menu.
+     *
+     * @param selectAll   Boolean value of whether or not we should select all of the equipment.
+     */
+    private void setCheckboxTick(boolean selectAll)
+    {
+        this.selectAll = selectAll;
+
+        menuCheckBox.setIcon(this.selectAll ? R.mipmap.ic_checkbox_marked : R.mipmap.ic_checkbox_blank_outline);
+    }
+
+    /**
+     * Searches the equipment list and checks or unchecks items based on whether we are selecting or deselecting the menu checkbox.
+     */
+    private void updateEquipmentList()
+    {
+        for (SelectableListItem listItem : equipmentList)
+        {
+            if (selectAll && !listItem.isChecked())
+            {
+                updateEquipmentListItem(listItem);
+            }
+            else if (!selectAll && listItem.isChecked())
+            {
+                updateEquipmentListItem(listItem);
+            }
+        }
+
+        // We set the checkbox to checked if the user has all the equipment in the equipment list.
+        setCheckboxTick(userEquipment.size() == equipmentList.size());
+
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
      * Populates the equipment list.
      */
     private void populateEquipmentListView()
@@ -232,24 +292,39 @@ public class EquipmentActivity extends AppCompatActivity
         {
             SelectableListItem equipment = equipmentList.get(position - 1);
 
-            String title = equipment.getTitle();
+            updateEquipmentListItem(equipment);
 
-            // Add or remove muscle groups from the list
-            // if he or she clicks on a list item.
-            if (userEquipment.contains(title))
-            {
-                equipment.setChecked(false);
-                userEquipment.remove(title);
-            }
-            else
-            {
-                equipment.setChecked(true);
-                userEquipment.add(title);
-            }
+            // We set the checkbox to checked if the user has all the equipment in the equipment list.
+            setCheckboxTick(userEquipment.size() == equipmentList.size());
 
             adapter.notifyDataSetChanged();
         }
     };
+
+    /**
+     * Updates a specified equipment list item.
+     *
+     * This adds or removes it from the list of equipment that the user currently has.
+     *
+     * @param equipment     The item to add or remove from the user's list of equipment.
+     */
+    private void updateEquipmentListItem(SelectableListItem equipment)
+    {
+        String equipmentName = equipment.getTitle();
+
+        // Add or remove equipment from the list
+        // if he or she selects on a list item.
+        if (userEquipment.contains(equipmentName))
+        {
+            equipment.setChecked(false);
+            userEquipment.remove(equipmentName);
+        }
+        else
+        {
+            equipment.setChecked(true);
+            userEquipment.add(equipmentName);
+        }
+    }
 
     /**
      * The dialog listener for when the connection to Intencity fails.

@@ -112,7 +112,7 @@ public class Util
     /**
      * Loads the MainActivity from the beginning.
      *
-     * @param activity              The activity that called this method.
+     * @param activity      The activity that called this method.
      */
     public static void loadIntencity(Activity activity)
     {

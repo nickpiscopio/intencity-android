@@ -75,6 +75,7 @@
     <string name="menu_search">Search</string>
     <string name="title_info">Info</string>
     <string name="title_app">App</string>
+    <string name="title_checkbox">Select</string>
 
     <!-- Search Strings -->
     <string name="search_exercise">Search for an exercise</string>
