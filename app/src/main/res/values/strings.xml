@@ -126,6 +126,10 @@
     <string name="muscle_group_limit_title">Limit error</string>
     <string name="muscle_group_limit_description">Please select at least 1 muscle group for this routine.</string>
 
+    <string name="edit_equipment_location_names_title">Edit Equipment Location Names</string>
+    <string name="edit_equipment_description1">Below are places you exercise.</string>
+    <string name="edit_equipment_description2">Only checked locations will be kept when hitting \'Save\'.</string>
+
     <string name="routine_saved_title">Save current routine</string>
     <string name="routine_saved_description">Give this routine a name so you can do it again at a later date.</string>
     <string name="routine_saved_title_error">Couldn\'t save routine</string>

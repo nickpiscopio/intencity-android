@@ -6,6 +6,7 @@
     <item
         android:id="@+id/edit"
         android:title="@string/edit"
+        android:icon="@mipmap/ic_pencil"
         app:showAsAction="always"/>
 
 </menu>

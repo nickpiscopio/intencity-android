@@ -11,6 +11,7 @@ import android.os.Parcelable;
 public class SelectableListItem implements Parcelable
 {
     private String title;
+    private String description;
 
     private int rowNumber;
 
@@ -22,6 +23,12 @@ public class SelectableListItem implements Parcelable
         this.title = title;
     }
 
+    public SelectableListItem(String title, String description)
+    {
+        this.title = title;
+        this.description = description;
+    }
+
     public SelectableListItem(String title, int rowNumber)
     {
         this.title = title;
@@ -31,6 +38,7 @@ public class SelectableListItem implements Parcelable
     private SelectableListItem(Parcel in)
     {
         title = in.readString();
+        description = in.readString();
         rowNumber = in.readInt();
         selected = in.readInt() == 1;
         checked = in.readInt() == 1;
@@ -61,6 +69,7 @@ public class SelectableListItem implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeString(title);
+        dest.writeString(description);
         dest.writeInt(rowNumber);
         dest.writeInt(selected ? 1 : 0);
         dest.writeInt(checked ? 1 : 0);
@@ -77,6 +86,16 @@ public class SelectableListItem implements Parcelable
     public void setTitle(String title)
     {
         this.title = title;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 
     public int getRowNumber()

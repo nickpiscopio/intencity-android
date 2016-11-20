@@ -131,6 +131,12 @@
             android:theme="@style/AppTheme.Base"/>
 
         <activity
+            android:name=".view.activity.EquipmentEditActivity"
+            android:label="@string/edit_equipment"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Base"/>
+
+        <activity
             android:name=".view.activity.ChangePasswordActivity"
             android:label="@string/change_password"
             android:screenOrientation="portrait"

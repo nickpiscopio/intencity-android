@@ -163,6 +163,7 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_EXERCISE_PRIORITIES = "getPriority";
     public static final String STORED_PROCEDURE_GET_CUSTOM_ROUTINE_MUSCLE_GROUP = "getCustomRoutineMuscleGroup";
     public static final String STORED_PROCEDURE_GET_USER_MUSCLE_GROUP_ROUTINE = "getUserMuscleGroupRoutine";
+    public static final String STORED_PROCEDURE_GET_USER_FITNESS_LOCATIONS = "getUserFitnessLocations";
     public static final String STORED_PROCEDURE_GRANT_POINTS = "grantPointsToUser";
     public static final String STORED_PROCEDURE_GRANT_BADGE = "grantBadgeToUser";
     public static final String STORED_PROCEDURE_GET_BADGES = "getBadges";
@@ -223,6 +224,7 @@ public class Constant
     public static final String COLUMN_EQUIPMENT_NAME = "EquipmentName";
     public static final String COLUMN_HAS_EQUIPMENT = "HasEquipment";
     public static final String COLUMN_PRIORITY = "Priority";
+    public static final String COLUMN_LOCATION = "Location";
 
     public static final String SPACE_REGEX = "\\s";
     public static final String REGEX_EMAIL = "[a-zA-Z0-9]+([\\-\\.\\{\\}\\^\\+*_~]*[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([\\.\\-]*[a-zA-Z0-9]+)*[\\.][a-zA-Z]{2}[A-Za-z]*";

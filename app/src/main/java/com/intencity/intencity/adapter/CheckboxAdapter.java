@@ -31,6 +31,7 @@ public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
     static class Holder
     {
         TextView title;
+        TextView description;
         CheckBox checkbox;
     }
 
@@ -65,7 +66,8 @@ public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
 
             convertView = inflater.inflate(listItemResId, parent, false);
 
-            holder.title = (TextView) convertView.findViewById(R.id.text_view);
+            holder.title = (TextView) convertView.findViewById(R.id.text_view_title);
+            holder.description = (TextView) convertView.findViewById(R.id.text_view_description);
             holder.checkbox = (CheckBox) convertView.findViewById(R.id.checkbox);
 
             convertView.setTag(holder);
@@ -79,6 +81,17 @@ public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
 
         holder.title.setText(row.getTitle());
         holder.checkbox.setChecked(row.isChecked());
+
+        String description = row.getDescription();
+        if(description != null && description.length() > 0)
+        {
+            holder.description.setText(description);
+            holder.description.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            holder.description.setVisibility(View.GONE);
+        }
 
         return convertView;
     }
