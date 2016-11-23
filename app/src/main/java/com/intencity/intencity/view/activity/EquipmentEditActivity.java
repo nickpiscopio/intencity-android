@@ -42,7 +42,12 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
 {
     private Context context;
 
+    private MenuItem menuItemRemove;
+    private MenuItem menuItemSave;
+
     private ProgressBar progressBar;
+
+    private TextView description;
 
     private ListView listView;
 
@@ -56,6 +61,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
     private CheckboxAdapter adapter;
 
     private boolean hasMoreExercises = false;
+    private boolean inRemovingState = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -86,7 +92,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
         View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
 
         TextView title = (TextView) header.findViewById(R.id.title);
-        TextView description = (TextView) header.findViewById(R.id.description);
+        description = (TextView) header.findViewById(R.id.description);
 
         title.setText(context.getString(R.string.edit_equipment_description1));
         description.setText(context.getString(R.string.edit_equipment_description2));
@@ -116,7 +122,12 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.exercise_location_menu, menu);
+        inflater.inflate(R.menu.remove_menu, menu);
+
+        menuItemRemove = menu.findItem(R.id.remove);
+        menuItemSave = menu.findItem(R.id.save);
+
+        setMenuItems(false);
 
         return true;
     }
@@ -129,7 +140,11 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.remove:
+                setMenuItems(!this.inRemovingState);
+                return true;
             case R.id.save:
+                setMenuItems(!this.inRemovingState);
                 removeLocations();
                 return true;
             default:
@@ -138,14 +153,32 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
     }
 
     /**
-     * The click listener for adding an Intencity Routine.
+     * Sets the menu item based on the state the view is in.
+     *
+     * @param inRemovingState   Boolean value for whether we are in the removing state or not.
+     */
+    private void setMenuItems(boolean inRemovingState)
+    {
+        this.inRemovingState = inRemovingState;
+
+        menuItemRemove.setVisible(!this.inRemovingState);
+        menuItemSave.setVisible(this.inRemovingState);
+
+        description.setVisibility(this.inRemovingState ? View.VISIBLE : View.GONE);
+
+        // Tell the adapter that we are enabling or disabling the deletion flag.
+        adapter.setDeletionEnabled(this.inRemovingState);
+    }
+
+    /**
+     * The click listener for adding a fitness location.
      */
     private View.OnClickListener addClickListener = new View.OnClickListener()
     {
         @Override
         public void onClick(View v)
         {
-            Intent intent = new Intent(context, RoutineIntencityAddActivity.class);
+            Intent intent = new Intent(context, EquipmentActivity.class);
             startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
         }
     };
@@ -170,6 +203,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
                 String location = object.getString(Constant.COLUMN_LOCATION);
 
                 SelectableListItem listItem = name.length() > 0 ? new SelectableListItem(name, location) : new SelectableListItem(location);
+                listItem.setDeletionEnabled(false);
 
                 // Add all the locations to the array.
                 locations.add(listItem);
@@ -248,10 +282,10 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
 //                                                                  Constant.generateServiceListVariables(email,
 //                                                                                                      locationsToRemove, false));
         }
-        else
-        {
-            onBackPressed();
-        }
+//        else
+//        {
+//            onBackPressed();
+//        }
     }
 
     /**

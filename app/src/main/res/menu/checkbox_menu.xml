@@ -6,7 +6,7 @@
     <item
         android:id="@+id/checkbox"
         android:title="@string/title_checkbox"
-        android:icon="@mipmap/ic_checkbox_blank_outline"
+        android:icon="@mipmap/ic_checkbox_blank_outline_white"
         app:showAsAction="always"/>
 
 </menu>

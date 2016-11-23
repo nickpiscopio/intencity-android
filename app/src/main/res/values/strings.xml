@@ -127,7 +127,7 @@
     <string name="muscle_group_limit_description">Please select at least 1 muscle group for this routine.</string>
 
     <string name="edit_equipment_location_names_title">Edit Equipment Location Names</string>
-    <string name="edit_equipment_description1">Below are places you exercise.</string>
+    <string name="edit_equipment_description1">Your fitness locations</string>
     <string name="edit_equipment_description2">Only checked locations will be kept when hitting \'Save\'.</string>
 
     <string name="routine_saved_title">Save current routine</string>
@@ -146,6 +146,8 @@
 
     <string name="undo_hide_exercise_title">You removed %1$s from today\'s workout.</string>
     <string name="undo_hide_button">UNDO</string>
+
+    <string name="menu_remove">REMOVE</string>
 
     <!-- Exercise List Strings -->
     <string name="more_priority_string">You will see %1$s more.</string>

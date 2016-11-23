@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
@@ -32,6 +33,7 @@ public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
     {
         TextView title;
         TextView description;
+        ImageView edit;
         CheckBox checkbox;
     }
 
@@ -68,6 +70,7 @@ public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
 
             holder.title = (TextView) convertView.findViewById(R.id.text_view_title);
             holder.description = (TextView) convertView.findViewById(R.id.text_view_description);
+            holder.edit = (ImageView) convertView.findViewById(R.id.edit);
             holder.checkbox = (CheckBox) convertView.findViewById(R.id.checkbox);
 
             convertView.setTag(holder);
@@ -93,6 +96,32 @@ public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
             holder.description.setVisibility(View.GONE);
         }
 
+        if(row.isDeletionEnabled())
+        {
+            holder.edit.setVisibility(View.GONE);
+            holder.checkbox.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            holder.edit.setVisibility(View.VISIBLE);
+            holder.checkbox.setVisibility(View.GONE);
+        }
+
         return convertView;
+    }
+
+    /**
+     * Changes all the deletion flag for all the objects.
+     *
+     * @param deletionEnabled   Boolean value of whether the deletion flag is enabled or not.
+     */
+    public void setDeletionEnabled(boolean deletionEnabled)
+    {
+        for (SelectableListItem listItem : objects)
+        {
+            listItem.setDeletionEnabled(deletionEnabled);
+        }
+
+        notifyDataSetChanged();
     }
 }

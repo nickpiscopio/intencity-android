@@ -221,7 +221,7 @@ public class EquipmentActivity extends AppCompatActivity
     {
         this.selectAll = selectAll;
 
-        menuCheckBox.setIcon(this.selectAll ? R.mipmap.ic_checkbox_marked : R.mipmap.ic_checkbox_blank_outline);
+        menuCheckBox.setIcon(this.selectAll ? R.mipmap.ic_checkbox_marked_white : R.mipmap.ic_checkbox_blank_outline_white);
     }
 
     /**

@@ -17,6 +17,9 @@ public class SelectableListItem implements Parcelable
 
     private boolean selected = false;
     private boolean checked = true;
+    // The flag to show the checkbox for keeping or deleting a list item.
+    // If this is false, the edit ImageView will be shown.
+    private boolean deletionEnabled = true;
 
     public SelectableListItem(String title)
     {
@@ -121,5 +124,13 @@ public class SelectableListItem implements Parcelable
     public void setSelected(boolean selected)
     {
         this.selected = selected;
+    }
+
+    public boolean isDeletionEnabled() {
+        return deletionEnabled;
+    }
+
+    public void setDeletionEnabled(boolean deletionEnabled) {
+        this.deletionEnabled = deletionEnabled;
     }
 }
