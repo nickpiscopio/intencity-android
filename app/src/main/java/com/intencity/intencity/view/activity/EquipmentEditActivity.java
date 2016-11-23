@@ -178,8 +178,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
         @Override
         public void onClick(View v)
         {
-            Intent intent = new Intent(context, EquipmentActivity.class);
-            startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
+            openEquipmentActivity("", "");
         }
     };
 
@@ -247,6 +246,18 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
     };
 
     /**
+     * Opens the EquipmentActivity
+     *
+     * @param displayName   The display name of the location the user exercises.
+     * @param location      The location (address or long/lat of the fitness location the user exercises.
+     */
+    private void openEquipmentActivity(String displayName, String location)
+    {
+        Intent intent = new Intent(context, EquipmentActivity.class);
+        startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
+    }
+
+    /**
      * Gets the user's fitness locations if they have any.
      */
     private void getUserFitnessLocations()
@@ -309,24 +320,32 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            SelectableListItem routine = locations.get(position - 1);
+            SelectableListItem location = locations.get(position - 1);
 
-            String title = routine.getTitle();
+            String title = location.getTitle();
 
-            // Add or remove muscle groups from the list
-            // if he or she clicks on a list item.
-            if (locationsToRemove.contains(title))
+            if (inRemovingState)
             {
-                routine.setChecked(true);
-                locationsToRemove.remove(title);
+                // Add or remove muscle groups from the list
+                // if he or she clicks on a list item.
+                if (locationsToRemove.contains(title))
+                {
+                    location.setChecked(true);
+                    locationsToRemove.remove(title);
+                }
+                else
+                {
+                    location.setChecked(false);
+                    locationsToRemove.add(title);
+                }
+
+                adapter.notifyDataSetChanged();
             }
             else
             {
-                routine.setChecked(false);
-                locationsToRemove.add(title);
+                // We are editing, so open the equipment activity.
+                openEquipmentActivity(title, location.getDescription());
             }
-
-            adapter.notifyDataSetChanged();
         }
     };
 
