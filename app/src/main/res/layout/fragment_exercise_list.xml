@@ -90,7 +90,8 @@
             android:layout_gravity="bottom"
             android:paddingBottom="@dimen/list_view_padding_bottom"
             android:clipToPadding="false"
-            app:layout_anchor="@id/layout_exercise_title"/>
+            app:layout_anchor="@id/layout_exercise_title"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     </LinearLayout>
 
