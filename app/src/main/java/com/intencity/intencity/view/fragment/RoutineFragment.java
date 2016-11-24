@@ -299,7 +299,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         Intent intent = new Intent(context, cls);
         intent.putExtra(Constant.BUNDLE_ROUTINE_ROWS, rows);
 
-        startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
+        startActivityForResult(intent, Constant.REQUEST_CODE_ROUTINE_UPDATED);
     }
 
     @Override
@@ -322,13 +322,13 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Constant.REQUEST_ROUTINE_UPDATED || resultCode == Constant.REQUEST_SAVED_ROUTINE_UPDATED)
+        if (resultCode == Constant.REQUEST_CODE_ROUTINE_UPDATED || resultCode == Constant.REQUEST_CODE_SAVED_ROUTINE_UPDATED)
         {
             ArrayList<SelectableListItem> rows = data.getParcelableArrayListExtra(Constant.BUNDLE_ROUTINE_ROWS);
 
             sections.remove(sectionSelected);
 
-            if (resultCode == Constant.REQUEST_ROUTINE_UPDATED)
+            if (resultCode == Constant.REQUEST_CODE_ROUTINE_UPDATED)
             {
                 sections.add(sectionSelected, new RoutineSection(RoutineType.FEATURED_ROUTINE, getString(R.string.title_featured_routines), rows));
             }
@@ -342,7 +342,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
             adapter.notifyDataSetChanged();
         }
-        else if (resultCode == Constant.REQUEST_START_EXERCISING)
+        else if (resultCode == Constant.REQUEST_CODE_START_EXERCISING)
         {
             index = 0;
             routineName = data.getStringExtra(Constant.BUNDLE_ROUTINE_NAME);

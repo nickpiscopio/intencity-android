@@ -111,7 +111,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
     {
         if (hasMoreExercises)
         {
-            setResult(Constant.REQUEST_ROUTINE_UPDATED);
+            setResult(Constant.REQUEST_CODE_ROUTINE_UPDATED);
             finish();
         }
 
@@ -234,7 +234,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            setResult(Constant.REQUEST_ROUTINE_UPDATED);
+            setResult(Constant.REQUEST_CODE_ROUTINE_UPDATED);
             finish();
         }
 
@@ -254,7 +254,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
     private void openEquipmentActivity(String displayName, String location)
     {
         Intent intent = new Intent(context, EquipmentActivity.class);
-        startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
+        startActivityForResult(intent, Constant.REQUEST_CODE_ROUTINE_UPDATED);
     }
 
     /**
@@ -354,7 +354,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Constant.REQUEST_ROUTINE_UPDATED)
+        if (resultCode == Constant.REQUEST_CODE_ROUTINE_UPDATED)
         {
             hasMoreExercises = true;
 

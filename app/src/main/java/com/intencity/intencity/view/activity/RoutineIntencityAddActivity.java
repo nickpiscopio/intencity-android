@@ -149,7 +149,7 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            setResult(Constant.REQUEST_ROUTINE_UPDATED);
+            setResult(Constant.REQUEST_CODE_ROUTINE_UPDATED);
             finish();
         }
 

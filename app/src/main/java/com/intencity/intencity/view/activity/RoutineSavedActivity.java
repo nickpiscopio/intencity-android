@@ -130,7 +130,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
             case R.id.edit:
                 Intent intent = new Intent(context, RoutineSavedEditActivity.class);
                 intent.putExtra(Constant.BUNDLE_ROUTINE_ROWS, rows);
-                startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
+                startActivityForResult(intent, Constant.REQUEST_CODE_ROUTINE_UPDATED);
                 return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
@@ -265,7 +265,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Constant.REQUEST_SAVED_ROUTINE_UPDATED)
+        if (resultCode == Constant.REQUEST_CODE_SAVED_ROUTINE_UPDATED)
         {
             getRoutines();
         }
@@ -292,7 +292,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
             Intent intent = new Intent();
             intent.putExtra(Constant.BUNDLE_ROUTINE_ROWS, rows);
 
-            setResult(Constant.REQUEST_SAVED_ROUTINE_UPDATED, intent);
+            setResult(Constant.REQUEST_CODE_SAVED_ROUTINE_UPDATED, intent);
         }
 
         super.onBackPressed();
@@ -322,7 +322,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
                 intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, row.getTitle());
                 intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, exercises);
 
-                setResult(Constant.REQUEST_START_EXERCISING, intent);
+                setResult(Constant.REQUEST_CODE_START_EXERCISING, intent);
                 finish();
             }
             catch (JSONException e)

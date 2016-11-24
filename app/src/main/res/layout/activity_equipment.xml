@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_background"
@@ -16,6 +17,68 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/layout_margin"/>
 
+    <include
+        layout="@layout/divider"
+        android:visibility="gone"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_fitness_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:layout_marginTop="@dimen/layout_margin"
+        android:layout_marginLeft="@dimen/layout_margin"
+        android:layout_marginRight="@dimen/layout_margin"
+        android:layout_marginBottom="@dimen/layout_margin"
+        card_view:cardCornerRadius="@dimen/rounded_corner_radius">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_margin"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="@integer/weight_edit_text"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/card_title3_size"
+                    android:textStyle="bold"
+                    android:textColor="@color/secondary_light"
+                    android:text="@string/edit_equipment_location"/>
+
+                <TextView
+                    android:id="@+id/text_view_display_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_margin_quarter"
+                    android:textColor="@color/secondary_light"
+                    android:text="Home"/>
+
+                <TextView
+                    android:id="@+id/text_view_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_margin_quarter"
+                    android:textColor="@color/secondary_light"
+                    android:text="1234 Street Name\nLos Angeles, CA 90210"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_pencil_grey"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
@@ -23,9 +86,5 @@
         android:choiceMode="multipleChoice"
         android:dividerHeight="0dp"
         android:divider="@null"/>
-
-    <include
-        layout="@layout/divider"
-        android:visibility="gone"/>
 
 </LinearLayout>

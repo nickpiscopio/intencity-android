@@ -432,7 +432,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         Util.setExerciseSkipped(securePreferences, false);
 
         // Call finish() to go back to the previous screen.
-        setResult(Constant.REQUEST_OVERVIEW);
+        setResult(Constant.REQUEST_CODE_OVERVIEW);
         finish();
     }
 

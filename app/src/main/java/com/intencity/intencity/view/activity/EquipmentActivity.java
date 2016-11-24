@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,11 +19,12 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.CheckboxAdapter;
-import com.intencity.intencity.listener.DialogListener;
+import com.intencity.intencity.listener.DialogFitnessLocationListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
+import com.intencity.intencity.notification.FitnessLocationDialog;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
@@ -44,6 +46,11 @@ public class EquipmentActivity extends AppCompatActivity
     private LinearLayout connectionIssue;
 
     private ProgressBar progressBar;
+
+    private CardView cardFitnessLocation;
+
+    private TextView textViewDisplayName;
+    private TextView textViewLocation;
 
     private ListView listView;
 
@@ -78,9 +85,16 @@ public class EquipmentActivity extends AppCompatActivity
 
         progressBar.setVisibility(View.VISIBLE);
 
+        cardFitnessLocation = (CardView) findViewById(R.id.card_fitness_location);
+
+        textViewDisplayName = (TextView) findViewById(R.id.text_view_display_name);
+        textViewLocation = (TextView) findViewById(R.id.text_view_location);
+
         context = getApplicationContext();
 
         email = Util.getSecurePreferencesEmail(context);
+
+        cardFitnessLocation.setOnClickListener(fitnessLocationClickListener);
 
         new ServiceTask(getEquipmentServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                 Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EQUIPMENT, email));
@@ -265,7 +279,7 @@ public class EquipmentActivity extends AppCompatActivity
         listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
         listView.addHeaderView(header, null, false);
-        listView.setOnItemClickListener(settingClicked);
+        listView.setOnItemClickListener(equipmentClickListener);
 
         progressBar.setVisibility(View.GONE);
     }
@@ -283,9 +297,21 @@ public class EquipmentActivity extends AppCompatActivity
     }
 
     /**
+     * The click listener for editing the fitness location.
+     */
+    private View.OnClickListener fitnessLocationClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            new FitnessLocationDialog(EquipmentActivity.this, textViewDisplayName.getText().toString(), textViewLocation.getText().toString(), dialogListener);
+        }
+    };
+
+    /**
      * The click listener for each item clicked in the settings list.
      */
-    private AdapterView.OnItemClickListener settingClicked = new AdapterView.OnItemClickListener()
+    private AdapterView.OnItemClickListener equipmentClickListener = new AdapterView.OnItemClickListener()
     {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
@@ -327,13 +353,22 @@ public class EquipmentActivity extends AppCompatActivity
     }
 
     /**
-     * The dialog listener for when the connection to Intencity fails.
+     * The dialog listener for the equipment activity.
      */
-    private DialogListener dialogListener = new DialogListener()
+    private DialogFitnessLocationListener dialogListener = new DialogFitnessLocationListener()
     {
+        @Override
+        public void onSaveFitnessLocation(String displayName, String location)
+        {
+            textViewDisplayName.setVisibility(displayName.length() > 0 ? View.VISIBLE : View.GONE);
+            textViewDisplayName.setText(displayName);
+            textViewLocation.setText(location);
+        }
+
         @Override
         public void onButtonPressed(int which)
         {
+            // This only gets called when there is a connection issue.
             // There is only 1 button that can be pressed, so we aren't going to switch on it.
             finish();
         }

@@ -64,10 +64,11 @@ public class Constant
     public static final int REQUEST_CODE_CAPTURE_IMAGE = 50;
     public static final int REQUEST_CODE_SHARE = 60;
     public static final int REQUEST_CODE_LOG_OUT = 70;
-    public static final int REQUEST_ROUTINE_UPDATED = 80;
-    public static final int REQUEST_SAVED_ROUTINE_UPDATED = 90;
-    public static final int REQUEST_START_EXERCISING = 100;
-    public static final int REQUEST_OVERVIEW = 110;
+    public static final int REQUEST_CODE_PERMISSION = 80;
+    public static final int REQUEST_CODE_ROUTINE_UPDATED = 90;
+    public static final int REQUEST_CODE_SAVED_ROUTINE_UPDATED = 100;
+    public static final int REQUEST_CODE_START_EXERCISING = 110;
+    public static final int REQUEST_CODE_OVERVIEW = 120;
 
     // Fragment IDs
     public static final int ID_FRAGMENT_ROUTINE = 10;

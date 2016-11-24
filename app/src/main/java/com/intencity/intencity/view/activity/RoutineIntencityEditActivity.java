@@ -105,7 +105,7 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
     {
         if (hasMoreExercises)
         {
-            setResult(Constant.REQUEST_ROUTINE_UPDATED);
+            setResult(Constant.REQUEST_CODE_ROUTINE_UPDATED);
             finish();
         }
 
@@ -146,7 +146,7 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
         public void onClick(View v)
         {
             Intent intent = new Intent(context, RoutineIntencityAddActivity.class);
-            startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
+            startActivityForResult(intent, Constant.REQUEST_CODE_ROUTINE_UPDATED);
         }
     };
 
@@ -198,7 +198,7 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            setResult(Constant.REQUEST_ROUTINE_UPDATED);
+            setResult(Constant.REQUEST_CODE_ROUTINE_UPDATED);
             finish();
         }
 
@@ -297,7 +297,7 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Constant.REQUEST_ROUTINE_UPDATED)
+        if (resultCode == Constant.REQUEST_CODE_ROUTINE_UPDATED)
         {
             hasMoreExercises = true;
 

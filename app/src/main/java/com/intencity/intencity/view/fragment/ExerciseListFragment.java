@@ -208,7 +208,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             Intent intent = new Intent(context, OverviewActivity.class);
             intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, routineName);
             intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, currentExercises);
-            startActivityForResult(intent, Constant.REQUEST_OVERVIEW);
+            startActivityForResult(intent, Constant.REQUEST_CODE_OVERVIEW);
         }
         else
         {
@@ -798,7 +798,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 addExerciseToList(exercise);
             }
         }
-        else if (resultCode  == Constant.REQUEST_OVERVIEW)
+        else if (resultCode  == Constant.REQUEST_CODE_OVERVIEW)
         {
             // The user finished the exercise from the overview screen.
             // Start the routine view over again.

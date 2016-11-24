@@ -99,7 +99,7 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
     @Override
     public void onRetrievalSuccessful(String response)
     {
-        setResult(Constant.REQUEST_SAVED_ROUTINE_UPDATED);
+        setResult(Constant.REQUEST_CODE_SAVED_ROUTINE_UPDATED);
         finish();
     }
 

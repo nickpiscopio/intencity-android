@@ -224,8 +224,16 @@
 
     <string name="edit_priority_title">Change the priority for each exercise to fit your needs.</string>
     <string name="edit_priority_description">Priorities change the frequency at which an exercise occurs during a workout. This helps Intencity generate exercises to fit your needs.</string>
+
+    <string name="edit_equipment_display_name">NAME</string>
+    <string name="edit_equipment_location">FITNESS LOCATION</string>
     <string name="edit_equipment_title">Select your current equipment.</string>
     <string name="edit_equipment_description">This helps Intencity generate exercises to fit your needs.</string>
+
+    <string name="dialog_fitness_location_title">Where will you use this equipment?</string>
+    <string name="dialog_fitness_location_description">When at this location, Intencity will automatically use the fitness equipment associated with this location.</string>
+    <string name="dialog_fitness_display_name">Name</string>
+    <string name="dialog_fitness_location">Location</string>
 
     <string name="change_password">Change Password</string>
 

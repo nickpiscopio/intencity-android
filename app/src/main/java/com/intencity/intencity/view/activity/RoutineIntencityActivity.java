@@ -124,7 +124,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
                 return true;
             case R.id.edit:
                 Intent intent = new Intent(context, RoutineIntencityEditActivity.class);
-                startActivityForResult(intent, Constant.REQUEST_ROUTINE_UPDATED);
+                startActivityForResult(intent, Constant.REQUEST_CODE_ROUTINE_UPDATED);
                 return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
@@ -252,7 +252,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Constant.REQUEST_ROUTINE_UPDATED)
+        if (resultCode == Constant.REQUEST_CODE_ROUTINE_UPDATED)
         {
             getRoutines();
         }
@@ -279,7 +279,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
             Intent intent = new Intent();
             intent.putExtra(Constant.BUNDLE_ROUTINE_ROWS, rows);
 
-            setResult(Constant.REQUEST_ROUTINE_UPDATED, intent);
+            setResult(Constant.REQUEST_CODE_ROUTINE_UPDATED, intent);
         }
 
         super.onBackPressed();
@@ -330,7 +330,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
                 intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, row.getTitle());
                 intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, exercises);
 
-                setResult(Constant.REQUEST_START_EXERCISING, intent);
+                setResult(Constant.REQUEST_CODE_START_EXERCISING, intent);
                 finish();
             }
             catch (JSONException e)
