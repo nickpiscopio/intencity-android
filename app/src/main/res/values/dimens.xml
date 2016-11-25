@@ -7,6 +7,8 @@
     <!-- Sign In -->
     <dimen name="logo_margin">32dp</dimen>
 
+    <dimen name="layout_margin_dialog">24dp</dimen>
+
     <dimen name="layout_margin">16dp</dimen>
     <dimen name="layout_margin_three_quarters">12dp</dimen>
     <dimen name="layout_margin_half">8dp</dimen>

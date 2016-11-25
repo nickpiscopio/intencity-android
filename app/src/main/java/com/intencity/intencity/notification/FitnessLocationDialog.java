@@ -11,6 +11,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.intencity.intencity.R;
@@ -30,9 +31,9 @@ public class FitnessLocationDialog
      * @param context       The application's context.
      * @param displayName   The fitness location's display name.
      *                      We use this to populate the display name EditText.
+     * @param apiClient     The google api client so we can get the addresses when the user types it in the location dialog.
      * @param location      The fitness location that the user exercises.
      *                      We use this to populate the location EditText.
-     * @param apiClient     The google api client so we can get the addresses when the user types it in the location dialog.
      * @param listener      The listener so we can send the new display name and location back to the original activity.
      */
     public FitnessLocationDialog(Context context, String displayName, String location, GoogleApiClient apiClient, Location deviceLocation, final DialogFitnessLocationListener listener)
@@ -51,7 +52,9 @@ public class FitnessLocationDialog
         final EditText editTextDisplayName = (EditText) view.findViewById(R.id.edit_text_display_name);
         final AutoCompleteTextView editTextLocation = (AutoCompleteTextView) view.findViewById(R.id.edit_text_location);
 
-        PlaceArrayAdapter adapter = new PlaceArrayAdapter(context, android.R.layout.simple_list_item_1, getCurrentBounds(deviceLocation), null);
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS).build();
+
+        PlaceArrayAdapter adapter = new PlaceArrayAdapter(context, android.R.layout.simple_list_item_1, getCurrentBounds(deviceLocation), typeFilter);
         adapter.setGoogleApiClient(apiClient);
         editTextLocation.setAdapter(adapter);
 
