@@ -38,7 +38,7 @@ import java.util.ArrayList;
 public class Direction extends AppCompatActivity implements ServiceListener, YouTubePlayer.OnInitializedListener,
                                                             DialogListener
 {
-    private String API_KEY = "AIzaSyC8GgBP0oBCNUS3JQrDsnOlDu5fTJG37XE";
+    private static final String API_KEY = "AIzaSyC8GgBP0oBCNUS3JQrDsnOlDu5fTJG37XE";
 
     private String videoUrl = "";
 
