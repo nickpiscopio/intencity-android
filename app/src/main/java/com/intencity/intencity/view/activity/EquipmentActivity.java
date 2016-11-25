@@ -39,6 +39,7 @@ import com.intencity.intencity.adapter.CheckboxAdapter;
 import com.intencity.intencity.listener.DialogFitnessLocationListener;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.model.EquipmentMetaData;
 import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
@@ -57,7 +58,7 @@ import java.util.ArrayList;
 
 /**
  * This is the activity to edit the user's equipment for Intencity.
- *
+ * <p>
  * Created by Nick Piscopio on 1/17/15.
  */
 public class EquipmentActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
@@ -79,6 +80,10 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
 
     private String email;
 
+    // This is the location that was already saved in teh DB.
+    // It will be unique to each user.
+    private String savedLocation;
+
     private ArrayList<SelectableListItem> equipmentList;
     private ArrayList<String> userEquipment;
 
@@ -91,25 +96,27 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     private boolean selectAll = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_equipment);
 
         // Add the back button to the action bar.
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
+        if (actionBar != null)
+        {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        connectionIssue = (LinearLayout) findViewById(R.id.layout_connection_issue);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
+        connectionIssue = (LinearLayout)findViewById(R.id.layout_connection_issue);
+        progressBar = (ProgressBar)findViewById(R.id.progress_bar_loading);
 
         progressBar.setVisibility(View.VISIBLE);
 
-        cardFitnessLocation = (CardView) findViewById(R.id.card_fitness_location);
+        cardFitnessLocation = (CardView)findViewById(R.id.card_fitness_location);
 
-        textViewDisplayName = (TextView) findViewById(R.id.text_view_display_name);
-        textViewLocation = (TextView) findViewById(R.id.text_view_location);
+        textViewDisplayName = (TextView)findViewById(R.id.text_view_display_name);
+        textViewLocation = (TextView)findViewById(R.id.text_view_location);
 
         context = getApplicationContext();
 
@@ -117,15 +124,33 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
 
         cardFitnessLocation.setOnClickListener(fitnessLocationClickListener);
 
-        new ServiceTask(getEquipmentServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EQUIPMENT, email));
+        Bundle extras = getIntent().getExtras();
+        if (extras != null)
+        {
+            EquipmentMetaData metaData = extras.getParcelable(Constant.BUNDLE_EQUIPMENT_META_DATA);
+            if (metaData != null)
+            {
+                String displayName = metaData.getDisplayName();
+                if (!displayName.equals(""))
+                {
+                    textViewDisplayName.setText(displayName);
+                }
+
+                String location = metaData.getLocation();
+                textViewLocation.setText(!location.equals("") ? location : getString(R.string.fitness_location_default));
+            }
+        }
+
+        new ServiceTask(getEquipmentServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EQUIPMENT, email));
 
         setUserSetEquipment();
     }
 
     @Override
-    protected void onDestroy() {
-        if (mGoogleApiClient != null) {
+    protected void onDestroy()
+    {
+        if (mGoogleApiClient != null)
+        {
             mGoogleApiClient.disconnect();
         }
 
@@ -133,7 +158,8 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.checkbox_menu, menu);
 
@@ -143,8 +169,10 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem menuItem)
+    {
+        switch (menuItem.getItemId())
+        {
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -159,12 +187,17 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
+    {
+        switch (requestCode)
+        {
             case Constant.REQUEST_CODE_PERMISSION:
-                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
                     requestGoogleApiClient();
-                } else {
+                }
+                else
+                {
                     CustomDialogContent content = new CustomDialogContent(getString(R.string.edit_equipment_location_permission_needed));
                     content.setPositiveButtonStringRes(R.string.button_preferences);
 
@@ -178,216 +211,17 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
         }
     }
 
-    /**
-     * The ServiceListener for getting the user's equipment.
-     */
-    private ServiceListener getEquipmentServiceListener = new ServiceListener() {
-        @Override
-        public void onRetrievalSuccessful(String response) {
-            try {
-                equipmentList = new ArrayList<>();
-                userEquipment = new ArrayList<>();
-
-                JSONArray array = new JSONArray(response);
-
-                int length = array.length();
-
-                for (int i = 0; i < length; i++) {
-                    JSONObject object = array.getJSONObject(i);
-
-                    String equipmentName = object.getString(Constant.COLUMN_EQUIPMENT_NAME);
-                    boolean hasEquipment = object.getString(Constant.COLUMN_HAS_EQUIPMENT).equalsIgnoreCase(Constant.TRUE);
-
-                    SelectableListItem listItem = new SelectableListItem(equipmentName);
-                    listItem.setChecked(hasEquipment);
-
-                    // Add all the equipment to the array.
-                    equipmentList.add(listItem);
-
-                    // Add the list item to the user's equipment list if he or she currently has it.
-                    if (hasEquipment) {
-                        userEquipment.add(equipmentName);
-                    }
-                }
-
-                // We set the checkbox to checked if the user has all the equipment in the equipment list.
-                setCheckboxTick(userEquipment.size() == equipmentList.size());
-
-                populateEquipmentListView();
-            } catch (JSONException exception) {
-                Log.e(Constant.TAG, "Couldn't parse equipment " + exception.toString());
-
-                connectionIssue.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
-            }
-        }
-
-        @Override
-        public void onRetrievalFailed() {
-            connectionIssue.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
-        }
-    };
-
-    /**
-     * The ServiceListener for updating the user's equipment.
-     */
-    private ServiceListener updateEquipmentServiceListener = new ServiceListener() {
-        @Override
-        public void onRetrievalSuccessful(String response) {
-            finish();
-        }
-
-        @Override
-        public void onRetrievalFailed() {
-            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
-
-            new CustomDialog(EquipmentActivity.this, dialogConnectionIssueListener, dialog, false);
-
-            progressBar.setVisibility(View.GONE);
-        }
-    };
-
     @Override
-    public void onBackPressed() {
-        if (userEquipment != null) {
-            updateEquipment();
-        } else {
-            // We finish the activity manually if we have equipment to update.
-            super.onBackPressed();
-        }
-    }
-
-    /**
-     * Selects or deselects all of the equipment based on the checkbox that is checked in the menu.
-     *
-     * @param selectAll   Boolean value of whether or not we should select all of the equipment.
-     */
-    private void setCheckboxTick(boolean selectAll) {
-        this.selectAll = selectAll;
-
-        menuCheckBox.setIcon(this.selectAll ? R.mipmap.ic_checkbox_marked_white : R.mipmap.ic_checkbox_blank_outline_white);
-    }
-
-    /**
-     * Searches the equipment list and checks or unchecks items based on whether we are selecting or deselecting the menu checkbox.
-     */
-    private void updateEquipmentList() {
-        for (SelectableListItem listItem : equipmentList) {
-            if (selectAll && !listItem.isChecked()) {
-                updateEquipmentListItem(listItem);
-            } else if (!selectAll && listItem.isChecked()) {
-                updateEquipmentListItem(listItem);
-            }
-        }
-
-        // We set the checkbox to checked if the user has all the equipment in the equipment list.
-        setCheckboxTick(userEquipment.size() == equipmentList.size());
-
-        adapter.notifyDataSetChanged();
-    }
-
-    /**
-     * Populates the equipment list.
-     */
-    private void populateEquipmentListView() {
-        adapter = new CheckboxAdapter(this, R.layout.list_item_standard_checkbox, equipmentList);
-
-        View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
-
-        TextView title = (TextView) header.findViewById(R.id.title);
-        TextView description = (TextView) header.findViewById(R.id.description);
-
-        title.setText(context.getString(R.string.edit_equipment_title));
-        description.setText(context.getString(R.string.edit_equipment_description));
-
-        listView = (ListView) findViewById(R.id.list_view);
-        listView.setAdapter(adapter);
-        listView.addHeaderView(header, null, false);
-        listView.setOnItemClickListener(equipmentClickListener);
-
-        progressBar.setVisibility(View.GONE);
-    }
-
-    /**
-     * Calls the service to update the user's equipment.
-     */
-    private void updateEquipment() {
-        progressBar.setVisibility(View.VISIBLE);
-
-        new ServiceTask(updateEquipmentServiceListener).execute(Constant.SERVICE_UPDATE_EQUIPMENT,
-                Constant.generateServiceListVariables(
-                        email, userEquipment, true));
-    }
-
-    /**
-     * The click listener for editing the fitness location.
-     */
-    private View.OnClickListener fitnessLocationClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            // This is for Android M+
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                // Permission was already granted, so show the fitness location dialog.
-                requestGoogleApiClient();
-            } else {
-                requestLocationPermission();
-            }
-        }
-    };
-
-    /**
-     * Displays the fitness location dialog to the user.
-     */
-    private void requestGoogleApiClient() {
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(context)
-                    .addApi(Places.GEO_DATA_API)
-                    .addApi(LocationServices.API)
-                    .enableAutoManage(this, GOOGLE_API_CLIENT_ID, this)
-                    .addConnectionCallbacks(this)
-                    .build();
-        }
-
-        if (mGoogleApiClient.isConnected())
+    public void onBackPressed()
+    {
+        if (userEquipment != null)
         {
-            // We're already connected to google's service, so just open the dialog.
-            openFitnessLocationDialog();
+            updateEquipment();
         }
         else
         {
-            mGoogleApiClient.connect();
-        }
-    }
-
-    /**
-     * Requests the location permission.
-     */
-    private void requestLocationPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(EquipmentActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example if the user has previously denied the permission.
-            new AlertDialog.Builder(EquipmentActivity.this)
-                    .setMessage(context.getResources().getString(R.string.edit_equipment_location_permission_needed))
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(EquipmentActivity.this,
-                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                    Constant.REQUEST_CODE_PERMISSION);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    }).show();
-        } else {
-            // Permission has not been granted yet. Request it directly.
-            ActivityCompat.requestPermissions(EquipmentActivity.this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    Constant.REQUEST_CODE_PERMISSION);
+            // We finish the activity manually if we have equipment to update.
+            super.onBackPressed();
         }
     }
 
@@ -409,68 +243,64 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             adapter.notifyDataSetChanged();
         }
     };
-
     /**
-     * Updates a specified equipment list item.
-     *
-     * This adds or removes it from the list of equipment that the user currently has.
-     *
-     * @param equipment     The item to add or remove from the user's list of equipment.
+     * The ServiceListener for getting the user's equipment.
      */
-    private void updateEquipmentListItem(SelectableListItem equipment) {
-        String equipmentName = equipment.getTitle();
-
-        // Add or remove equipment from the list
-        // if he or she selects on a list item.
-        if (userEquipment.contains(equipmentName)) {
-            equipment.setChecked(false);
-            userEquipment.remove(equipmentName);
-        } else {
-            equipment.setChecked(true);
-            userEquipment.add(equipmentName);
-        }
-    }
-
-    /**
-     * Opens the fitness location dialog.
-     */
-    // We suppress this warning because at this point in the code, we already have the permission to use the user's location.
-    @SuppressWarnings({"MissingPermission"})
-    private void openFitnessLocationDialog()
+    private ServiceListener getEquipmentServiceListener = new ServiceListener()
     {
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        @Override
+        public void onRetrievalSuccessful(String response)
+        {
+            try
+            {
+                equipmentList = new ArrayList<>();
+                userEquipment = new ArrayList<>();
 
-        new FitnessLocationDialog(EquipmentActivity.this, textViewDisplayName.getText().toString(), textViewLocation.getText().toString(), mGoogleApiClient, location, dialogListener);
-    }
+                JSONArray array = new JSONArray(response);
 
-    /**
-     * Starts the app settings screen.
-     */
-    private void startInstalledAppDetailsActivity() {
-        Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.setData(Uri.parse("package:" + context.getPackageName()));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                int length = array.length();
 
-        context.startActivity(intent);
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject object = array.getJSONObject(i);
 
-        Toast.makeText(context, context.getString(R.string.directions_set_permissions), Toast.LENGTH_LONG).show();
-    }
+                    String equipmentName = object.getString(Constant.COLUMN_EQUIPMENT_NAME);
+                    boolean hasEquipment = object.getString(Constant.COLUMN_HAS_EQUIPMENT).equalsIgnoreCase(Constant.TRUE);
 
-    /**
-     * Saves the user set the equipment.
-     */
-    private void setUserSetEquipment() {
-        SecurePreferences sp = new SecurePreferences(context);
-        SharedPreferences.Editor editor = sp.edit();
+                    SelectableListItem listItem = new SelectableListItem(equipmentName);
+                    listItem.setChecked(hasEquipment);
 
-        editor.putBoolean(Constant.USER_SET_EQUIPMENT, true);
-        editor.apply();
-    }
+                    // Add all the equipment to the array.
+                    equipmentList.add(listItem);
 
+                    // Add the list item to the user's equipment list if he or she currently has it.
+                    if (hasEquipment)
+                    {
+                        userEquipment.add(equipmentName);
+                    }
+                }
+
+                // We set the checkbox to checked if the user has all the equipment in the equipment list.
+                setCheckboxTick(userEquipment.size() == equipmentList.size());
+
+                populateEquipmentListView();
+            }
+            catch (JSONException exception)
+            {
+                Log.e(Constant.TAG, "Couldn't parse equipment " + exception.toString());
+
+                connectionIssue.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onRetrievalFailed()
+        {
+            connectionIssue.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+        }
+    };
     /**
      * The dialog listener for the equipment activity.
      */
@@ -497,7 +327,26 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             }
         }
     };
-
+    /**
+     * The click listener for editing the fitness location.
+     */
+    private View.OnClickListener fitnessLocationClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            // This is for Android M+
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            {
+                // Permission was already granted, so show the fitness location dialog.
+                requestGoogleApiClient();
+            }
+            else
+            {
+                requestLocationPermission();
+            }
+        }
+    };
     /**
      * The dialog listener for a connection issue.
      */
@@ -511,6 +360,217 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             finish();
         }
     };
+    /**
+     * The ServiceListener for updating the user's equipment.
+     */
+    private ServiceListener updateEquipmentServiceListener = new ServiceListener()
+    {
+        @Override
+        public void onRetrievalSuccessful(String response)
+        {
+            finish();
+        }
+
+        @Override
+        public void onRetrievalFailed()
+        {
+            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
+
+            new CustomDialog(EquipmentActivity.this, dialogConnectionIssueListener, dialog, false);
+
+            progressBar.setVisibility(View.GONE);
+        }
+    };
+
+    /**
+     * Selects or deselects all of the equipment based on the checkbox that is checked in the menu.
+     *
+     * @param selectAll Boolean value of whether or not we should select all of the equipment.
+     */
+    private void setCheckboxTick(boolean selectAll)
+    {
+        this.selectAll = selectAll;
+
+        menuCheckBox.setIcon(this.selectAll ? R.mipmap.ic_checkbox_marked_white : R.mipmap.ic_checkbox_blank_outline_white);
+    }
+
+    /**
+     * Searches the equipment list and checks or unchecks items based on whether we are selecting or deselecting the menu checkbox.
+     */
+    private void updateEquipmentList()
+    {
+        for (SelectableListItem listItem : equipmentList)
+        {
+            if (selectAll && !listItem.isChecked())
+            {
+                updateEquipmentListItem(listItem);
+            }
+            else if (!selectAll && listItem.isChecked())
+            {
+                updateEquipmentListItem(listItem);
+            }
+        }
+
+        // We set the checkbox to checked if the user has all the equipment in the equipment list.
+        setCheckboxTick(userEquipment.size() == equipmentList.size());
+
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Populates the equipment list.
+     */
+    private void populateEquipmentListView()
+    {
+        adapter = new CheckboxAdapter(this, R.layout.list_item_standard_checkbox, equipmentList);
+
+        View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
+
+        TextView title = (TextView)header.findViewById(R.id.title);
+        TextView description = (TextView)header.findViewById(R.id.description);
+
+        title.setText(context.getString(R.string.edit_equipment_title));
+        description.setText(context.getString(R.string.edit_equipment_description));
+
+        listView = (ListView)findViewById(R.id.list_view);
+        listView.setAdapter(adapter);
+        listView.addHeaderView(header, null, false);
+        listView.setOnItemClickListener(equipmentClickListener);
+
+        progressBar.setVisibility(View.GONE);
+    }
+
+    /**
+     * Calls the service to update the user's equipment.
+     */
+    private void updateEquipment()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+
+        new ServiceTask(updateEquipmentServiceListener).execute(Constant.SERVICE_UPDATE_EQUIPMENT, Constant.generateServiceListVariables(email, userEquipment, true));
+    }
+
+    /**
+     * Displays the fitness location dialog to the user.
+     */
+    private void requestGoogleApiClient()
+    {
+        if (mGoogleApiClient == null)
+        {
+            mGoogleApiClient = new GoogleApiClient.Builder(context).addApi(Places.GEO_DATA_API).addApi(LocationServices.API).enableAutoManage(this, GOOGLE_API_CLIENT_ID, this).addConnectionCallbacks(this).build();
+        }
+
+        if (mGoogleApiClient.isConnected())
+        {
+            // We're already connected to google's service, so just open the dialog.
+            openFitnessLocationDialog();
+        }
+        else
+        {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    /**
+     * Requests the location permission.
+     */
+    private void requestLocationPermission()
+    {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(EquipmentActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION))
+        {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example if the user has previously denied the permission.
+            new AlertDialog.Builder(EquipmentActivity.this)
+                    .setMessage(context.getResources().getString(R.string.edit_equipment_location_permission_needed))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    ActivityCompat.requestPermissions(EquipmentActivity.this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, Constant.REQUEST_CODE_PERMISSION);
+                }
+            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                }
+            }).show();
+        }
+        else
+        {
+            // Permission has not been granted yet. Request it directly.
+            ActivityCompat.requestPermissions(EquipmentActivity.this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, Constant.REQUEST_CODE_PERMISSION);
+        }
+    }
+
+    /**
+     * Updates a specified equipment list item.
+     * <p>
+     * This adds or removes it from the list of equipment that the user currently has.
+     *
+     * @param equipment The item to add or remove from the user's list of equipment.
+     */
+    private void updateEquipmentListItem(SelectableListItem equipment)
+    {
+        String equipmentName = equipment.getTitle();
+
+        // Add or remove equipment from the list
+        // if he or she selects on a list item.
+        if (userEquipment.contains(equipmentName))
+        {
+            equipment.setChecked(false);
+            userEquipment.remove(equipmentName);
+        }
+        else
+        {
+            equipment.setChecked(true);
+            userEquipment.add(equipmentName);
+        }
+    }
+
+    /**
+     * Opens the fitness location dialog.
+     */
+    // We suppress this warning because at this point in the code, we already have the permission to use the user's location.
+    @SuppressWarnings({ "MissingPermission" })
+    private void openFitnessLocationDialog()
+    {
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        new FitnessLocationDialog(EquipmentActivity.this, textViewDisplayName.getText().toString(), textViewLocation.getText().toString(), mGoogleApiClient, location, dialogListener);
+    }
+
+    /**
+     * Starts the app settings screen.
+     */
+    private void startInstalledAppDetailsActivity()
+    {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setData(Uri.parse("package:" + context.getPackageName()));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+
+        context.startActivity(intent);
+
+        Toast.makeText(context, context.getString(R.string.directions_set_permissions), Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Saves the user set the equipment.
+     */
+    private void setUserSetEquipment()
+    {
+        SecurePreferences sp = new SecurePreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+
+        editor.putBoolean(Constant.USER_SET_EQUIPMENT, true);
+        editor.apply();
+    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle)
@@ -520,7 +580,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     }
 
     @Override
-    public void onConnectionSuspended(int i) { }
+    public void onConnectionSuspended(int i){ }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult)

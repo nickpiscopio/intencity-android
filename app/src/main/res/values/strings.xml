@@ -237,8 +237,9 @@
 
     <string name="dialog_fitness_location_title">Where is this equipment located?</string>
     <string name="dialog_fitness_location_description">When at this location, Intencity will automatically use the fitness equipment associated with it.</string>
-    <string name="dialog_fitness_display_name">Name</string>
-    <string name="dialog_fitness_location">Location</string>
+    <string name="dialog_fitness_display_name">Name (Home, Gym, etc.)</string>
+    <string name="dialog_fitness_location">Address</string>
+    <string name="fitness_location_default">NO LOCATION SPECIFIED</string>
 
     <string name="change_password">Change Password</string>
 

@@ -58,6 +58,11 @@ public class FitnessLocationDialog
         adapter.setGoogleApiClient(apiClient);
         editTextLocation.setAdapter(adapter);
 
+        if (location.equals(context.getString(R.string.fitness_location_default)))
+        {
+            location = "";
+        }
+
         editTextDisplayName.setText(displayName);
         editTextLocation.setText(location);
 

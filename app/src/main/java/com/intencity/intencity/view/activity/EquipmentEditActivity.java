@@ -20,6 +20,7 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.CheckboxAdapter;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.model.EquipmentMetaData;
 import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
@@ -234,7 +235,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            setResult(Constant.REQUEST_CODE_ROUTINE_UPDATED);
+//            setResult(Constant.REQUEST_CODE_ROUTINE_UPDATED);
             finish();
         }
 
@@ -254,7 +255,13 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
     private void openEquipmentActivity(String displayName, String location)
     {
         Intent intent = new Intent(context, EquipmentActivity.class);
-        startActivityForResult(intent, Constant.REQUEST_CODE_ROUTINE_UPDATED);
+
+        if (!displayName.equals("") || !location.equals(""))
+        {
+            intent.putExtra(Constant.BUNDLE_EQUIPMENT_META_DATA, new EquipmentMetaData(displayName, location));
+        }
+
+        startActivityForResult(intent, Constant.REQUEST_CODE_EQUIPMENT_SAVED);
     }
 
     /**

@@ -57,16 +57,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_margin_quarter"
-                    android:textColor="@color/secondary_light"
-                    android:text="Home"/>
+                    android:textColor="@color/secondary_light"/>
 
                 <TextView
                     android:id="@+id/text_view_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_margin_quarter"
-                    android:textColor="@color/secondary_light"
-                    android:text="1234 Street Name\nLos Angeles, CA 90210"/>
+                    android:textColor="@color/secondary_light"/>
 
             </LinearLayout>
 
