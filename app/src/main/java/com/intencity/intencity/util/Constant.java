@@ -119,7 +119,7 @@ public class Constant
     public static final String SERVICE_STORED_PROCEDURE = SERVICE_FOLDER_MOBILE + "stored_procedure.php";
     public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER_MOBILE + "complex_insert.php";
     public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
-    public static final String SERVICE_UPDATE_EQUIPMENT = SERVICE_FOLDER_MOBILE + "update_equipment.php";
+    public static final String SERVICE_UPDATE_EQUIPMENT = SERVICE_FOLDER_MOBILE + "update_fitness_equipment.php";
     public static final String SERVICE_SET_ROUTINE = SERVICE_FOLDER_MOBILE + "set_routine.php";
     public static final String SERVICE_SET_USER_MUSCLE_GROUP_ROUTINE = SERVICE_FOLDER_MOBILE + "set_user_muscle_group_routine.php";
     public static final String SERVICE_UPDATE_USER_MUSCLE_GROUP_ROUTINE = SERVICE_FOLDER_MOBILE + "update_user_muscle_group_routine.php";
@@ -145,6 +145,7 @@ public class Constant
     private static final String PARAMETER_VARIABLE = "v=";
     private static final String PARAMETER_FIRST_NAME = "first_name=";
     private static final String PARAMETER_LAST_NAME = "last_name=";
+    private static final String PARAMETER_DISPLAY_NAME = "display_name=";
     private static final String PARAMETER_ACCOUNT_TYPE = "account_type=";
     private static final String PARAMETER_INSERTS = "inserts=";
     private static final String PARAMETER_REMOVE = "remove=";
@@ -334,6 +335,32 @@ public class Constant
     {
         String parameters = PARAMETER_EMAIL + email;
         parameters += isInserting ? generateListVariables(PARAMETER_AMPERSAND + PARAMETER_INSERTS, variables) : generateRemoveListVariables(PARAMETER_AMPERSAND + PARAMETER_REMOVE, variables);
+
+        return parameters;
+    }
+
+    /**
+     * Generates the URL string to update a user's specified equipment list.
+     *
+     * @param email             The user's email.
+     * @param displayName       The display name of the fitness location.
+     * @param savedLocation     The location in the database of the fitness location.
+     *                          This is used so we can query and update the database.
+     * @param location          The new location of the fitness equipment.
+     * @param userEquipment     Teh equipment the user has at a current location.
+     *
+     * @return  The generated URL string.
+     */
+    public static String generateEquipmentListVariables(String email, String displayName, String savedLocation, String location, ArrayList<String> userEquipment)
+    {
+        String parameterSavedLocation = "saved_location=";
+        String parameterLocation = PARAMETER_AMPERSAND + "location=";
+
+        String parameters = parameterSavedLocation + savedLocation +
+                            parameterLocation + location +
+                            PARAMETER_AMPERSAND + PARAMETER_DISPLAY_NAME + displayName +
+                            // We are always inserting here because update_fitness_equipment.php always uses and insert.
+                            PARAMETER_AMPERSAND + generateServiceListVariables(email, userEquipment, true);
 
         return parameters;
     }

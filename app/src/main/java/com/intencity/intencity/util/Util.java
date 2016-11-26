@@ -3,18 +3,20 @@ package com.intencity.intencity.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
 import android.widget.ProgressBar;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.view.activity.MainActivity;
 import com.intencity.intencity.handler.NotificationHandler;
 import com.intencity.intencity.helper.DbHelper;
 import com.intencity.intencity.notification.AwardDialogContent;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
+import com.intencity.intencity.view.activity.MainActivity;
 
 import java.util.Date;
 import java.util.Random;
@@ -316,5 +318,19 @@ public class Util
     public static String getSecurePreferencesEmail(Context context)
     {
         return new SecurePreferences(context).getString(Constant.USER_ACCOUNT_EMAIL, "");
+    }
+
+    /**
+     * Converts density independent pixels to pixels.
+     *
+     * @param dp    The dp to convert.
+     *
+     * @return  The converted pixels.
+     */
+    public static float convertDpToPixel(float dp)
+    {
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        float px = dp * (metrics.densityDpi / 160f);
+        return Math.round(px);
     }
 }

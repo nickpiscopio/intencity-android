@@ -82,7 +82,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
 
     // This is the location that was already saved in teh DB.
     // It will be unique to each user.
-    private String savedLocation;
+    private String savedLocation = "";
 
     private ArrayList<SelectableListItem> equipmentList;
     private ArrayList<String> userEquipment;
@@ -130,14 +130,10 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             EquipmentMetaData metaData = extras.getParcelable(Constant.BUNDLE_EQUIPMENT_META_DATA);
             if (metaData != null)
             {
-                String displayName = metaData.getDisplayName();
-                if (!displayName.equals(""))
-                {
-                    textViewDisplayName.setText(displayName);
-                }
+                setDisplayName(metaData.getDisplayName());
 
-                String location = metaData.getLocation();
-                textViewLocation.setText(!location.equals("") ? location : getString(R.string.fitness_location_default));
+                savedLocation = metaData.getLocation();
+                textViewLocation.setText(!savedLocation.equals("") ? savedLocation : getString(R.string.fitness_location_default));
             }
         }
 
@@ -309,8 +305,8 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
         @Override
         public void onSaveFitnessLocation(String displayName, String location)
         {
-            textViewDisplayName.setVisibility(displayName.length() > 0 ? View.VISIBLE : View.GONE);
-            textViewDisplayName.setText(displayName);
+            setDisplayName(displayName);
+
             textViewLocation.setText(location);
         }
 
@@ -383,6 +379,17 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     };
 
     /**
+     * Sets the text of the display name.
+     *
+     * @param displayName   The text to set the display name.
+     */
+    private void setDisplayName(String displayName)
+    {
+        textViewDisplayName.setVisibility(displayName.length() > 0 ? View.VISIBLE : View.GONE);
+        textViewDisplayName.setText(displayName);
+    }
+
+    /**
      * Selects or deselects all of the equipment based on the checkbox that is checked in the menu.
      *
      * @param selectAll Boolean value of whether or not we should select all of the equipment.
@@ -447,7 +454,8 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     {
         progressBar.setVisibility(View.VISIBLE);
 
-        new ServiceTask(updateEquipmentServiceListener).execute(Constant.SERVICE_UPDATE_EQUIPMENT, Constant.generateServiceListVariables(email, userEquipment, true));
+        String params = Constant.generateEquipmentListVariables(email, textViewDisplayName.getText().toString(), savedLocation, textViewLocation.getText().toString(), userEquipment);
+        new ServiceTask(updateEquipmentServiceListener).execute(Constant.SERVICE_UPDATE_EQUIPMENT, params);
     }
 
     /**

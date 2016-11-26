@@ -202,7 +202,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
                 String name = object.getString(Constant.COLUMN_DISPLAY_NAME);
                 String location = object.getString(Constant.COLUMN_LOCATION);
 
-                SelectableListItem listItem = name.length() > 0 ? new SelectableListItem(name, location) : new SelectableListItem(location);
+                SelectableListItem listItem = new SelectableListItem(name, location);
                 listItem.setDeletionEnabled(false);
 
                 // Add all the locations to the array.

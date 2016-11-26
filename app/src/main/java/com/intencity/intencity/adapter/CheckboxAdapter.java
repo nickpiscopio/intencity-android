@@ -1,6 +1,9 @@
 package com.intencity.intencity.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.model.SelectableListItem;
+import com.intencity.intencity.util.Util;
 
 import java.util.ArrayList;
 
@@ -82,12 +86,41 @@ public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
 
         SelectableListItem row = objects.get(position);
 
-        holder.title.setText(row.getTitle());
+        String title = row.getTitle();
+        String description = row.getDescription();
+
+        boolean hasTitle = title.length() > 0;
+        if (hasTitle)
+        {
+            holder.title.setText(title);
+            holder.title.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            holder.title.setVisibility(View.GONE);
+        }
+
         holder.checkbox.setChecked(row.isChecked());
 
-        String description = row.getDescription();
         if(description != null && description.length() > 0)
         {
+            Resources res = context.getResources();
+
+            if (hasTitle)
+            {
+                int paddingTop = (int) Util.convertDpToPixel(res.getDimension(R.dimen.layout_margin_sixteenth));
+
+                holder.description.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
+                holder.description.setPadding(0, paddingTop, 0, 0);
+                holder.description.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimension(R.dimen.card_title3_size));
+            }
+            else
+            {
+                holder.description.setTextColor(ContextCompat.getColor(context, R.color.secondary_dark));
+                holder.description.setPadding(0, 0, 0, 0);
+                holder.description.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimension(R.dimen.card_title_size));
+            }
+
             holder.description.setText(description);
             holder.description.setVisibility(View.VISIBLE);
         }

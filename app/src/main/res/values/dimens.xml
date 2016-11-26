@@ -13,6 +13,8 @@
     <dimen name="layout_margin_three_quarters">12dp</dimen>
     <dimen name="layout_margin_half">8dp</dimen>
     <dimen name="layout_margin_quarter">4dp</dimen>
+    <dimen name="layout_margin_eighth">2dp</dimen>
+    <dimen name="layout_margin_sixteenth">1dp</dimen>
     <dimen name="rounded_corner_radius">4dp</dimen>
     <dimen name="negative_shadow">-10dp</dimen>
     <dimen name="shadow">2dp</dimen>
