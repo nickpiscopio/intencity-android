@@ -20,14 +20,24 @@ import java.net.URL;
  */
 public class ServiceTask extends AsyncTask<String, Void, String>
 {
-    public static final String FAILURE = "FAILURE";
+    // This is the failure response from Intencity's services.
+    public static final String RESPONSE_FAILURE = "RESPONSE_FAILURE";
+
+    // This is the OK response from Google Services.
+    public static final String RESPONSE_OK = "OK";
+
+    // This is a node from Google services to check the status of an API call,
+    public static final String NODE_STATUS = "status";
+
+    private final String POST = "POST";
+    private final String GET = "GET";
 
     private ServiceListener serviceListener;
 
     private boolean success = true;
 
     /**
-     * This is the generic constructor for the ServiceTask.
+     * This is a constructor for the ServiceTask.
      *
      * @param serviceListener   The listener to call when the service is done.
      */
@@ -43,8 +53,20 @@ public class ServiceTask extends AsyncTask<String, Void, String>
         OutputStreamWriter request;
 
         URL url;
-        String response = null;
-        String parameters = params[1];
+        StringBuffer response = new StringBuffer();
+        String inputLine;
+        String parameters = "";
+        String requestMethod;
+
+        try
+        {
+            parameters = params[1];
+            requestMethod = POST;
+        }
+        catch (Exception e)
+        {
+            requestMethod = GET;
+        }
 
         try
         {
@@ -52,18 +74,23 @@ public class ServiceTask extends AsyncTask<String, Void, String>
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestMethod("POST");
+            connection.setRequestMethod(requestMethod);
 
-            request = new OutputStreamWriter(connection.getOutputStream());
-            request.write(parameters);
-            request.flush();
-            request.close();
+            if (requestMethod.equals(POST))
+            {
+                request = new OutputStreamWriter(connection.getOutputStream());
+                request.write(parameters);
+                request.flush();
+                request.close();
+            }
 
             InputStreamReader isr = new InputStreamReader(connection.getInputStream());
             BufferedReader reader = new BufferedReader(isr);
 
-            // Response from server after login process will be stored in response variable.
-            response = reader.readLine();
+            while ((inputLine = reader.readLine()) != null)
+            {
+                response.append(inputLine);
+            }
 
             isr.close();
             reader.close();
@@ -75,7 +102,7 @@ public class ServiceTask extends AsyncTask<String, Void, String>
             success = false;
         }
 
-        return response;
+        return response.toString();
     }
 
     @Override
@@ -83,7 +110,7 @@ public class ServiceTask extends AsyncTask<String, Void, String>
     {
         if (serviceListener != null)
         {
-            if (success && result.length() > 0 && !result.replaceAll("\"", "").equalsIgnoreCase(FAILURE))
+            if (success && result.length() > 0 && !result.replaceAll("\"", "").equalsIgnoreCase(RESPONSE_FAILURE))
             {
                 serviceListener.onRetrievalSuccessful(result);
             }

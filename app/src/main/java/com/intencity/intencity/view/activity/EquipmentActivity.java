@@ -47,6 +47,7 @@ import com.intencity.intencity.notification.FitnessLocationDialog;
 import com.intencity.intencity.notification.ToastDialog;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.GoogleGeocode;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 
@@ -58,7 +59,7 @@ import java.util.ArrayList;
 
 /**
  * This is the activity to edit the user's equipment for Intencity.
- * <p>
+ *
  * Created by Nick Piscopio on 1/17/15.
  */
 public class EquipmentActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
@@ -79,9 +80,11 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     private MenuItem menuCheckBox;
 
     private String email;
+    private String defaultLocationString;
 
-    // This is the location that was already saved in teh DB.
+    // This is the location that was already saved in the DB.
     // It will be unique to each user.
+    private String savedDisplayName = "";
     private String savedLocation = "";
 
     private ArrayList<SelectableListItem> equipmentList;
@@ -121,6 +124,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
         context = getApplicationContext();
 
         email = Util.getSecurePreferencesEmail(context);
+        defaultLocationString = getString(R.string.fitness_location_default);
 
         cardFitnessLocation.setOnClickListener(fitnessLocationClickListener);
 
@@ -130,10 +134,11 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             EquipmentMetaData metaData = extras.getParcelable(Constant.BUNDLE_EQUIPMENT_META_DATA);
             if (metaData != null)
             {
-                setDisplayName(metaData.getDisplayName());
+                savedDisplayName = metaData.getDisplayName();
+                setDisplayName(savedDisplayName);
 
                 savedLocation = metaData.getLocation();
-                textViewLocation.setText(!savedLocation.equals("") ? savedLocation : getString(R.string.fitness_location_default));
+                textViewLocation.setText(!savedLocation.equals("") ? savedLocation : defaultLocationString);
             }
         }
 
@@ -210,16 +215,64 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     @Override
     public void onBackPressed()
     {
-        if (userEquipment != null)
+        String textViewDisplayNameString = textViewDisplayName.getText().toString();
+        String textViewLocationString = textViewLocation.getText().toString();
+
+        if (userEquipment != null || !textViewLocationString.equals(savedLocation) || !textViewDisplayNameString.equals(savedDisplayName))
         {
-            updateEquipment();
+            // The geocode API request to check if the fitness location is a valid address.
+            // We need it to be valid because we use that locations proximity to check what equipment the user currently has.
+            new ServiceTask(googleGeoCodeListener).execute(GoogleGeocode.ROUTE +
+                                                           GoogleGeocode.getGoogleGeocodeParameters(textViewLocationString));
         }
         else
         {
-            // We finish the activity manually if we have equipment to update.
+            // We finish the activity because there isn't anything to update.
             super.onBackPressed();
         }
     }
+
+    /**
+     * The service listener to check if the location the user typed in was a valid address according to google.
+     */
+   private ServiceListener googleGeoCodeListener = new ServiceListener()
+   {
+        @Override
+        public void onRetrievalSuccessful(String response)
+        {
+            try
+            {
+                JSONObject obj = new JSONObject(response);
+                String status = obj.getString(ServiceTask.NODE_STATUS);
+                if (status.equalsIgnoreCase(ServiceTask.RESPONSE_OK))
+                {
+                    // We got a response back with a status of "OK", so we continue.
+                    updateEquipment();
+                }
+                else
+                {
+                    onRetrievalFailed();
+                }
+            }
+            catch (JSONException e)
+            {
+                onRetrievalFailed();
+            }
+
+        }
+
+        @Override
+        public void onRetrievalFailed()
+        {
+            String title = getString(R.string.invalid_fitness_location_title);
+            String message = getString(R.string.invalid_fitness_location_description);
+            CustomDialogContent dialog = new CustomDialogContent(title, message, true);
+            dialog.setPositiveButtonStringRes(R.string.invalid_fitness_location_positive_button);
+            dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_negative_button);
+
+            new CustomDialog(EquipmentActivity.this, invalidFitnessLocationDialogListener, dialog, true);
+        }
+    };
 
     /**
      * The click listener for each item clicked in the equipment list.
@@ -323,6 +376,49 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             }
         }
     };
+
+    /**
+     * The dialog listener for the invalid fitness dialog.
+     */
+    private DialogListener invalidFitnessLocationDialogListener = new DialogListener()
+    {
+        @Override
+        public void onButtonPressed(int which)
+        {
+            switch (which)
+            {
+                // Set the fitness location.
+                case Constant.POSITIVE_BUTTON:
+                    // We request the google api client.
+                    // When that is received, we open the fitness location dialog.
+                    requestGoogleApiClient();
+                    break;
+
+                // Just go back because we don't want to save anything.
+                case Constant.NEGATIVE_BUTTON:
+                    EquipmentActivity.super.onBackPressed();
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    };
+
+    /**
+     * The dialog listener for a connection issue.
+     */
+    private DialogListener dialogConnectionIssueListener = new DialogListener()
+    {
+        @Override
+        public void onButtonPressed(int which)
+        {
+            // This only gets called when there is a connection issue.
+            // There is only 1 button that can be pressed, so we aren't going to switch on it.
+            finish();
+        }
+    };
+
     /**
      * The click listener for editing the fitness location.
      */
@@ -343,19 +439,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             }
         }
     };
-    /**
-     * The dialog listener for a connection issue.
-     */
-    private DialogListener dialogConnectionIssueListener = new DialogListener()
-    {
-        @Override
-        public void onButtonPressed(int which)
-        {
-            // This only gets called when there is a connection issue.
-            // There is only 1 button that can be pressed, so we aren't going to switch on it.
-            finish();
-        }
-    };
+
     /**
      * The ServiceListener for updating the user's equipment.
      */

@@ -241,6 +241,12 @@
     <string name="dialog_fitness_location">Address</string>
     <string name="fitness_location_default">NO LOCATION SPECIFIED</string>
 
+    <string name="invalid_fitness_location_positive_button">Enter location</string>
+    <string name="invalid_fitness_location_negative_button">Go back &amp; don\'t save</string>
+
+    <string name="invalid_fitness_location_title">Invalid fitness location</string>
+    <string name="invalid_fitness_location_description">Please enter a correct address for where this equipment is located.</string>
+
     <string name="change_password">Change Password</string>
 
     <string name="title_rate_intencity">Rate Intencity</string>

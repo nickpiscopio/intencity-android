@@ -113,7 +113,7 @@ public class UploadImageTask extends AsyncTask<Void, Void, String>
     {
         if (listener != null)
         {
-            if (success && result.length() > 0 && !result.replaceAll("\"", "").equalsIgnoreCase(ServiceTask.FAILURE))
+            if (success && result.length() > 0 && !result.replaceAll("\"", "").equalsIgnoreCase(ServiceTask.RESPONSE_FAILURE))
             {
                 listener.onImageRetrieved(image);
             }
