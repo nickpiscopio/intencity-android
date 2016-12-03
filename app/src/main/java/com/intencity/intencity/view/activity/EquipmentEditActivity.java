@@ -296,14 +296,14 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
         {
             progressBar.setVisibility(View.VISIBLE);
 
-//            new ServiceTask(saveLocationsServiceListener).execute(Constant.SERVICE_UPDATE_USER_MUSCLE_GROUP_ROUTINE,
-//                                                                  Constant.generateServiceListVariables(email,
-//                                                                                                      locationsToRemove, false));
+            new ServiceTask(saveLocationsServiceListener).execute(Constant.SERVICE_UPDATE_USER_FITNESS_LOCATION,
+                                                                  Constant.generateServiceListVariables(email,
+                                                                                                      locationsToRemove, false));
         }
-//        else
-//        {
-//            onBackPressed();
-//        }
+        else
+        {
+            onBackPressed();
+        }
     }
 
     /**
@@ -329,21 +329,23 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
         {
             SelectableListItem location = locations.get(position - 1);
 
-            String title = location.getTitle();
+            // The address is located in teh description.
+            // We only allow 1 address per person, so we are removing on the user's email/location (address).
+            String address = location.getDescription();
 
             if (inRemovingState)
             {
                 // Add or remove muscle groups from the list
                 // if he or she clicks on a list item.
-                if (locationsToRemove.contains(title))
+                if (locationsToRemove.contains(address))
                 {
                     location.setChecked(true);
-                    locationsToRemove.remove(title);
+                    locationsToRemove.remove(address);
                 }
                 else
                 {
                     location.setChecked(false);
-                    locationsToRemove.add(title);
+                    locationsToRemove.add(address);
                 }
 
                 adapter.notifyDataSetChanged();
@@ -351,7 +353,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
             else
             {
                 // We are editing, so open the equipment activity.
-                openEquipmentActivity(title, location.getDescription());
+                openEquipmentActivity(address, location.getDescription());
             }
         }
     };

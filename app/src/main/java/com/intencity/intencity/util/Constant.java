@@ -119,6 +119,7 @@ public class Constant
     public static final String SERVICE_STORED_PROCEDURE = SERVICE_FOLDER_MOBILE + "stored_procedure.php";
     public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER_MOBILE + "complex_insert.php";
     public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
+    public static final String SERVICE_UPDATE_USER_FITNESS_LOCATION = SERVICE_FOLDER_MOBILE + "update_user_fitness_location.php";
     public static final String SERVICE_UPDATE_EQUIPMENT = SERVICE_FOLDER_MOBILE + "update_fitness_equipment.php";
     public static final String SERVICE_SET_ROUTINE = SERVICE_FOLDER_MOBILE + "set_routine.php";
     public static final String SERVICE_SET_USER_MUSCLE_GROUP_ROUTINE = SERVICE_FOLDER_MOBILE + "set_user_muscle_group_routine.php";
