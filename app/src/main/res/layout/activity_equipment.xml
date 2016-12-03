@@ -47,6 +47,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/layout_margin_quarter"
                     android:textSize="@dimen/card_title3_size"
                     android:textStyle="bold"
                     android:textColor="@color/secondary_light"
@@ -56,14 +57,13 @@
                     android:id="@+id/text_view_display_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_margin_quarter"
+                    android:layout_marginBottom="@dimen/layout_margin_sixteenth"
                     android:textColor="@color/secondary_light"/>
 
                 <TextView
                     android:id="@+id/text_view_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_margin_eighth"
                     android:textColor="@color/secondary_light"/>
 
             </LinearLayout>

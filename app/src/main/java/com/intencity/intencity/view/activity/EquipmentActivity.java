@@ -223,6 +223,8 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             (!textViewLocationString.equals(savedLocation) && !textViewLocationString.equals(defaultLocationString)) ||
              !textViewDisplayNameString.equals(savedDisplayName))
         {
+            progressBar.setVisibility(View.VISIBLE);
+
             // The geocode API request to check if the fitness location is a valid address.
             // We need it to be valid because we use that locations proximity to check what equipment the user currently has.
             new ServiceTask(googleGeoCodeListener).execute(GoogleGeocode.ROUTE +
@@ -280,6 +282,8 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_negative_button);
 
             new CustomDialog(EquipmentActivity.this, invalidFitnessLocationDialogListener, dialog, true);
+
+            progressBar.setVisibility(View.GONE);
         }
     };
 
@@ -578,8 +582,6 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
      */
     private void updateEquipment()
     {
-        progressBar.setVisibility(View.VISIBLE);
-
         String params = Constant.generateEquipmentListVariables(email, textViewDisplayName.getText().toString(), savedLocation, textViewLocation.getText().toString(), userEquipment);
         new ServiceTask(updateEquipmentServiceListener).execute(Constant.SERVICE_UPDATE_EQUIPMENT, params);
     }
