@@ -61,7 +61,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
 
     private CheckboxAdapter adapter;
 
-    private boolean hasMoreExercises = false;
+    private boolean hasMoreFitnessLocations = false;
     private boolean inRemovingState = false;
 
     @Override
@@ -110,7 +110,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
     @Override
     public void onBackPressed()
     {
-        if (hasMoreExercises)
+        if (hasMoreFitnessLocations)
         {
             setResult(Constant.REQUEST_CODE_ROUTINE_UPDATED);
             finish();
@@ -361,9 +361,9 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Constant.REQUEST_CODE_ROUTINE_UPDATED)
+        if (resultCode == Constant.REQUEST_CODE_EQUIPMENT_SAVED)
         {
-            hasMoreExercises = true;
+            hasMoreFitnessLocations = true;
 
             getUserFitnessLocations();
         }

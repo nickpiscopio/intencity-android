@@ -258,7 +258,6 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             {
                 onRetrievalFailed();
             }
-
         }
 
         @Override
@@ -389,9 +388,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             {
                 // Set the fitness location.
                 case Constant.POSITIVE_BUTTON:
-                    // We request the google api client.
-                    // When that is received, we open the fitness location dialog.
-                    requestGoogleApiClient();
+                    checkLocationPermission();
                     break;
 
                 // Just go back because we don't want to save anything.
@@ -427,16 +424,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
         @Override
         public void onClick(View view)
         {
-            // This is for Android M+
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            {
-                // Permission was already granted, so show the fitness location dialog.
-                requestGoogleApiClient();
-            }
-            else
-            {
-                requestLocationPermission();
-            }
+            checkLocationPermission();
         }
     };
 
@@ -448,6 +436,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
         @Override
         public void onRetrievalSuccessful(String response)
         {
+            setResult(Constant.REQUEST_CODE_EQUIPMENT_SAVED);
             finish();
         }
 
@@ -543,6 +532,23 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     }
 
     /**
+     * Checks to see if we have the location permission.
+     */
+    private void checkLocationPermission()
+    {
+        // This is for Android M+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            // Permission was already granted, so show the fitness location dialog.
+            requestGoogleApiClient();
+        }
+        else
+        {
+            requestLocationPermission();
+        }
+    }
+
+    /**
      * Displays the fitness location dialog to the user.
      */
     private void requestGoogleApiClient()
@@ -568,7 +574,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
      */
     private void requestLocationPermission()
     {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(EquipmentActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION))
+        if (ActivityCompat.shouldShowRequestPermissionRationale(EquipmentActivity.this, Manifest.permission.ACCESS_FINE_LOCATION))
         {
             // Provide an additional rationale to the user if the permission was not granted
             // and the user would benefit from additional context for the use of the permission.
@@ -580,20 +586,18 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
                 @Override
                 public void onClick(DialogInterface dialog, int which)
                 {
-                    ActivityCompat.requestPermissions(EquipmentActivity.this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, Constant.REQUEST_CODE_PERMISSION);
+                    ActivityCompat.requestPermissions(EquipmentActivity.this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, Constant.REQUEST_CODE_PERMISSION);
                 }
             }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
             {
                 @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
-                }
+                public void onClick(DialogInterface dialog, int which) { }
             }).show();
         }
         else
         {
             // Permission has not been granted yet. Request it directly.
-            ActivityCompat.requestPermissions(EquipmentActivity.this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, Constant.REQUEST_CODE_PERMISSION);
+            ActivityCompat.requestPermissions(EquipmentActivity.this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, Constant.REQUEST_CODE_PERMISSION);
         }
     }
 
