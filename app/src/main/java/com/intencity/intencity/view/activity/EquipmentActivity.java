@@ -138,7 +138,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
                 setDisplayName(savedDisplayName);
 
                 savedLocation = metaData.getLocation();
-                textViewLocation.setText(!savedLocation.equals("") ? savedLocation : defaultLocationString);
+                setLocation(savedLocation);
             }
         }
 
@@ -369,7 +369,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
         {
             setDisplayName(displayName);
 
-            textViewLocation.setText(location);
+            setLocation(location);
         }
 
         @Override
@@ -494,6 +494,25 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     {
         textViewDisplayName.setVisibility(displayName.length() > 0 ? View.VISIBLE : View.GONE);
         textViewDisplayName.setText(displayName);
+    }
+
+    /**
+     * Sets the text of the fitness location.
+     *
+     * @param location   The text to set the location.
+     */
+    private void setLocation(String location)
+    {
+        if (!location.equals(""))
+        {
+            textViewLocation.setText(location);
+            textViewLocation.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
+        }
+        else
+        {
+            textViewLocation.setText(defaultLocationString);
+            textViewLocation.setTextColor(ContextCompat.getColor(context, R.color.card_button_delete_deselect));
+        }
     }
 
     /**

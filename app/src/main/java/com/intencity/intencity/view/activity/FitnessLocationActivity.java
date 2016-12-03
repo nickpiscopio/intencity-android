@@ -68,7 +68,7 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_equipment_edit);
+        setContentView(R.layout.activity_fitness_location_edit);
 
         // Add the back button to the action bar.
         ActionBar actionBar = getSupportActionBar();
