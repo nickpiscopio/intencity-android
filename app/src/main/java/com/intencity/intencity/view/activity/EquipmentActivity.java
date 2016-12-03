@@ -142,7 +142,8 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             }
         }
 
-        new ServiceTask(getEquipmentServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EQUIPMENT, email));
+        new ServiceTask(getEquipmentServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+                                                             Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_EQUIPMENT, email, savedLocation));
 
         setUserSetEquipment();
     }
@@ -218,12 +219,21 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
         String textViewDisplayNameString = textViewDisplayName.getText().toString();
         String textViewLocationString = textViewLocation.getText().toString();
 
-        if (userEquipment != null || !textViewLocationString.equals(savedLocation) || !textViewDisplayNameString.equals(savedDisplayName))
+        if ((userEquipment != null && userEquipment.size() > 0) ||
+            (!textViewLocationString.equals(savedLocation) && !textViewLocationString.equals(defaultLocationString)) ||
+             !textViewDisplayNameString.equals(savedDisplayName))
         {
             // The geocode API request to check if the fitness location is a valid address.
             // We need it to be valid because we use that locations proximity to check what equipment the user currently has.
             new ServiceTask(googleGeoCodeListener).execute(GoogleGeocode.ROUTE +
                                                            GoogleGeocode.getGoogleGeocodeParameters(textViewLocationString));
+        }
+        else if (userEquipment != null && userEquipment.size() == 0)
+        {
+            CustomDialogContent dialog = new CustomDialogContent(getString(R.string.edit_equipment_error_title), getString(R.string.edit_equipment_error_description), true);
+            dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_negative_button);
+
+            new CustomDialog(EquipmentActivity.this, invalidFitnessEquipmentDialogListener, dialog, true);
         }
         else
         {
@@ -396,6 +406,30 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
                     EquipmentActivity.super.onBackPressed();
                     break;
 
+                default:
+                    break;
+            }
+        }
+    };
+
+    /**
+     * The dialog listener for the invalid fitness equipment.
+     */
+    private DialogListener invalidFitnessEquipmentDialogListener = new DialogListener()
+    {
+        @Override
+        public void onButtonPressed(int which)
+        {
+            switch (which)
+            {
+                // Just go back because we don't want to save anything.
+                case Constant.NEGATIVE_BUTTON:
+                    EquipmentActivity.super.onBackPressed();
+                    break;
+
+                // Allow the user to set equipment.
+                case Constant.POSITIVE_BUTTON:
+                    break;
                 default:
                     break;
             }

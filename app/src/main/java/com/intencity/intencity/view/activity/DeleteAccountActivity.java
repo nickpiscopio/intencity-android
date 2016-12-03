@@ -154,7 +154,7 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
             else
             {
                 // Service to delete the user's account.
-                new ServiceTask(removeAccountListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+                new ServiceTask(removeAccountListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
                                                                  Constant.generateStoredProcedureParameters(
                                                                          Constant.STORED_PROCEDURE_REMOVE_ACCOUNT,
                                                                          email));

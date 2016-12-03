@@ -116,7 +116,7 @@ public class Constant
     public static final String SERVICE_VALIDATE_USER_CREDENTIALS = SERVICE_FOLDER_MOBILE + "user_credentials.php";
     public static final String SERVICE_CREATE_ACCOUNT = SERVICE_FOLDER_MOBILE + "account.php";
     public static final String SERVICE_UPDATE_USER_LOGIN_DATE = SERVICE_FOLDER_MOBILE + "update_user_login_date.php";
-    public static final String SERVICE_STORED_PROCEDURE = SERVICE_FOLDER_MOBILE + "stored_procedure.php";
+    public static final String SERVICE_EXECUTE_STORED_PROCEDURE = SERVICE_FOLDER_MOBILE + "execute_stored_procedure.php";
     public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER_MOBILE + "complex_insert.php";
     public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
     public static final String SERVICE_UPDATE_USER_FITNESS_LOCATION = SERVICE_FOLDER_MOBILE + "update_user_fitness_location.php";
@@ -134,7 +134,7 @@ public class Constant
     // Parameters
     public static final String PARAMETER_AMPERSAND = "&";
     public static final String PARAMETER_DELIMITER = ",";
-    public static final String PARAMETER_DELIMITER_REMOVE = "|";
+    public static final String PARAMETER_DELIMITER_SECONDARY = "|";
     // This does not have "=" because it usually has a number followed by it.
     // i.e. &table0
     public static final String PARAMETER_TABLE = "table";
@@ -164,7 +164,7 @@ public class Constant
     public static final String STORED_PROCEDURE_SEARCH_USERS = "searchUsers";
     public static final String STORED_PROCEDURE_FOLLOW_USER = "followUser";
     public static final String STORED_PROCEDURE_GET_EXERCISE_DIRECTION = "getDirection";
-    public static final String STORED_PROCEDURE_GET_EQUIPMENT = "getEquipment";
+    public static final String STORED_PROCEDURE_GET_USER_EQUIPMENT = "getUserEquipment";
     public static final String STORED_PROCEDURE_GET_EXERCISE_PRIORITIES = "getPriority";
     public static final String STORED_PROCEDURE_GET_CUSTOM_ROUTINE_MUSCLE_GROUP = "getCustomRoutineMuscleGroup";
     public static final String STORED_PROCEDURE_GET_USER_MUSCLE_GROUP_ROUTINE = "getUserMuscleGroupRoutine";
@@ -316,7 +316,7 @@ public class Constant
                     storedProcedureParameters += PARAMETER_AMPERSAND + PARAMETER_VARIABLE;
                 }
 
-                storedProcedureParameters += ((i > 0) ? PARAMETER_DELIMITER : "") + variables[i];
+                storedProcedureParameters += ((i > 0) ? PARAMETER_DELIMITER_SECONDARY : "") + variables[i];
             }
         }
 
@@ -487,7 +487,7 @@ public class Constant
                 parameters += variableName;
             }
 
-            parameters += ((i > 0) ? PARAMETER_DELIMITER_REMOVE : "") + variables.get(i).replaceAll("&", "%26");
+            parameters += ((i > 0) ? PARAMETER_DELIMITER_SECONDARY : "") + variables.get(i).replaceAll("&", "%26");
         }
 
         return parameters;

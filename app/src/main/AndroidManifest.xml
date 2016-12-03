@@ -135,8 +135,8 @@
             android:theme="@style/AppTheme.Base"/>
 
         <activity
-            android:name=".view.activity.EquipmentEditActivity"
-            android:label="@string/edit_equipment"
+            android:name=".view.activity.FitnessLocationActivity"
+            android:label="@string/edit_fitness_locations"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
 

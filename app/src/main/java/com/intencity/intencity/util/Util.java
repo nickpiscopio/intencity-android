@@ -213,7 +213,7 @@ public class Util
      */
     public static void grantPointsToUser(String email, int points, String description)
     {
-        new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
+        new ServiceTask(null).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(
                                               Constant.STORED_PROCEDURE_GRANT_POINTS, email,
                                               String.valueOf(points)));
@@ -234,7 +234,7 @@ public class Util
         // We won't display the date anywhere, so we probably don't need this in local time.
         long now = new Date().getTime();
 
-        new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
+        new ServiceTask(null).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GRANT_BADGE,
                                                                                  email, String.valueOf(now), badgeName));
         // Add an award to the notification handler.

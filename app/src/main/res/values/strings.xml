@@ -140,7 +140,7 @@
     <string name="no_saved_routine_title">No saved routines</string>
     <string name="no_saved_routine_message">You removed all your saved routines.</string>
 
-    <string name="routine_total_description">Completed Exercises: %1$s\nExercises in Routine: %2$s</string>
+    <string name="routine_total_description">Completed Exercises: %1$d\nExercises in Routine: %2$d</string>
 
     <string name="action_button_search_directions">HOLD</string>
 
@@ -220,7 +220,11 @@
 
     <!-- Settings Strings -->
     <string name="edit_priority">Edit Exercise Priorities</string>
+    <string name="edit_fitness_locations">Edit Fitness Locations</string>
     <string name="edit_equipment">Edit Equipment</string>
+
+    <string name="edit_equipment_error_title">Equipment needed</string>
+    <string name="edit_equipment_error_description">Before saving, please select at least 1 piece of equipment at this location.</string>
 
     <string name="edit_priority_title">Change the priority for each exercise to fit your needs.</string>
     <string name="edit_priority_description">Priorities change the frequency at which an exercise occurs during a workout. This helps Intencity generate exercises to fit your needs.</string>

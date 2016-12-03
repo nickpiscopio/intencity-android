@@ -168,7 +168,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                 Constant.generateStoredProcedureParameters(
                         Constant.STORED_PROCEDURE_SEARCH_USERS, email, query);
 
-        new ServiceTask(searchListener).execute(Constant.SERVICE_STORED_PROCEDURE, urlParameters);
+        new ServiceTask(searchListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE, urlParameters);
 
         return false;
     }

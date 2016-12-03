@@ -144,7 +144,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
     {
         showLoading();
 
-        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_ROUTINE, email));
+        new ServiceTask(this).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_ROUTINE, email));
     }
 
     /**
@@ -256,7 +256,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
             String routine = String.valueOf(row.getRowNumber());
             String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_ROUTINE_EXERCISES, email, routine);
 
-            new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE, storedProcedureParameters);
+            new ServiceTask(routineServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE, storedProcedureParameters);
         }
     };
 

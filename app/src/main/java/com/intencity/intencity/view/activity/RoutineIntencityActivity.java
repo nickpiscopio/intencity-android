@@ -138,7 +138,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     {
         showLoading();
 
-        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS, email));
+        new ServiceTask(this).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS, email));
     }
 
     /**
@@ -243,7 +243,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
             String routine = String.valueOf(row.getRowNumber());
             String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);
 
-            new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE, storedProcedureParameters);
+            new ServiceTask(routineServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE, storedProcedureParameters);
         }
     };
 
@@ -293,7 +293,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+            new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
                                                              Constant.generateStoredProcedureParameters(
                                                                      Constant.STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY,
                                                                      email));

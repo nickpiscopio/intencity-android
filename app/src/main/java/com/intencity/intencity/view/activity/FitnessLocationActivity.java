@@ -35,11 +35,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * This is the activity that shows the equipment location names.
+ * This is the activity that shows the fitness location names.
  *
  * Created by Nick Piscopio on 11/20/16.
  */
-public class EquipmentEditActivity extends AppCompatActivity implements ServiceListener
+public class FitnessLocationActivity extends AppCompatActivity implements ServiceListener
 {
     private Context context;
 
@@ -255,11 +255,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
     private void openEquipmentActivity(String displayName, String location)
     {
         Intent intent = new Intent(context, EquipmentActivity.class);
-
-        if (!displayName.equals("") || !location.equals(""))
-        {
-            intent.putExtra(Constant.BUNDLE_EQUIPMENT_META_DATA, new EquipmentMetaData(displayName, location));
-        }
+        intent.putExtra(Constant.BUNDLE_EQUIPMENT_META_DATA, new EquipmentMetaData(displayName, location));
 
         startActivityForResult(intent, Constant.REQUEST_CODE_EQUIPMENT_SAVED);
     }
@@ -271,7 +267,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
     {
         progressBar.setVisibility(View.VISIBLE);
 
-        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
+        new ServiceTask(this).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_FITNESS_LOCATIONS, email));
     }
 
@@ -282,7 +278,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
     {
         CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 
-        new CustomDialog(EquipmentEditActivity.this, dialogListener, dialog, false);
+        new CustomDialog(FitnessLocationActivity.this, dialogListener, dialog, false);
 
         progressBar.setVisibility(View.GONE);
     }
@@ -329,12 +325,12 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
         {
             SelectableListItem location = locations.get(position - 1);
 
-            // The address is located in teh description.
-            // We only allow 1 address per person, so we are removing on the user's email/location (address).
-            String address = location.getDescription();
-
             if (inRemovingState)
             {
+                // The address is located in the description.
+                // We only allow 1 address per person, so we are removing on the user's email/location (address).
+                String address = location.getDescription();
+
                 // Add or remove muscle groups from the list
                 // if he or she clicks on a list item.
                 if (locationsToRemove.contains(address))
@@ -353,7 +349,7 @@ public class EquipmentEditActivity extends AppCompatActivity implements ServiceL
             else
             {
                 // We are editing, so open the equipment activity.
-                openEquipmentActivity(address, location.getDescription());
+                openEquipmentActivity(location.getTitle(), location.getDescription());
             }
         }
     };

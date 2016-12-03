@@ -629,7 +629,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         // Set the exercise priority on the web server.
         // The ServiceListener is null because we don't care if it reached the server.
         // The worst that will happen is a user will have to click the exercise priority again.
-        new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
+        new ServiceTask(null).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_SET_EXERCISE_PRIORITY,
                                                                                  email, exerciseName, increment ? "1" : "0"));
 

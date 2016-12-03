@@ -216,7 +216,7 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
     {
         progressBar.setVisibility(View.VISIBLE);
 
-        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
+        new ServiceTask(this).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_MUSCLE_GROUP_ROUTINE, email));
     }
 

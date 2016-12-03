@@ -63,7 +63,7 @@ public class MenuActivity extends AppCompatActivity
         menuItems.add(new MenuItem(getString(R.string.notifications, "(" + awardTotal + ")"), NotificationActivity.class));
         menuItems.add(new MenuItem(getString(R.string.title_settings), null));
         menuItems.add(new MenuItem(getString(R.string.edit_priority), ExercisePriorityActivity.class));
-        menuItems.add(new MenuItem(getString(R.string.edit_equipment), EquipmentEditActivity.class));
+        menuItems.add(new MenuItem(getString(R.string.edit_fitness_locations), FitnessLocationActivity.class));
         if (!accountType.equals(Constant.ACCOUNT_TYPE_MOBILE_TRIAL))
         {
             menuItems.add(new MenuItem(getString(R.string.change_password), ChangePasswordActivity.class));

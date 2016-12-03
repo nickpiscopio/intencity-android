@@ -48,7 +48,7 @@ public class CustomDialog
 
             if (includeNegativeButton)
             {
-                alertDialog.setNegativeButton(positiveButtonRes > 0 ? negativeButtonRes : android.R.string.cancel, new DialogInterface.OnClickListener()
+                alertDialog.setNegativeButton(negativeButtonRes > 0 ? negativeButtonRes : android.R.string.cancel, new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int which)
                     {
