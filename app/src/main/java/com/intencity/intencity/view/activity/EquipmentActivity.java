@@ -1,19 +1,10 @@
 package com.intencity.intencity.view.activity;
 
-import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -28,23 +19,19 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Places;
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.CheckboxAdapter;
 import com.intencity.intencity.listener.DialogFitnessLocationListener;
 import com.intencity.intencity.listener.DialogListener;
+import com.intencity.intencity.listener.GeocodeListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.EquipmentMetaData;
 import com.intencity.intencity.model.SelectableListItem;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.notification.FitnessLocationDialog;
-import com.intencity.intencity.notification.ToastDialog;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.GoogleGeocode;
@@ -60,11 +47,13 @@ import java.util.ArrayList;
 /**
  * This is the activity to edit the user's equipment for Intencity.
  *
- * Created by Nick Piscopio on 1/17/15.
+ * Created by Nick Piscopio on 1/17/16.
  */
-public class EquipmentActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+public class EquipmentActivity extends AppCompatActivity implements GeocodeListener
 {
-    private static final int GOOGLE_API_CLIENT_ID = 0;
+    private final int REQUEST_CODE_FITNESS_DIALOG = 10;
+    private final int REQUEST_CODE_ADDRESS = 20;
+    private final int REQUEST_CODE_LOCATION_VALIDITY = 30;
 
     private LinearLayout connectionIssue;
 
@@ -94,7 +83,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
 
     private CheckboxAdapter adapter;
 
-    private GoogleApiClient mGoogleApiClient;
+    private GoogleGeocode googleGeocode;
 
     private boolean selectAll = false;
 
@@ -128,6 +117,8 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
 
         cardFitnessLocation.setOnClickListener(fitnessLocationClickListener);
 
+        googleGeocode = new GoogleGeocode(EquipmentActivity.this, this);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null)
         {
@@ -151,10 +142,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     @Override
     protected void onDestroy()
     {
-        if (mGoogleApiClient != null)
-        {
-            mGoogleApiClient.disconnect();
-        }
+        googleGeocode.onDestroy();
 
         super.onDestroy();
     }
@@ -191,26 +179,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
     {
-        switch (requestCode)
-        {
-            case Constant.REQUEST_CODE_PERMISSION:
-                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    requestGoogleApiClient();
-                }
-                else
-                {
-                    CustomDialogContent content = new CustomDialogContent(getString(R.string.edit_equipment_location_permission_needed));
-                    content.setPositiveButtonStringRes(R.string.button_preferences);
-
-                    new ToastDialog(EquipmentActivity.this, content, dialogListener);
-
-                    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                }
-                break;
-            default:
-                break;
-        }
+        googleGeocode.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     @Override
@@ -225,10 +194,9 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
         {
             progressBar.setVisibility(View.VISIBLE);
 
-            // The geocode API request to check if the fitness location is a valid address.
-            // We need it to be valid because we use that locations proximity to check what equipment the user currently has.
-            new ServiceTask(googleGeoCodeListener).execute(GoogleGeocode.ROUTE +
-                                                           GoogleGeocode.getGoogleGeocodeParameters(textViewLocationString));
+            // We check if the location is valid here.
+            // The GeocodeListener will return what gets executed next.
+            googleGeocode.checkLocationValidity(REQUEST_CODE_LOCATION_VALIDITY, textViewLocationString);
         }
         else if (userEquipment != null && userEquipment.size() == 0)
         {
@@ -243,49 +211,6 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             super.onBackPressed();
         }
     }
-
-    /**
-     * The service listener to check if the location the user typed in was a valid address according to google.
-     */
-   private ServiceListener googleGeoCodeListener = new ServiceListener()
-   {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-            try
-            {
-                JSONObject obj = new JSONObject(response);
-                String status = obj.getString(ServiceTask.NODE_STATUS);
-                if (status.equalsIgnoreCase(ServiceTask.RESPONSE_OK))
-                {
-                    // We got a response back with a status of "OK", so we continue.
-                    updateEquipment();
-                }
-                else
-                {
-                    onRetrievalFailed();
-                }
-            }
-            catch (JSONException e)
-            {
-                onRetrievalFailed();
-            }
-        }
-
-        @Override
-        public void onRetrievalFailed()
-        {
-            String title = getString(R.string.invalid_fitness_location_title);
-            String message = getString(R.string.invalid_fitness_location_description);
-            CustomDialogContent dialog = new CustomDialogContent(title, message, true);
-            dialog.setPositiveButtonStringRes(R.string.invalid_fitness_location_positive_button);
-            dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_negative_button);
-
-            new CustomDialog(EquipmentActivity.this, invalidFitnessLocationDialogListener, dialog, true);
-
-            progressBar.setVisibility(View.GONE);
-        }
-    };
 
     /**
      * The click listener for each item clicked in the equipment list.
@@ -363,6 +288,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             progressBar.setVisibility(View.GONE);
         }
     };
+
     /**
      * The dialog listener for the equipment activity.
      */
@@ -374,19 +300,6 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             setDisplayName(displayName);
 
             setLocation(location);
-        }
-
-        @Override
-        public void onButtonPressed(int which)
-        {
-            switch (which)
-            {
-                case Constant.POSITIVE_BUTTON:
-                    startInstalledAppDetailsActivity();
-                    break;
-                default:
-                    break;
-            }
         }
     };
 
@@ -402,7 +315,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
             {
                 // Set the fitness location.
                 case Constant.POSITIVE_BUTTON:
-                    checkLocationPermission();
+                    googleGeocode.checkLocationPermission(REQUEST_CODE_FITNESS_DIALOG);
                     break;
 
                 // Just go back because we don't want to save anything.
@@ -462,7 +375,7 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
         @Override
         public void onClick(View view)
         {
-            checkLocationPermission();
+            googleGeocode.checkLocationPermission(REQUEST_CODE_FITNESS_DIALOG);
         }
     };
 
@@ -514,7 +427,8 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
         }
         else
         {
-            textViewLocation.setText(defaultLocationString);
+            // Get location of user since there wasn't one already.
+            googleGeocode.checkLocationPermission(REQUEST_CODE_ADDRESS);
             textViewLocation.setTextColor(ContextCompat.getColor(context, R.color.card_button_delete_deselect));
         }
     }
@@ -587,78 +501,8 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     }
 
     /**
-     * Checks to see if we have the location permission.
-     */
-    private void checkLocationPermission()
-    {
-        // This is for Android M+
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
-            // Permission was already granted, so show the fitness location dialog.
-            requestGoogleApiClient();
-        }
-        else
-        {
-            requestLocationPermission();
-        }
-    }
-
-    /**
-     * Displays the fitness location dialog to the user.
-     */
-    private void requestGoogleApiClient()
-    {
-        if (mGoogleApiClient == null)
-        {
-            mGoogleApiClient = new GoogleApiClient.Builder(context).addApi(Places.GEO_DATA_API).addApi(LocationServices.API).enableAutoManage(this, GOOGLE_API_CLIENT_ID, this).addConnectionCallbacks(this).build();
-        }
-
-        if (mGoogleApiClient.isConnected())
-        {
-            // We're already connected to google's service, so just open the dialog.
-            openFitnessLocationDialog();
-        }
-        else
-        {
-            mGoogleApiClient.connect();
-        }
-    }
-
-    /**
-     * Requests the location permission.
-     */
-    private void requestLocationPermission()
-    {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(EquipmentActivity.this, Manifest.permission.ACCESS_FINE_LOCATION))
-        {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example if the user has previously denied the permission.
-            new AlertDialog.Builder(EquipmentActivity.this)
-                    .setMessage(context.getResources().getString(R.string.edit_equipment_location_permission_needed))
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
-                    ActivityCompat.requestPermissions(EquipmentActivity.this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, Constant.REQUEST_CODE_PERMISSION);
-                }
-            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which) { }
-            }).show();
-        }
-        else
-        {
-            // Permission has not been granted yet. Request it directly.
-            ActivityCompat.requestPermissions(EquipmentActivity.this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, Constant.REQUEST_CODE_PERMISSION);
-        }
-    }
-
-    /**
      * Updates a specified equipment list item.
-     * <p>
+     *
      * This adds or removes it from the list of equipment that the user currently has.
      *
      * @param equipment The item to add or remove from the user's list of equipment.
@@ -682,36 +526,6 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
     }
 
     /**
-     * Opens the fitness location dialog.
-     */
-    // We suppress this warning because at this point in the code, we already have the permission to use the user's location.
-    @SuppressWarnings({ "MissingPermission" })
-    private void openFitnessLocationDialog()
-    {
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-        new FitnessLocationDialog(EquipmentActivity.this, textViewDisplayName.getText().toString(), textViewLocation.getText().toString(), mGoogleApiClient, location, dialogListener);
-    }
-
-    /**
-     * Starts the app settings screen.
-     */
-    private void startInstalledAppDetailsActivity()
-    {
-        Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.setData(Uri.parse("package:" + context.getPackageName()));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-
-        context.startActivity(intent);
-
-        Toast.makeText(context, context.getString(R.string.directions_set_permissions), Toast.LENGTH_LONG).show();
-    }
-
-    /**
      * Saves the user set the equipment.
      */
     private void setUserSetEquipment()
@@ -723,19 +537,85 @@ public class EquipmentActivity extends AppCompatActivity implements GoogleApiCli
         editor.apply();
     }
 
+    /**
+     * This is the callback from the GeocodeListener.
+     * It is called when we receive the callback for GoogleApiClient being connected.
+     */
     @Override
-    public void onConnected(@Nullable Bundle bundle)
+    public void onGoogleApiClientConnected(int requestCode, GoogleApiClient googleApiClient, Location location)
     {
-        // We've connected to the Google Maps API, so open the dialog.
-        openFitnessLocationDialog();
+        switch (requestCode)
+        {
+            case REQUEST_CODE_FITNESS_DIALOG:
+                new FitnessLocationDialog(EquipmentActivity.this, textViewDisplayName.getText().toString(), textViewLocation.getText().toString(), googleApiClient, location, dialogListener);
+                break;
+            case REQUEST_CODE_ADDRESS:
+                googleGeocode.getLastLocationAddress(REQUEST_CODE_ADDRESS, location);
+                break;
+            default:
+                break;
+        }
     }
 
+    /**
+     * This is the callback from the GeocodeListener.
+     * It is called when we receive the callback that the location that was looked up is valid.
+     */
     @Override
-    public void onConnectionSuspended(int i){ }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+    public void onRetrievalSuccessful(int requestCode, Object obj)
     {
-        Toast.makeText(context, getString(R.string.location_issue), Toast.LENGTH_SHORT).show();
+        switch (requestCode)
+        {
+            case REQUEST_CODE_ADDRESS:
+                textViewLocation.setText((String)obj);
+                break;
+
+            case REQUEST_CODE_LOCATION_VALIDITY:
+                // We got a response back with a status of "OK", so we continue.
+                updateEquipment();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    /**
+     * This is the callback from the GeocodeListener.
+     * It is called when we receive the callback that the location that was looked up is invalid.
+     */
+    @Override
+    public void onRetrievalFailed(int requestCode)
+    {
+        switch (requestCode)
+        {
+            case REQUEST_CODE_LOCATION_VALIDITY:
+                String title = getString(R.string.invalid_fitness_location_title);
+                String message = getString(R.string.invalid_fitness_location_description);
+                CustomDialogContent dialog = new CustomDialogContent(title, message, true);
+                dialog.setPositiveButtonStringRes(R.string.invalid_fitness_location_positive_button);
+                dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_negative_button);
+
+                new CustomDialog(EquipmentActivity.this, invalidFitnessLocationDialogListener, dialog, true);
+
+                progressBar.setVisibility(View.GONE);
+                break;
+
+            case REQUEST_CODE_ADDRESS:
+                break;
+            
+            default:
+                break;
+        }
+    }
+
+    /**
+     * This is the callback from the GeocodeListener.
+     * It is called when we receive the callback that the user needs to grant permission.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults, FragmentActivity activity)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

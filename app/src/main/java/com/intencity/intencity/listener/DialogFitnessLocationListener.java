@@ -5,7 +5,7 @@ package com.intencity.intencity.listener;
  *
  * Created by Nick Piscopio on 11/24/16.
  */
-public interface DialogFitnessLocationListener extends DialogListener
+public interface DialogFitnessLocationListener
 {
     void onSaveFitnessLocation(String displayName, String location);
 }
