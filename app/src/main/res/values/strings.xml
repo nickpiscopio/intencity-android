@@ -243,7 +243,7 @@
     <string name="dialog_fitness_location_description">When at this location, Intencity will automatically use the fitness equipment associated with it.</string>
     <string name="dialog_fitness_display_name">Name (Home, Gym, etc.)</string>
     <string name="dialog_fitness_location">Address</string>
-    <string name="fitness_location_default">NO LOCATION SPECIFIED</string>
+    <string name="fitness_location_default">(Fitness location needed)</string>
 
     <string name="invalid_fitness_location_positive_button">Enter location</string>
     <string name="invalid_fitness_location_negative_button">Go back &amp; don\'t save</string>

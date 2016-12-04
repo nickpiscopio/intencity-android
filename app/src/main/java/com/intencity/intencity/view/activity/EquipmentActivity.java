@@ -2,6 +2,7 @@ package com.intencity.intencity.view.activity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -188,7 +189,14 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         String textViewDisplayNameString = textViewDisplayName.getText().toString();
         String textViewLocationString = textViewLocation.getText().toString();
 
-        if ((userEquipment != null && userEquipment.size() > 0) ||
+        if (userEquipment != null && userEquipment.size() == 0)
+        {
+            CustomDialogContent dialog = new CustomDialogContent(getString(R.string.edit_equipment_error_title), getString(R.string.edit_equipment_error_description), true);
+            dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_negative_button);
+
+            new CustomDialog(EquipmentActivity.this, invalidFitnessEquipmentDialogListener, dialog, true);
+        }
+        else if ((userEquipment != null && userEquipment.size() > 0) ||
             (!textViewLocationString.equals(savedLocation) && !textViewLocationString.equals(defaultLocationString)) ||
              !textViewDisplayNameString.equals(savedDisplayName))
         {
@@ -197,13 +205,6 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
             // We check if the location is valid here.
             // The GeocodeListener will return what gets executed next.
             googleGeocode.checkLocationValidity(REQUEST_CODE_LOCATION_VALIDITY, textViewLocationString);
-        }
-        else if (userEquipment != null && userEquipment.size() == 0)
-        {
-            CustomDialogContent dialog = new CustomDialogContent(getString(R.string.edit_equipment_error_title), getString(R.string.edit_equipment_error_description), true);
-            dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_negative_button);
-
-            new CustomDialog(EquipmentActivity.this, invalidFitnessEquipmentDialogListener, dialog, true);
         }
         else
         {
@@ -424,12 +425,14 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         {
             textViewLocation.setText(location);
             textViewLocation.setTextColor(ContextCompat.getColor(context, R.color.secondary_light));
+            textViewLocation.setTypeface(Typeface.DEFAULT);
         }
         else
         {
             // Get location of user since there wasn't one already.
             googleGeocode.checkLocationPermission(REQUEST_CODE_ADDRESS);
             textViewLocation.setTextColor(ContextCompat.getColor(context, R.color.card_button_delete_deselect));
+            textViewLocation.setTypeface(textViewLocation.getTypeface(), Typeface.ITALIC);
         }
     }
 
@@ -603,7 +606,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
             case REQUEST_CODE_ADDRESS:
                 break;
-            
+
             default:
                 break;
         }
