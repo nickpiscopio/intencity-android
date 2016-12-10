@@ -25,6 +25,8 @@
             android:id="@+id/edit_text_display_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:digits="@string/routine_name_characters"
+            android:maxLength="@integer/routine_name_length"
             android:hint="@string/dialog_fitness_display_name"/>
 
     </android.support.design.widget.TextInputLayout>
