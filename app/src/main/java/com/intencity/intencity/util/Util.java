@@ -137,11 +137,6 @@ public class Util
     {
         Context context = activity.getApplicationContext();
 
-        // Clear the database because when uninstalling it doesn't do that.
-        DbHelper dbHelper = new DbHelper(context);
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
-        dbHelper.resetDb(database);
-
         // Set the email and account type in the SecurePreferences.
         SecurePreferences securePreferences = new SecurePreferences(context);
         SecurePreferences.Editor editor = securePreferences.edit();
