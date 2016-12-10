@@ -35,7 +35,7 @@ import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.notification.FitnessLocationDialog;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.GoogleGeocode;
+import com.intencity.intencity.helper.GoogleGeocode;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 

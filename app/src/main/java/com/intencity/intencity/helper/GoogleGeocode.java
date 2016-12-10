@@ -1,12 +1,11 @@
-package com.intencity.intencity.util;
+package com.intencity.intencity.helper;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -15,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -25,9 +25,11 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.GeocodeListener;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.notification.ToastDialog;
 import com.intencity.intencity.task.ServiceTask;
+import com.intencity.intencity.util.Constant;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +42,8 @@ import org.json.JSONObject;
  */
 public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
+    private final String TAG = GoogleGeocode.class.getSimpleName();
+
     private static final int GOOGLE_API_CLIENT_ID = 0;
 
     // Service Endpoint
@@ -153,9 +157,12 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
     {
         this.requestCode = requestCode;
 
-        // The geocode API request to check if the fitness location is a valid address.
-        // We need it to be valid because we use that locations proximity to check what equipment the user currently has.
-        new ServiceTask(googleGeoCodeAddressListener).execute(ROUTE + getGoogleGeocodeAddressParameters(location));
+        if (isLocationEnabled())
+        {
+            // The geocode API request to check if the fitness location is a valid address.
+            // We need it to be valid because we use that locations proximity to check what equipment the user currently has.
+            new ServiceTask(googleGeoCodeAddressListener).execute(ROUTE + getGoogleGeocodeAddressParameters(location));
+        }
     }
 
     /**
@@ -169,15 +176,18 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
         // We use this to switch in GeocodeListener.onGoogleApiClientConnected();
         this.requestCode = requestCode;
 
-        // This is for Android M+
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        if (isLocationEnabled())
         {
-            // Permission was already granted, so show the fitness location dialog.
-            requestGoogleApiClient();
-        }
-        else
-        {
-            requestLocationPermission();
+            // This is for Android M+
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            {
+                // Permission was already granted, so show the fitness location dialog.
+                requestGoogleApiClient();
+            }
+            else
+            {
+                requestLocationPermission();
+            }
         }
     }
 
@@ -191,8 +201,59 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
     {
         this.requestCode = requestCode;
 
-        // The geocode API request to get an address from a long and lat.
-        new ServiceTask(googleGeoCodeFormattedAddressListener).execute(ROUTE + getGoogleGeocodeFormattedAddressParameters(location));
+        if (isLocationEnabled())
+        {
+            // The geocode API request to get an address from a long and lat.
+            new ServiceTask(googleGeoCodeFormattedAddressListener).execute(ROUTE + getGoogleGeocodeFormattedAddressParameters(location));
+        }
+    }
+
+    /**
+     * Checks if the location service is enabled on the device.
+     *
+     * @return Boolean value of whether the location and GPS service is enabled or not.
+     */
+    private boolean isLocationEnabled()
+    {
+        LocationManager lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+        boolean gpsIsEnabled = false;
+        boolean networkIsEnabled = false;
+
+        try
+        {
+            gpsIsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            networkIsEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        }
+        catch(Exception ex)
+        {
+            Log.d(TAG, "Cannot get location: " + ex.getMessage());
+        }
+
+        if(!gpsIsEnabled && !networkIsEnabled)
+        {
+            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.gps_network_not_enabled_title),
+                                                                 context.getString(R.string.gps_network_not_enabled_description),
+                                                                 true);
+            dialog.setPositiveButtonStringRes(R.string.open_location_settings);
+
+            new CustomDialog(activity, new DialogListener()
+            {
+                @Override
+                public void onButtonPressed(int which)
+                {
+                    switch (which)
+                    {
+                        case Constant.POSITIVE_BUTTON:
+                            context.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }, dialog, true);
+        }
+
+        return gpsIsEnabled && networkIsEnabled;
     }
 
     /**
@@ -230,20 +291,24 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
             // Provide an additional rationale to the user if the permission was not granted
             // and the user would benefit from additional context for the use of the permission.
             // For example if the user has previously denied the permission.
-            new AlertDialog.Builder(activity)
-                    .setMessage(context.getResources().getString(R.string.edit_equipment_location_permission_needed))
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.edit_equipment_location_permission_needed_title),
+                                                                 context.getString(R.string.edit_equipment_location_permission_needed_description),
+                                                                 true);
+            new CustomDialog(activity, new DialogListener()
             {
                 @Override
-                public void onClick(DialogInterface dialog, int which)
+                public void onButtonPressed(int which)
                 {
-                    ActivityCompat.requestPermissions(activity, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, Constant.REQUEST_CODE_PERMISSION);
+                    switch (which)
+                    {
+                        case Constant.POSITIVE_BUTTON:
+                            ActivityCompat.requestPermissions(activity, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, Constant.REQUEST_CODE_PERMISSION);
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which) { }
-            }).show();
+            }, dialog, true);
         }
         else
         {

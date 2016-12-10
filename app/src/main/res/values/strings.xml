@@ -229,7 +229,12 @@
     <string name="edit_priority_title">Change the priority for each exercise to fit your needs.</string>
     <string name="edit_priority_description">Priorities change the frequency at which an exercise occurs during a workout. This helps Intencity generate exercises to fit your needs.</string>
 
-    <string name="edit_equipment_location_permission_needed">Location permission is needed to save your exercise locations.</string>
+    <string name="gps_network_not_enabled_title">Location services not enabled</string>
+    <string name="gps_network_not_enabled_description">GPS location is needed for certain features in Intencity.</string>
+    <string name="open_location_settings">Open</string>
+    <string name="edit_equipment_location_permission_needed_title">Location permission needed</string>
+    <string name="edit_equipment_location_permission_needed_description">Intencity uses this information to use the correct equipment without intervention.</string>
+    <string name="edit_equipment_location_permission_needed">Location permission is needed to save your fitness locations.</string>
     <string name="directions_set_permissions">Select \'Permissions\' and enable \'Location.\'</string>
     <string name="button_preferences">SET PERMISSION</string>
     <string name="location_issue">An issue occurred finding your device\'s location. Please try again later.</string>
