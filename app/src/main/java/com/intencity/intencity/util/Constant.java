@@ -169,6 +169,7 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_CUSTOM_ROUTINE_MUSCLE_GROUP = "getCustomRoutineMuscleGroup";
     public static final String STORED_PROCEDURE_GET_USER_MUSCLE_GROUP_ROUTINE = "getUserMuscleGroupRoutine";
     public static final String STORED_PROCEDURE_GET_USER_FITNESS_LOCATIONS = "getUserFitnessLocations";
+    public static final String STORED_PROCEDURE_CHECK_IF_FITNESS_LOCATION_EXISTS = "checkIfFitnessLocationExists";
     public static final String STORED_PROCEDURE_GRANT_POINTS = "grantPointsToUser";
     public static final String STORED_PROCEDURE_GRANT_BADGE = "grantBadgeToUser";
     public static final String STORED_PROCEDURE_GET_BADGES = "getBadges";

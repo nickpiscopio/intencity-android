@@ -231,6 +231,41 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
             adapter.notifyDataSetChanged();
         }
     };
+
+    /**
+     * The service listener for checking if a user already has fitness equipment in a specifed location.
+     */
+    private ServiceListener getLocationServiceListener = new ServiceListener()
+    {
+        @Override
+        public void onRetrievalSuccessful(String response)
+        {
+            if (response.equals(Constant.RETURN_NULL))
+            {
+                // We failed to retrieve equipment from a specified location.
+                // This means the location wasn't used before.
+                // This is what we want, so we are updating the equipment.
+                updateEquipment();
+            }
+            else
+            {
+                // We already have a fitness location saved.
+                // Notify the user.
+                CustomDialogContent dialog = new CustomDialogContent(getString(R.string.duplicate_location_title), getString(R.string.duplicate_location_description), true);
+                dialog.setPositiveButtonStringRes(R.string.overwrite);
+                dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_negative_button);
+
+                new CustomDialog(EquipmentActivity.this, overwriteFitnessLocationDialogListener, dialog, true);
+            }
+        }
+
+        @Override
+        public void onRetrievalFailed()
+        {
+            displayCommunicationError();
+        }
+    };
+
     /**
      * The ServiceListener for getting the user's equipment.
      */
@@ -301,6 +336,32 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
             setDisplayName(displayName);
 
             setLocation(location);
+        }
+    };
+
+    /**
+     * The dialog listener for the invalid fitness dialog.
+     */
+    private DialogListener overwriteFitnessLocationDialogListener = new DialogListener()
+    {
+        @Override
+        public void onButtonPressed(int which)
+        {
+            switch (which)
+            {
+                // Overwrite fitness location.
+                case Constant.POSITIVE_BUTTON:
+                    updateEquipment();
+                    break;
+
+                // Just go back because we don't want to save anything.
+                case Constant.NEGATIVE_BUTTON:
+                    EquipmentActivity.super.onBackPressed();
+                    break;
+
+                default:
+                    break;
+            }
         }
     };
 
@@ -395,11 +456,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         @Override
         public void onRetrievalFailed()
         {
-            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
-
-            new CustomDialog(EquipmentActivity.this, dialogConnectionIssueListener, dialog, false);
-
-            progressBar.setVisibility(View.GONE);
+            displayCommunicationError();
         }
     };
 
@@ -541,6 +598,18 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
     }
 
     /**
+     * Displays a communication error to the user.
+     */
+    private void displayCommunicationError()
+    {
+        CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
+
+        new CustomDialog(EquipmentActivity.this, dialogConnectionIssueListener, dialog, false);
+
+        progressBar.setVisibility(View.GONE);
+    }
+
+    /**
      * This is the callback from the GeocodeListener.
      * It is called when we receive the callback for GoogleApiClient being connected.
      */
@@ -573,9 +642,25 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
                 textViewLocation.setText((String)obj);
                 break;
 
+            // We got a response back with a status of "OK".
+            // This tells us that the location we typed is valid according to Google.
             case REQUEST_CODE_LOCATION_VALIDITY:
-                // We got a response back with a status of "OK", so we continue.
-                updateEquipment();
+
+                String location = textViewLocation.getText().toString();
+
+                // If the location and saved location equal, that means we are editing a fitness equipment.
+                if (location.equals(savedLocation))
+                {
+                    updateEquipment();
+                }
+                else
+                {
+                    // If the location and saved location don't equal, then we should check if the location already exists
+                    // because the user might not know he or she already has equipment at the designated location
+                    new ServiceTask(getLocationServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+                                                                        Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_CHECK_IF_FITNESS_LOCATION_EXISTS, email, location));
+                }
+
                 break;
 
             default:

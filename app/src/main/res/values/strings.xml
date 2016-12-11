@@ -221,6 +221,30 @@
     <!-- Settings Strings -->
     <string name="edit_priority">Edit Exercise Priorities</string>
     <string name="edit_fitness_locations">Edit Fitness Locations</string>
+
+    <string name="change_password">Change Password</string>
+
+    <string name="title_rate_intencity">Rate Intencity</string>
+    <string name="title_contribute_intencity">Contribute to Intencity</string>
+
+    <string name="high_priority">HIGH PRIORITY</string>
+    <string name="medium_priority">MEDIUM PRIORITY</string>
+    <string name="normal_priority">NORMAL PRIORITY</string>
+    <string name="low_priority">LOW PRIORITY</string>
+    <string name="hidden_exercise">EXERCISE HIDDEN</string>
+    <string name="no_priorities">Priorities have not been set for any exercises.</string>
+
+    <string name="no_notifications">No notifications found.</string>
+
+    <string name="invalid_password">The password you entered as your current password isn\'t correct. Please try again.</string>
+    <string name="password_changed_title">Password changed</string>
+    <string name="password_changed">Your password has been changed.</string>
+
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm new password</string>
+
+    <!-- Fitness Location -->
     <string name="edit_equipment">Edit Equipment</string>
 
     <string name="edit_equipment_error_title">Equipment needed</string>
@@ -256,27 +280,9 @@
     <string name="invalid_fitness_location_title">Invalid fitness location</string>
     <string name="invalid_fitness_location_description">Please enter a correct address for where this equipment is located.</string>
 
-    <string name="change_password">Change Password</string>
-
-    <string name="title_rate_intencity">Rate Intencity</string>
-    <string name="title_contribute_intencity">Contribute to Intencity</string>
-
-    <string name="high_priority">HIGH PRIORITY</string>
-    <string name="medium_priority">MEDIUM PRIORITY</string>
-    <string name="normal_priority">NORMAL PRIORITY</string>
-    <string name="low_priority">LOW PRIORITY</string>
-    <string name="hidden_exercise">EXERCISE HIDDEN</string>
-    <string name="no_priorities">Priorities have not been set for any exercises.</string>
-
-    <string name="no_notifications">No notifications found.</string>
-
-    <string name="invalid_password">The password you entered as your current password isn\'t correct. Please try again.</string>
-    <string name="password_changed_title">Password changed</string>
-    <string name="password_changed">Your password has been changed.</string>
-
-    <string name="current_password">Current password</string>
-    <string name="new_password">New password</string>
-    <string name="confirm_new_password">Confirm new password</string>
+    <string name="duplicate_location_title">Duplicate location</string>
+    <string name="duplicate_location_description">Equipment for this location has already been saved. Would you like to overwrite it?</string>
+    <string name="overwrite">Overwrite</string>
 
     <!-- Directions -->
     <string name="title_direction">DIRECTIONS</string>
