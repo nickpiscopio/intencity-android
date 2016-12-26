@@ -79,6 +79,10 @@
 
     </android.support.v7.widget.CardView>
 
+    <include
+        android:id="@+id/layout_divider"
+        layout="@layout/divider"/>
+
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"

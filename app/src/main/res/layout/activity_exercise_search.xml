@@ -25,7 +25,6 @@
         android:divider="@color/shadow"/>
 
     <View
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height_search"
