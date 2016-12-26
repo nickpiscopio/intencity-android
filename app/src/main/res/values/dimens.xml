@@ -63,4 +63,7 @@
     <!-- Exercise List -->
     <dimen name="magnifying_margin">3dp</dimen>
 
+    <!-- List View Dimensions -->
+    <dimen name="list_view_shadow">4dp</dimen>
+
 </resources>

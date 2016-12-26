@@ -7,7 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -16,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -67,7 +65,6 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
     private TextView textViewDisplayName;
     private TextView textViewLocation;
 
-    private View divider;
     private ListView listView;
 
     private MenuItem menuCheckBox;
@@ -113,9 +110,6 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
         textViewDisplayName = (TextView)findViewById(R.id.text_view_display_name);
         textViewLocation = (TextView)findViewById(R.id.text_view_location);
-
-        divider = findViewById(R.id.layout_divider);
-        divider.setVisibility(View.GONE);
 
         context = getApplicationContext();
 
@@ -551,7 +545,6 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
         listView = (ListView)findViewById(R.id.list_view);
         listView.setAdapter(adapter);
-        listView.setOnScrollListener(scrollListener);
         listView.addHeaderView(header, null, false);
         listView.setOnItemClickListener(equipmentClickListener);
 
@@ -712,40 +705,5 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults, FragmentActivity activity)
     {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    /**
-     * The scroll listener for the ListView.
-     */
-    private AbsListView.OnScrollListener scrollListener = new AbsListView.OnScrollListener()
-    {
-        @Override
-        public void onScrollStateChanged(AbsListView absListView, int i) { }
-
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
-        {
-            if (isViewAtTop(view))
-            {
-                divider.setVisibility(View.GONE);
-            }
-            else if (divider.getVisibility() == View.GONE)
-            {
-                divider.setVisibility(View.VISIBLE);
-            }
-        }
-    };
-
-    /**
-     * Checks to see if a specified view is at the top most position.
-     *
-     * @param view  The view we are checking.
-     *              This is most likely a ListView.
-     *
-     * @return  A boolean value determining if the view can scroll up anymore.
-     */
-    private boolean isViewAtTop(View view)
-    {
-        return !ViewCompat.canScrollVertically(view, -1);
     }
 }

@@ -79,16 +79,13 @@
 
     </android.support.v7.widget.CardView>
 
-    <include
-        android:id="@+id/layout_divider"
-        layout="@layout/divider"/>
-
-    <ListView
+    <com.intencity.intencity.widget.ShadowedListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:choiceMode="multipleChoice"
         android:dividerHeight="0dp"
-        android:divider="@null"/>
+        android:divider="@null"
+        style="@style/shadowed_list_view"/>
 
 </LinearLayout>
