@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.1"
     defaultConfig {
         applicationId "com.intencity.intencity"
         minSdkVersion 16
@@ -22,16 +22,16 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:design:25.0.1'
-    compile 'com.android.support:cardview-v7:25.0.1'
-    compile 'com.android.support:recyclerview-v7:25.0.1'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:design:25.1.0'
+    compile 'com.android.support:cardview-v7:25.1.0'
+    compile 'com.android.support:recyclerview-v7:25.1.0'
 
     // We use this for the location services by google for the fitness locations.
     compile 'com.google.android.gms:play-services:8.4.0'
 
     // Pull to refresh.
-    compile 'com.android.support:support-v4:25.0.1'
+    compile 'com.android.support:support-v4:25.1.0'
 
     // Lazy loading of images.
     // Documentation: https://github.com/nostra13/Android-Universal-Image-Loader
