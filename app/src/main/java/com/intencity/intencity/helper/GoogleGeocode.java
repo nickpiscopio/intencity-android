@@ -97,6 +97,13 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
         return PARAMETER_ADDRESS + address + PARAMETER_KEY + API_KEY;
     }
 
+    /**
+     * Gets the formatted address parameters for the google api service.
+     *
+     * @param location  The long/lat from the location we are trying to find.
+     *
+     * @return  The parameters for the google api service to get a formatted address.
+     */
     public String getGoogleGeocodeFormattedAddressParameters(Location location)
     {
         return PARAMETER_LAT_LONG + location.getLatitude() + DELIMITER + location.getLongitude() + PARAMETER_SENSOR;
@@ -166,6 +173,23 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
     }
 
     /**
+     * Gets the address from a longitude and latitude.
+     *
+     * @param requestCode   The request code that called this method.
+     * @param location      The location to get the address from.
+     */
+    public void getLastLocationAddress(int requestCode, Location location)
+    {
+        this.requestCode = requestCode;
+
+        if (isLocationEnabled())
+        {
+            // The geocode API request to get an address from a long and lat.
+            new ServiceTask(googleGeoCodeAddressListener).execute(ROUTE + getGoogleGeocodeFormattedAddressParameters(location));
+        }
+    }
+
+    /**
      * Checks to see if we have the location permission.
      *
      * @param requestCode  The request code that called this method.
@@ -188,23 +212,6 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
             {
                 requestLocationPermission();
             }
-        }
-    }
-
-    /**
-     * Gets the address from a longitude and latitude.
-     *
-     * @param requestCode   The request code that called this method.
-     * @param location  The location to get the address from.
-     */
-    public void getLastLocationAddress(int requestCode, Location location)
-    {
-        this.requestCode = requestCode;
-
-        if (isLocationEnabled())
-        {
-            // The geocode API request to get an address from a long and lat.
-            new ServiceTask(googleGeoCodeFormattedAddressListener).execute(ROUTE + getGoogleGeocodeFormattedAddressParameters(location));
         }
     }
 
@@ -349,42 +356,6 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
      * The service listener to check if the location the user typed in was a valid address according to google.
      */
     private ServiceListener googleGeoCodeAddressListener = new ServiceListener()
-    {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-            try
-            {
-                JSONObject obj = new JSONObject(response);
-                String status = obj.getString(ServiceTask.NODE_STATUS);
-                if (status.equalsIgnoreCase(ServiceTask.RESPONSE_OK))
-                {
-                    listener.onRetrievalSuccessful(requestCode, null);
-                }
-                else
-                {
-                    onRetrievalFailed();
-                }
-            }
-            catch (JSONException e)
-            {
-                onRetrievalFailed();
-            }
-        }
-
-        @Override
-        public void onRetrievalFailed()
-        {
-            listener.onRetrievalFailed(requestCode);
-        }
-    };
-
-    /**
-     * The service listener to check for the user's formatted address.
-     *
-     * i.e. 1234 Abc Street, State, 00000, Country
-     */
-    private ServiceListener googleGeoCodeFormattedAddressListener = new ServiceListener()
     {
         @Override
         public void onRetrievalSuccessful(String response)

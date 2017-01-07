@@ -646,7 +646,9 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
             // This tells us that the location we typed is valid according to Google.
             case REQUEST_CODE_LOCATION_VALIDITY:
 
-                String location = textViewLocation.getText().toString();
+                String location = (String)obj;
+
+                textViewLocation.setText(location);
 
                 // If the location and saved location equal, that means we are editing a fitness equipment.
                 if (location.equals(savedLocation))
