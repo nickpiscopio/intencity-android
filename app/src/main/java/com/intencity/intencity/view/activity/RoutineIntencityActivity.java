@@ -2,8 +2,10 @@ package com.intencity.intencity.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,11 +19,14 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RoutineAdapter;
+import com.intencity.intencity.helper.GoogleGeocode;
 import com.intencity.intencity.helper.doa.ExerciseDao;
 import com.intencity.intencity.helper.doa.IntencityRoutineDao;
 import com.intencity.intencity.listener.DialogListener;
+import com.intencity.intencity.listener.GeocodeListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.SelectableListItem;
@@ -41,8 +46,13 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 5/6/16.
  */
-public class RoutineIntencityActivity extends AppCompatActivity implements ServiceListener
+public class RoutineIntencityActivity extends AppCompatActivity implements ServiceListener,
+                                                                           GeocodeListener
 {
+    private final int REQUEST_CODE_ADDRESS = 20;
+
+    private GoogleGeocode googleGeocode;
+
     private Context context;
 
     private ProgressBar progressBar;
@@ -54,6 +64,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     private FloatingActionButton start;
 
     private String email;
+    private String currentUserLocation;
 
     private RoutineAdapter adapter;
 
@@ -103,6 +114,30 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         listView.setOnItemClickListener(routineClickListener);
 
         populateRoutineList();
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        googleGeocode = new GoogleGeocode(this, this);
+        // Get location of user since there wasn't one already.
+        googleGeocode.checkLocationPermission(REQUEST_CODE_ADDRESS);
+    }
+
+    @Override
+    protected void onPause()
+    {
+        googleGeocode.onDestroy();
+
+        super.onPause();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
+    {
+        googleGeocode.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     @Override
@@ -295,8 +330,8 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         {
             new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
                                                              Constant.generateStoredProcedureParameters(
-                                                                     Constant.STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY,
-                                                                     email));
+                                                                     Constant.STORED_PROCEDURE_GET_ROUTINE_EXERCISES,
+                                                                     email, currentUserLocation));
         }
 
         @Override
@@ -372,5 +407,51 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     public void onRetrievalFailed()
     {
         showConnectionIssueDialog();
+    }
+
+    @Override
+    public void onGoogleApiClientConnected(int requestCode, GoogleApiClient googleApiClient, Location location)
+    {
+        switch (requestCode)
+        {
+            case REQUEST_CODE_ADDRESS:
+                googleGeocode.getLastLocationAddress(REQUEST_CODE_ADDRESS, location);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onRetrievalSuccessful(int requestCode, Object obj)
+    {
+        switch (requestCode)
+        {
+            case REQUEST_CODE_ADDRESS:
+                currentUserLocation = (String)obj;
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onRetrievalFailed(int requestCode)
+    {
+        switch (requestCode)
+        {
+            case REQUEST_CODE_ADDRESS:
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults, FragmentActivity activity)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

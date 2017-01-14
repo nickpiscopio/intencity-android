@@ -116,6 +116,7 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
     {
         if (googleApiClient != null)
         {
+            googleApiClient.stopAutoManage(activity);
             googleApiClient.disconnect();
         }
     }

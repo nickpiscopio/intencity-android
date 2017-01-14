@@ -154,7 +154,7 @@ public class Constant
     // Stored Procedure Names
     public static final String STORED_PROCEDURE_GET_USER_ROUTINE = "getUserRoutine";
     public static final String STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS = "getAllDisplayMuscleGroups";
-    public static final String STORED_PROCEDURE_GET_EXERCISES_FOR_TODAY = "getExercisesForToday";
+    public static final String STORED_PROCEDURE_GET_ROUTINE_EXERCISES = "getRoutineExercises";
     public static final String STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP = "setCurrentMuscleGroup";
     public static final String STORED_PROCEDURE_GET_USER_ROUTINE_EXERCISES = "getUserRoutineExercises";
     public static final String STORED_PROCEDURE_SET_EXERCISE_PRIORITY = "setPriority";
