@@ -24,6 +24,7 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RoutineAdapter;
 import com.intencity.intencity.helper.GoogleGeocode;
 import com.intencity.intencity.helper.doa.ExerciseDao;
+import com.intencity.intencity.helper.doa.FitnessLocationDao;
 import com.intencity.intencity.helper.doa.IntencityRoutineDao;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.GeocodeListener;
@@ -74,6 +75,8 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
 
     private boolean hasMoreExercises = false;
 
+    private FitnessLocationDao fitnessLocationDao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -113,6 +116,8 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         listView.addHeaderView(header, null, false);
         listView.setOnItemClickListener(routineClickListener);
 
+        fitnessLocationDao = new FitnessLocationDao(fitnessLocationServiceListener, email);
+
         populateRoutineList();
     }
 
@@ -122,8 +127,6 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         super.onStart();
 
         googleGeocode = new GoogleGeocode(this, this);
-        // Get location of user since there wasn't one already.
-        googleGeocode.checkLocationPermission(REQUEST_CODE_ADDRESS);
     }
 
     @Override
@@ -237,6 +240,20 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     }
 
     /**
+     * Opens the fitness location screen so the user can select his or her fitness location.
+     * We do this because the location we found didn't match what the user had.
+     *
+     * @param locations     The user's fitness locations to send to the fitness location screen so we don't need to get them again.
+     */
+    private void openFitnessLocation(ArrayList<SelectableListItem> locations)
+    {
+        Intent intent = new Intent(context, FitnessLocationActivity.class);
+        intent.putExtra(Constant.BUNDLE_FITNESS_LOCATION_SELECT, true);
+        intent.putExtra(Constant.BUNDLE_FITNESS_LOCATIONS, locations);
+        context.startActivity(intent);
+    }
+
+    /**
      * The click listener for when a routine is clicked in the ListView.
      */
     private AdapterView.OnItemClickListener routineClickListener = new AdapterView.OnItemClickListener()
@@ -273,12 +290,8 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         {
             showLoading();
 
-            SelectableListItem row = rows.get(routineSelected);
-
-            String routine = String.valueOf(row.getRowNumber());
-            String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP, email, routine);
-
-            new ServiceTask(routineServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE, storedProcedureParameters);
+            // Get location of user since there wasn't one already.
+            googleGeocode.checkLocationPermission(REQUEST_CODE_ADDRESS);
         }
     };
 
@@ -321,27 +334,6 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     }
 
     /**
-     * The service listener for setting the routine.
-     */
-    public ServiceListener routineServiceListener = new ServiceListener()
-    {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-            new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
-                                                             Constant.generateStoredProcedureParameters(
-                                                                     Constant.STORED_PROCEDURE_GET_ROUTINE_EXERCISES,
-                                                                     email, currentUserLocation));
-        }
-
-        @Override
-        public void onRetrievalFailed()
-        {
-            showConnectionIssue();
-        }
-    };
-
-    /**
      * The service listener for getting the exercise list.
      */
     public ServiceListener exerciseServiceListener = new ServiceListener()
@@ -373,6 +365,53 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
                 Log.e(Constant.TAG, e.getMessage());
 
                 showConnectionIssue();
+            }
+        }
+
+        @Override
+        public void onRetrievalFailed()
+        {
+            showConnectionIssue();
+        }
+    };
+
+    /**
+     * The service listener for getting the user's fitness locations.
+     */
+    public ServiceListener fitnessLocationServiceListener = new ServiceListener()
+    {
+        @Override
+        public void onRetrievalSuccessful(String response)
+        {
+            ArrayList<SelectableListItem> locations = new ArrayList<>();
+            try
+            {
+                locations.addAll(fitnessLocationDao.parseJson(response, currentUserLocation));
+
+                if (fitnessLocationDao.hasValidFitnessLocation())
+                {
+                    SelectableListItem row = rows.get(routineSelected);
+
+                    String routine = String.valueOf(row.getRowNumber());
+                    String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_ROUTINE_EXERCISES,
+                                                                                                  email, currentUserLocation, routine);
+
+                    new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+                                                                     storedProcedureParameters);
+                }
+                else
+                {
+                    // The location wasn't valid, so we need to notify the user.
+                    openFitnessLocation(locations);
+
+                    hideLoading();
+                }
+            }
+            catch (JSONException e)
+            {
+                Log.e(Constant.TAG, "Couldn't parse user locations. " + e.toString());
+
+                hideLoading();
             }
         }
 
@@ -429,6 +468,10 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         {
             case REQUEST_CODE_ADDRESS:
                 currentUserLocation = (String)obj;
+
+                // See if the currentUserLocation is in our list.
+                fitnessLocationDao.getFitnessLocations();
+
                 break;
 
             default:
@@ -442,6 +485,10 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         switch (requestCode)
         {
             case REQUEST_CODE_ADDRESS:
+                // Failed to retrieve the fitness location, so open the fitness location screen for the user to select it.
+                openFitnessLocation(null);
+
+                hideLoading();
                 break;
 
             default:

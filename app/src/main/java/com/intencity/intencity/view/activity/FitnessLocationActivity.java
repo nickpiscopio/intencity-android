@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.CheckboxAdapter;
+import com.intencity.intencity.helper.doa.FitnessLocationDao;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.EquipmentMetaData;
@@ -28,9 +29,7 @@ import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -63,6 +62,11 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
 
     private boolean hasMoreFitnessLocations = false;
     private boolean inRemovingState = false;
+    private boolean selectFitnessLocation = false;
+
+    private ArrayList<SelectableListItem> fitnessLocations;
+
+    private FitnessLocationDao fitnessLocationDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -70,12 +74,7 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fitness_location_edit);
 
-        // Add the back button to the action bar.
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-        {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         context = getApplicationContext();
 
@@ -104,7 +103,39 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
         listView.setEmptyView(findViewById(R.id.empty_list));
         listView.setOnItemClickListener(locationClickListener);
 
-        getUserFitnessLocations();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null)
+        {
+            selectFitnessLocation = extras.getBoolean(Constant.BUNDLE_FITNESS_LOCATION_SELECT);
+            fitnessLocations = extras.getParcelable(Constant.BUNDLE_FITNESS_LOCATIONS);
+        }
+
+        fitnessLocationDao = new FitnessLocationDao(this, email);
+
+        if (actionBar != null)
+        {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+
+            if (selectFitnessLocation)
+            {
+                actionBar.setTitle(getString(R.string.select_fitness_locations));
+            }
+            else
+            {
+                actionBar.setTitle(getString(R.string.edit_fitness_locations));
+            }
+        }
+
+        if (fitnessLocations != null && fitnessLocations.size() > 0)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+
+            setLocations(fitnessLocations);
+        }
+        else
+        {
+            getUserFitnessLocations();
+        }
     }
 
     @Override
@@ -188,34 +219,11 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
     {
         try
         {
-            locations.clear();
-            locationsToRemove = new ArrayList<>();
-
-            JSONArray array = new JSONArray(response);
-
-            int length = array.length();
-
-            for (int i = 0; i < length; i++)
-            {
-                JSONObject object = array.getJSONObject(i);
-
-                String name = object.getString(Constant.COLUMN_DISPLAY_NAME);
-                String location = object.getString(Constant.COLUMN_LOCATION);
-
-                SelectableListItem listItem = new SelectableListItem(name, location);
-                listItem.setDeletionEnabled(false);
-
-                // Add all the locations to the array.
-                locations.add(listItem);
-            }
-
-            adapter.notifyDataSetChanged();
-
-            progressBar.setVisibility(View.GONE);
+            setLocations(fitnessLocationDao.parseJson(response, null));
         }
         catch (JSONException exception)
         {
-            Log.e(Constant.TAG, "Couldn't parse custom Intencity routine list. " + exception.toString());
+            Log.e(Constant.TAG, "Couldn't parse user locations. " + exception.toString());
 
             progressBar.setVisibility(View.GONE);
         }
@@ -267,8 +275,24 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
     {
         progressBar.setVisibility(View.VISIBLE);
 
-        new ServiceTask(this).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
-                                      Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_FITNESS_LOCATIONS, email));
+        fitnessLocationDao.getFitnessLocations();
+    }
+
+    /**
+     * Sets the fitness locations for the screen.
+     *
+     * @param locations     The locations that we retrieved from the database.
+     */
+    private void setLocations(ArrayList<SelectableListItem> locations)
+    {
+        this.locations.clear();
+        locationsToRemove = new ArrayList<>();
+
+        this.locations.addAll(locations);
+
+        adapter.notifyDataSetChanged();
+
+        progressBar.setVisibility(View.GONE);
     }
 
     /**

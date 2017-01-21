@@ -221,6 +221,7 @@
     <!-- Settings Strings -->
     <string name="edit_priority">Edit Exercise Priorities</string>
     <string name="edit_fitness_locations">Edit Fitness Locations</string>
+    <string name="select_fitness_locations">Select Fitness Locations</string>
 
     <string name="change_password">Change Password</string>
 

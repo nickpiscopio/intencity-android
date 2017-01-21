@@ -103,6 +103,8 @@ public class Constant
     public static final String BUNDLE_PROFILE_IS_USER = "com.intencity.intencity.profile.is.user";
     public static final String BUNDLE_FOLLOW_ID = "com.intencity.intencity.bundle.follow.id";
     public static final String BUNDLE_EQUIPMENT_META_DATA = "com.intencity.intencity.bundle.equipment.meta.data";
+    public static final String BUNDLE_FITNESS_LOCATIONS = "com.intencity.intencity.bundle.fitness.locations";
+    public static final String BUNDLE_FITNESS_LOCATION_SELECT = "com.intencity.intencity.bundle.fitness.location.select";
 
     // Service Endpoint
     private static final String ENDPOINT = "http://www.intencityapp.com/";
@@ -155,7 +157,6 @@ public class Constant
     public static final String STORED_PROCEDURE_GET_USER_ROUTINE = "getUserRoutine";
     public static final String STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS = "getAllDisplayMuscleGroups";
     public static final String STORED_PROCEDURE_GET_ROUTINE_EXERCISES = "getRoutineExercises";
-    public static final String STORED_PROCEDURE_SET_CURRENT_MUSCLE_GROUP = "setCurrentMuscleGroup";
     public static final String STORED_PROCEDURE_GET_USER_ROUTINE_EXERCISES = "getUserRoutineExercises";
     public static final String STORED_PROCEDURE_SET_EXERCISE_PRIORITY = "setPriority";
     public static final String STORED_PROCEDURE_GET_FOLLOWING = "getFollowing";
@@ -200,7 +201,6 @@ public class Constant
 
     // Column Names
     // The current muscle group a user is recommended to do.
-    public static final String COLUMN_CURRENT_MUSCLE_GROUP = "currentMuscleGroup";
     public static final String COLUMN_DISPLAY_NAME = "DisplayName";
     public static final String COLUMN_ROUTINE_NAME = "RoutineName";
     public static final String COLUMN_EXERCISE_DAY = "ExerciseDay";
