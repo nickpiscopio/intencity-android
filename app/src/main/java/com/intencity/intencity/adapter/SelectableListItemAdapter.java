@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  *
  * Created by Nick Piscopio on 5/6/16.
  */
-public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
+public class SelectableListItemAdapter extends ArrayAdapter<SelectableListItem>
 {
     private Context context;
 
@@ -39,6 +40,7 @@ public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
         TextView description;
         ImageView edit;
         CheckBox checkbox;
+        RadioButton radioButton;
     }
 
     /**
@@ -48,7 +50,7 @@ public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
      * @param listItemResId     The resource id of the view we are inflating for the list items.
      * @param titles            The title of the row.
      */
-    public CheckboxAdapter(Context context, int listItemResId, ArrayList<SelectableListItem> titles)
+    public SelectableListItemAdapter(Context context, int listItemResId, ArrayList<SelectableListItem> titles)
     {
         super(context, 0, titles);
 
@@ -76,6 +78,7 @@ public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
             holder.description = (TextView) convertView.findViewById(R.id.text_view_description);
             holder.edit = (ImageView) convertView.findViewById(R.id.edit);
             holder.checkbox = (CheckBox) convertView.findViewById(R.id.checkbox);
+            holder.radioButton = (RadioButton) convertView.findViewById(R.id.radio_button);
 
             convertView.setTag(holder);
         }
@@ -101,6 +104,7 @@ public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
         }
 
         holder.checkbox.setChecked(row.isChecked());
+        holder.radioButton.setChecked(row.isSelected());
 
         if(description != null && description.length() > 0)
         {
@@ -129,30 +133,39 @@ public class CheckboxAdapter extends ArrayAdapter<SelectableListItem>
             holder.description.setVisibility(View.GONE);
         }
 
-        if(row.isDeletionEnabled())
+        switch (row.getListItemType())
         {
-            holder.edit.setVisibility(View.GONE);
-            holder.checkbox.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            holder.edit.setVisibility(View.VISIBLE);
-            holder.checkbox.setVisibility(View.GONE);
+            case TYPE_RADIO_BUTTON:
+                holder.radioButton.setVisibility(View.VISIBLE);
+                holder.edit.setVisibility(View.GONE);
+                holder.checkbox.setVisibility(View.GONE);
+                break;
+            case TYPE_IMAGE_VIEW:
+                holder.edit.setVisibility(View.VISIBLE);
+                holder.radioButton.setVisibility(View.GONE);
+                holder.checkbox.setVisibility(View.GONE);
+                break;
+            case TYPE_CHECKBOX:
+            default:
+                holder.checkbox.setVisibility(View.VISIBLE);
+                holder.edit.setVisibility(View.GONE);
+                holder.radioButton.setVisibility(View.GONE);
+                break;
         }
 
         return convertView;
     }
 
     /**
-     * Changes all the deletion flag for all the objects.
+     * Changes all the list item types for all the objects.
      *
-     * @param deletionEnabled   Boolean value of whether the deletion flag is enabled or not.
+     * @param listItemType  Enumeration of the list item type to change the objects to.
      */
-    public void setDeletionEnabled(boolean deletionEnabled)
+    public void setListItemType(SelectableListItem.ListItemType listItemType)
     {
         for (SelectableListItem listItem : objects)
         {
-            listItem.setDeletionEnabled(deletionEnabled);
+            listItem.setListItemType(listItemType);
         }
 
         notifyDataSetChanged();

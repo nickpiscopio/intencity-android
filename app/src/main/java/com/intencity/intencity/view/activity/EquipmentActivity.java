@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.intencity.intencity.R;
-import com.intencity.intencity.adapter.CheckboxAdapter;
+import com.intencity.intencity.adapter.SelectableListItemAdapter;
 import com.intencity.intencity.helper.GoogleGeocode;
 import com.intencity.intencity.listener.DialogFitnessLocationListener;
 import com.intencity.intencity.listener.DialogListener;
@@ -82,7 +82,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
     private Context context;
 
-    private CheckboxAdapter adapter;
+    private SelectableListItemAdapter adapter;
 
     private GoogleGeocode googleGeocode;
 
@@ -533,7 +533,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
      */
     private void populateEquipmentListView()
     {
-        adapter = new CheckboxAdapter(this, R.layout.list_item_standard_checkbox, equipmentList);
+        adapter = new SelectableListItemAdapter(this, R.layout.list_item_standard_selectable, equipmentList);
 
         View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
 

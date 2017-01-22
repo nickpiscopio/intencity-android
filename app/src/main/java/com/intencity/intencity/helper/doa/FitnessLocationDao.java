@@ -45,10 +45,11 @@ public class FitnessLocationDao
      * @param currentUserLocation   The current location of the user.
      *                              We search through the locations anyway just in case the user is in a location that isn't saved.
      *                              If this is the case, then we go to the fitness location screen for the user to either select or create a new fitness location.
+    * @param listItemType           The type of list we want to see after parsing.
      *
      * @return  The ArrayList of the user's fitness locations.
      */
-    public ArrayList<SelectableListItem> parseJson(String response, String currentUserLocation) throws JSONException
+    public ArrayList<SelectableListItem> parseJson(String response, String currentUserLocation, SelectableListItem.ListItemType listItemType) throws JSONException
     {
         ArrayList<SelectableListItem> locations = new ArrayList<>();
 
@@ -73,7 +74,7 @@ public class FitnessLocationDao
             }
 
             SelectableListItem listItem = new SelectableListItem(name, location);
-            listItem.setDeletionEnabled(false);
+            listItem.setListItemType(listItemType);
 
             // Add all the locations to the array.
             locations.add(listItem);

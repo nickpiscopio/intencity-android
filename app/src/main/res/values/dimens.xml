@@ -60,8 +60,8 @@
     <dimen name="badge_amount_size">26dp</dimen>
     <dimen name="badge_amount_padding">-15dp</dimen>
 
-    <!-- Exercise List -->
-    <dimen name="magnifying_margin">3dp</dimen>
+    <!-- Floating action button -->
+    <dimen name="fab_secondary_icon_margin">3dp</dimen>
 
     <!-- List View Dimensions -->
     <dimen name="list_view_shadow">4dp</dimen>

@@ -250,7 +250,22 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         Intent intent = new Intent(context, FitnessLocationActivity.class);
         intent.putExtra(Constant.BUNDLE_FITNESS_LOCATION_SELECT, true);
         intent.putExtra(Constant.BUNDLE_FITNESS_LOCATIONS, locations);
-        context.startActivity(intent);
+        RoutineIntencityActivity.this.startActivityForResult(intent, Constant.REQUEST_CODE_FITNESS_LOCATION);
+    }
+
+    /**
+     * Starts the service to start exercising.
+     */
+    private void startServiceToStartExercising()
+    {
+        SelectableListItem row = rows.get(routineSelected);
+
+        String routine = String.valueOf(row.getRowNumber());
+        String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_ROUTINE_EXERCISES,
+                                                                                      email, currentUserLocation, routine);
+
+        new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+                                                         storedProcedureParameters);
     }
 
     /**
@@ -303,6 +318,14 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         if (resultCode == Constant.REQUEST_CODE_ROUTINE_UPDATED)
         {
             getRoutines();
+        }
+        else if (resultCode == Constant.REQUEST_CODE_FITNESS_LOCATION)
+        {
+            showLoading();
+
+            currentUserLocation = data.getStringExtra(Constant.BUNDLE_FITNESS_LOCATION);
+
+            startServiceToStartExercising();
         }
     }
 
@@ -384,20 +407,15 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         public void onRetrievalSuccessful(String response)
         {
             ArrayList<SelectableListItem> locations = new ArrayList<>();
+
             try
             {
-                locations.addAll(fitnessLocationDao.parseJson(response, currentUserLocation));
+                locations.addAll(fitnessLocationDao.parseJson(response, currentUserLocation,
+                                                              SelectableListItem.ListItemType.TYPE_RADIO_BUTTON));
 
                 if (fitnessLocationDao.hasValidFitnessLocation())
                 {
-                    SelectableListItem row = rows.get(routineSelected);
-
-                    String routine = String.valueOf(row.getRowNumber());
-                    String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_ROUTINE_EXERCISES,
-                                                                                                  email, currentUserLocation, routine);
-
-                    new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
-                                                                     storedProcedureParameters);
+                    startServiceToStartExercising();
                 }
                 else
                 {
@@ -410,6 +428,8 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
             catch (JSONException e)
             {
                 Log.e(Constant.TAG, "Couldn't parse user locations. " + e.toString());
+
+                openFitnessLocation(null);
 
                 hideLoading();
             }

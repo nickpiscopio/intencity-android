@@ -10,6 +10,13 @@ import android.os.Parcelable;
  */
 public class SelectableListItem implements Parcelable
 {
+    public enum ListItemType
+    {
+        TYPE_CHECKBOX,
+        TYPE_RADIO_BUTTON,
+        TYPE_IMAGE_VIEW
+    }
+
     private String title;
     private String description;
 
@@ -17,9 +24,9 @@ public class SelectableListItem implements Parcelable
 
     private boolean selected = false;
     private boolean checked = true;
-    // The flag to show the checkbox for keeping or deleting a list item.
-    // If this is false, the edit ImageView will be shown.
-    private boolean deletionEnabled = true;
+
+    // We give this a default just in case we don't set the listItemType.
+    private ListItemType listItemType = ListItemType.TYPE_CHECKBOX;
 
     public SelectableListItem(String title)
     {
@@ -45,6 +52,7 @@ public class SelectableListItem implements Parcelable
         rowNumber = in.readInt();
         selected = in.readInt() == 1;
         checked = in.readInt() == 1;
+        listItemType = ListItemType.values()[in.readInt()];
     }
 
     public static final Creator<SelectableListItem> CREATOR = new Creator<SelectableListItem>()
@@ -76,6 +84,7 @@ public class SelectableListItem implements Parcelable
         dest.writeInt(rowNumber);
         dest.writeInt(selected ? 1 : 0);
         dest.writeInt(checked ? 1 : 0);
+        dest.writeInt(listItemType.ordinal());
     }
 
     /**
@@ -126,11 +135,13 @@ public class SelectableListItem implements Parcelable
         this.selected = selected;
     }
 
-    public boolean isDeletionEnabled() {
-        return deletionEnabled;
+    public ListItemType getListItemType()
+    {
+        return listItemType;
     }
 
-    public void setDeletionEnabled(boolean deletionEnabled) {
-        this.deletionEnabled = deletionEnabled;
+    public void setListItemType(ListItemType listItemType)
+    {
+        this.listItemType = listItemType;
     }
 }

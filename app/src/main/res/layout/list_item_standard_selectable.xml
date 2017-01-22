@@ -60,6 +60,14 @@
             android:focusable="false"
             android:clickable="false"/>
 
+        <RadioButton
+            android:id="@+id/radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/radio_button"
+            android:focusable="false"
+            android:clickable="false"/>
+
     </LinearLayout>
 
     <include layout="@layout/divider"/>

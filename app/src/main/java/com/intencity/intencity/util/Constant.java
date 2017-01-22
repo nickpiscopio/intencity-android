@@ -70,6 +70,7 @@ public class Constant
     public static final int REQUEST_CODE_EQUIPMENT_SAVED = 110;
     public static final int REQUEST_CODE_START_EXERCISING = 120;
     public static final int REQUEST_CODE_OVERVIEW = 130;
+    public static final int REQUEST_CODE_FITNESS_LOCATION = 140;
 
     // Fragment IDs
     public static final int ID_FRAGMENT_ROUTINE = 10;
@@ -103,6 +104,7 @@ public class Constant
     public static final String BUNDLE_PROFILE_IS_USER = "com.intencity.intencity.profile.is.user";
     public static final String BUNDLE_FOLLOW_ID = "com.intencity.intencity.bundle.follow.id";
     public static final String BUNDLE_EQUIPMENT_META_DATA = "com.intencity.intencity.bundle.equipment.meta.data";
+    public static final String BUNDLE_FITNESS_LOCATION = "com.intencity.intencity.bundle.fitness.location";
     public static final String BUNDLE_FITNESS_LOCATIONS = "com.intencity.intencity.bundle.fitness.locations";
     public static final String BUNDLE_FITNESS_LOCATION_SELECT = "com.intencity.intencity.bundle.fitness.location.select";
 

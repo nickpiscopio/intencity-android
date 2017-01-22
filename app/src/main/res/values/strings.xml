@@ -71,8 +71,10 @@
     <!-- Intencity Strings-->
     <string name="title_rankings">Leaderboard</string>
     <string name="title_fitness_guru">Fitness Guru</string>
-    <string name="title_menu">Menu</string>
-    <string name="menu_search">Search</string>
+    <string name="title_menu">MENU</string>
+    <string name="menu_search">SEARCH</string>
+    <string name="menu_done">DONE</string>
+    <string name="menu_edit">EDIT</string>
     <string name="title_info">Info</string>
     <string name="title_app">App</string>
     <string name="title_checkbox">Select</string>
@@ -127,8 +129,8 @@
     <string name="muscle_group_limit_description">Please select at least 1 muscle group for this routine.</string>
 
     <string name="edit_equipment_location_names_title">Edit Equipment Location Names</string>
-    <string name="edit_equipment_description1">Your fitness locations</string>
-    <string name="edit_equipment_description2">Only checked locations will be kept when hitting \'Save\'.</string>
+    <string name="edit_equipment_description_save">Only checked locations will be kept when hitting \'Save\'.</string>
+    <string name="edit_equipment_description_select_location">Intencity couldn\'t find your fitness location. Please select a fitness location or create a new one.</string>
 
     <string name="routine_saved_title">Save current routine</string>
     <string name="routine_saved_description">Give this routine a name so you can do it again at a later date.</string>
@@ -222,6 +224,7 @@
     <string name="edit_priority">Edit Exercise Priorities</string>
     <string name="edit_fitness_locations">Edit Fitness Locations</string>
     <string name="select_fitness_locations">Select Fitness Locations</string>
+    <string name="no_fitness_locations">No fitness locations found.</string>
 
     <string name="change_password">Change Password</string>
 

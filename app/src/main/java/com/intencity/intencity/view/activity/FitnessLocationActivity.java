@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,12 +13,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.adapter.CheckboxAdapter;
+import com.intencity.intencity.adapter.SelectableListItemAdapter;
 import com.intencity.intencity.helper.doa.FitnessLocationDao;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
@@ -27,6 +29,7 @@ import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.SelectionType;
 import com.intencity.intencity.util.Util;
 
 import org.json.JSONException;
@@ -40,33 +43,73 @@ import java.util.ArrayList;
  */
 public class FitnessLocationActivity extends AppCompatActivity implements ServiceListener
 {
+    private class Location
+    {
+        private int row;
+        private String location = "";
+
+        public int getRow()
+        {
+            return row;
+        }
+
+        public void setRow(int row)
+        {
+            this.row = row;
+        }
+
+        public String getLocation()
+        {
+            return location;
+        }
+
+        public void setLocation(String location)
+        {
+            this.location = location;
+        }
+    }
+
+    private enum ActivityState
+    {
+        STATE_SELECT,
+        STATE_EDIT,
+        STATE_REMOVE
+    }
+
     private Context context;
 
+    private MenuItem menuItemEdit;
     private MenuItem menuItemRemove;
     private MenuItem menuItemSave;
+    private MenuItem menuItemDone;
 
     private ProgressBar progressBar;
 
+    private View header;
     private TextView description;
 
     private ListView listView;
 
-    private FloatingActionButton add;
+    private FloatingActionButton floatingActionButton;
+
+    private LinearLayout layoutAdd;
 
     private ArrayList<SelectableListItem> locations;
     private ArrayList<String> locationsToRemove;
 
     private String email;
 
-    private CheckboxAdapter adapter;
+    private SelectableListItemAdapter adapter;
 
-    private boolean hasMoreFitnessLocations = false;
-    private boolean inRemovingState = false;
-    private boolean selectFitnessLocation = false;
+    private ActivityState activityState;
 
-    private ArrayList<SelectableListItem> fitnessLocations;
+    private boolean selectingFitnessLocation = false;
+
+    private ArrayList<SelectableListItem> alreadyRetrievedLocations;
 
     private FitnessLocationDao fitnessLocationDao;
+
+    private Location selectedLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -80,22 +123,21 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
 
-        add = (FloatingActionButton) findViewById(R.id.button_add);
-        add.setOnClickListener(addClickListener);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.button_add);
+        floatingActionButton.setOnClickListener(fabClickListener);
+
+        layoutAdd = (LinearLayout) findViewById(R.id.layout_add);
 
         email = Util.getSecurePreferencesEmail(context);
 
         locations = new ArrayList<>();
 
-        adapter = new CheckboxAdapter(context, R.layout.list_item_standard_checkbox, locations);
+        adapter = new SelectableListItemAdapter(context, R.layout.list_item_standard_selectable, locations);
 
-        View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
+        header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
+        header.findViewById(R.id.title).setVisibility(View.GONE);
 
-        TextView title = (TextView) header.findViewById(R.id.title);
         description = (TextView) header.findViewById(R.id.description);
-
-        title.setText(context.getString(R.string.edit_equipment_description1));
-        description.setText(context.getString(R.string.edit_equipment_description2));
 
         listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
@@ -106,8 +148,8 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
         Bundle extras = getIntent().getExtras();
         if (extras != null)
         {
-            selectFitnessLocation = extras.getBoolean(Constant.BUNDLE_FITNESS_LOCATION_SELECT);
-            fitnessLocations = extras.getParcelable(Constant.BUNDLE_FITNESS_LOCATIONS);
+            selectingFitnessLocation = extras.getBoolean(Constant.BUNDLE_FITNESS_LOCATION_SELECT);
+            alreadyRetrievedLocations = extras.getParcelable(Constant.BUNDLE_FITNESS_LOCATIONS);
         }
 
         fitnessLocationDao = new FitnessLocationDao(this, email);
@@ -116,21 +158,27 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
         {
             actionBar.setDisplayHomeAsUpEnabled(true);
 
-            if (selectFitnessLocation)
+            if (selectingFitnessLocation)
             {
                 actionBar.setTitle(getString(R.string.select_fitness_locations));
+
+                activityState = ActivityState.STATE_SELECT;
+
+                selectedLocation = new Location();
             }
             else
             {
                 actionBar.setTitle(getString(R.string.edit_fitness_locations));
+
+                activityState = ActivityState.STATE_EDIT;
             }
         }
 
-        if (fitnessLocations != null && fitnessLocations.size() > 0)
+        if (alreadyRetrievedLocations != null && alreadyRetrievedLocations.size() > 0)
         {
             progressBar.setVisibility(View.VISIBLE);
 
-            setLocations(fitnessLocations);
+            setLocations(alreadyRetrievedLocations);
         }
         else
         {
@@ -141,10 +189,9 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
     @Override
     public void onBackPressed()
     {
-        if (hasMoreFitnessLocations)
+        if (hasValidFitnessLocation())
         {
-            setResult(Constant.REQUEST_CODE_ROUTINE_UPDATED);
-            finish();
+            setResult();
         }
 
         super.onBackPressed();
@@ -154,12 +201,12 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.remove_menu, menu);
+        inflater.inflate(R.menu.fitness_location_menu, menu);
 
+        menuItemEdit = menu.findItem(R.id.edit);
         menuItemRemove = menu.findItem(R.id.remove);
         menuItemSave = menu.findItem(R.id.save);
-
-        setMenuItems(false);
+        menuItemDone = menu.findItem(R.id.done);
 
         return true;
     }
@@ -172,12 +219,25 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.edit:
+                activityState = ActivityState.STATE_EDIT;
+                applyActivityState();
+                return true;
             case R.id.remove:
-                setMenuItems(!this.inRemovingState);
+                activityState = ActivityState.STATE_REMOVE;
+                applyActivityState();
                 return true;
             case R.id.save:
-                setMenuItems(!this.inRemovingState);
-                removeLocations();
+
+                if (locationsToRemove != null && locationsToRemove.size() > 0)
+                {
+                    removeLocations();
+                }
+
+                // Fall through here because we do the same as 'DONE'
+            case R.id.done:
+                activityState = selectingFitnessLocation ? ActivityState.STATE_SELECT : ActivityState.STATE_EDIT;
+                applyActivityState();
                 return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
@@ -187,46 +247,114 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
     /**
      * Sets the menu item based on the state the view is in.
      *
-     * @param inRemovingState   Boolean value for whether we are in the removing state or not.
      */
-    private void setMenuItems(boolean inRemovingState)
+    private void applyActivityState()
     {
-        this.inRemovingState = inRemovingState;
+        if(selectingFitnessLocation)
+        {
+            setSelection(SelectionType.DESELECT, selectedLocation.getRow());
+            selectedLocation = new Location();
+        }
 
-        menuItemRemove.setVisible(!this.inRemovingState);
-        menuItemSave.setVisible(this.inRemovingState);
+        if (userHasFitnessLocations())
+        {
+            switch (activityState)
+            {
+                case STATE_EDIT:
+                    menuItemEdit.setVisible(false);
+                    menuItemRemove.setVisible(!selectingFitnessLocation);
+                    menuItemSave.setVisible(false);
+                    menuItemDone.setVisible(selectingFitnessLocation);
 
-        description.setVisibility(this.inRemovingState ? View.VISIBLE : View.GONE);
+                    header.setVisibility(View.GONE);
+                    description.setVisibility(View.GONE);
 
-        // Tell the adapter that we are enabling or disabling the deletion flag.
-        adapter.setDeletionEnabled(this.inRemovingState);
+                    adapter.setListItemType(SelectableListItem.ListItemType.TYPE_IMAGE_VIEW);
+
+                    break;
+
+                case STATE_REMOVE:
+                    menuItemEdit.setVisible(false);
+                    menuItemRemove.setVisible(false);
+                    menuItemSave.setVisible(true);
+                    menuItemDone.setVisible(false);
+
+                    description.setText(context.getString(R.string.edit_equipment_description_save));
+                    description.setVisibility(View.VISIBLE);
+                    header.setVisibility(View.VISIBLE);
+
+                    adapter.setListItemType(SelectableListItem.ListItemType.TYPE_CHECKBOX);
+
+                    break;
+
+                case STATE_SELECT:
+                default:
+                    menuItemEdit.setVisible(true);
+                    menuItemRemove.setVisible(true);
+                    menuItemSave.setVisible(false);
+                    menuItemDone.setVisible(false);
+
+                    description.setText(context.getString(R.string.edit_equipment_description_select_location));
+                    description.setVisibility(View.VISIBLE);
+                    header.setVisibility(View.VISIBLE);
+
+                    adapter.setListItemType(SelectableListItem.ListItemType.TYPE_RADIO_BUTTON);
+
+                    break;
+            }
+        }
+        else
+        {
+            header.setVisibility(View.GONE);
+
+            menuItemEdit.setVisible(false);
+            menuItemRemove.setVisible(false);
+            menuItemSave.setVisible(false);
+            menuItemDone.setVisible(false);
+        }
+
+        setFloatingActionButton();
     }
 
     /**
-     * The click listener for adding a fitness location.
+     * Sets the floating action button images and layouts.
      */
-    private View.OnClickListener addClickListener = new View.OnClickListener()
+    private void setFloatingActionButton()
     {
-        @Override
-        public void onClick(View v)
+        if (hasValidFitnessLocation())
         {
-            openEquipmentActivity("", "");
+            floatingActionButton.setImageDrawable(ContextCompat.getDrawable(context, R.mipmap.next_light));
+            floatingActionButton.setOnLongClickListener(fabLongClickListener);
+
+            layoutAdd.setVisibility(View.VISIBLE);
         }
-    };
+        else
+        {
+            floatingActionButton.setImageDrawable(ContextCompat.getDrawable(context, R.mipmap.ic_plus_white));
+            floatingActionButton.setOnLongClickListener(null);
+
+            layoutAdd.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     public void onRetrievalSuccessful(String response)
     {
         try
         {
-            setLocations(fitnessLocationDao.parseJson(response, null));
+            SelectableListItem.ListItemType listItemType = selectingFitnessLocation ?
+                    SelectableListItem.ListItemType.TYPE_RADIO_BUTTON : SelectableListItem.ListItemType.TYPE_IMAGE_VIEW;
+
+            setLocations(fitnessLocationDao.parseJson(response, null, listItemType));
         }
         catch (JSONException exception)
         {
             Log.e(Constant.TAG, "Couldn't parse user locations. " + exception.toString());
 
-            progressBar.setVisibility(View.GONE);
+            setLocations(null);
         }
+
+        applyActivityState();
     }
 
     @Override
@@ -243,8 +371,15 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
         @Override
         public void onRetrievalSuccessful(String response)
         {
-//            setResult(Constant.REQUEST_CODE_ROUTINE_UPDATED);
-            finish();
+            response = response.replaceAll("\"", "");
+            if (response.equals(Constant.SUCCESS))
+            {
+                getUserFitnessLocations();
+            }
+            else
+            {
+                showConnectionIssue();
+            }
         }
 
         @Override
@@ -253,6 +388,18 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
             showConnectionIssue();
         }
     };
+
+    /**
+     * Sets the result, and finishes the activity.
+     */
+    private void setResult()
+    {
+        Intent intent = new Intent();
+        intent.putExtra(Constant.BUNDLE_FITNESS_LOCATION, selectedLocation.getLocation());
+
+        setResult(Constant.REQUEST_CODE_FITNESS_LOCATION, intent);
+        finish();
+    }
 
     /**
      * Opens the EquipmentActivity
@@ -288,7 +435,10 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
         this.locations.clear();
         locationsToRemove = new ArrayList<>();
 
-        this.locations.addAll(locations);
+        if (locations != null)
+        {
+            this.locations.addAll(locations);
+        }
 
         adapter.notifyDataSetChanged();
 
@@ -312,7 +462,7 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
      */
     private void removeLocations()
     {
-        if (locationsToRemove.size() > 0)
+        if (userHasFitnessLocations())
         {
             progressBar.setVisibility(View.VISIBLE);
 
@@ -324,6 +474,40 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
         {
             onBackPressed();
         }
+    }
+
+    /**
+     * Sets the flag to select or deselect a row.
+     *
+     * @param type      The type of selection we want to do.
+     * @param position  The position to select or deselect a row.
+     */
+    private void setSelection(SelectionType type, int position)
+    {
+        SelectableListItem selectedItem = locations.get(position);
+
+        selectedItem.setSelected(type == SelectionType.SELECT);
+    }
+
+    /**
+     * Checks to see if the user has fitness locations.
+     *
+     * @return  Boolean value telling whether the user has fitness locations or not.
+     */
+    private boolean userHasFitnessLocations()
+    {
+        return locations != null && locations.size() > 0;
+    }
+
+
+    /**
+     * Checks to see if the user has selected a fitness location.
+     *
+     * @return  Boolean value of whether the user has selected a fitness location.
+     */
+    private boolean hasValidFitnessLocation()
+    {
+        return selectingFitnessLocation && !selectedLocation.getLocation().equals("");
     }
 
     /**
@@ -347,34 +531,88 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            SelectableListItem location = locations.get(position - 1);
+            int listItemPosition = position - 1;
+            SelectableListItem location = locations.get(listItemPosition);
 
-            if (inRemovingState)
+            switch (activityState)
             {
-                // The address is located in the description.
-                // We only allow 1 address per person, so we are removing on the user's email/location (address).
-                String address = location.getDescription();
+                case STATE_EDIT:
+                    // We are editing, so open the equipment activity.
+                    openEquipmentActivity(location.getTitle(), location.getDescription());
 
-                // Add or remove muscle groups from the list
-                // if he or she clicks on a list item.
-                if (locationsToRemove.contains(address))
-                {
-                    location.setChecked(true);
-                    locationsToRemove.remove(address);
-                }
-                else
-                {
-                    location.setChecked(false);
-                    locationsToRemove.add(address);
-                }
+                    break;
 
-                adapter.notifyDataSetChanged();
+                case STATE_REMOVE:
+                    // The address is located in the description.
+                    // We only allow 1 address per person, so we are removing on the user's email/location (address).
+                    String address = location.getDescription();
+
+                    // Add or remove muscle groups from the list
+                    // if he or she clicks on a list item.
+                    if (locationsToRemove.contains(address))
+                    {
+                        location.setChecked(true);
+                        locationsToRemove.remove(address);
+                    }
+                    else
+                    {
+                        location.setChecked(false);
+                        locationsToRemove.add(address);
+                    }
+
+                    adapter.notifyDataSetChanged();
+
+                    break;
+
+                case STATE_SELECT:
+                default:
+
+                    // We deselect the old row.
+                    setSelection(SelectionType.DESELECT, selectedLocation.getRow());
+
+                    // We select the new row.
+                    selectedLocation.setRow(listItemPosition);
+                    selectedLocation.setLocation(location.getDescription());
+                    setSelection(SelectionType.SELECT, selectedLocation.getRow());
+
+                    adapter.notifyDataSetChanged();
+
+                    setFloatingActionButton();
+
+                    break;
+            }
+        }
+    };
+
+    /**
+     * The click listener for adding a fitness location.
+     */
+    private View.OnClickListener fabClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            if (hasValidFitnessLocation())
+            {
+                setResult();
             }
             else
             {
-                // We are editing, so open the equipment activity.
-                openEquipmentActivity(location.getTitle(), location.getDescription());
+                openEquipmentActivity("", "");
             }
+        }
+    };
+
+    /**
+     * The long click listener for the floating action button for when we have the next button and the add button active.
+     */
+    private View.OnLongClickListener fabLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View view)
+        {
+            openEquipmentActivity("", "");
+
+            return false;
         }
     };
 
@@ -385,8 +623,6 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
 
         if (resultCode == Constant.REQUEST_CODE_EQUIPMENT_SAVED)
         {
-            hasMoreFitnessLocations = true;
-
             getUserFitnessLocations();
         }
     }

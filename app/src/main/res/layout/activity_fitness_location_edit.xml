@@ -11,32 +11,33 @@
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
-    
-        <LinearLayout
+
+        <include
+            layout="@layout/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_margin"/>
+
+        <ListView
+            android:id="@+id/list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:choiceMode="multipleChoice"
+            android:drawSelectorOnTop="true"
+            android:dividerHeight="0dp"
+            android:divider="@null"
+            android:paddingBottom="@dimen/list_view_padding_bottom"
+            android:clipToPadding="false"/>
 
-            <include
-                layout="@layout/progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/layout_margin"/>
-
-            <ListView
-                android:id="@+id/list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:choiceMode="multipleChoice"
-                android:drawSelectorOnTop="true"
-                android:dividerHeight="0dp"
-                android:divider="@null"
-                android:paddingBottom="@dimen/list_view_padding_bottom"
-                android:clipToPadding="false"/>
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/empty_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_fitness_locations"
+            android:padding="@dimen/layout_margin"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -49,5 +50,33 @@
         android:src="@mipmap/ic_plus_white"
         app:layout_anchor="@id/layout"
         app:layout_anchorGravity="bottom|right|end"/>
+
+    <LinearLayout
+        android:id="@+id/layout_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/layout_margin_three_quarters"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_anchor="@id/button_add"
+        app:layout_anchorGravity="bottom|center_horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/fab_secondary_icon_margin"
+            android:alpha=".2175"
+            android:src="@mipmap/magnifying_glass"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_button_search_directions"
+            android:alpha=".2"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/card_title4_size"/>
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

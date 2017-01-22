@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.adapter.CheckboxAdapter;
+import com.intencity.intencity.adapter.SelectableListItemAdapter;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.SelectableListItem;
@@ -39,7 +39,7 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
 
     private ListView listView;
 
-    private CheckboxAdapter adapter;
+    private SelectableListItemAdapter adapter;
 
     private ArrayList<SelectableListItem> routines;
     private ArrayList<String> routinesToRemove;
@@ -128,7 +128,7 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
      */
     private void populateListView(ArrayList<SelectableListItem> routines)
     {
-        adapter = new CheckboxAdapter(context, R.layout.list_item_standard_checkbox, routines);
+        adapter = new SelectableListItemAdapter(context, R.layout.list_item_standard_selectable, routines);
 
         View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
 
