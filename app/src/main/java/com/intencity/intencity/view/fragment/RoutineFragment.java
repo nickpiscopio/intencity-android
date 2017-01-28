@@ -22,14 +22,11 @@ import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.model.RoutineSection;
 import com.intencity.intencity.model.SelectableListItem;
-import com.intencity.intencity.notification.CustomDialogContent;
-import com.intencity.intencity.notification.ToastDialog;
 import com.intencity.intencity.task.GetExerciseTask;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.RoutineState;
 import com.intencity.intencity.util.RoutineType;
-import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 import com.intencity.intencity.view.activity.EquipmentActivity;
 import com.intencity.intencity.view.activity.RoutineIntencityActivity;
@@ -69,10 +66,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
     private int sectionSelected;
 
-    private SecurePreferences securePreferences;
-
-    private ToastDialog toastDialog;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -99,20 +92,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
         initRoutineCards();
 
-        showEquipmentToastIfNeeded();
-
         return view;
-    }
-
-    @Override
-    public void onDestroy()
-    {
-        if (toastDialog != null)
-        {
-            toastDialog.dismiss();
-        }
-
-        super.onDestroy();
     }
 
     /**
@@ -148,24 +128,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
                                                                  Constant.generateStoredProcedureParameters(
                                                                     Constant.STORED_PROCEDURE_GET_USER_ROUTINE,
                                                                     email));
-    }
-
-    /**
-     * Checks if the user set his or her equipment yet. If not, we show the set equipment toast.
-     */
-    private void showEquipmentToastIfNeeded()
-    {
-        securePreferences = new SecurePreferences(context);
-
-        boolean userHasSetEquipment = securePreferences.getBoolean(Constant.USER_SET_EQUIPMENT, false);
-
-        if (!userHasSetEquipment)
-        {
-            CustomDialogContent content = new CustomDialogContent(context.getString(R.string.title_set_equipment));
-            content.setPositiveButtonStringRes(R.string.title_button_set_equipment);
-
-            toastDialog = new ToastDialog(context, content, this);
-        }
     }
 
     /**

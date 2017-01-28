@@ -54,7 +54,6 @@ public class Constant
     public static final String USER_TRIAL_CREATED_DATE = "com.intencity.intencity.user.trial.created.date";
     public static final String USER_LAST_LOGIN = "com.intencity.intencity.user.last.login";
     public static final String USER_LAST_EXERCISE_TIME = "com.intencity.intencity.user.last.exercise.time";
-    public static final String USER_SET_EQUIPMENT = "com.intencity.intencity.user.set.equipment";
 
     // Request codes
     public static final int REQUEST_CODE_STAT = 10;

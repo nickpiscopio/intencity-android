@@ -136,8 +136,6 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
         new ServiceTask(getEquipmentServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
                                                              Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_EQUIPMENT, email, savedLocation));
-
-        setUserSetEquipment();
     }
 
     @Override
@@ -586,18 +584,6 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
             equipment.setChecked(true);
             userEquipment.add(equipmentName);
         }
-    }
-
-    /**
-     * Saves the user set the equipment.
-     */
-    private void setUserSetEquipment()
-    {
-        SecurePreferences sp = new SecurePreferences(context);
-        SharedPreferences.Editor editor = sp.edit();
-
-        editor.putBoolean(Constant.USER_SET_EQUIPMENT, true);
-        editor.apply();
     }
 
     /**

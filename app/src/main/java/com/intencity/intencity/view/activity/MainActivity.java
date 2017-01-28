@@ -290,7 +290,6 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         editor.putString(Constant.USER_ACCOUNT_TYPE, "");
         editor.putLong(Constant.USER_LAST_EXERCISE_TIME, 0);
         editor.putLong(Constant.USER_TRIAL_CREATED_DATE, 0);
-        editor.putBoolean(Constant.USER_SET_EQUIPMENT, false);
         editor.apply();
 
         showDemo(DemoActivity.LOG_IN);
