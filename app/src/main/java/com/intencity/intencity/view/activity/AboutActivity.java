@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.intencity.intencity.BuildType;
 import com.intencity.intencity.R;
+import com.intencity.intencity.util.Build;
 
 /**
  * This is the about activity for Intencity.
@@ -34,7 +36,8 @@ public class AboutActivity extends AppCompatActivity
 
         try
         {
-            String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            String buildType = (BuildType.type == Build.Type.DEBUG) ? " (" + BuildType.type.toString() + ")" : "";
+            String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName + buildType;
             versionTextView.setText(versionName);
         }
         catch (PackageManager.NameNotFoundException e)

@@ -502,7 +502,10 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
     {
         this.selectAll = selectAll;
 
-        menuCheckBox.setIcon(this.selectAll ? R.mipmap.ic_checkbox_marked_white : R.mipmap.ic_checkbox_blank_outline_white);
+        if (menuCheckBox != null)
+        {
+            menuCheckBox.setIcon(this.selectAll ? R.mipmap.ic_checkbox_marked_white : R.mipmap.ic_checkbox_blank_outline_white);
+        }
     }
 
     /**

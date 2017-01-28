@@ -484,9 +484,11 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
      */
     private void setSelection(SelectionType type, int position)
     {
-        SelectableListItem selectedItem = locations.get(position);
-
-        selectedItem.setSelected(type == SelectionType.SELECT);
+        if (locations.size() > 0)
+        {
+            SelectableListItem selectedItem = locations.get(position);
+            selectedItem.setSelected(type == SelectionType.SELECT);
+        }
     }
 
     /**

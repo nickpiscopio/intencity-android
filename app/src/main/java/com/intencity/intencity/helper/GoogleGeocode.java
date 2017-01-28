@@ -252,7 +252,9 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
                     switch (which)
                     {
                         case Constant.POSITIVE_BUTTON:
-                            context.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
                             break;
                         default:
                             break;
