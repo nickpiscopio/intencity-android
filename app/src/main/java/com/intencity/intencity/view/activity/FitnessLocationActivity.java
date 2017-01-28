@@ -138,10 +138,11 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
         header.findViewById(R.id.title).setVisibility(View.GONE);
 
         description = (TextView) header.findViewById(R.id.description);
+        description.setVisibility(View.VISIBLE);
 
         listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
-        listView.addHeaderView(header, null, false);
+        setHeaderViewVisibility(true);
         listView.setEmptyView(findViewById(R.id.empty_list));
         listView.setOnItemClickListener(locationClickListener);
 
@@ -244,96 +245,14 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
         }
     }
 
-    /**
-     * Sets the menu item based on the state the view is in.
-     *
-     */
-    private void applyActivityState()
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if(selectingFitnessLocation)
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Constant.REQUEST_CODE_EQUIPMENT_SAVED)
         {
-            setSelection(SelectionType.DESELECT, selectedLocation.getRow());
-            selectedLocation = new Location();
-        }
-
-        if (userHasFitnessLocations())
-        {
-            switch (activityState)
-            {
-                case STATE_EDIT:
-                    menuItemEdit.setVisible(false);
-                    menuItemRemove.setVisible(!selectingFitnessLocation);
-                    menuItemSave.setVisible(false);
-                    menuItemDone.setVisible(selectingFitnessLocation);
-
-                    header.setVisibility(View.GONE);
-                    description.setVisibility(View.GONE);
-
-                    adapter.setListItemType(SelectableListItem.ListItemType.TYPE_IMAGE_VIEW);
-
-                    break;
-
-                case STATE_REMOVE:
-                    menuItemEdit.setVisible(false);
-                    menuItemRemove.setVisible(false);
-                    menuItemSave.setVisible(true);
-                    menuItemDone.setVisible(false);
-
-                    description.setText(context.getString(R.string.edit_equipment_description_save));
-                    description.setVisibility(View.VISIBLE);
-                    header.setVisibility(View.VISIBLE);
-
-                    adapter.setListItemType(SelectableListItem.ListItemType.TYPE_CHECKBOX);
-
-                    break;
-
-                case STATE_SELECT:
-                default:
-                    menuItemEdit.setVisible(true);
-                    menuItemRemove.setVisible(true);
-                    menuItemSave.setVisible(false);
-                    menuItemDone.setVisible(false);
-
-                    description.setText(context.getString(R.string.edit_equipment_description_select_location));
-                    description.setVisibility(View.VISIBLE);
-                    header.setVisibility(View.VISIBLE);
-
-                    adapter.setListItemType(SelectableListItem.ListItemType.TYPE_RADIO_BUTTON);
-
-                    break;
-            }
-        }
-        else
-        {
-            header.setVisibility(View.GONE);
-
-            menuItemEdit.setVisible(false);
-            menuItemRemove.setVisible(false);
-            menuItemSave.setVisible(false);
-            menuItemDone.setVisible(false);
-        }
-
-        setFloatingActionButton();
-    }
-
-    /**
-     * Sets the floating action button images and layouts.
-     */
-    private void setFloatingActionButton()
-    {
-        if (hasValidFitnessLocation())
-        {
-            floatingActionButton.setImageDrawable(ContextCompat.getDrawable(context, R.mipmap.next_light));
-            floatingActionButton.setOnLongClickListener(fabLongClickListener);
-
-            layoutAdd.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            floatingActionButton.setImageDrawable(ContextCompat.getDrawable(context, R.mipmap.ic_plus_white));
-            floatingActionButton.setOnLongClickListener(null);
-
-            layoutAdd.setVisibility(View.GONE);
+            getUserFitnessLocations();
         }
     }
 
@@ -388,6 +307,183 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
             showConnectionIssue();
         }
     };
+
+    /**
+     * The dialog listener for when the connection to Intencity fails.
+     */
+    private DialogListener dialogListener = new DialogListener()
+    {
+        @Override
+        public void onButtonPressed(int which)
+        {
+            // There is only 1 button that can be pressed, so we aren't going to switch on it.
+            finish();
+        }
+    };
+
+    /**
+     * The click listener for when a routine is clicked in the ListView.
+     */
+    private AdapterView.OnItemClickListener locationClickListener = new AdapterView.OnItemClickListener()
+    {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        {
+            // The header has a position.
+            // The position of the item that is selected is based off that.
+            int listItemPosition = position - listView.getHeaderViewsCount();
+            SelectableListItem location = locations.get(listItemPosition);
+
+            switch (activityState)
+            {
+                case STATE_EDIT:
+                    // We are editing, so open the equipment activity.
+                    openEquipmentActivity(location.getTitle(), location.getDescription());
+
+                    break;
+
+                case STATE_REMOVE:
+                    // The address is located in the description.
+                    // We only allow 1 address per person, so we are removing on the user's email/location (address).
+                    String address = location.getDescription();
+
+                    // Add or remove muscle groups from the list
+                    // if he or she clicks on a list item.
+                    if (locationsToRemove.contains(address))
+                    {
+                        location.setChecked(true);
+                        locationsToRemove.remove(address);
+                    }
+                    else
+                    {
+                        location.setChecked(false);
+                        locationsToRemove.add(address);
+                    }
+
+                    adapter.notifyDataSetChanged();
+
+                    break;
+
+                case STATE_SELECT:
+                default:
+
+                    // We deselect the old row.
+                    setSelection(SelectionType.DESELECT, selectedLocation.getRow());
+
+                    // We select the new row.
+                    selectedLocation.setRow(listItemPosition);
+                    selectedLocation.setLocation(location.getDescription());
+                    setSelection(SelectionType.SELECT, selectedLocation.getRow());
+
+                    adapter.notifyDataSetChanged();
+
+                    setFloatingActionButton();
+
+                    break;
+            }
+        }
+    };
+
+    /**
+     * The click listener for adding a fitness location.
+     */
+    private View.OnClickListener fabClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            if (hasValidFitnessLocation())
+            {
+                setResult();
+            }
+            else
+            {
+                openEquipmentActivity("", "");
+            }
+        }
+    };
+
+    /**
+     * The long click listener for the floating action button for when we have the next button and the add button active.
+     */
+    private View.OnLongClickListener fabLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View view)
+        {
+            openEquipmentActivity("", "");
+
+            return false;
+        }
+    };
+
+    /**
+     * Sets the menu item based on the state the view is in.
+     *
+     */
+    private void applyActivityState()
+    {
+        if(selectingFitnessLocation)
+        {
+            setSelection(SelectionType.DESELECT, selectedLocation.getRow());
+            selectedLocation = new Location();
+        }
+
+        if (userHasFitnessLocations())
+        {
+            switch (activityState)
+            {
+                case STATE_EDIT:
+                    menuItemEdit.setVisible(false);
+                    menuItemRemove.setVisible(!selectingFitnessLocation);
+                    menuItemSave.setVisible(false);
+                    menuItemDone.setVisible(selectingFitnessLocation);
+
+                    setHeaderViewVisibility(false);
+
+                    adapter.setListItemType(SelectableListItem.ListItemType.TYPE_IMAGE_VIEW);
+
+                    break;
+
+                case STATE_REMOVE:
+                    menuItemEdit.setVisible(false);
+                    menuItemRemove.setVisible(false);
+                    menuItemSave.setVisible(true);
+                    menuItemDone.setVisible(false);
+
+                    description.setText(context.getString(R.string.edit_equipment_description_save));
+                    setHeaderViewVisibility(true);
+
+                    adapter.setListItemType(SelectableListItem.ListItemType.TYPE_CHECKBOX);
+
+                    break;
+
+                case STATE_SELECT:
+                default:
+                    menuItemEdit.setVisible(true);
+                    menuItemRemove.setVisible(true);
+                    menuItemSave.setVisible(false);
+                    menuItemDone.setVisible(false);
+
+                    description.setText(context.getString(R.string.edit_equipment_description_select_location));
+                    setHeaderViewVisibility(true);
+
+                    adapter.setListItemType(SelectableListItem.ListItemType.TYPE_RADIO_BUTTON);
+
+                    break;
+            }
+        }
+        else
+        {
+            setHeaderViewVisibility(false);
+
+            menuItemEdit.setVisible(false);
+            menuItemRemove.setVisible(false);
+            menuItemSave.setVisible(false);
+            menuItemDone.setVisible(false);
+        }
+
+        setFloatingActionButton();
+    }
 
     /**
      * Sets the result, and finishes the activity.
@@ -513,119 +609,43 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
     }
 
     /**
-     * The dialog listener for when the connection to Intencity fails.
+     * Sets the header view's visibility.
+     *
+     * @param isVisible     Boolean value of whether the view should be visible or not.
      */
-    private DialogListener dialogListener = new DialogListener()
+    private void setHeaderViewVisibility(boolean isVisible)
     {
-        @Override
-        public void onButtonPressed(int which)
+        if (isVisible)
         {
-            // There is only 1 button that can be pressed, so we aren't going to switch on it.
-            finish();
-        }
-    };
-
-    /**
-     * The click listener for when a routine is clicked in the ListView.
-     */
-    private AdapterView.OnItemClickListener locationClickListener = new AdapterView.OnItemClickListener()
-    {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-        {
-            int listItemPosition = position - 1;
-            SelectableListItem location = locations.get(listItemPosition);
-
-            switch (activityState)
+            if (!(listView.getHeaderViewsCount() > 0))
             {
-                case STATE_EDIT:
-                    // We are editing, so open the equipment activity.
-                    openEquipmentActivity(location.getTitle(), location.getDescription());
-
-                    break;
-
-                case STATE_REMOVE:
-                    // The address is located in the description.
-                    // We only allow 1 address per person, so we are removing on the user's email/location (address).
-                    String address = location.getDescription();
-
-                    // Add or remove muscle groups from the list
-                    // if he or she clicks on a list item.
-                    if (locationsToRemove.contains(address))
-                    {
-                        location.setChecked(true);
-                        locationsToRemove.remove(address);
-                    }
-                    else
-                    {
-                        location.setChecked(false);
-                        locationsToRemove.add(address);
-                    }
-
-                    adapter.notifyDataSetChanged();
-
-                    break;
-
-                case STATE_SELECT:
-                default:
-
-                    // We deselect the old row.
-                    setSelection(SelectionType.DESELECT, selectedLocation.getRow());
-
-                    // We select the new row.
-                    selectedLocation.setRow(listItemPosition);
-                    selectedLocation.setLocation(location.getDescription());
-                    setSelection(SelectionType.SELECT, selectedLocation.getRow());
-
-                    adapter.notifyDataSetChanged();
-
-                    setFloatingActionButton();
-
-                    break;
+                listView.addHeaderView(header);
             }
         }
-    };
+        else
+        {
+            listView.removeHeaderView(header);
+        }
+    }
 
     /**
-     * The click listener for adding a fitness location.
+     * Sets the floating action button images and layouts.
      */
-    private View.OnClickListener fabClickListener = new View.OnClickListener()
+    private void setFloatingActionButton()
     {
-        @Override
-        public void onClick(View v)
+        if (hasValidFitnessLocation())
         {
-            if (hasValidFitnessLocation())
-            {
-                setResult();
-            }
-            else
-            {
-                openEquipmentActivity("", "");
-            }
+            floatingActionButton.setImageDrawable(ContextCompat.getDrawable(context, R.mipmap.next_light));
+            floatingActionButton.setOnLongClickListener(fabLongClickListener);
+
+            layoutAdd.setVisibility(View.VISIBLE);
         }
-    };
-
-    /**
-     * The long click listener for the floating action button for when we have the next button and the add button active.
-     */
-    private View.OnLongClickListener fabLongClickListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View view)
+        else
         {
-            openEquipmentActivity("", "");
+            floatingActionButton.setImageDrawable(ContextCompat.getDrawable(context, R.mipmap.ic_plus_white));
+            floatingActionButton.setOnLongClickListener(null);
 
-            return false;
-        }
-    };
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == Constant.REQUEST_CODE_EQUIPMENT_SAVED)
-        {
-            getUserFitnessLocations();
+            layoutAdd.setVisibility(View.GONE);
         }
     }
 }

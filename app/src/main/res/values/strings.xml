@@ -130,7 +130,7 @@
 
     <string name="edit_equipment_location_names_title">Edit Equipment Location Names</string>
     <string name="edit_equipment_description_save">Only checked locations will be kept when hitting \'Save\'.</string>
-    <string name="edit_equipment_description_select_location">Intencity couldn\'t find your fitness location. Please select a fitness location or create a new one.</string>
+    <string name="edit_equipment_description_select_location">Intencity couldn\'t find your fitness location. Please select a fitness location, or create a new one.</string>
 
     <string name="routine_saved_title">Save current routine</string>
     <string name="routine_saved_description">Give this routine a name so you can do it again at a later date.</string>
