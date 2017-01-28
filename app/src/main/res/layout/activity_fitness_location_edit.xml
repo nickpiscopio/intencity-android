@@ -58,20 +58,25 @@
         android:paddingTop="@dimen/layout_margin_three_quarters"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:visibility="gone"
         app:layout_anchor="@id/button_add"
         app:layout_anchorGravity="bottom|center_horizontal">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/fab_secondary_icon_margin"
-            android:alpha=".2175"
-            android:src="@mipmap/plus_dark"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/action_button_search_directions"
+            android:paddingRight="@dimen/layout_margin_eighth"
+            android:paddingBottom="@dimen/layout_margin_sixteenth"
+            android:text="@string/action_button_directions_add_prefix"
+            android:alpha=".2"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/card_title2_size"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_button_directions"
             android:alpha=".2"
             android:textStyle="bold"
             android:textColor="@android:color/black"
