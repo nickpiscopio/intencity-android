@@ -1,7 +1,6 @@
 package com.intencity.intencity.view.activity;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
@@ -36,7 +35,6 @@ import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.notification.FitnessLocationDialog;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 
 import org.json.JSONArray;
@@ -684,6 +682,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
                 break;
 
             default:
+                displayCommunicationError();
                 break;
         }
     }

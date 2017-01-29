@@ -280,7 +280,7 @@
     <string name="invalid_fitness_location_negative_button">Go back &amp; don\'t save</string>
 
     <string name="invalid_fitness_location_title">Invalid fitness location</string>
-    <string name="invalid_fitness_location_description">Please enter a correct address for where this equipment is located.</string>
+    <string name="invalid_fitness_location_description">The address entered could not be verified because of a communication issue or because it is invalid. Please try again.</string>
 
     <string name="duplicate_location_title">Duplicate location</string>
     <string name="duplicate_location_description">Equipment for this location has already been saved. Would you like to overwrite it?</string>
