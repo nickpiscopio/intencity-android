@@ -1,16 +1,17 @@
-package com.intencity.intencity.view.fragment;
+package com.intencity.intencity.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -21,9 +22,6 @@ import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
-import com.intencity.intencity.view.activity.CreateAccountActivity;
-import com.intencity.intencity.view.activity.LoginActivity;
-import com.intencity.intencity.view.activity.TermsActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,13 +29,13 @@ import org.json.JSONObject;
 import java.util.Date;
 
 /**
- * The initial fragment for Intencity.
+ * The initial activity for Intencity.
  *
  * This was created to make the getting started process quicker because people don't like logging into applications.
  *
  * Created by Nick Piscopio on 8/13/16.
  */
-public class GetStartedFragment extends android.support.v4.app.Fragment implements ServiceListener
+public class GetStartedActivity extends AppCompatActivity implements ServiceListener
 {
     private ProgressBar loadingProgressBar;
 
@@ -48,25 +46,33 @@ public class GetStartedFragment extends android.support.v4.app.Fragment implemen
     private Context context;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_get_started, container, false);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_get_started);
 
-        loadingProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar_loading);
+        // Add the back button to the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+        {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
-        loginForm = (LinearLayout) view.findViewById(R.id.linear_layout_login_form);
+        loadingProgressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
 
-        terms = (TextView) view.findViewById(R.id.terms);
+        loginForm = (LinearLayout) findViewById(R.id.linear_layout_login_form);
 
-        Button getStarted = (Button) view.findViewById(R.id.btn_get_started);
-        TextView login = (TextView) view.findViewById(R.id.btn_login);
-        TextView createAccount = (TextView) view.findViewById(R.id.btn_create_account);
+        terms = (TextView) findViewById(R.id.terms);
+
+        Button getStarted = (Button) findViewById(R.id.btn_get_started);
+        TextView login = (TextView) findViewById(R.id.btn_login);
+        TextView createAccount = (TextView) findViewById(R.id.btn_create_account);
 
         getStarted.setOnClickListener(getStartedClickListener);
         login.setOnClickListener(loginClickListener);
         createAccount.setOnClickListener(createAccountListener);
 
-        context = getContext();
+        context = getApplicationContext();
 
         // Sets the progress bar color.
         Util.setProgressBarColor(context, loadingProgressBar);
@@ -96,10 +102,59 @@ public class GetStartedFragment extends android.support.v4.app.Fragment implemen
             terms.setText(builder, TextView.BufferType.SPANNABLE);
             terms.setOnClickListener(termsClickListener);
         }
-
-        return view;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem)
+    {
+        switch (menuItem.getItemId())
+        {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(menuItem);
+        }
+    }
+
+    @Override
+    public void onRetrievalSuccessful(String response)
+    {
+        try
+        {
+            JSONObject json = new JSONObject(response);
+
+            String email = json.getString(Constant.COLUMN_EMAIL);
+            String accountType = json.getString(Constant.COLUMN_ACCOUNT_TYPE);
+
+            Util.loadIntencity(GetStartedActivity.this, email, accountType, 0);
+        }
+        catch (JSONException e)
+        {
+            loadingProgressBar.setVisibility(View.GONE);
+            loginForm.setVisibility(View.VISIBLE);
+
+            showMessage(context.getString(R.string.login_error_title),
+                        context.getString(R.string.login_error_message));
+            Log.e(Constant.TAG, "Error parsing login data " + e.toString());
+        }
+    }
+
+    @Override
+    public void onRetrievalFailed()
+    {
+        loadingProgressBar.setVisibility(View.GONE);
+        loginForm.setVisibility(View.VISIBLE);
+
+        showMessage(context.getString(R.string.login_error_title),
+                    context.getString(R.string.login_error_message));
+    }
+
+    /**
+     * The click listener for the get started button.
+     *
+     * This creates an account for the user without asking them for their information.
+     */
     View.OnClickListener getStartedClickListener = new View.OnClickListener()
     {
         @Override
@@ -109,6 +164,9 @@ public class GetStartedFragment extends android.support.v4.app.Fragment implemen
         }
     };
 
+    /**
+     * The click listener for the login button.
+     */
     View.OnClickListener loginClickListener = new View.OnClickListener()
     {
         @Override
@@ -118,6 +176,9 @@ public class GetStartedFragment extends android.support.v4.app.Fragment implemen
         }
     };
 
+    /**
+     * The click listener for the create account button.
+     */
     View.OnClickListener createAccountListener = new View.OnClickListener()
     {
         @Override
@@ -140,19 +201,6 @@ public class GetStartedFragment extends android.support.v4.app.Fragment implemen
     };
 
     /**
-     * Starts the service to check if the credentials the user typed in are in the web database.
-     */
-    private void checkCredentials(String email, String password)
-    {
-        loadingProgressBar.setVisibility(View.VISIBLE);
-        loginForm.setVisibility(View.GONE);
-
-        new ServiceTask(this).execute(Constant.SERVICE_VALIDATE_USER_CREDENTIALS,
-                                      Constant.getValidateUserCredentialsServiceParameters(
-                                              Util.replacePlus(email), Util.replaceApostrophe(password)));
-    }
-
-    /**
      * Displays the login error to the user.
      */
     private void showMessage(String title, String message)
@@ -161,39 +209,6 @@ public class GetStartedFragment extends android.support.v4.app.Fragment implemen
         loginForm.setVisibility(View.VISIBLE);
 
         Util.showMessage(context, title, message);
-    }
-
-    @Override
-    public void onRetrievalSuccessful(String response)
-    {
-        try
-        {
-            JSONObject json = new JSONObject(response);
-
-            String email = json.getString(Constant.COLUMN_EMAIL);
-            String accountType = json.getString(Constant.COLUMN_ACCOUNT_TYPE);
-
-            Util.loadIntencity(GetStartedFragment.this.getActivity(), email, accountType, 0);
-        }
-        catch (JSONException e)
-        {
-            loadingProgressBar.setVisibility(View.GONE);
-            loginForm.setVisibility(View.VISIBLE);
-
-            showMessage(context.getString(R.string.login_error_title),
-                        context.getString(R.string.login_error_message));
-            Log.e(Constant.TAG, "Error parsing login data " + e.toString());
-        }
-    }
-
-    @Override
-    public void onRetrievalFailed()
-    {
-        loadingProgressBar.setVisibility(View.GONE);
-        loginForm.setVisibility(View.VISIBLE);
-
-        showMessage(context.getString(R.string.login_error_title),
-                         context.getString(R.string.login_error_message));
     }
 
     /**
@@ -230,7 +245,7 @@ public class GetStartedFragment extends android.support.v4.app.Fragment implemen
 
                 if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
                 {
-                    Util.loadIntencity(GetStartedFragment.this.getActivity(), email, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
+                    Util.loadIntencity(GetStartedActivity.this, email, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
                 }
                 else
                 {

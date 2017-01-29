@@ -26,7 +26,8 @@
         </activity>
 
         <activity
-            android:name=".view.activity.DemoActivity"
+            android:name=".view.activity.GetStartedActivity"
+            android:label="@string/get_started"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Base"/>
 

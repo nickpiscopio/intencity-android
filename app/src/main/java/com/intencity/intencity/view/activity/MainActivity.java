@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         {
             userHasLoggedIn = false;
 
-            showDemo(DemoActivity.DESCRIPTION);
+            showGetStartedScreen();
         }
         else
         {
@@ -119,17 +119,14 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     }
 
     /**
-     * Shows the demo screens.
-     *
-     * @param page  The page to open when the demo starts.
+     * Shows the 'Get Started' screen.
      */
-    private void showDemo(int page)
+    private void showGetStartedScreen()
     {
         invalidateOptionsMenu();
 
-        Intent intent = new Intent(this, DemoActivity.class);
+        Intent intent = new Intent(this, GetStartedActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(Constant.EXTRA_DEMO_PAGE, page);
         startActivity(intent);
         finish();
     }
@@ -292,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         editor.putLong(Constant.USER_TRIAL_CREATED_DATE, 0);
         editor.apply();
 
-        showDemo(DemoActivity.LOG_IN);
+        showGetStartedScreen();
     }
 
     /**
