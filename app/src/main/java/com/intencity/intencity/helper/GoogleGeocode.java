@@ -94,6 +94,9 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
      */
     public String getGoogleGeocodeAddressParameters(String address)
     {
+        // We remove the spaces because on older version of android it doesn't see the URL as valid unless we manually replace spaces with the encoded equivalent.
+        address = address.replaceAll(Constant.REGEX_SPACE, Constant.URL_ENCODE_SPACE);
+
         return PARAMETER_ADDRESS + address + PARAMETER_KEY + API_KEY;
     }
 

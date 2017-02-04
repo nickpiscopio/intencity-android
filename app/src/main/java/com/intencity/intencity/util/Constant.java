@@ -32,6 +32,9 @@ public class Constant
     public static final int POINTS_FOLLOWING = 5;
     public static final int POINTS_AWARD = 10;
 
+    // URL Encodes.
+    public static final String URL_ENCODE_SPACE = "%20";
+
     public static final String TRUE = "true";
 
     public static final String DURATION_0 = "00:00:00";
@@ -230,7 +233,7 @@ public class Constant
     public static final String COLUMN_PRIORITY = "Priority";
     public static final String COLUMN_LOCATION = "Location";
 
-    public static final String SPACE_REGEX = "\\s";
+    public static final String REGEX_SPACE = "\\s";
     public static final String REGEX_EMAIL = "[a-zA-Z0-9]+([\\-\\.\\{\\}\\^\\+*_~]*[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([\\.\\-]*[a-zA-Z0-9]+)*[\\.][a-zA-Z]{2}[A-Za-z]*";
     public static final String REGEX_FIELD = "[a-zA-Z0-9\\s\\-\\.\\{\\}\\^\\*\\(\\)\\[\\]\\$/;:,_~!@#%']+";
 
