@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -174,6 +176,10 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
             // We need it to be valid because we use that locations proximity to check what equipment the user currently has.
             new ServiceTask(googleGeoCodeAddressListener).execute(ROUTE + getGoogleGeocodeAddressParameters(location));
         }
+//        else
+//        {
+//            listener.onRetrievalFailed(EquipmentActivity.LOCATION_NOT_AVAILABLE);
+//        }
     }
 
     /**
@@ -191,6 +197,10 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
             // The geocode API request to get an address from a long and lat.
             new ServiceTask(googleGeoCodeAddressListener).execute(ROUTE + getGoogleGeocodeFormattedAddressParameters(location));
         }
+//       else
+//        {
+//            çç
+//        }
     }
 
     /**
@@ -217,6 +227,10 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
                 requestLocationPermission();
             }
         }
+//        else
+//        {
+//            listener.onRetrievalFailed(EquipmentActivity.LOCATION_NOT_AVAILABLE);
+//        }
     }
 
     /**
@@ -227,12 +241,17 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
     private boolean isLocationEnabled()
     {
         LocationManager lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+
         boolean gpsIsEnabled = false;
         boolean networkIsEnabled = false;
 
         try
         {
+            ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
             gpsIsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//            networkIsEnabled = activeNetworkInfo != null && activeNetworkInfo.isConnected();
             networkIsEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         }
         catch(Exception ex)
@@ -259,11 +278,13 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                             break;
+                        case Constant.NEGATIVE_BUTTON:
                         default:
+                            googleGeoCodeAddressListener.onRetrievalFailed();
                             break;
                     }
                 }
-            }, dialog, true);
+            }, dialog, false);
         }
 
         return gpsIsEnabled && networkIsEnabled;
@@ -419,8 +440,16 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
     @Override
     public void onConnected(@Nullable Bundle bundle)
     {
-        // We've connected to the Google Maps API, so notify the listener.
-        listener.onGoogleApiClientConnected(requestCode, googleApiClient, getLastLocation());
+        Location location = getLastLocation();
+        if (location != null)
+        {
+            // We've connected to the Google Maps API, so notify the listener.
+            listener.onGoogleApiClientConnected(requestCode, googleApiClient, location);
+        }
+        else
+        {
+            googleGeoCodeAddressListener.onRetrievalFailed();
+        }
     }
 
     @Override
