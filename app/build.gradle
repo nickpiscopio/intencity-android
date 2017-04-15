@@ -17,11 +17,11 @@ android {
     buildToolsVersion "25.0.1"
     defaultConfig {
         applicationId "com.intencity.intencity"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 25
         // Intencity's version for Google Play.
-        versionCode 73
-        versionName "2.8"
+        versionCode 74
+        versionName "2.8.1"
     }
     buildTypes {
         release {

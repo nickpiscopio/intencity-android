@@ -49,11 +49,9 @@ import java.util.ArrayList;
  */
 public class EquipmentActivity extends AppCompatActivity implements GeocodeListener
 {
-    public static final int REQUEST_CODE_CANCELED = 0;
-    public static final int LOCATION_NOT_AVAILABLE = 10;
-    private final int REQUEST_CODE_FITNESS_DIALOG = 20;
-    private final int REQUEST_CODE_ADDRESS = 30;
-    private final int REQUEST_CODE_LOCATION_VALIDITY = 40;
+    private final int REQUEST_CODE_FITNESS_DIALOG = 10;
+    private final int REQUEST_CODE_ADDRESS = 20;
+    private final int REQUEST_CODE_LOCATION_VALIDITY = 30;
 
     private ProgressBar progressBar;
 
@@ -681,13 +679,26 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
             case REQUEST_CODE_ADDRESS:
                 break;
 
-            case REQUEST_CODE_CANCELED:
-                progressBar.setVisibility(View.GONE);
-                break;
-
-            case LOCATION_NOT_AVAILABLE:
             default:
                 displayCommunicationError();
+                break;
+        }
+    }
+
+    @Override
+    public void onLocationServiceEnabled() { }
+
+    @Override
+    public void onLocationServiceNotEnabled(int requestCode)
+    {
+        switch (requestCode)
+        {
+            case GoogleGeocode.REQUEST_CODE_CANCELED:
+                EquipmentActivity.super.onBackPressed();
+            case GoogleGeocode.LOCATION_NOT_AVAILABLE:
+            case GoogleGeocode.REQUEST_CODE_PERMISSION_NEEDED:
+            default:
+                progressBar.setVisibility(View.GONE);
                 break;
         }
     }
