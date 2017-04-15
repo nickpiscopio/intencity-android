@@ -15,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -53,8 +52,6 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
     private final int REQUEST_CODE_FITNESS_DIALOG = 10;
     private final int REQUEST_CODE_ADDRESS = 20;
     private final int REQUEST_CODE_LOCATION_VALIDITY = 30;
-
-    private LinearLayout connectionIssue;
 
     private ProgressBar progressBar;
 
@@ -99,7 +96,6 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        connectionIssue = (LinearLayout)findViewById(R.id.layout_connection_issue);
         progressBar = (ProgressBar)findViewById(R.id.progress_bar_loading);
 
         progressBar.setVisibility(View.VISIBLE);
@@ -308,16 +304,18 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
             {
                 Log.e(Constant.TAG, "Couldn't parse equipment " + exception.toString());
 
-                connectionIssue.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
+
+                displayCommunicationError();
             }
         }
 
         @Override
         public void onRetrievalFailed()
         {
-            connectionIssue.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
+
+            displayCommunicationError();
         }
     };
 
@@ -683,6 +681,24 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
             default:
                 displayCommunicationError();
+                break;
+        }
+    }
+
+    @Override
+    public void onLocationServiceEnabled() { }
+
+    @Override
+    public void onLocationServiceNotEnabled(int requestCode)
+    {
+        switch (requestCode)
+        {
+            case GoogleGeocode.REQUEST_CODE_CANCELED:
+                EquipmentActivity.super.onBackPressed();
+            case GoogleGeocode.LOCATION_NOT_AVAILABLE:
+            case GoogleGeocode.REQUEST_CODE_PERMISSION_NEEDED:
+            default:
+                progressBar.setVisibility(View.GONE);
                 break;
         }
     }

@@ -196,6 +196,8 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     {
         progressBar.setVisibility(View.VISIBLE);
         connectionIssueLayout.setVisibility(View.GONE);
+
+        start.setEnabled(false);
     }
 
     /**
@@ -204,6 +206,8 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     private void hideLoading()
     {
         progressBar.setVisibility(View.GONE);
+
+        start.setEnabled(true);
     }
 
     /**
@@ -505,13 +509,45 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         switch (requestCode)
         {
             case REQUEST_CODE_ADDRESS:
+
                 // Failed to retrieve the fitness location, so open the fitness location screen for the user to select it.
                 openFitnessLocation(null);
 
+            default:
                 hideLoading();
                 break;
+        }
+    }
 
+    /**
+     * This gets called by GoogleGeocode when we have determined that the location services have been enabled.
+     */
+    @Override
+    public void onLocationServiceEnabled()
+    {
+        showLoading();
+    }
+
+    /**
+     * This gets called by GoogleGeocode when we have determined that the location services have not been enabled.
+     */
+    @Override
+    public void onLocationServiceNotEnabled(int requestCode)
+    {
+        switch (requestCode)
+        {
+            case GoogleGeocode.REQUEST_CODE_CANCELED:
+
+                // The user decided he or she didn't want to set location services.
+                // Just open the fitness location for the user to select one manually.
+                openFitnessLocation(null);
+
+                // Fall through to stop the loading.
+
+            case GoogleGeocode.LOCATION_NOT_AVAILABLE:
+            case GoogleGeocode.REQUEST_CODE_PERMISSION_NEEDED:
             default:
+                hideLoading();
                 break;
         }
     }
@@ -519,6 +555,6 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults, FragmentActivity activity)
     {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        onLocationServiceNotEnabled(GoogleGeocode.REQUEST_CODE_CANCELED);
     }
 }

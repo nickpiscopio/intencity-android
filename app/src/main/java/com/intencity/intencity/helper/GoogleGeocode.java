@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -44,6 +43,9 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
 {
     private final String TAG = GoogleGeocode.class.getSimpleName();
 
+    public static final int REQUEST_CODE_CANCELED = 100;
+    public static final int REQUEST_CODE_PERMISSION_NEEDED = 110;
+    public static final int LOCATION_NOT_AVAILABLE = 120;
     private static final int GOOGLE_API_CLIENT_ID = 0;
 
     // Service Endpoint
@@ -132,7 +134,7 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
      * @param grantResults      The grant results for the corresponding permissions which is either
      *                          android.content.pm.PackageManager.PERMISSION_GRANTED or android.content.pm.PackageManager.PERMISSION_DENIED.
      *                          Never null.
-     * @param activity          Teh activity that called this method.
+     * @param activity          The activity that called this method.
      */
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults, FragmentActivity activity)
     {
@@ -141,6 +143,8 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
             case Constant.REQUEST_CODE_PERMISSION:
                 if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
+                    listener.onLocationServiceEnabled();
+
                     requestGoogleApiClient();
                 }
                 else
@@ -168,7 +172,7 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
     {
         this.requestCode = requestCode;
 
-        if (isLocationEnabled())
+        if (isLocationAccuracySufficient())
         {
             // The geocode API request to check if the fitness location is a valid address.
             // We need it to be valid because we use that locations proximity to check what equipment the user currently has.
@@ -186,7 +190,7 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
     {
         this.requestCode = requestCode;
 
-        if (isLocationEnabled())
+        if (isLocationAccuracySufficient())
         {
             // The geocode API request to get an address from a long and lat.
             new ServiceTask(googleGeoCodeAddressListener).execute(ROUTE + getGoogleGeocodeFormattedAddressParameters(location));
@@ -204,7 +208,7 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
         // We use this to switch in GeocodeListener.onGoogleApiClientConnected();
         this.requestCode = requestCode;
 
-        if (isLocationEnabled())
+        if (isLocationAccuracySufficient())
         {
             // This is for Android M+
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
@@ -220,32 +224,38 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
     }
 
     /**
-     * Checks if the location service is enabled on the device.
+     * Checks if the location service is enabled and high enough for Intencity to determine the user's location.
      *
-     * @return Boolean value of whether the location and GPS service is enabled or not.
+     * @return Boolean value of whether Intencity will be able to determine the user's location.
      */
-    private boolean isLocationEnabled()
+    private boolean isLocationAccuracySufficient()
     {
-        LocationManager lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
-        boolean gpsIsEnabled = false;
-        boolean networkIsEnabled = false;
+        int locationMode = Settings.Secure.LOCATION_MODE_OFF;
 
         try
         {
-            gpsIsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            networkIsEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            // DOCUMENTATION: https://developer.android.com/reference/android/provider/Settings.Secure.html
+            // 0 = LOCATION_MODE_OFF
+            // 1 = LOCATION_MODE_SENSORS_ONLY
+            // 2 = LOCATION_MODE_BATTERY_SAVING
+            // 3 = LOCATION_MODE_HIGH_ACCURACY
+            locationMode = Settings.Secure.getInt(activity.getContentResolver(), Settings.Secure.LOCATION_MODE);
         }
-        catch(Exception ex)
+        catch (Settings.SettingNotFoundException ex)
         {
-            Log.d(TAG, "Cannot get location: " + ex.getMessage());
+            Log.d(TAG, "High accuracy isn't set: " + ex.getMessage());
         }
 
-        if(!gpsIsEnabled && !networkIsEnabled)
+        if (locationMode < Settings.Secure.LOCATION_MODE_HIGH_ACCURACY)
         {
-            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.gps_network_not_enabled_title),
-                                                                 context.getString(R.string.gps_network_not_enabled_description),
-                                                                 true);
-            dialog.setPositiveButtonStringRes(R.string.open_location_settings);
+            int titleRes = R.string.gps_network_not_enabled_title;
+            int messageRes = R.string.gps_network_not_high_description;
+            int positiveButtonRes = R.string.gps_network_positive_button;
+            int negativeButtonRes = R.string.gps_network_negative_button;
+
+            CustomDialogContent dialog = new CustomDialogContent(context.getString(titleRes), context.getString(messageRes), true);
+            dialog.setPositiveButtonStringRes(positiveButtonRes);
+            dialog.setNegativeButtonStringRes(negativeButtonRes);
 
             new CustomDialog(activity, new DialogListener()
             {
@@ -259,14 +269,18 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                             break;
+                        case Constant.NEGATIVE_BUTTON:
                         default:
+                            listener.onLocationServiceNotEnabled(REQUEST_CODE_CANCELED);
                             break;
                     }
                 }
-            }, dialog, true);
+            }, dialog, false);
+
+            listener.onLocationServiceNotEnabled(LOCATION_NOT_AVAILABLE);
         }
 
-        return gpsIsEnabled && networkIsEnabled;
+        return locationMode == Settings.Secure.LOCATION_MODE_HIGH_ACCURACY;
     }
 
     /**
@@ -318,10 +332,13 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
                             ActivityCompat.requestPermissions(activity, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, Constant.REQUEST_CODE_PERMISSION);
                             break;
                         default:
+                            listener.onLocationServiceNotEnabled(REQUEST_CODE_CANCELED);
                             break;
                     }
                 }
             }, dialog, true);
+
+            listener.onLocationServiceNotEnabled(REQUEST_CODE_PERMISSION_NEEDED);
         }
         else
         {
@@ -419,8 +436,16 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
     @Override
     public void onConnected(@Nullable Bundle bundle)
     {
-        // We've connected to the Google Maps API, so notify the listener.
-        listener.onGoogleApiClientConnected(requestCode, googleApiClient, getLastLocation());
+        Location location = getLastLocation();
+        if (location != null)
+        {
+            // We've connected to the Google Maps API, so notify the listener.
+            listener.onGoogleApiClientConnected(requestCode, googleApiClient, location);
+        }
+        else
+        {
+            googleGeoCodeAddressListener.onRetrievalFailed();
+        }
     }
 
     @Override
