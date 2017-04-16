@@ -160,7 +160,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         recyclerView.setAdapter(adapter);
 
         securePreferences = new SecurePreferences(context);
-        email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+        email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
 
         workoutFinished = false;
 
@@ -713,7 +713,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     if (setsWithRepsGreaterThan10 >= 2)
                     {
                         SecurePreferences securePreferences = new SecurePreferences(context);
-                        String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+                        String email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
 
                         Util.grantBadgeToUser(email, badge,
                                               new AwardDialogContent(R.mipmap.left_it_on_the_field,

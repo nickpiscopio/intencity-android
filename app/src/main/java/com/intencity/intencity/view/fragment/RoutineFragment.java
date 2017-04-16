@@ -76,7 +76,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
         context = getContext();
 
-        email = Util.getSecurePreferencesEmail(context);
+        email = Util.getSecurePreferencesUserId(context);
 
         sectionMap = new TreeMap<>();
         sections = new ArrayList<>();

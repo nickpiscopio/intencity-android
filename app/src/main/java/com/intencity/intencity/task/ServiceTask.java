@@ -5,6 +5,11 @@ import android.util.Log;
 
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.util.Constant;
+import com.intencity.intencity.util.Util;
+import com.intencity.intencity.view.activity.GetStartedActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -112,6 +117,25 @@ public class ServiceTask extends AsyncTask<String, Void, String>
         {
             if (success && result.length() > 0 && !result.replaceAll("\"", "").equalsIgnoreCase(RESPONSE_FAILURE))
             {
+                try
+                {
+                    JSONObject obj = new JSONObject(result);
+                    boolean success = Boolean.parseBoolean(obj.getString(Constant.SUCCESS));
+                    if (success)
+                    {
+                        int userId = Integer.parseInt(obj.getString(Constant.DATA));
+
+                        Util.loadIntencity(GetStartedActivity.this, userId, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
+                    }
+                    else
+                    {
+                        showFailureMessage();
+                    }
+                }
+                catch (JSONException e)
+                {
+                    showFailureMessage();
+                }
                 serviceListener.onRetrievalSuccessful(result);
             }
             else

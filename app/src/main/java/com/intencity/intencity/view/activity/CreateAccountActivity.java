@@ -27,6 +27,9 @@ import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * This is the create account activity for Intencity.
  *
@@ -206,7 +209,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
                     // Upgrade a trial account to a full account.
                     new ServiceTask(CreateAccountActivity.this).execute(
                             Constant.SERVICE_UPDATE_ACCOUNT,
-                            Constant.getUpdateAccountParameters(Util.getSecurePreferencesEmail(context), Util.replaceApostrophe(firstName), Util.replaceApostrophe(
+                            Constant.getUpdateAccountParameters(Util.getSecurePreferencesUserId(context), Util.replaceApostrophe(firstName), Util.replaceApostrophe(
                                     lastName), Util.replacePlus(email), Util.replaceApostrophe(password)));
                 }
                 else
@@ -260,40 +263,65 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
     @Override
     public void onRetrievalSuccessful(String response)
     {
-        String email = emailEditText.getText().toString();
-
-        response = response.replaceAll("\"", "");
-
-        if (response.equalsIgnoreCase(Constant.EMAIL_EXISTS))
+        try
         {
-            loadingLayout.setVisibility(View.GONE);
-            formLayout.setVisibility(View.VISIBLE);
+            JSONObject obj = new JSONObject(response);
+            int status = Integer.parseInt(obj.getString(Constant.STATUS_CODE));
 
-            showErrorMessage(context.getString(R.string.email_exists));
+            switch (status)
+            {
+                case Constant.STATUS_CODE_ACCOUNT_CREATION:
+                case Constant.STATUS_CODE_ACCOUNT_UPDATED:
+
+                    int userId = Integer.parseInt(obj.getString(Constant.DATA));
+
+                    if (status == Constant.STATUS_CODE_ACCOUNT_CREATION)
+                    {
+                        Util.loadIntencity(CreateAccountActivity.this, userId, Constant.ACCOUNT_TYPE_NORMAL, 0);
+                    }
+                    else
+                    {
+                        Util.convertAccount(CreateAccountActivity.this, userId);
+
+                        CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.success), context.getString(R.string.account_converted), false);
+
+                        new CustomDialog(CreateAccountActivity.this, accountConvertedDialogListener, dialog, false);
+                    }
+
+                    break;
+
+                case Constant.STATUS_CODE_EMAIL_ERROR:
+
+                    loadingLayout.setVisibility(View.GONE);
+                    formLayout.setVisibility(View.VISIBLE);
+
+                    showErrorMessage(context.getString(R.string.email_exists));
+                    break;
+
+                case Constant.STATUS_CODE_ACCOUNT_CREATION_FAILURE:
+                default:
+
+                    showFailureMessage();
+
+                    break;
+            }
         }
-        else if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
+        catch (JSONException e)
         {
-            Util.loadIntencity(CreateAccountActivity.this, email, Constant.ACCOUNT_TYPE_NORMAL, 0);
-        }
-        else if (response.equalsIgnoreCase(Constant.ACCOUNT_UPDATED))
-        {
-            Util.convertAccount(CreateAccountActivity.this, email);
-
-            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.success), context.getString(R.string.account_converted), false);
-
-            new CustomDialog(CreateAccountActivity.this, accountConvertedDialogListener, dialog, false);
-        }
-        else
-        {
-            loadingLayout.setVisibility(View.GONE);
-            formLayout.setVisibility(View.VISIBLE);
-
-            showErrorMessage(context.getString(R.string.intencity_communication_error));
+            showFailureMessage();
         }
     }
 
     @Override
     public void onRetrievalFailed()
+    {
+        loadingLayout.setVisibility(View.GONE);
+        formLayout.setVisibility(View.VISIBLE);
+
+        showErrorMessage(context.getString(R.string.intencity_communication_error));
+    }
+
+    private void showFailureMessage()
     {
         loadingLayout.setVisibility(View.GONE);
         formLayout.setVisibility(View.VISIBLE);

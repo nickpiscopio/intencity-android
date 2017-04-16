@@ -74,7 +74,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
         context = getApplicationContext();
 
         SecurePreferences securePreferences = new SecurePreferences(context);
-        email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+        email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
 
         new ServiceTask(getExclusionService).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
                 Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EXERCISE_PRIORITIES, email));

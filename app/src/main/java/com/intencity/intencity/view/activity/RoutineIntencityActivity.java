@@ -101,7 +101,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
 
         rows = bundle.getParcelableArrayList(Constant.BUNDLE_ROUTINE_ROWS);
 
-        email = Util.getSecurePreferencesEmail(context);
+        email = Util.getSecurePreferencesUserId(context);
 
         View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
         header.findViewById(R.id.divider).setVisibility(View.GONE);

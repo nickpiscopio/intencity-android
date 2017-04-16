@@ -70,7 +70,7 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
 
         context = getApplicationContext();
 
-        email = Util.getSecurePreferencesEmail(context);
+        email = Util.getSecurePreferencesUserId(context);
 
         progressBar.setVisibility(View.VISIBLE);
 

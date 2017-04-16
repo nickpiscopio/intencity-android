@@ -77,7 +77,7 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
         add = (FloatingActionButton) findViewById(R.id.button_add);
         add.setOnClickListener(addClickListener);
 
-        email = Util.getSecurePreferencesEmail(context);
+        email = Util.getSecurePreferencesUserId(context);
 
         routines = new ArrayList<>();
 

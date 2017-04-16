@@ -73,7 +73,7 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
         context = getApplicationContext();
 
         SecurePreferences securePreferences = new SecurePreferences(getApplicationContext());
-        email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+        email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
     }
 
     @Override

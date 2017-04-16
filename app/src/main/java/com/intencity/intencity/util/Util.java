@@ -83,11 +83,11 @@ public class Util
      * Saves the login information for Intencity.
      *
      * @param activity              The activity that called this method.
-     * @param email                 The email of the user.
+     * @param userId                The identification of the user.
      * @param accountType           The account type of the user.
      * @param trialCreatedDate      The long value of the date the trial account was created.
      */
-    public static void loadIntencity(Activity activity, String email, String accountType, long trialCreatedDate)
+    public static void loadIntencity(Activity activity, int userId, String accountType, long trialCreatedDate)
     {
         Context context = activity.getApplicationContext();
 
@@ -100,7 +100,7 @@ public class Util
         SecurePreferences securePreferences = new SecurePreferences(context);
         SecurePreferences.Editor editor = securePreferences.edit();
 
-        editor.putString(Constant.USER_ACCOUNT_EMAIL, Util.replacePlus(email));
+        editor.putInt(Constant.USER_ACCOUNT_ID, userId);
         editor.putString(Constant.USER_ACCOUNT_TYPE, accountType);
         if (trialCreatedDate > 0)
         {
@@ -131,9 +131,9 @@ public class Util
      * Saves the user information for Intencity when converting to a full account.
      *
      * @param activity      The activity that called this method.
-     * @param email         The email of the user.
+     * @param userId        The identification of the user.
      */
-    public static void convertAccount(Activity activity, String email)
+    public static void convertAccount(Activity activity, int userId)
     {
         Context context = activity.getApplicationContext();
 
@@ -141,7 +141,7 @@ public class Util
         SecurePreferences securePreferences = new SecurePreferences(context);
         SecurePreferences.Editor editor = securePreferences.edit();
 
-        editor.putString(Constant.USER_ACCOUNT_EMAIL, Util.replacePlus(email));
+        editor.putInt(Constant.USER_ACCOUNT_ID, userId);
         editor.putString(Constant.USER_ACCOUNT_TYPE, Constant.ACCOUNT_TYPE_NORMAL);
         // We remove this because we no longer are using a trial account.
         editor.remove(Constant.USER_TRIAL_CREATED_DATE);
@@ -306,13 +306,13 @@ public class Util
      *
      * This method should only be used if we aren't going to open the secure preferences at all.
      *
-     * @param context   The application context to get the email.
+     * @param context   The application context to get the user's ID.
      *
-     * @return  The email from the secure preferences.
+     * @return  The ID from the secure preferences.
      */
-    public static String getSecurePreferencesEmail(Context context)
+    public static String getSecurePreferencesUserId(Context context)
     {
-        return new SecurePreferences(context).getString(Constant.USER_ACCOUNT_EMAIL, "");
+        return new SecurePreferences(context).getString(Constant.USER_ACCOUNT_ID, "");
     }
 
     /**

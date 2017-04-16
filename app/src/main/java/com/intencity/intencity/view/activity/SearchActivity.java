@@ -154,7 +154,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         searchString = query;
 
         SecurePreferences securePreferences = new SecurePreferences(context);
-        String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+        String email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
 
         // Get all the users from the database with the search query minus the spaces.
         query = searchExercises ? query : query.replaceAll(Constant.REGEX_SPACE, "");

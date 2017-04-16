@@ -124,10 +124,10 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
         {
             JSONObject json = new JSONObject(response);
 
-            String email = json.getString(Constant.COLUMN_EMAIL);
+            int userId = Integer.parseInt(json.getString(Constant.COLUMN_ID));
             String accountType = json.getString(Constant.COLUMN_ACCOUNT_TYPE);
 
-            Util.loadIntencity(GetStartedActivity.this, email, accountType, 0);
+            Util.loadIntencity(GetStartedActivity.this, userId, accountType, 0);
         }
         catch (JSONException e)
         {
@@ -241,17 +241,24 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
             @Override
             public void onRetrievalSuccessful(String response)
             {
-                response = response.replaceAll("\"", "");
+                try
+                {
+                    JSONObject obj = new JSONObject(response);
+                    boolean success = Boolean.parseBoolean(obj.getString(Constant.SUCCESS));
+                    if (success)
+                    {
+                        int userId = Integer.parseInt(obj.getString(Constant.DATA));
 
-                if (response.equalsIgnoreCase(Constant.ACCOUNT_CREATED))
-                {
-                    Util.loadIntencity(GetStartedActivity.this, email, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
+                        Util.loadIntencity(GetStartedActivity.this, userId, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
+                    }
+                    else
+                    {
+                        showFailureMessage();
+                    }
                 }
-                else
+                catch (JSONException e)
                 {
-                    showMessage(context.getString(R.string.login_error_title),
-                                context.getString(
-                                        R.string.intencity_communication_error));
+                    showFailureMessage();
                 }
             }
 
@@ -260,5 +267,15 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
         }).execute(Constant.SERVICE_CREATE_ACCOUNT,
                    Constant.getAccountParameters(firstName, lastName, email, password,
                                                  Constant.ACCOUNT_TYPE_MOBILE_TRIAL));
+    }
+
+    /**
+     * Displays a dialog to the user telling them the account couldn't be created.
+     */
+    private void showFailureMessage()
+    {
+        showMessage(context.getString(R.string.login_error_title),
+                    context.getString(
+                            R.string.intencity_communication_error));
     }
 }

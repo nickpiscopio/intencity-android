@@ -82,7 +82,7 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
         followingMessage = (TextView) footer.findViewById(R.id.following_message);
 
         SecurePreferences securePreferences = new SecurePreferences(context);
-        email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+        email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
 
         users = new ArrayList<>();
 

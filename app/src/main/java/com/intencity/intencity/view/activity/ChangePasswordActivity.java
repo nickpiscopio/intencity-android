@@ -23,6 +23,9 @@ import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * This is the change password activity for Intencity.
  *
@@ -43,7 +46,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
 
     private ProgressBar loadingProgressBar;
 
-    private String email;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -77,7 +80,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
         context = getApplicationContext();
 
         SecurePreferences securePreferences = new SecurePreferences(getApplicationContext());
-        email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+        userId = securePreferences.getInt(Constant.USER_ACCOUNT_ID, 0);
     }
 
     @Override
@@ -142,7 +145,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
 
                 new ServiceTask(ChangePasswordActivity.this).execute(
                         Constant.SERVICE_CHANGE_PASSWORD,
-                        Constant.generateChangePasswordVariables(email,
+                        Constant.generateChangePasswordVariables(userId,
                                                                  Util.replaceApostrophe(currentPassword),
                                                                  Util.replaceApostrophe(newPassword)));
             }
@@ -150,9 +153,29 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
     };
 
     @Override
-    public void onRetrievalSuccessful(String response)
+    public void onRetrievalSuccessful(JSONObject response)
     {
-        response = response.replaceAll("\"", "");
+//        response = response.replaceAll("\"", "");
+
+//        try
+//        {
+//            JSONObject obj = new JSONObject(response);
+            boolean success = Boolean.parseBoolean(response.getString(Constant.SUCCESS));
+            if (success)
+            {
+                int userId = Integer.parseInt(response.getString(Constant.DATA));
+
+                Util.loadIntencity(GetStartedActivity.this, userId, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
+            }
+            else
+            {
+                showFailureMessage();
+            }
+        }
+//        catch (JSONException e)
+//        {
+//            showFailureMessage();
+//        }
 
         if (response.equalsIgnoreCase(Constant.INVALID_PASSWORD))
         {

@@ -107,7 +107,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
         context = getApplicationContext();
 
-        email = Util.getSecurePreferencesEmail(context);
+        email = Util.getSecurePreferencesUserId(context);
         defaultLocationString = getString(R.string.fitness_location_default);
 
         cardFitnessLocation.setOnClickListener(fitnessLocationClickListener);

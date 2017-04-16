@@ -141,7 +141,7 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
 
         setAddRemoveButtonImage();
 
-        email = Util.getSecurePreferencesEmail(context);
+        email = Util.getSecurePreferencesUserId(context);
 
         String userId = String.valueOf(user.getId());
 

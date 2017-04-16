@@ -63,7 +63,7 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
 
-        email = Util.getSecurePreferencesEmail(context);
+        email = Util.getSecurePreferencesUserId(context);
 
         routines = getIntent().getParcelableArrayListExtra(Constant.BUNDLE_ROUTINE_ROWS);
         routinesToRemove = new ArrayList<>();

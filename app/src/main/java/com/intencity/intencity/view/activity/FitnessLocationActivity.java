@@ -128,7 +128,7 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
 
         layoutAdd = (LinearLayout) findViewById(R.id.layout_add);
 
-        email = Util.getSecurePreferencesEmail(context);
+        email = Util.getSecurePreferencesUserId(context);
 
         locations = new ArrayList<>();
 

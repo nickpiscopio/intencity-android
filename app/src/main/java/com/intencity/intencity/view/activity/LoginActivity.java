@@ -204,10 +204,10 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
         {
             JSONObject json = new JSONObject(response);
 
-            String email = json.getString(Constant.COLUMN_EMAIL);
+            int userId = Integer.parseInt(json.getString(Constant.COLUMN_ID));
             String accountType = json.getString(Constant.COLUMN_ACCOUNT_TYPE);
 
-            Util.loadIntencity(LoginActivity.this, email, accountType, 0);
+            Util.loadIntencity(LoginActivity.this, userId, accountType, 0);
         }
         catch (JSONException e)
         {

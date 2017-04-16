@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         String nullString = "";
 
         securePreferences = new SecurePreferences(context);
-        if (securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, nullString).equals(nullString))
+        if (securePreferences.getString(Constant.USER_ACCOUNT_ID, nullString).equals(nullString))
         {
             userHasLoggedIn = false;
 
@@ -175,8 +175,8 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
 
         if ((now - lastLogin) >= Constant.LOGIN_POINTS_THRESHOLD)
         {
-            String email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
-            Util.grantPointsToUser(email, Constant.POINTS_LOGIN, context.getString(R.string.award_login_description));
+            String userId = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
+            Util.grantPointsToUser(userId, Constant.POINTS_LOGIN, context.getString(R.string.award_login_description));
 
             editor.putLong(Constant.USER_LAST_LOGIN, now);
             editor.apply();
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
             // If it doesn't reach the server, then we try again when the user logs back in.
             new ServiceTask(null).execute(
                     Constant.SERVICE_UPDATE_USER_LOGIN_DATE,
-                    Constant.getStandardServiceUrlParams(email));
+                    Constant.getStandardServiceUrlParams(userId));
         }
 
         if (lastLogin == 0)
@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         // Clears everything except the last login time.
         // We do this to stop the app from showing the welcome every time.
         SecurePreferences.Editor editor = securePreferences.edit();
-        editor.putString(Constant.USER_ACCOUNT_EMAIL, "");
+        editor.putString(Constant.USER_ACCOUNT_ID, "");
         editor.putString(Constant.USER_ACCOUNT_TYPE, "");
         editor.putLong(Constant.USER_LAST_EXERCISE_TIME, 0);
         editor.putLong(Constant.USER_TRIAL_CREATED_DATE, 0);

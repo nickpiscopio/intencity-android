@@ -91,7 +91,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         context = getApplicationContext();
 
         securePreferences = new SecurePreferences(context);
-        email = securePreferences.getString(Constant.USER_ACCOUNT_EMAIL, "");
+        email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
         warmUphExerciseName = getString(R.string.warm_up);
         stretchExerciseName = getString(R.string.stretch);
 

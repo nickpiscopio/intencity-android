@@ -44,15 +44,22 @@ public class Constant
     public static final int POSITIVE_BUTTON = 1;
 
     public static final String SUCCESS = "SUCCESS";
+    public static final String STATUS_CODE = "STATUS_CODE";
+    public static final String DATA = "DATA";
     public static final String EMAIL_EXISTS = "Email already exists";
     public static final String COULD_NOT_FIND_EMAIL = "Could not find email";
     public static final String INVALID_PASSWORD = "Invalid password";
     public static final String ACCOUNT_CREATED = "Account created";
     public static final String ACCOUNT_UPDATED = "Account updated";
 
+    public static final int STATUS_CODE_ACCOUNT_CREATION = 201;
+    public static final int STATUS_CODE_ACCOUNT_UPDATED = 202;
+    public static final int STATUS_CODE_EMAIL_ERROR = 501;
+    public static final int STATUS_CODE_ACCOUNT_CREATION_FAILURE = 502;
+
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences
-    public static final String USER_ACCOUNT_EMAIL = "com.intencity.intencity.user.email";
+    public static final String USER_ACCOUNT_ID = "com.intencity.intencity.user.id";
     public static final String USER_ACCOUNT_TYPE = "com.intencity.intencity.user.account.type";
     public static final String USER_TRIAL_CREATED_DATE = "com.intencity.intencity.user.trial.created.date";
     public static final String USER_LAST_LOGIN = "com.intencity.intencity.user.last.login";
@@ -108,7 +115,7 @@ public class Constant
     public static final String BUNDLE_FITNESS_LOCATION_SELECT = "com.intencity.intencity.bundle.fitness.location.select";
 
     // Service Endpoint
-    private static final String ENDPOINT = "http://www.intencityapp.com/";
+    private static final String ENDPOINT = "http://www.intencity.fit/";
     private static final String BUILD_TYPE = ((BuildType.type == Build.Type.DEBUG) ? "dev/" : "");
     public static final String UPLOAD_FOLDER = ENDPOINT + BUILD_TYPE + "uploads/";
     private static final String SERVICE_FOLDER = ENDPOINT + BUILD_TYPE + "services/";
@@ -142,9 +149,10 @@ public class Constant
     // i.e. &table0
     public static final String PARAMETER_TABLE = "table";
     public static final String PARAMETER_EMAIL = "email=";
+    public static final String PARAMETER_USER_ID = "user_id=";
     private static final String PARAMETER_TRIAL_EMAIL = "trial_email=";
     private static final String PARAMETER_PASSWORD = "password=";
-    private static final String PARAMETER_CURRENT_PASSWORD = "oldPassword=";
+    private static final String PARAMETER_CURRENT_PASSWORD = "old_password=";
     private static final String PARAMETER_DATA = "d=";
     private static final String PARAMETER_VARIABLE = "v=";
     private static final String PARAMETER_FIRST_NAME = "first_name=";
@@ -252,6 +260,18 @@ public class Constant
     public static String getStandardServiceUrlParams(String email)
     {
         return PARAMETER_EMAIL + email;
+    }
+
+    /**
+     * Generates the standard parameters for a service.
+     *
+     * @param userId     The user's ID to add to the url.
+     *
+     * @return  The generated url parameter.
+     */
+    public static String getStandardServiceUrlParams(int userId)
+    {
+        return PARAMETER_USER_ID + userId;
     }
 
     /**
@@ -498,15 +518,15 @@ public class Constant
     /**
      * Generates the change password URL string.
      *
-     * @param email             The user's email to change the password.
+     * @param userId            The user's ID to change the password.
      * @param currentPassword   The user's current password.
      * @param newPassword       The user's new password.
      *
      * @return  The change password URL string.
      */
-    public static String generateChangePasswordVariables(String email, String currentPassword, String newPassword)
+    public static String generateChangePasswordVariables(int userId, String currentPassword, String newPassword)
     {
-        return PARAMETER_EMAIL + email +
+        return PARAMETER_USER_ID + userId +
                PARAMETER_AMPERSAND + PARAMETER_CURRENT_PASSWORD + currentPassword +
                PARAMETER_AMPERSAND + PARAMETER_PASSWORD + newPassword;
     }
