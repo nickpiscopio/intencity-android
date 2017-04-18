@@ -403,7 +403,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             showConnectionIssue();
         }
@@ -453,7 +453,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             showConnectionIssue();
         }
@@ -486,7 +486,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     }
 
     @Override
-    public void onRetrievalFailed()
+    public void onRetrievalFailed(int statusCode)
     {
         showConnectionIssueDialog();
     }
@@ -505,7 +505,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     }
 
     @Override
-    public void onRetrievalSuccessful(int requestCode, Object obj)
+    public void onGeocodeRetrievalSuccessful(int requestCode, Object obj)
     {
         switch (requestCode)
         {
@@ -523,7 +523,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     }
 
     @Override
-    public void onRetrievalFailed(int requestCode)
+    public void onGeocodeRetrievalFailed(int requestCode)
     {
         switch (requestCode)
         {

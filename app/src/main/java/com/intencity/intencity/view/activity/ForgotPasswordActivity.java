@@ -121,7 +121,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
     }
 
     @Override
-    public void onRetrievalFailed()
+    public void onRetrievalFailed(int statusCode)
     {
         loadingProgressBar.setVisibility(View.GONE);
         form.setVisibility(View.VISIBLE);

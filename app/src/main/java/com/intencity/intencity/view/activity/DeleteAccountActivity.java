@@ -170,7 +170,7 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             loadingProgressBar.setVisibility(View.GONE);
 
@@ -197,7 +197,7 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             loadingProgressBar.setVisibility(View.GONE);
 

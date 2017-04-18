@@ -341,7 +341,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             showConnectionIssue();
         }
@@ -382,7 +382,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
     }
 
     @Override
-    public void onRetrievalFailed()
+    public void onRetrievalFailed(int statusCode)
     {
         showDialog(DialogType.COMMUNICATION_ERROR);
 

@@ -149,7 +149,7 @@ public class ExerciseSearchActivity extends AppCompatActivity implements Service
     }
 
     @Override
-    public void onRetrievalFailed()
+    public void onRetrievalFailed(int statusCode)
     {
         connectionIssue.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);

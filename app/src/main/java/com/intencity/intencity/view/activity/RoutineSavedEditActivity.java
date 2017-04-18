@@ -112,7 +112,7 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
     }
 
     @Override
-    public void onRetrievalFailed()
+    public void onRetrievalFailed(int statusCode)
     {
         showConnectionIssue();
     }

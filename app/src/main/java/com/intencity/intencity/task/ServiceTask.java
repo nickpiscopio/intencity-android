@@ -113,6 +113,7 @@ public class ServiceTask extends AsyncTask<String, Void, String>
     {
         if (serviceListener != null)
         {
+            // TODO: REMOVE RESPONSE FAILURE.
             if (success && result.length() > 0 && !result.replaceAll("\"", "").equalsIgnoreCase(RESPONSE_FAILURE))
             {
 //                try
@@ -131,8 +132,7 @@ public class ServiceTask extends AsyncTask<String, Void, String>
                     }
                     else
                     {
-                        // TODO: NEED TO CREATE an onRetrievalFaileded with status code.
-                        serviceListener.onRetrievalFailed();
+                        serviceListener.onRetrievalFailed(code);
                     }
                 }
                 catch (JSONException e)
@@ -155,12 +155,12 @@ public class ServiceTask extends AsyncTask<String, Void, String>
 //                {
 //                    showFailureMessage();
 //                }
-                serviceListener.onRetrievalSuccessful(result);
+//                serviceListener.onRetrievalSuccessful(result);
             }
-            else
-            {
-                serviceListener.onRetrievalFailed();
-            }
+//            else
+//            {
+//                serviceListener.onRetrievalFailed(int statusCode);
+//            }
         }
     }
 }

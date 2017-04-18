@@ -13,8 +13,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 public interface GeocodeListener
 {
     void onGoogleApiClientConnected(int requestCode, GoogleApiClient googleApiClient, Location location);
-    void onRetrievalSuccessful(int requestCode, Object obj);
-    void onRetrievalFailed(int requestCode);
+    void onGeocodeRetrievalSuccessful(int requestCode, Object obj);
+    void onGeocodeRetrievalFailed(int requestCode);
     void onLocationServiceEnabled();
     void onLocationServiceNotEnabled(int requestCode);
     void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults, FragmentActivity activity);

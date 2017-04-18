@@ -257,7 +257,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             displayCommunicationError();
         }
@@ -322,7 +322,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             progressBar.setVisibility(View.GONE);
 
@@ -465,7 +465,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             displayCommunicationError();
         }
@@ -636,7 +636,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
      * It is called when we receive the callback that the location that was looked up is valid.
      */
     @Override
-    public void onRetrievalSuccessful(int requestCode, Object obj)
+    public void onGeocodeRetrievalSuccessful(int requestCode, Object obj)
     {
         switch (requestCode)
         {
@@ -677,7 +677,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
      * It is called when we receive the callback that the location that was looked up is invalid.
      */
     @Override
-    public void onRetrievalFailed(int requestCode)
+    public void onGeocodeRetrievalFailed(int requestCode)
     {
         switch (requestCode)
         {

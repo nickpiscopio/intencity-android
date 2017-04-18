@@ -160,7 +160,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             listener.onFinishedLoading((int) Constant.CODE_FAILED);
         }
@@ -198,7 +198,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             listener.onFinishedLoading((int) Constant.CODE_FAILED);
         }

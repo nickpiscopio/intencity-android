@@ -145,7 +145,7 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
     }
 
     @Override
-    public void onRetrievalFailed()
+    public void onRetrievalFailed(int statusCode)
     {
         showConnectionIssue();
     }
@@ -166,7 +166,7 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             showConnectionIssue();
         }

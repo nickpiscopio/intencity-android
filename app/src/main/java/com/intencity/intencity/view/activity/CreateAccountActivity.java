@@ -316,7 +316,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
     }
 
     @Override
-    public void onRetrievalFailed()
+    public void onRetrievalFailed(int statusCode)
     {
         loadingLayout.setVisibility(View.GONE);
         formLayout.setVisibility(View.VISIBLE);

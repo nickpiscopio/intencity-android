@@ -307,7 +307,7 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         }
 
         @Override
-        public void onRetrievalFailed() { }
+        public void onRetrievalFailed(int statusCode) { }
     };
 
     private ServiceListener last7DayRoutineServiceListener = new ServiceListener()
@@ -346,7 +346,7 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         }
 
         @Override
-        public void onRetrievalFailed() { }
+        public void onRetrievalFailed(int statusCode) { }
     };
 
     @Override

@@ -227,7 +227,7 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
     }
 
     @Override
-    public void onRetrievalFailed()
+    public void onRetrievalFailed(int statusCode)
     {
         loadingProgressBar.setVisibility(View.GONE);
         loginForm.setVisibility(View.VISIBLE);

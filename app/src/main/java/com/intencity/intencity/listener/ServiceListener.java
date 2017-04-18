@@ -13,5 +13,5 @@ public interface ServiceListener
     void onRetrievalSuccessful(String response);
 
     void onRetrievalSuccessful(int statusCode, JSONObject response);
-    void onRetrievalFailed();
+    void onRetrievalFailed(int statusCode);
 }

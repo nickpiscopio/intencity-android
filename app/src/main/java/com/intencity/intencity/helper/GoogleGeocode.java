@@ -394,16 +394,16 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
                     // so there is no reason to search through the array.
                     String formattedAddress = addresses.getJSONObject(0).getString(NODE_FORMATTED_ADDRESS);
 
-                    listener.onRetrievalSuccessful(requestCode, formattedAddress);
+                    listener.onGeocodeRetrievalSuccessful(requestCode, formattedAddress);
                 }
                 else
                 {
-                    onRetrievalFailed();
+                    onRetrievalFailed(0);
                 }
             }
             catch (JSONException e)
             {
-                onRetrievalFailed();
+                onRetrievalFailed(0);
             }
         }
 
@@ -414,9 +414,9 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
-            listener.onRetrievalFailed(requestCode);
+            listener.onGeocodeRetrievalFailed(requestCode);
         }
     };
 
@@ -450,7 +450,7 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
         }
         else
         {
-            googleGeoCodeAddressListener.onRetrievalFailed();
+            googleGeoCodeAddressListener.onRetrievalFailed(0);
         }
     }
 

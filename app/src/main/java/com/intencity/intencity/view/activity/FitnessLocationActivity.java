@@ -284,7 +284,7 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
     }
 
     @Override
-    public void onRetrievalFailed()
+    public void onRetrievalFailed(int statusCode)
     {
         showConnectionIssue();
     }
@@ -314,7 +314,7 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             showConnectionIssue();
         }

@@ -155,7 +155,7 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
     }
 
     @Override
-    public void onRetrievalFailed()
+    public void onRetrievalFailed(int statusCode)
     {
         swipeContainer.setRefreshing(false);
 

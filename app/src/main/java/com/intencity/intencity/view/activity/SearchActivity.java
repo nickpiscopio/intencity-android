@@ -265,7 +265,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             if (searchExercises)
             {

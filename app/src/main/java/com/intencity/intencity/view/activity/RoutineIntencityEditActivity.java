@@ -190,7 +190,7 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
     }
 
     @Override
-    public void onRetrievalFailed()
+    public void onRetrievalFailed(int statusCode)
     {
         showConnectionIssue();
     }
@@ -213,7 +213,7 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             showConnectionIssue();
         }

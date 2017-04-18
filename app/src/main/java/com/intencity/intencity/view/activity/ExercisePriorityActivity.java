@@ -142,7 +142,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             connectionIssue.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
@@ -167,7 +167,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 

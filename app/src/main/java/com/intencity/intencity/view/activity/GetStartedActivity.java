@@ -146,7 +146,7 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
     }
 
     @Override
-    public void onRetrievalFailed()
+    public void onRetrievalFailed(int statusCode)
     {
         loadingProgressBar.setVisibility(View.GONE);
         loginForm.setVisibility(View.VISIBLE);
@@ -273,7 +273,7 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
             }
 
             @Override
-            public void onRetrievalFailed() { }
+            public void onRetrievalFailed(int statusCode) { }
         }).execute(Constant.SERVICE_CREATE_ACCOUNT,
                    Constant.getAccountParameters(firstName, lastName, email, password,
                                                  Constant.ACCOUNT_TYPE_MOBILE_TRIAL));

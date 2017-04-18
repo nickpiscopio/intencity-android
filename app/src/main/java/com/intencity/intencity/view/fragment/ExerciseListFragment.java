@@ -369,7 +369,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         }
 
         @Override
-        public void onRetrievalFailed()
+        public void onRetrievalFailed(int statusCode)
         {
             new SaveDialog(context, ExerciseListFragment.this, SaveDialog.SaveDialogState.SAME_NAME_ERROR);
 
@@ -761,7 +761,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     }
 
                     @Override
-                    public void onRetrievalFailed() { }
+                    public void onRetrievalFailed(int statusCode) { }
                 }).execute(Constant.SERVICE_COMPLEX_UPDATE, updateString);
             }
 
@@ -801,7 +801,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     }
 
                     @Override
-                    public void onRetrievalFailed() { }
+                    public void onRetrievalFailed(int statusCode) { }
                 }).execute(Constant.SERVICE_COMPLEX_INSERT, insertString);
             }
         }

@@ -201,7 +201,7 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
     }
 
     @Override
-    public void onRetrievalFailed()
+    public void onRetrievalFailed(int statusCode)
     {
         showMessage(context.getString(R.string.intencity_communication_error));
     }
