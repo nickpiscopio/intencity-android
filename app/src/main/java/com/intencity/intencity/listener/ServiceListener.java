@@ -9,6 +9,9 @@ import org.json.JSONObject;
  */
 public interface ServiceListener
 {
-    void onRetrievalSuccessful(JSONObject response);
+    // TODO: REMOVE LATER
+    void onRetrievalSuccessful(String response);
+
+    void onRetrievalSuccessful(int statusCode, JSONObject response);
     void onRetrievalFailed();
 }

@@ -140,6 +140,11 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
         }
     }
 
+    @Override public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    {
+
+    }
+
     @Override
     public void onRetrievalFailed()
     {
@@ -260,6 +265,11 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
                 {
                     showFailureMessage();
                 }
+            }
+
+            @Override public void onRetrievalSuccessful(int statusCode, JSONObject response)
+            {
+
             }
 
             @Override

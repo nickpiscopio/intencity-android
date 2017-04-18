@@ -263,19 +263,22 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
     @Override
     public void onRetrievalSuccessful(String response)
     {
+
+    }
+
+    @Override
+    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    {
         try
         {
-            JSONObject obj = new JSONObject(response);
-            int status = Integer.parseInt(obj.getString(Constant.STATUS_CODE));
-
-            switch (status)
+            switch (statusCode)
             {
                 case Constant.STATUS_CODE_ACCOUNT_CREATION:
                 case Constant.STATUS_CODE_ACCOUNT_UPDATED:
 
-                    int userId = Integer.parseInt(obj.getString(Constant.DATA));
+                    int userId = Integer.parseInt(response.getString(Constant.DATA));
 
-                    if (status == Constant.STATUS_CODE_ACCOUNT_CREATION)
+                    if (statusCode == Constant.STATUS_CODE_ACCOUNT_CREATION)
                     {
                         Util.loadIntencity(CreateAccountActivity.this, userId, Constant.ACCOUNT_TYPE_NORMAL, 0);
                     }

@@ -14,8 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.intencity.intencity.R;
-import com.intencity.intencity.notification.CustomDialog;
-import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
@@ -23,7 +21,6 @@ import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -153,50 +150,56 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
     };
 
     @Override
-    public void onRetrievalSuccessful(JSONObject response)
+    public void onRetrievalSuccessful(String response)
     {
-//        response = response.replaceAll("\"", "");
-
-//        try
-//        {
-//            JSONObject obj = new JSONObject(response);
-            boolean success = Boolean.parseBoolean(response.getString(Constant.SUCCESS));
-            if (success)
-            {
-                int userId = Integer.parseInt(response.getString(Constant.DATA));
-
-                Util.loadIntencity(GetStartedActivity.this, userId, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
-            }
-            else
-            {
-                showFailureMessage();
-            }
-        }
-//        catch (JSONException e)
-//        {
-//            showFailureMessage();
+////        response = response.replaceAll("\"", "");
+//
+////        try
+////        {
+////            JSONObject obj = new JSONObject(response);
+//            boolean success = Boolean.parseBoolean(response.getString(Constant.SUCCESS));
+//            if (success)
+//            {
+//                int userId = Integer.parseInt(response.getString(Constant.DATA));
+//
+//                Util.loadIntencity(GetStartedActivity.this, userId, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
+//            }
+//            else
+//            {
+//                showFailureMessage();
+//            }
 //        }
+////        catch (JSONException e)
+////        {
+////            showFailureMessage();
+////        }
+//
+//        if (response.equalsIgnoreCase(Constant.INVALID_PASSWORD))
+//        {
+//            showMessage(context.getString(R.string.generic_error),
+//                        context.getString(R.string.invalid_password));
+//        }
+//        else if (response.equalsIgnoreCase(Constant.SUCCESS))
+//        {
+//            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.password_changed_title),
+//                                                         context.getString(R.string.password_changed),
+//                                                         false);
+//
+//            new CustomDialog(ChangePasswordActivity.this, ChangePasswordActivity.this, dialog, true);
+//        }
+//        else
+//        {
+//            showMessage(context.getString(R.string.generic_error),
+//                        context.getString(R.string.intencity_communication_error));
+//        }
+//
+//        loadingProgressBar.setVisibility(View.GONE);
+    }
 
-        if (response.equalsIgnoreCase(Constant.INVALID_PASSWORD))
-        {
-            showMessage(context.getString(R.string.generic_error),
-                        context.getString(R.string.invalid_password));
-        }
-        else if (response.equalsIgnoreCase(Constant.SUCCESS))
-        {
-            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.password_changed_title),
-                                                         context.getString(R.string.password_changed),
-                                                         false);
+    @Override
+    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    {
 
-            new CustomDialog(ChangePasswordActivity.this, ChangePasswordActivity.this, dialog, true);
-        }
-        else
-        {
-            showMessage(context.getString(R.string.generic_error),
-                        context.getString(R.string.intencity_communication_error));
-        }
-
-        loadingProgressBar.setVisibility(View.GONE);
     }
 
     @Override

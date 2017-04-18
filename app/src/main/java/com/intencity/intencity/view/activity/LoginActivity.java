@@ -221,6 +221,12 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
     }
 
     @Override
+    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    {
+
+    }
+
+    @Override
     public void onRetrievalFailed()
     {
         loadingProgressBar.setVisibility(View.GONE);

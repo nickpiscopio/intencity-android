@@ -17,6 +17,8 @@ import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
 
+import org.json.JSONObject;
+
 /**
  * This is the forgot password activity for Intencity.
  *
@@ -110,6 +112,12 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
 
         Util.showMessage(ForgotPasswordActivity.this, context.getString(R.string.forgot_password_email_sent_title),
                          context.getString(R.string.forgot_password_email_sent));
+    }
+
+    @Override
+    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    {
+
     }
 
     @Override

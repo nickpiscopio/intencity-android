@@ -29,6 +29,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.utils.DiskCacheUtils;
 import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
 
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -144,6 +146,12 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
         users = new UserDao().parseJson(response);
 
         populateRankingList();
+    }
+
+    @Override
+    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    {
+
     }
 
     @Override

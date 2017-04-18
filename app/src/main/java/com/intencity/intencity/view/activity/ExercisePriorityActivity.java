@@ -136,6 +136,12 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
         }
 
         @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
+        }
+
+        @Override
         public void onRetrievalFailed()
         {
             connectionIssue.setVisibility(View.VISIBLE);
@@ -150,6 +156,12 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
     {
         @Override
         public void onRetrievalSuccessful(String response)
+        {
+            finish();
+        }
+
+        @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
         {
             finish();
         }

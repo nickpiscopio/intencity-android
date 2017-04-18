@@ -44,7 +44,9 @@ public class Constant
     public static final int POSITIVE_BUTTON = 1;
 
     public static final String SUCCESS = "SUCCESS";
-    public static final String STATUS_CODE = "STATUS_CODE";
+    public static final String STATUS = "STATUS";
+    public static final String CODE = "CODE";
+    public static final String MESSAGE = "MESSAGE";
     public static final String DATA = "DATA";
     public static final String EMAIL_EXISTS = "Email already exists";
     public static final String COULD_NOT_FIND_EMAIL = "Could not find email";

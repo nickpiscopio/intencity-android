@@ -33,6 +33,7 @@ import com.intencity.intencity.util.SelectionType;
 import com.intencity.intencity.util.Util;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -277,6 +278,12 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
     }
 
     @Override
+    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    {
+
+    }
+
+    @Override
     public void onRetrievalFailed()
     {
         showConnectionIssue();
@@ -299,6 +306,11 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
             {
                 showConnectionIssue();
             }
+        }
+
+        @Override public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
         }
 
         @Override

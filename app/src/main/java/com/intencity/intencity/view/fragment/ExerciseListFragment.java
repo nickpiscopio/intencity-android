@@ -45,6 +45,8 @@ import com.intencity.intencity.view.activity.OverviewActivity;
 import com.intencity.intencity.view.activity.SearchActivity;
 import com.intencity.intencity.view.activity.StatActivity;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -359,6 +361,11 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             Toast.makeText(context, getString(R.string.routine_saved, savedRoutineName), Toast.LENGTH_SHORT).show();
 
             loadingListener.onFinishedLoading(Constant.ID_SAVE_EXERCISE_LIST);
+        }
+
+        @Override public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
         }
 
         @Override
@@ -748,6 +755,12 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     public void onRetrievalSuccessful(String response){ }
 
                     @Override
+                    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+                    {
+
+                    }
+
+                    @Override
                     public void onRetrievalFailed() { }
                 }).execute(Constant.SERVICE_COMPLEX_UPDATE, updateString);
             }
@@ -779,6 +792,12 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                             // Create a new array withe the use id removed.
                             ids = Arrays.copyOfRange(ids, 1, ids.length);
                         }
+                    }
+
+                    @Override
+                    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+                    {
+
                     }
 
                     @Override

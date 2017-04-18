@@ -143,6 +143,12 @@ public class ExerciseSearchActivity extends AppCompatActivity implements Service
     }
 
     @Override
+    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    {
+
+    }
+
+    @Override
     public void onRetrievalFailed()
     {
         connectionIssue.setVisibility(View.VISIBLE);

@@ -23,6 +23,8 @@ import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 
+import org.json.JSONObject;
+
 /**
  * This is the change password activity for Intencity.
  *
@@ -155,10 +157,16 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
             {
                 // Service to delete the user's account.
                 new ServiceTask(removeAccountListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
-                                                                 Constant.generateStoredProcedureParameters(
-                                                                         Constant.STORED_PROCEDURE_REMOVE_ACCOUNT,
-                                                                         email));
+                                                               Constant.generateStoredProcedureParameters(
+                                                                       Constant.STORED_PROCEDURE_REMOVE_ACCOUNT,
+                                                                       email));
             }
+        }
+
+        @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
         }
 
         @Override
@@ -178,6 +186,12 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
     {
         @Override
         public void onRetrievalSuccessful(String response)
+        {
+
+        }
+
+        @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
         {
             logOut();
         }

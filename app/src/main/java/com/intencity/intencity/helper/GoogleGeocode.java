@@ -408,6 +408,12 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
         }
 
         @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
+        }
+
+        @Override
         public void onRetrievalFailed()
         {
             listener.onRetrievalFailed(requestCode);

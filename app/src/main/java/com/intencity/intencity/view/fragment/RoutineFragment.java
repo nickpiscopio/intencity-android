@@ -33,6 +33,7 @@ import com.intencity.intencity.view.activity.RoutineIntencityActivity;
 import com.intencity.intencity.view.activity.RoutineSavedActivity;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -153,6 +154,12 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         }
 
         @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
+        }
+
+        @Override
         public void onRetrievalFailed()
         {
             listener.onFinishedLoading((int) Constant.CODE_FAILED);
@@ -182,6 +189,12 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
                 listener.onFinishedLoading((int) Constant.CODE_FAILED);
             }
+        }
+
+        @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
         }
 
         @Override

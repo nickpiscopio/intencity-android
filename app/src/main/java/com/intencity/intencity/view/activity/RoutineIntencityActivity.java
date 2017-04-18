@@ -39,6 +39,7 @@ import com.intencity.intencity.util.SelectionType;
 import com.intencity.intencity.util.Util;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -396,6 +397,12 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         }
 
         @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
+        }
+
+        @Override
         public void onRetrievalFailed()
         {
             showConnectionIssue();
@@ -440,6 +447,12 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         }
 
         @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
+        }
+
+        @Override
         public void onRetrievalFailed()
         {
             showConnectionIssue();
@@ -464,6 +477,12 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         {
             showConnectionIssueDialog();
         }
+    }
+
+    @Override
+    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    {
+
     }
 
     @Override

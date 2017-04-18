@@ -24,6 +24,8 @@ import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -101,6 +103,12 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
     {
         setResult(Constant.REQUEST_CODE_SAVED_ROUTINE_UPDATED);
         finish();
+    }
+
+    @Override
+    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    {
+
     }
 
     @Override

@@ -32,6 +32,7 @@ import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -255,6 +256,12 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             {
                 divider.setVisibility(View.GONE);
             }
+        }
+
+        @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
         }
 
         @Override

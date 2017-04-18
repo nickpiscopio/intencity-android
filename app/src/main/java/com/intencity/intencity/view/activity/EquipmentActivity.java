@@ -229,8 +229,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
      */
     private ServiceListener getLocationServiceListener = new ServiceListener()
     {
-        @Override
-        public void onRetrievalSuccessful(String response)
+        @Override public void onRetrievalSuccessful(String response)
         {
             if (response.equals(Constant.RETURN_NULL))
             {
@@ -249,6 +248,12 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
                 new CustomDialog(EquipmentActivity.this, overwriteFitnessLocationDialogListener, dialog, true);
             }
+        }
+
+        @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
         }
 
         @Override
@@ -308,6 +313,12 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
                 displayCommunicationError();
             }
+        }
+
+        @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
         }
 
         @Override
@@ -442,6 +453,12 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
     {
         @Override
         public void onRetrievalSuccessful(String response)
+        {
+
+        }
+
+        @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
         {
             setResult(Constant.REQUEST_CODE_EQUIPMENT_SAVED);
             finish();

@@ -301,6 +301,12 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         }
 
         @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
+        }
+
+        @Override
         public void onRetrievalFailed() { }
     };
 
@@ -331,6 +337,12 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
             catch (Exception e) { }
 
             updateListView();
+        }
+
+        @Override
+        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        {
+
         }
 
         @Override
