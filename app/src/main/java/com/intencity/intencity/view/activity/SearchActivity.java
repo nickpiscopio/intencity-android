@@ -259,7 +259,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        public void onRetrievalSuccessful(int statusCode, String response)
         {
 
         }

@@ -301,7 +301,7 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        public void onRetrievalSuccessful(int statusCode, String response)
         {
 
         }
@@ -340,7 +340,7 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        public void onRetrievalSuccessful(int statusCode, String response)
         {
 
         }

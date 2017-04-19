@@ -143,7 +143,7 @@ public class ExerciseSearchActivity extends AppCompatActivity implements Service
     }
 
     @Override
-    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    public void onRetrievalSuccessful(int statusCode, String response)
     {
 
     }

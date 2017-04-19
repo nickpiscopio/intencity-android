@@ -140,7 +140,7 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
         }
     }
 
-    @Override public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    @Override public void onRetrievalSuccessful(int statusCode, String response)
     {
 
     }
@@ -246,34 +246,22 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
             @Override
             public void onRetrievalSuccessful(String response)
             {
-                try
-                {
-                    JSONObject obj = new JSONObject(response);
-                    boolean success = Boolean.parseBoolean(obj.getString(Constant.SUCCESS));
-                    if (success)
-                    {
-                        int userId = Integer.parseInt(obj.getString(Constant.DATA));
-
-                        Util.loadIntencity(GetStartedActivity.this, userId, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
-                    }
-                    else
-                    {
-                        showFailureMessage();
-                    }
-                }
-                catch (JSONException e)
-                {
-                    showFailureMessage();
-                }
-            }
-
-            @Override public void onRetrievalSuccessful(int statusCode, JSONObject response)
-            {
 
             }
 
             @Override
-            public void onRetrievalFailed(int statusCode) { }
+            public void onRetrievalSuccessful(int statusCode, String response)
+            {
+                int userId = Integer.parseInt(response);
+
+                Util.loadIntencity(GetStartedActivity.this, userId, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
+            }
+
+            @Override
+            public void onRetrievalFailed(int statusCode)
+            {
+                showFailureMessage();
+            }
         }).execute(Constant.SERVICE_CREATE_ACCOUNT,
                    Constant.getAccountParameters(firstName, lastName, email, password,
                                                  Constant.ACCOUNT_TYPE_MOBILE_TRIAL));

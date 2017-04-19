@@ -363,7 +363,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             loadingListener.onFinishedLoading(Constant.ID_SAVE_EXERCISE_LIST);
         }
 
-        @Override public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        @Override public void onRetrievalSuccessful(int statusCode, String response)
         {
 
         }
@@ -755,7 +755,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     public void onRetrievalSuccessful(String response){ }
 
                     @Override
-                    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+                    public void onRetrievalSuccessful(int statusCode, String response)
                     {
 
                     }
@@ -795,7 +795,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     }
 
                     @Override
-                    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+                    public void onRetrievalSuccessful(int statusCode, String response)
                     {
 
                     }

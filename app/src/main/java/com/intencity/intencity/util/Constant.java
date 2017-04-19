@@ -44,20 +44,20 @@ public class Constant
     public static final int POSITIVE_BUTTON = 1;
 
     public static final String SUCCESS = "SUCCESS";
-    public static final String STATUS = "STATUS";
-    public static final String CODE = "CODE";
-    public static final String MESSAGE = "MESSAGE";
+    public static final String STATUS_CODE = "STATUS_CODE";
     public static final String DATA = "DATA";
-    public static final String EMAIL_EXISTS = "Email already exists";
     public static final String COULD_NOT_FIND_EMAIL = "Could not find email";
     public static final String INVALID_PASSWORD = "Invalid password";
-    public static final String ACCOUNT_CREATED = "Account created";
-    public static final String ACCOUNT_UPDATED = "Account updated";
 
     public static final int STATUS_CODE_ACCOUNT_CREATION = 201;
     public static final int STATUS_CODE_ACCOUNT_UPDATED = 202;
+    public static final int STATUS_CODE_DATE_LOGIN_UPDATED = 203;
+    public static final int STATUS_CODE_PASSWORD_CHANGED = 204;
+    public static final int STATUS_CODE_FAILURE_GENERIC = 500;
     public static final int STATUS_CODE_EMAIL_ERROR = 501;
     public static final int STATUS_CODE_ACCOUNT_CREATION_FAILURE = 502;
+    public static final int STATUS_CODE_PASSWORD_INVALID = 503;
+    public static final int STATUS_CODE_PASSWORD_CHANGE_FAILURE = 504;
 
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences

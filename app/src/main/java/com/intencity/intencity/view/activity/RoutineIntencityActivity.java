@@ -397,7 +397,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        public void onRetrievalSuccessful(int statusCode, String response)
         {
 
         }
@@ -447,7 +447,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        public void onRetrievalSuccessful(int statusCode, String response)
         {
 
         }
@@ -480,7 +480,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     }
 
     @Override
-    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    public void onRetrievalSuccessful(int statusCode, String response)
     {
 
     }

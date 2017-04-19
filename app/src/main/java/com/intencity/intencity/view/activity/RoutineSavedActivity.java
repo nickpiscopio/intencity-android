@@ -335,7 +335,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        public void onRetrievalSuccessful(int statusCode, String response)
         {
 
         }
@@ -376,7 +376,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
     }
 
     @Override
-    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    public void onRetrievalSuccessful(int statusCode, String response)
     {
 
     }

@@ -16,12 +16,12 @@ import android.widget.TextView;
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.notification.CustomDialog;
+import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
-
-import org.json.JSONObject;
 
 /**
  * This is the change password activity for Intencity.
@@ -120,21 +120,18 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
             // Check if all the fields are filled in.
             if (!Util.checkStringLength(currentPassword, 1) || !Util.checkStringLength(newPassword, 1))
             {
-                showMessage(context.getString(R.string.generic_error),
-                                 context.getString(R.string.fill_in_fields));
+                showMessage(R.string.fill_in_fields);
             }
             // Check to see if the password is greater than the password length needed.
             // Check to see if the password is valid.
             else if (!Util.checkStringLength(newPassword, Constant.REQUIRED_PASSWORD_LENGTH) || !Util.isFieldValid(newPassword, Constant.REGEX_FIELD))
             {
-                showMessage(context.getString(R.string.generic_error),
-                                 context.getString(R.string.password_validation_error));
+                showMessage(R.string.password_validation_error);
             }
             // Check to see if the passwords match.
             else if (!newPassword.equals(confirmNewPassword))
             {
-                showMessage(context.getString(R.string.generic_error),
-                                 context.getString(R.string.password_match_error));
+                showMessage(R.string.password_match_error);
             }
             else
             {
@@ -152,74 +149,46 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
     @Override
     public void onRetrievalSuccessful(String response)
     {
-////        response = response.replaceAll("\"", "");
-//
-////        try
-////        {
-////            JSONObject obj = new JSONObject(response);
-//            boolean success = Boolean.parseBoolean(response.getString(Constant.SUCCESS));
-//            if (success)
-//            {
-//                int userId = Integer.parseInt(response.getString(Constant.DATA));
-//
-//                Util.loadIntencity(GetStartedActivity.this, userId, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
-//            }
-//            else
-//            {
-//                showFailureMessage();
-//            }
-//        }
-////        catch (JSONException e)
-////        {
-////            showFailureMessage();
-////        }
-//
-//        if (response.equalsIgnoreCase(Constant.INVALID_PASSWORD))
-//        {
-//            showMessage(context.getString(R.string.generic_error),
-//                        context.getString(R.string.invalid_password));
-//        }
-//        else if (response.equalsIgnoreCase(Constant.SUCCESS))
-//        {
-//            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.password_changed_title),
-//                                                         context.getString(R.string.password_changed),
-//                                                         false);
-//
-//            new CustomDialog(ChangePasswordActivity.this, ChangePasswordActivity.this, dialog, true);
-//        }
-//        else
-//        {
-//            showMessage(context.getString(R.string.generic_error),
-//                        context.getString(R.string.intencity_communication_error));
-//        }
-//
-//        loadingProgressBar.setVisibility(View.GONE);
+
     }
 
     @Override
-    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    public void onRetrievalSuccessful(int statusCode, String response)
     {
+        CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.password_changed_title),
+                                                             context.getString(R.string.password_changed),
+                                                             false);
 
+        new CustomDialog(ChangePasswordActivity.this, ChangePasswordActivity.this, dialog, true);
+
+        loadingProgressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onRetrievalFailed(int statusCode)
     {
-        loadingProgressBar.setVisibility(View.GONE);
+        switch (statusCode)
+        {
+            case Constant.STATUS_CODE_PASSWORD_INVALID:
+                showMessage(R.string.invalid_password);
+                break;
+            default:
 
-        showMessage(context.getString(R.string.generic_error),
-                    context.getString(R.string.intencity_communication_error));
+                showMessage(R.string.intencity_communication_error);
+                break;
+        }
+
+        loadingProgressBar.setVisibility(View.GONE);
     }
 
     /**
      * Show a message to the user.
      *
-     * @param title     The title of the message.
-     * @param message   The message to display.
+     * @param resId     The resource ID for the message string.
      */
-    private void showMessage(String title, String message)
+    private void showMessage(int resId)
     {
-        Util.showMessage(ChangePasswordActivity.this, title, message);
+        Util.showMessage(ChangePasswordActivity.this, context.getString(R.string.generic_error), context.getString(resId));
     }
 
     @Override

@@ -113,54 +113,27 @@ public class ServiceTask extends AsyncTask<String, Void, String>
     {
         if (serviceListener != null)
         {
-            // TODO: REMOVE RESPONSE FAILURE.
-            if (success && result.length() > 0 && !result.replaceAll("\"", "").equalsIgnoreCase(RESPONSE_FAILURE))
+            int statusCode = Constant.STATUS_CODE_FAILURE_GENERIC;
+
+            if (success)
             {
-//                try
-//                {
                 try
                 {
                     JSONObject obj = new JSONObject(result);
-                    boolean success = Boolean.parseBoolean(obj.getString(Constant.SUCCESS));
-                    JSONObject status = obj.getJSONObject(Constant.STATUS);
-                    int code = Integer.parseInt(status.getString(Constant.CODE));
+                    statusCode = Integer.parseInt(obj.getString(Constant.STATUS_CODE));
+                    String data = obj.getString(Constant.DATA);
 
-                    if (success)
-                    {
-                        JSONObject data = obj.getJSONObject(Constant.DATA);
-                        serviceListener.onRetrievalSuccessful(code, data);
-                    }
-                    else
-                    {
-                        serviceListener.onRetrievalFailed(code);
-                    }
+                    serviceListener.onRetrievalSuccessful(statusCode, data);
                 }
-                catch (JSONException e)
+                catch (JSONException ex)
                 {
-                    e.printStackTrace();
+                    serviceListener.onRetrievalFailed(statusCode);
                 }
-                //                    boolean success = Boolean.parseBoolean(obj.getString(Constant.SUCCESS));
-//                    if (success)
-//                    {
-//                        int userId = Integer.parseInt(obj.getString(Constant.DATA));
-//
-//                        Util.loadIntencity(GetStartedActivity.this, userId, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
-//                    }
-//                    else
-//                    {
-//                        showFailureMessage();
-//                    }
-//                }
-//                catch (JSONException e)
-//                {
-//                    showFailureMessage();
-//                }
-//                serviceListener.onRetrievalSuccessful(result);
             }
-//            else
-//            {
-//                serviceListener.onRetrievalFailed(int statusCode);
-//            }
+            else
+            {
+                serviceListener.onRetrievalFailed(statusCode);
+            }
         }
     }
 }

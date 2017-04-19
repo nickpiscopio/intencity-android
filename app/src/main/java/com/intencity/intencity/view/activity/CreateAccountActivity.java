@@ -27,9 +27,6 @@ import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
  * This is the create account activity for Intencity.
  *
@@ -226,12 +223,27 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
 
     /**
      * Displays the login error to the user.
+     *
+     * @param message   The message to display to the user.
      */
     private void showErrorMessage(String message)
     {
         CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), message, false);
 
         new CustomDialog(CreateAccountActivity.this, null, dialog, true);
+    }
+
+    /**
+     * Displays an error message to the user.
+     *
+     * @param stringRes     The string resource to populate the error dialog.
+     */
+    private void showErrorMessage(int stringRes)
+    {
+        showErrorMessage(context.getString(stringRes));
+
+        loadingLayout.setVisibility(View.GONE);
+        formLayout.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -267,68 +279,52 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
     }
 
     @Override
-    public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    public void onRetrievalSuccessful(int statusCode, String response)
     {
-        try
+        switch (statusCode)
         {
-            switch (statusCode)
-            {
-                case Constant.STATUS_CODE_ACCOUNT_CREATION:
-                case Constant.STATUS_CODE_ACCOUNT_UPDATED:
+            case Constant.STATUS_CODE_ACCOUNT_CREATION:
+            case Constant.STATUS_CODE_ACCOUNT_UPDATED:
 
-                    int userId = Integer.parseInt(response.getString(Constant.DATA));
+                int userId = Integer.parseInt(response);
 
-                    if (statusCode == Constant.STATUS_CODE_ACCOUNT_CREATION)
-                    {
-                        Util.loadIntencity(CreateAccountActivity.this, userId, Constant.ACCOUNT_TYPE_NORMAL, 0);
-                    }
-                    else
-                    {
-                        Util.convertAccount(CreateAccountActivity.this, userId);
+                if (statusCode == Constant.STATUS_CODE_ACCOUNT_CREATION)
+                {
+                    Util.loadIntencity(CreateAccountActivity.this, userId, Constant.ACCOUNT_TYPE_NORMAL, 0);
+                }
+                else
+                {
+                    Util.convertAccount(CreateAccountActivity.this, userId);
 
-                        CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.success), context.getString(R.string.account_converted), false);
+                    CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.success), context.getString(R.string.account_converted), false);
 
-                        new CustomDialog(CreateAccountActivity.this, accountConvertedDialogListener, dialog, false);
-                    }
+                    new CustomDialog(CreateAccountActivity.this, accountConvertedDialogListener, dialog, false);
+                }
 
-                    break;
-
-                case Constant.STATUS_CODE_EMAIL_ERROR:
-
-                    loadingLayout.setVisibility(View.GONE);
-                    formLayout.setVisibility(View.VISIBLE);
-
-                    showErrorMessage(context.getString(R.string.email_exists));
-                    break;
-
-                case Constant.STATUS_CODE_ACCOUNT_CREATION_FAILURE:
-                default:
-
-                    showFailureMessage();
-
-                    break;
-            }
-        }
-        catch (JSONException e)
-        {
-            showFailureMessage();
+                break;
+            default:
+                break;
         }
     }
 
     @Override
     public void onRetrievalFailed(int statusCode)
     {
-        loadingLayout.setVisibility(View.GONE);
-        formLayout.setVisibility(View.VISIBLE);
+        switch (statusCode)
+        {
+            case Constant.STATUS_CODE_EMAIL_ERROR:
 
-        showErrorMessage(context.getString(R.string.intencity_communication_error));
-    }
+                showErrorMessage(R.string.email_exists);
 
-    private void showFailureMessage()
-    {
-        loadingLayout.setVisibility(View.GONE);
-        formLayout.setVisibility(View.VISIBLE);
+                break;
 
-        showErrorMessage(context.getString(R.string.intencity_communication_error));
+            case Constant.STATUS_CODE_ACCOUNT_CREATION_FAILURE:
+            default:
+
+                showErrorMessage(R.string.intencity_communication_error);
+
+                break;
+        }
+
     }
 }

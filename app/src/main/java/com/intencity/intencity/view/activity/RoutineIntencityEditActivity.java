@@ -184,7 +184,7 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
         }
     }
 
-    @Override public void onRetrievalSuccessful(int statusCode, JSONObject response)
+    @Override public void onRetrievalSuccessful(int statusCode, String response)
     {
 
     }
@@ -207,7 +207,7 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
             finish();
         }
 
-        @Override public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        @Override public void onRetrievalSuccessful(int statusCode, String response)
         {
 
         }

@@ -154,7 +154,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        public void onRetrievalSuccessful(int statusCode, String response)
         {
 
         }
@@ -192,7 +192,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, JSONObject response)
+        public void onRetrievalSuccessful(int statusCode, String response)
         {
 
         }
