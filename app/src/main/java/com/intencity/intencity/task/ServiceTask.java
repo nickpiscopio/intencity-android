@@ -113,26 +113,36 @@ public class ServiceTask extends AsyncTask<String, Void, String>
     {
         if (serviceListener != null)
         {
-            int statusCode = Constant.STATUS_CODE_FAILURE_GENERIC;
+            int code = Constant.STATUS_CODE_FAILURE_GENERIC;
 
             if (success)
             {
                 try
                 {
                     JSONObject obj = new JSONObject(result);
-                    statusCode = Integer.parseInt(obj.getString(Constant.STATUS_CODE));
-                    String data = obj.getString(Constant.DATA);
+                    JSONObject status = obj.getJSONObject(Constant.STATUS);
 
-                    serviceListener.onRetrievalSuccessful(statusCode, data);
+                    boolean success = status.getBoolean(Constant.SUCCESS);
+                    code = status.getInt(Constant.CODE);
+
+                    if (success)
+                    {
+                        String data = obj.getString(Constant.DATA);
+                        serviceListener.onRetrievalSuccessful(code, data);
+                    }
+                    else
+                    {
+                        serviceListener.onRetrievalFailed(code);
+                    }
                 }
                 catch (JSONException ex)
                 {
-                    serviceListener.onRetrievalFailed(statusCode);
+                    serviceListener.onRetrievalFailed(code);
                 }
             }
             else
             {
-                serviceListener.onRetrievalFailed(statusCode);
+                serviceListener.onRetrievalFailed(code);
             }
         }
     }
