@@ -139,7 +139,7 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
     }
 
     @Override
-    public void onRetrievalSuccessful(int statusCode, String response)
+    public void onServiceResponse(int statusCode, String response)
     {
 
     }
@@ -160,7 +160,7 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, String response)
+        public void onServiceResponse(int statusCode, String response)
         {
 
         }

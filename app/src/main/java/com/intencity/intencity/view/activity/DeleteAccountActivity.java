@@ -164,7 +164,7 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, String response)
+        public void onServiceResponse(int statusCode, String response)
         {
 
         }
@@ -191,7 +191,7 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, String response)
+        public void onServiceResponse(int statusCode, String response)
         {
             logOut();
         }

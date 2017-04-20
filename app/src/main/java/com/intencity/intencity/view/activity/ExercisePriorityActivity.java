@@ -136,7 +136,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, String response)
+        public void onServiceResponse(int statusCode, String response)
         {
 
         }
@@ -161,7 +161,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, String response)
+        public void onServiceResponse(int statusCode, String response)
         {
             finish();
         }

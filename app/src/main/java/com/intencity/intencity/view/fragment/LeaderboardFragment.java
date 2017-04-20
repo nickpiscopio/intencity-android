@@ -149,7 +149,7 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
     }
 
     @Override
-    public void onRetrievalSuccessful(int statusCode, String response)
+    public void onServiceResponse(int statusCode, String response)
     {
 
     }

@@ -195,7 +195,7 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
     }
 
     @Override
-    public void onRetrievalSuccessful(int statusCode, String response)
+    public void onServiceResponse(int statusCode, String response)
     {
 
     }

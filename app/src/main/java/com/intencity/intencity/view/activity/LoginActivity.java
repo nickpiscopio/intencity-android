@@ -221,7 +221,7 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
     }
 
     @Override
-    public void onRetrievalSuccessful(int statusCode, String response)
+    public void onServiceResponse(int statusCode, String response)
     {
 
     }

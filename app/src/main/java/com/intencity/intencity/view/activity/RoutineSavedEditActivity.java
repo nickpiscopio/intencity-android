@@ -106,7 +106,7 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
     }
 
     @Override
-    public void onRetrievalSuccessful(int statusCode, String response)
+    public void onServiceResponse(int statusCode, String response)
     {
 
     }

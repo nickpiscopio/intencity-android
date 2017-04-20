@@ -408,7 +408,7 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, String response)
+        public void onServiceResponse(int statusCode, String response)
         {
 
         }

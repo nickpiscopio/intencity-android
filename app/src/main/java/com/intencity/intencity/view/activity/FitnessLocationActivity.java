@@ -278,7 +278,7 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
     }
 
     @Override
-    public void onRetrievalSuccessful(int statusCode, String response)
+    public void onServiceResponse(int statusCode, String response)
     {
 
     }
@@ -308,7 +308,7 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
             }
         }
 
-        @Override public void onRetrievalSuccessful(int statusCode, String response)
+        @Override public void onServiceResponse(int statusCode, String response)
         {
 
         }

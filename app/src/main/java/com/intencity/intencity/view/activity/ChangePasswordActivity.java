@@ -153,25 +153,22 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
     }
 
     @Override
-    public void onRetrievalSuccessful(int statusCode, String response)
-    {
-        CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.password_changed_title),
-                                                             context.getString(R.string.password_changed),
-                                                             false);
-
-        new CustomDialog(ChangePasswordActivity.this, ChangePasswordActivity.this, dialog, true);
-
-        loadingProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onRetrievalFailed(int statusCode)
+    public void onServiceResponse(int statusCode, String response)
     {
         switch (statusCode)
         {
+            case Constant.STATUS_CODE_PASSWORD_CHANGED:
+                CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.password_changed_title),
+                                                                     context.getString(R.string.password_changed),
+                                                                     false);
+
+                new CustomDialog(ChangePasswordActivity.this, ChangePasswordActivity.this, dialog, true);
+                break;
+
             case Constant.STATUS_CODE_PASSWORD_INVALID:
                 showMessage(R.string.invalid_password);
                 break;
+
             default:
 
                 showMessage(R.string.intencity_communication_error);
@@ -179,6 +176,23 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
         }
 
         loadingProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onRetrievalFailed(int statusCode)
+    {
+//        switch (statusCode)
+//        {
+//            case Constant.STATUS_CODE_PASSWORD_INVALID:
+//                showMessage(R.string.invalid_password);
+//                break;
+//            default:
+//
+//                showMessage(R.string.intencity_communication_error);
+//                break;
+//        }
+//
+//        loadingProgressBar.setVisibility(View.GONE);
     }
 
     /**

@@ -140,7 +140,7 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
         }
     }
 
-    @Override public void onRetrievalSuccessful(int statusCode, String response)
+    @Override public void onServiceResponse(int statusCode, String response)
     {
 
     }
@@ -250,17 +250,28 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
             }
 
             @Override
-            public void onRetrievalSuccessful(int statusCode, String response)
+            public void onServiceResponse(int statusCode, String response)
             {
-                int userId = Integer.parseInt(response);
+                switch (statusCode)
+                {
+                    case Constant.STATUS_CODE_ACCOUNT_CREATION:
+                        int userId = Integer.parseInt(response);
 
-                Util.loadIntencity(GetStartedActivity.this, userId, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
+                        Util.loadIntencity(GetStartedActivity.this, userId, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
+                        break;
+
+                    case Constant.STATUS_CODE_ACCOUNT_CREATION_FAILURE:
+                    default:
+
+                        showFailureMessage();
+                        break;
+                }
             }
 
             @Override
             public void onRetrievalFailed(int statusCode)
             {
-                showFailureMessage();
+
             }
         }).execute(Constant.SERVICE_CREATE_ACCOUNT,
                    Constant.getAccountParameters(firstName, lastName, email, password,

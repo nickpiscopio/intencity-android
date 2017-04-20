@@ -10,6 +10,6 @@ public interface ServiceListener
     // TODO: REMOVE LATER
     void onRetrievalSuccessful(String response);
 
-    void onRetrievalSuccessful(int statusCode, String response);
+    void onServiceResponse(int statusCode, String response);
     void onRetrievalFailed(int statusCode);
 }

@@ -251,7 +251,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, String response)
+        public void onServiceResponse(int statusCode, String response)
         {
 
         }
@@ -316,7 +316,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, String response)
+        public void onServiceResponse(int statusCode, String response)
         {
 
         }
@@ -458,7 +458,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         }
 
         @Override
-        public void onRetrievalSuccessful(int statusCode, String response)
+        public void onServiceResponse(int statusCode, String response)
         {
             setResult(Constant.REQUEST_CODE_EQUIPMENT_SAVED);
             finish();
