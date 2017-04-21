@@ -283,12 +283,12 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
     {
         switch (statusCode)
         {
-            case Constant.STATUS_CODE_ACCOUNT_CREATION:
-            case Constant.STATUS_CODE_ACCOUNT_UPDATED:
+            case Constant.STATUS_CODE_SUCCESS_ACCOUNT_CREATION:
+            case Constant.STATUS_CODE_SUCCESS_ACCOUNT_UPDATED:
 
                 int userId = Integer.parseInt(response);
 
-                if (statusCode == Constant.STATUS_CODE_ACCOUNT_CREATION)
+                if (statusCode == Constant.STATUS_CODE_SUCCESS_ACCOUNT_CREATION)
                 {
                     Util.loadIntencity(CreateAccountActivity.this, userId, Constant.ACCOUNT_TYPE_NORMAL, 0);
                 }
@@ -303,13 +303,13 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
 
                 break;
 
-            case Constant.STATUS_CODE_EMAIL_ERROR:
+            case Constant.STATUS_CODE_FAILURE_EMAIL_ERROR:
 
                 showErrorMessage(R.string.email_exists);
 
                 break;
 
-            case Constant.STATUS_CODE_ACCOUNT_CREATION_FAILURE:
+            case Constant.STATUS_CODE_FAILURE_ACCOUNT_CREATION:
             default:
 
                 showErrorMessage(R.string.intencity_communication_error);
@@ -323,13 +323,13 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
     {
 //        switch (statusCode)
 //        {
-//            case Constant.STATUS_CODE_EMAIL_ERROR:
+//            case Constant.STATUS_CODE_FAILURE_EMAIL_ERROR:
 //
 //                showErrorMessage(R.string.email_exists);
 //
 //                break;
 //
-//            case Constant.STATUS_CODE_ACCOUNT_CREATION_FAILURE:
+//            case Constant.STATUS_CODE_FAILURE_ACCOUNT_CREATION:
 //            default:
 //
 //                showErrorMessage(R.string.intencity_communication_error);

@@ -254,13 +254,13 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
             {
                 switch (statusCode)
                 {
-                    case Constant.STATUS_CODE_ACCOUNT_CREATION:
+                    case Constant.STATUS_CODE_SUCCESS_ACCOUNT_CREATION:
                         int userId = Integer.parseInt(response);
 
                         Util.loadIntencity(GetStartedActivity.this, userId, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
                         break;
 
-                    case Constant.STATUS_CODE_ACCOUNT_CREATION_FAILURE:
+                    case Constant.STATUS_CODE_FAILURE_ACCOUNT_CREATION:
                     default:
 
                         showFailureMessage();

@@ -157,7 +157,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
     {
         switch (statusCode)
         {
-            case Constant.STATUS_CODE_PASSWORD_CHANGED:
+            case Constant.STATUS_CODE_SUCCESS_PASSWORD_CHANGED:
                 CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.password_changed_title),
                                                                      context.getString(R.string.password_changed),
                                                                      false);
@@ -165,7 +165,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
                 new CustomDialog(ChangePasswordActivity.this, ChangePasswordActivity.this, dialog, true);
                 break;
 
-            case Constant.STATUS_CODE_PASSWORD_INVALID:
+            case Constant.STATUS_CODE_FAILURE_PASSWORD_INVALID:
                 showMessage(R.string.invalid_password);
                 break;
 
@@ -183,7 +183,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
     {
 //        switch (statusCode)
 //        {
-//            case Constant.STATUS_CODE_PASSWORD_INVALID:
+//            case Constant.STATUS_CODE_FAILURE_PASSWORD_INVALID:
 //                showMessage(R.string.invalid_password);
 //                break;
 //            default:

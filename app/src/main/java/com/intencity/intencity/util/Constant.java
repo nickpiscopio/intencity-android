@@ -49,15 +49,18 @@ public class Constant
     public static final String COULD_NOT_FIND_EMAIL = "Could not find email";
     public static final String INVALID_PASSWORD = "Invalid password";
 
-    public static final int STATUS_CODE_ACCOUNT_CREATION = 201;
-    public static final int STATUS_CODE_ACCOUNT_UPDATED = 202;
-    public static final int STATUS_CODE_DATE_LOGIN_UPDATED = 203;
-    public static final int STATUS_CODE_PASSWORD_CHANGED = 204;
+    public static final int STATUS_CODE_SUCCESS_ACCOUNT_CREATION = 201;
+    public static final int STATUS_CODE_SUCCESS_ACCOUNT_UPDATED = 202;
+    public static final int STATUS_CODE_SUCCESS_DATE_LOGIN_UPDATED = 203;
+    public static final int STATUS_CODE_SUCCESS_PASSWORD_CHANGED = 204;
+    public static final int STATUS_CODE_SUCCESS_CREDENTIALS_VALID = 205;
     public static final int STATUS_CODE_FAILURE_GENERIC = 500;
-    public static final int STATUS_CODE_EMAIL_ERROR = 501;
-    public static final int STATUS_CODE_ACCOUNT_CREATION_FAILURE = 502;
-    public static final int STATUS_CODE_PASSWORD_INVALID = 503;
-    public static final int STATUS_CODE_PASSWORD_CHANGE_FAILURE = 504;
+    public static final int STATUS_CODE_FAILURE_EMAIL_ERROR = 501;
+    public static final int STATUS_CODE_FAILURE_ACCOUNT_CREATION = 502;
+    public static final int STATUS_CODE_FAILURE_PASSWORD_INVALID = 503;
+    public static final int STATUS_CODE_FAILURE_PASSWORD_CHANGE = 504;
+    public static final int STATUS_CODE_FAILURE_CREDENTIALS_EMAIL_INVALID = 505;
+    public static final int STATUS_CODE_FAILURE_CREDENTIALS_PASSWORD_INVALID = 506;
 
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences
