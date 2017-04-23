@@ -169,6 +169,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
                 showMessage(R.string.invalid_password);
                 break;
 
+            case Constant.STATUS_CODE_FAILURE_PASSWORD_CHANGE:
             default:
 
                 showMessage(R.string.intencity_communication_error);

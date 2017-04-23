@@ -203,10 +203,11 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
 
                 if (createAccountFromTrial)
                 {
+                    int userId = Integer.parseInt(Util.getSecurePreferencesUserId(context));
                     // Upgrade a trial account to a full account.
                     new ServiceTask(CreateAccountActivity.this).execute(
                             Constant.SERVICE_UPDATE_ACCOUNT,
-                            Constant.getUpdateAccountParameters(Util.getSecurePreferencesUserId(context), Util.replaceApostrophe(firstName), Util.replaceApostrophe(
+                            Constant.getUpdateAccountParameters(userId, Util.replaceApostrophe(firstName), Util.replaceApostrophe(
                                     lastName), Util.replacePlus(email), Util.replaceApostrophe(password)));
                 }
                 else
@@ -284,22 +285,21 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
         switch (statusCode)
         {
             case Constant.STATUS_CODE_SUCCESS_ACCOUNT_CREATION:
-            case Constant.STATUS_CODE_SUCCESS_ACCOUNT_UPDATED:
 
                 int userId = Integer.parseInt(response);
 
-                if (statusCode == Constant.STATUS_CODE_SUCCESS_ACCOUNT_CREATION)
-                {
-                    Util.loadIntencity(CreateAccountActivity.this, userId, Constant.ACCOUNT_TYPE_NORMAL, 0);
-                }
-                else
-                {
-                    Util.convertAccount(CreateAccountActivity.this, userId);
+                Util.loadIntencity(CreateAccountActivity.this, userId, Constant.ACCOUNT_TYPE_NORMAL, 0);
 
-                    CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.success), context.getString(R.string.account_converted), false);
+                break;
 
-                    new CustomDialog(CreateAccountActivity.this, accountConvertedDialogListener, dialog, false);
-                }
+            case Constant.STATUS_CODE_SUCCESS_ACCOUNT_UPDATED:
+
+                int storedUserId = Integer.parseInt(Util.getSecurePreferencesUserId(context));
+                Util.convertAccount(CreateAccountActivity.this, storedUserId);
+
+                CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.success), context.getString(R.string.account_converted), false);
+
+                new CustomDialog(CreateAccountActivity.this, accountConvertedDialogListener, dialog, false);
 
                 break;
 
@@ -309,6 +309,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
 
                 break;
 
+            case Constant.STATUS_CODE_FAILURE_ACCOUNT_UPDATE:
             case Constant.STATUS_CODE_FAILURE_ACCOUNT_CREATION:
             default:
 

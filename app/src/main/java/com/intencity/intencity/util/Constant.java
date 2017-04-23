@@ -61,6 +61,8 @@ public class Constant
     public static final int STATUS_CODE_FAILURE_PASSWORD_CHANGE = 504;
     public static final int STATUS_CODE_FAILURE_CREDENTIALS_EMAIL_INVALID = 505;
     public static final int STATUS_CODE_FAILURE_CREDENTIALS_PASSWORD_INVALID = 506;
+    public static final int STATUS_CODE_FAILURE_ACCOUNT_UPDATE = 507;
+    public static final int STATUS_CODE_FAILURE_DATE_LOGIN_UPDATE = 508;
 
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences
@@ -155,7 +157,6 @@ public class Constant
     public static final String PARAMETER_TABLE = "table";
     public static final String PARAMETER_EMAIL = "email=";
     public static final String PARAMETER_USER_ID = "user_id=";
-    private static final String PARAMETER_TRIAL_EMAIL = "trial_email=";
     private static final String PARAMETER_PASSWORD = "password=";
     private static final String PARAMETER_CURRENT_PASSWORD = "old_password=";
     private static final String PARAMETER_DATA = "d=";
@@ -302,8 +303,7 @@ public class Constant
     /**
      * Generates the update account parameters to convert a trial account to a full account.
      *
-     * @param trialEmail    The email used when for the trial account.
-     *                      This is the email we are converting to the user's real email.
+     * @param userId        The ID used for the trial account.
      * @param firstName     The first name of the user.
      * @param lastName      The last name of the user.
      * @param email         The user's email.
@@ -311,9 +311,9 @@ public class Constant
      *
      * @return  The parameters for updating an account.
      */
-    public static String getUpdateAccountParameters(String trialEmail, String firstName, String lastName, String email, String password)
+    public static String getUpdateAccountParameters(int userId, String firstName, String lastName, String email, String password)
     {
-        return PARAMETER_TRIAL_EMAIL + trialEmail + PARAMETER_AMPERSAND +
+        return PARAMETER_USER_ID + userId + PARAMETER_AMPERSAND +
                PARAMETER_FIRST_NAME + firstName + PARAMETER_AMPERSAND +
                PARAMETER_LAST_NAME + lastName + PARAMETER_AMPERSAND +
                PARAMETER_EMAIL + email + PARAMETER_AMPERSAND +
