@@ -88,7 +88,7 @@ public class FitnessLocationDao
      */
     public void getFitnessLocations()
     {
-        new ServiceTask(listener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+        new ServiceTask(listener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_FITNESS_LOCATIONS, email));
     }
 

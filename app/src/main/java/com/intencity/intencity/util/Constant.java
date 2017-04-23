@@ -46,9 +46,8 @@ public class Constant
     public static final String SUCCESS = "SUCCESS";
     public static final String STATUS_CODE = "STATUS_CODE";
     public static final String DATA = "DATA";
-    public static final String COULD_NOT_FIND_EMAIL = "Could not find email";
-    public static final String INVALID_PASSWORD = "Invalid password";
 
+    public static final int STATUS_CODE_STORED_PROCEDURE = 200;
     public static final int STATUS_CODE_SUCCESS_ACCOUNT_CREATION = 201;
     public static final int STATUS_CODE_SUCCESS_ACCOUNT_UPDATED = 202;
     public static final int STATUS_CODE_SUCCESS_DATE_LOGIN_UPDATED = 203;
@@ -135,7 +134,7 @@ public class Constant
     public static final String SERVICE_VALIDATE_USER_CREDENTIALS = SERVICE_FOLDER_MOBILE + "user_credentials.php";
     public static final String SERVICE_CREATE_ACCOUNT = SERVICE_FOLDER_MOBILE + "account.php";
     public static final String SERVICE_UPDATE_USER_LOGIN_DATE = SERVICE_FOLDER_MOBILE + "update_user_login_date.php";
-    public static final String SERVICE_EXECUTE_STORED_PROCEDURE = SERVICE_FOLDER_MOBILE + "execute_stored_procedure.php";
+    public static final String SERVICE_STORED_PROCEDURE = SERVICE_FOLDER_MOBILE + "stored_procedure.php";
     public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER_MOBILE + "complex_insert.php";
     public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
     public static final String SERVICE_UPDATE_USER_FITNESS_LOCATION = SERVICE_FOLDER_MOBILE + "update_user_fitness_location.php";
@@ -253,6 +252,27 @@ public class Constant
     public static final String REGEX_EMAIL = "[a-zA-Z0-9]+([\\-\\.\\{\\}\\^\\+*_~]*[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([\\.\\-]*[a-zA-Z0-9]+)*[\\.][a-zA-Z]{2}[A-Za-z]*";
     public static final String REGEX_FIELD = "[a-zA-Z0-9\\s\\-\\.\\{\\}\\^\\*\\(\\)\\[\\]\\$/;:,_~!@#%']+";
 
+    /**
+     * Generates the validate user credentials parameters.
+     *
+     * @param userId         The ID of the user.
+     * @param password      The password the user typed into the login screen.
+     *
+     * @return  The generated url parameter.
+     */
+    public static String getValidateUserCredentialsServiceParameters(int userId, String password)
+    {
+        return PARAMETER_USER_ID + userId + PARAMETER_AMPERSAND + PARAMETER_PASSWORD + password;
+    }
+
+    /**
+     * Generates the validate user credentials parameters.
+     *
+     * @param email         The email the user typed into the login screen.
+     * @param password      The password the user typed into the login screen.
+     *
+     * @return  The generated url parameter.
+     */
     public static String getValidateUserCredentialsServiceParameters(String email, String password)
     {
         return PARAMETER_EMAIL + email + PARAMETER_AMPERSAND + PARAMETER_PASSWORD + password;

@@ -145,11 +145,11 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
 
         String userId = String.valueOf(user.getId());
 
-        new ServiceTask(badgeRetrievalListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+        new ServiceTask(badgeRetrievalListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(
                                               Constant.STORED_PROCEDURE_GET_BADGES, userId));
 
-        new ServiceTask(last7DayRoutineServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+        new ServiceTask(last7DayRoutineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(
                                               Constant.STORED_PROCEDURE_GET_LAST_WEEK_ROUTINES, userId));
 
@@ -432,14 +432,14 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         {
             if (followId < 0)
             {
-                new ServiceTask(null).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+                new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
                                               Constant.generateStoredProcedureParameters(
                                                       Constant.STORED_PROCEDURE_REMOVE_FROM_FOLLOWING, String.valueOf(originalFollowId)));
             }
             else
             {
                 // Follow the user.
-                new ServiceTask(null).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+                new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
                            Constant.generateStoredProcedureParameters(
                                    Constant.STORED_PROCEDURE_FOLLOW_USER, email, String.valueOf(userId)));
             }

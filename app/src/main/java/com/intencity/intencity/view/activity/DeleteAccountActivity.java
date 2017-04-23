@@ -20,17 +20,14 @@ import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.SecurePreferences;
 import com.intencity.intencity.util.Util;
-
-import org.json.JSONObject;
 
 /**
  * This is the change password activity for Intencity.
  *
  * Created by Nick Piscopio on 1/17/15.
  */
-public class DeleteAccountActivity extends AppCompatActivity implements DialogListener
+public class DeleteAccountActivity extends AppCompatActivity implements ServiceListener, DialogListener
 {
     private EditText password;
 
@@ -42,7 +39,7 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
 
     private ProgressBar loadingProgressBar;
 
-    private String email;
+    private int userId;
 
     private String currentPassword;
 
@@ -74,8 +71,7 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
 
         context = getApplicationContext();
 
-        SecurePreferences securePreferences = new SecurePreferences(getApplicationContext());
-        email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
+        userId = Integer.parseInt(Util.getSecurePreferencesUserId(context));
     }
 
     @Override
@@ -133,80 +129,6 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
     };
 
     /**
-     * The service listener for the user credentials.
-     */
-    private ServiceListener userCredentialsListener = new ServiceListener()
-    {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-            response = response.replaceAll("\"", "");
-
-            if (response.equalsIgnoreCase(Constant.INVALID_PASSWORD))
-            {
-                loadingProgressBar.setVisibility(View.GONE);
-
-                showMessage(context.getString(R.string.generic_error),
-                            context.getString(R.string.invalid_password));
-            }
-            else if (response.equalsIgnoreCase(Constant.COULD_NOT_FIND_EMAIL))
-            {
-                logOut();
-            }
-            else
-            {
-                // Service to delete the user's account.
-                new ServiceTask(removeAccountListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
-                                                               Constant.generateStoredProcedureParameters(
-                                                                       Constant.STORED_PROCEDURE_REMOVE_ACCOUNT,
-                                                                       email));
-            }
-        }
-
-        @Override
-        public void onServiceResponse(int statusCode, String response)
-        {
-
-        }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-            loadingProgressBar.setVisibility(View.GONE);
-
-            showMessage(context.getString(R.string.generic_error),
-                        context.getString(R.string.intencity_communication_error));
-        }
-    };
-
-    /**
-     * The service listener for the removing a user's account.
-     */
-    private ServiceListener removeAccountListener = new ServiceListener()
-    {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-
-        }
-
-        @Override
-        public void onServiceResponse(int statusCode, String response)
-        {
-            logOut();
-        }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-            loadingProgressBar.setVisibility(View.GONE);
-
-            showMessage(context.getString(R.string.generic_error),
-                        context.getString(R.string.intencity_communication_error));
-        }
-    };
-
-    /**
      * Sets a result to log out the user.
      */
     private void logOut()
@@ -236,10 +158,63 @@ public class DeleteAccountActivity extends AppCompatActivity implements DialogLi
         {
             loadingProgressBar.setVisibility(View.VISIBLE);
 
-            new ServiceTask(userCredentialsListener).execute(
+            new ServiceTask(this).execute(
                     Constant.SERVICE_VALIDATE_USER_CREDENTIALS,
-                    Constant.getValidateUserCredentialsServiceParameters(email,
+                    Constant.getValidateUserCredentialsServiceParameters(userId,
                                                                          Util.replaceApostrophe(currentPassword)));
         }
+    }
+
+    @Override
+    public void onRetrievalSuccessful(String response)
+    {
+
+    }
+
+    @Override
+    public void onServiceResponse(int statusCode, String response)
+    {
+        switch (statusCode)
+        {
+            case Constant.STATUS_CODE_SUCCESS_CREDENTIALS_VALID:
+
+                // The credentials are valid so call the service to delete the account.
+                new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                              Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_REMOVE_ACCOUNT, String.valueOf(userId)));
+
+                break;
+
+            case Constant.STATUS_CODE_STORED_PROCEDURE:
+            // We log out here because we couldn't find the user's account, so we don't need to delete anything.
+            case Constant.STATUS_CODE_FAILURE_CREDENTIALS_EMAIL_INVALID:
+
+                logOut();
+
+                break;
+
+            case Constant.STATUS_CODE_FAILURE_CREDENTIALS_PASSWORD_INVALID:
+
+                loadingProgressBar.setVisibility(View.GONE);
+
+                showMessage(context.getString(R.string.generic_error),
+                            context.getString(R.string.invalid_password));
+
+                break;
+
+            default:
+
+                loadingProgressBar.setVisibility(View.GONE);
+
+                showMessage(context.getString(R.string.generic_error),
+                            context.getString(R.string.intencity_communication_error));
+
+                break;
+        }
+    }
+
+    @Override
+    public void onRetrievalFailed(int statusCode)
+    {
+
     }
 }

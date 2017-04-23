@@ -128,7 +128,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
             }
         }
 
-        new ServiceTask(getEquipmentServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+        new ServiceTask(getEquipmentServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                              Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_EQUIPMENT, email, savedLocation));
     }
 
@@ -661,7 +661,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
                 {
                     // If the location and saved location don't equal, then we should check if the location already exists
                     // because the user might not know he or she already has equipment at the designated location
-                    new ServiceTask(getLocationServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+                    new ServiceTask(getLocationServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                                         Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_CHECK_IF_FITNESS_LOCATION_EXISTS, email, location));
                 }
 

@@ -33,7 +33,6 @@ import com.intencity.intencity.view.activity.RoutineIntencityActivity;
 import com.intencity.intencity.view.activity.RoutineSavedActivity;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -119,13 +118,13 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         insertSection(RoutineType.CUSTOM_ROUTINE, new RoutineSection(RoutineType.CUSTOM_ROUTINE, getString(R.string.title_custom_routine), null), true);
 
         // Get the Featured Routines
-        new ServiceTask(intencityRoutineServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+        new ServiceTask(intencityRoutineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                                  Constant.generateStoredProcedureParameters(
                                                                     Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS,
                                                                     email));
 
         // Get the Saved Routines
-        new ServiceTask(savedRoutineServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+        new ServiceTask(savedRoutineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                                  Constant.generateStoredProcedureParameters(
                                                                     Constant.STORED_PROCEDURE_GET_USER_ROUTINE,
                                                                     email));

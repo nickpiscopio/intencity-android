@@ -68,7 +68,7 @@ public class ExerciseSearchActivity extends AppCompatActivity implements Service
                                 Constant.ROUTINE_LEGS_AND_LOWER_BACK :
                                 displayMuscleGroup;
 
-        new ServiceTask(this).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(
                                               Constant.STORED_PROCEDURE_GET_INJURY_PREVENTION_WORKOUTS,
                                               type, routineName.replace("&", "%26")));

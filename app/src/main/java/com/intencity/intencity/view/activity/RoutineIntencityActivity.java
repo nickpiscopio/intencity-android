@@ -39,7 +39,6 @@ import com.intencity.intencity.util.SelectionType;
 import com.intencity.intencity.util.Util;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -177,7 +176,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     {
         showLoading();
 
-        new ServiceTask(this).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS, email));
+        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS, email));
     }
 
     /**
@@ -269,7 +268,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_ROUTINE_EXERCISES,
                                                                                       email, currentUserLocation, routine);
 
-        new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+        new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                          storedProcedureParameters);
     }
 

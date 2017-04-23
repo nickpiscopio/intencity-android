@@ -29,8 +29,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.utils.DiskCacheUtils;
 import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
 
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -233,7 +231,7 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
      */
     public void getFollowing()
     {
-        new ServiceTask(this).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(
                                               Constant.STORED_PROCEDURE_GET_FOLLOWING, email));
     }
