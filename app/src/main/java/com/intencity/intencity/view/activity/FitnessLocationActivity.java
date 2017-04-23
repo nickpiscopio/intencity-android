@@ -33,7 +33,6 @@ import com.intencity.intencity.util.SelectionType;
 import com.intencity.intencity.util.Util;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 

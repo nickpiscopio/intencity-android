@@ -17,8 +17,6 @@ import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
 
-import org.json.JSONObject;
-
 /**
  * This is the forgot password activity for Intencity.
  *
@@ -107,25 +105,35 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
     @Override
     public void onRetrievalSuccessful(String response)
     {
-        loadingProgressBar.setVisibility(View.GONE);
-        form.setVisibility(View.VISIBLE);
 
-        Util.showMessage(ForgotPasswordActivity.this, context.getString(R.string.forgot_password_email_sent_title),
-                         context.getString(R.string.forgot_password_email_sent));
     }
 
     @Override
     public void onServiceResponse(int statusCode, String response)
     {
+        switch (statusCode)
+        {
+            case Constant.STATUS_CODE_SUCCESS_EMAILED_NEW_PASSWORD:
 
+                Util.showMessage(ForgotPasswordActivity.this, context.getString(R.string.forgot_password_email_sent_title),
+                                 context.getString(R.string.forgot_password_email_sent));
+
+                break;
+
+            case Constant.STATUS_CODE_FAILURE_EMAILED_PASSWORD:
+            default:
+
+                Util.showCommunicationErrorMessage(ForgotPasswordActivity.this);
+
+                break;
+        }
+
+        loadingProgressBar.setVisibility(View.GONE);
+        form.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onRetrievalFailed(int statusCode)
     {
-        loadingProgressBar.setVisibility(View.GONE);
-        form.setVisibility(View.VISIBLE);
-
-        Util.showCommunicationErrorMessage(ForgotPasswordActivity.this);
     }
 }
