@@ -57,7 +57,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
     private LoadingListener listener;
 
-    private String email;
+    private int userId;
 
     private RoutineSectionAdapter adapter;
 
@@ -76,7 +76,8 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
 
         context = getContext();
 
-        email = Util.getSecurePreferencesUserId(context);
+        // We are keeping this as a string because the service accepts it as that.
+        userId = Integer.parseInt(Util.getSecurePreferencesUserId(context));
 
         sectionMap = new TreeMap<>();
         sections = new ArrayList<>();
@@ -121,13 +122,13 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         new ServiceTask(intencityRoutineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                                  Constant.generateStoredProcedureParameters(
                                                                     Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS,
-                                                                    email));
+                                                                    userId));
 
         // Get the Saved Routines
         new ServiceTask(savedRoutineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                                  Constant.generateStoredProcedureParameters(
                                                                     Constant.STORED_PROCEDURE_GET_USER_ROUTINE,
-                                                                    email));
+                                                                    userId));
     }
 
     /**
@@ -138,24 +139,35 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            try
-            {
-                insertSection(RoutineType.FEATURED_ROUTINE, new RoutineSection(RoutineType.FEATURED_ROUTINE, getString(R.string.title_featured_routines), new IntencityRoutineDao().parseJson(context, response)), true);
 
-                listener.onFinishedLoading(Constant.CODE_NULL);
-            }
-            catch (JSONException e)
-            {
-                Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
-
-                listener.onFinishedLoading((int) Constant.CODE_FAILED);
-            }
         }
 
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_STORED_PROCEDURE:
 
+                    try
+                    {
+                        insertSection(RoutineType.FEATURED_ROUTINE, new RoutineSection(RoutineType.FEATURED_ROUTINE, getString(R.string.title_featured_routines), new IntencityRoutineDao().parseJson(context, response)), true);
+
+                        listener.onFinishedLoading(Constant.CODE_NULL);
+                    }
+                    catch (JSONException e)
+                    {
+                        Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
+
+                        listener.onFinishedLoading((int) Constant.CODE_FAILED);
+                    }
+
+                    break;
+
+                default:
+                    listener.onFinishedLoading((int) Constant.CODE_FAILED);
+                    break;
+            }
         }
 
         @Override
@@ -173,33 +185,58 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            try
-            {
-                if (!response.equalsIgnoreCase(Constant.RETURN_NULL))
-                {
-                    insertSection(RoutineType.SAVED_ROUTINE, new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new UserRoutineDao().parseJson(response)), true);
-                }
-
-                listener.onFinishedLoading(Constant.CODE_NULL);
-            }
-            catch (JSONException e)
-            {
-                Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
-
-                listener.onFinishedLoading((int) Constant.CODE_FAILED);
-            }
+//            try
+//            {
+//                if (!response.equalsIgnoreCase(Constant.RETURN_NULL))
+//                {
+//                    insertSection(RoutineType.SAVED_ROUTINE, new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new UserRoutineDao().parseJson(response)), true);
+//                }
+//
+//                listener.onFinishedLoading(Constant.CODE_NULL);
+//            }
+//            catch (JSONException e)
+//            {
+//                Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
+//
+//                listener.onFinishedLoading((int) Constant.CODE_FAILED);
+//            }
         }
 
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_STORED_PROCEDURE:
 
+                    try
+                    {
+                        if (!response.equalsIgnoreCase(Constant.RETURN_NULL))
+                        {
+                            insertSection(RoutineType.SAVED_ROUTINE, new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new UserRoutineDao().parseJson(response)), true);
+                        }
+
+                        listener.onFinishedLoading(Constant.CODE_NULL);
+                    }
+                    catch (JSONException e)
+                    {
+                        Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
+
+                        listener.onFinishedLoading((int) Constant.CODE_FAILED);
+                    }
+
+                    break;
+
+                default:
+                    listener.onFinishedLoading((int) Constant.CODE_FAILED);
+                    break;
+            }
         }
 
         @Override
         public void onRetrievalFailed(int statusCode)
         {
-            listener.onFinishedLoading((int) Constant.CODE_FAILED);
+//            listener.onFinishedLoading((int) Constant.CODE_FAILED);
         }
     };
 

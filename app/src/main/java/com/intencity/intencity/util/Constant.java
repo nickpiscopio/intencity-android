@@ -350,7 +350,7 @@ public class Constant
      *
      * @return  The stored procedure method call with the parameters included.
      */
-    public static String generateStoredProcedureParameters(String name, String... variables)
+    public static String generateStoredProcedureParameters(String name, Object... variables)
     {
         String storedProcedureParameters = PARAMETER_DATA + name;
 
