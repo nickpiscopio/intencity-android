@@ -45,7 +45,7 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
 
     private ListView listView;
 
-    private String email;
+    private int userId;
 
     private ArrayList<SelectableListItem> muscleGroups;
     private ArrayList<String> routineMuscleGroups;
@@ -70,7 +70,7 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
 
         context = getApplicationContext();
 
-        email = Util.getSecurePreferencesUserId(context);
+        userId = Util.getSecurePreferencesUserId(context);
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -233,7 +233,8 @@ public class RoutineIntencityAddActivity extends AppCompatActivity implements Se
             Collections.sort(routineMuscleGroups, String.CASE_INSENSITIVE_ORDER);
 
             new ServiceTask(saveRoutineServiceListener).execute(Constant.SERVICE_SET_USER_MUSCLE_GROUP_ROUTINE,
-                                                                Constant.generateServiceListVariables(email, routineMuscleGroups, true));
+                                                                Constant.generateServiceListVariables(
+                                                                        userId, routineMuscleGroups, true));
         }
         else
         {

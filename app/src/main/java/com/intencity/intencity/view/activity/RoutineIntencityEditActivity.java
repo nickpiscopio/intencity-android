@@ -51,7 +51,7 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
     private ArrayList<SelectableListItem> routines;
     private ArrayList<String> routinesToRemove;
 
-    private String email;
+    private int userId;
 
     private SelectableListItemAdapter adapter;
 
@@ -77,7 +77,7 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
         add = (FloatingActionButton) findViewById(R.id.button_add);
         add.setOnClickListener(addClickListener);
 
-        email = Util.getSecurePreferencesUserId(context);
+        userId = Util.getSecurePreferencesUserId(context);
 
         routines = new ArrayList<>();
 
@@ -227,7 +227,8 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
         progressBar.setVisibility(View.VISIBLE);
 
         new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                      Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_MUSCLE_GROUP_ROUTINE, email));
+                                      Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_MUSCLE_GROUP_ROUTINE,
+                                                                                 userId));
     }
 
     /**
@@ -252,7 +253,8 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
             progressBar.setVisibility(View.VISIBLE);
 
             new ServiceTask(saveRoutinesServiceListener).execute(Constant.SERVICE_UPDATE_USER_MUSCLE_GROUP_ROUTINE,
-                                                                Constant.generateServiceListVariables(email, routinesToRemove, false));
+                                                                Constant.generateServiceListVariables(
+                                                                        userId, routinesToRemove, false));
         }
         else
         {

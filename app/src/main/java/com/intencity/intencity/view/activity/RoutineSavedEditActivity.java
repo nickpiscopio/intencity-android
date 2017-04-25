@@ -24,8 +24,6 @@ import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 /**
@@ -46,7 +44,7 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
     private ArrayList<SelectableListItem> routines;
     private ArrayList<String> routinesToRemove;
 
-    private String email;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -65,7 +63,7 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
 
-        email = Util.getSecurePreferencesUserId(context);
+        userId = Util.getSecurePreferencesUserId(context);
 
         routines = getIntent().getParcelableArrayListExtra(Constant.BUNDLE_ROUTINE_ROWS);
         routinesToRemove = new ArrayList<>();
@@ -163,7 +161,8 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
         {
             progressBar.setVisibility(View.VISIBLE);
 
-            new ServiceTask(this).execute(Constant.SERVICE_UPDATE_USER_ROUTINE, Constant.generateServiceListVariables(email, routinesToRemove, false));
+            new ServiceTask(this).execute(Constant.SERVICE_UPDATE_USER_ROUTINE, Constant.generateServiceListVariables(
+                    userId, routinesToRemove, false));
         }
         else
         {

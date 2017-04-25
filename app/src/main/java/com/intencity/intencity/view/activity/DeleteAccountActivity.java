@@ -71,7 +71,7 @@ public class DeleteAccountActivity extends AppCompatActivity implements ServiceL
 
         context = getApplicationContext();
 
-        userId = Integer.parseInt(Util.getSecurePreferencesUserId(context));
+        userId = Util.getSecurePreferencesUserId(context);
     }
 
     @Override
@@ -184,7 +184,7 @@ public class DeleteAccountActivity extends AppCompatActivity implements ServiceL
 
                 break;
 
-            case Constant.STATUS_CODE_STORED_PROCEDURE:
+            case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
             // We log out here because we couldn't find the user's account, so we don't need to delete anything.
             case Constant.STATUS_CODE_FAILURE_CREDENTIALS_EMAIL_INVALID:
 

@@ -64,7 +64,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
     private MenuItem menuCheckBox;
 
-    private String email;
+    private int userId;
     private String defaultLocationString;
 
     // This is the location that was already saved in the DB.
@@ -107,7 +107,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
         context = getApplicationContext();
 
-        email = Util.getSecurePreferencesUserId(context);
+        userId = Util.getSecurePreferencesUserId(context);
         defaultLocationString = getString(R.string.fitness_location_default);
 
         cardFitnessLocation.setOnClickListener(fitnessLocationClickListener);
@@ -129,7 +129,8 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         }
 
         new ServiceTask(getEquipmentServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                             Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_EQUIPMENT, email, savedLocation));
+                                                             Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_EQUIPMENT,
+                                                                                                        userId, savedLocation));
     }
 
     @Override
@@ -231,35 +232,59 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
     {
         @Override public void onRetrievalSuccessful(String response)
         {
-            if (response.equals(Constant.RETURN_NULL))
-            {
-                // We failed to retrieve equipment from a specified location.
-                // This means the location wasn't used before.
-                // This is what we want, so we are updating the equipment.
-                updateEquipment();
-            }
-            else
-            {
-                // We already have a fitness location saved.
-                // Notify the user.
-                CustomDialogContent dialog = new CustomDialogContent(getString(R.string.duplicate_location_title), getString(R.string.duplicate_location_description), true);
-                dialog.setPositiveButtonStringRes(R.string.overwrite);
-                dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_negative_button);
-
-                new CustomDialog(EquipmentActivity.this, overwriteFitnessLocationDialogListener, dialog, true);
-            }
+//            if (response.equals(Constant.RETURN_NULL))
+//            {
+//                // We failed to retrieve equipment from a specified location.
+//                // This means the location wasn't used before.
+//                // This is what we want, so we are updating the equipment.
+//                updateEquipment();
+//            }
+//            else
+//            {
+//                // We already have a fitness location saved.
+//                // Notify the user.
+//                CustomDialogContent dialog = new CustomDialogContent(getString(R.string.duplicate_location_title), getString(R.string.duplicate_location_description), true);
+//                dialog.setPositiveButtonStringRes(R.string.overwrite);
+//                dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_negative_button);
+//
+//                new CustomDialog(EquipmentActivity.this, overwriteFitnessLocationDialogListener, dialog, true);
+//            }
         }
 
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
+                    if (response.equals(Constant.RETURN_NULL))
+                    {
+                        // We failed to retrieve equipment from a specified location.
+                        // This means the location wasn't used before.
+                        // This is what we want, so we are updating the equipment.
+                        updateEquipment();
+                    }
+                    else
+                    {
+                        // We already have a fitness location saved.
+                        // Notify the user.
+                        CustomDialogContent dialog = new CustomDialogContent(getString(R.string.duplicate_location_title), getString(R.string.duplicate_location_description), true);
+                        dialog.setPositiveButtonStringRes(R.string.overwrite);
+                        dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_negative_button);
 
+                        new CustomDialog(EquipmentActivity.this, overwriteFitnessLocationDialogListener, dialog, true);
+                    }
+                    break;
+                default:
+                    displayCommunicationError();
+                    break;
+            }
         }
 
         @Override
         public void onRetrievalFailed(int statusCode)
         {
-            displayCommunicationError();
+//            displayCommunicationError();
         }
     };
 
@@ -318,15 +343,66 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
+                    try
+                    {
+                        equipmentList = new ArrayList<>();
+                        userEquipment = new ArrayList<>();
 
+                        JSONArray array = new JSONArray(response);
+
+                        int length = array.length();
+
+                        for (int i = 0; i < length; i++)
+                        {
+                            JSONObject object = array.getJSONObject(i);
+
+                            String equipmentName = object.getString(Constant.COLUMN_EQUIPMENT_NAME);
+                            boolean hasEquipment = object.getString(Constant.COLUMN_HAS_EQUIPMENT).equalsIgnoreCase(Constant.TRUE);
+
+                            SelectableListItem listItem = new SelectableListItem(equipmentName);
+                            listItem.setChecked(hasEquipment);
+
+                            // Add all the equipment to the array.
+                            equipmentList.add(listItem);
+
+                            // Add the list item to the user's equipment list if he or she currently has it.
+                            if (hasEquipment)
+                            {
+                                userEquipment.add(equipmentName);
+                            }
+                        }
+
+                        // We set the checkbox to checked if the user has all the equipment in the equipment list.
+                        setCheckboxTick(userEquipment.size() == equipmentList.size());
+
+                        populateEquipmentListView();
+                    }
+                    catch (JSONException exception)
+                    {
+                        Log.e(Constant.TAG, "Couldn't parse equipment " + exception.toString());
+
+                        progressBar.setVisibility(View.GONE);
+
+                        displayCommunicationError();
+                    }
+                    break;
+                default:
+                    progressBar.setVisibility(View.GONE);
+
+                    displayCommunicationError();
+                    break;
+            }
         }
 
         @Override
         public void onRetrievalFailed(int statusCode)
         {
-            progressBar.setVisibility(View.GONE);
-
-            displayCommunicationError();
+//            progressBar.setVisibility(View.GONE);
+//
+//            displayCommunicationError();
         }
     };
 
@@ -460,14 +536,22 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
-            setResult(Constant.REQUEST_CODE_EQUIPMENT_SAVED);
-            finish();
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
+                    setResult(Constant.REQUEST_CODE_EQUIPMENT_SAVED);
+                    finish();
+                    break;
+                default:
+                    displayCommunicationError();
+                    break;
+            }
         }
 
         @Override
         public void onRetrievalFailed(int statusCode)
         {
-            displayCommunicationError();
+//            displayCommunicationError();
         }
     };
 
@@ -570,7 +654,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
      */
     private void updateEquipment()
     {
-        String params = Constant.generateEquipmentListVariables(email, textViewDisplayName.getText().toString(), savedLocation, textViewLocation.getText().toString(), userEquipment);
+        String params = Constant.generateEquipmentListVariables(userId, textViewDisplayName.getText().toString(), savedLocation, textViewLocation.getText().toString(), userEquipment);
         new ServiceTask(updateEquipmentServiceListener).execute(Constant.SERVICE_UPDATE_EQUIPMENT, params);
     }
 
@@ -662,7 +746,8 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
                     // If the location and saved location don't equal, then we should check if the location already exists
                     // because the user might not know he or she already has equipment at the designated location
                     new ServiceTask(getLocationServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                                                        Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_CHECK_IF_FITNESS_LOCATION_EXISTS, email, location));
+                                                                        Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_CHECK_IF_FITNESS_LOCATION_EXISTS,
+                                                                                                                   userId, location));
                 }
 
                 break;

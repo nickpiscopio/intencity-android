@@ -77,7 +77,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         context = getContext();
 
         // We are keeping this as a string because the service accepts it as that.
-        userId = Integer.parseInt(Util.getSecurePreferencesUserId(context));
+        userId = Util.getSecurePreferencesUserId(context);
 
         sectionMap = new TreeMap<>();
         sections = new ArrayList<>();
@@ -147,7 +147,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         {
             switch (statusCode)
             {
-                case Constant.STATUS_CODE_STORED_PROCEDURE:
+                case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
 
                     try
                     {
@@ -207,7 +207,7 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
         {
             switch (statusCode)
             {
-                case Constant.STATUS_CODE_STORED_PROCEDURE:
+                case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
 
                     try
                     {

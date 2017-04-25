@@ -203,7 +203,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
 
                 if (createAccountFromTrial)
                 {
-                    int userId = Integer.parseInt(Util.getSecurePreferencesUserId(context));
+                    int userId = Util.getSecurePreferencesUserId(context);
                     // Upgrade a trial account to a full account.
                     new ServiceTask(CreateAccountActivity.this).execute(
                             Constant.SERVICE_UPDATE_ACCOUNT,
@@ -294,7 +294,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
 
             case Constant.STATUS_CODE_SUCCESS_ACCOUNT_UPDATED:
 
-                int storedUserId = Integer.parseInt(Util.getSecurePreferencesUserId(context));
+                int storedUserId = Util.getSecurePreferencesUserId(context);
                 Util.convertAccount(CreateAccountActivity.this, storedUserId);
 
                 CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.success), context.getString(R.string.account_converted), false);

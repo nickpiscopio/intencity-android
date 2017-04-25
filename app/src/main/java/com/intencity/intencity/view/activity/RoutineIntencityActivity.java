@@ -64,7 +64,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
 
     private FloatingActionButton start;
 
-    private String email;
+    private int userId;
     private String currentUserLocation;
 
     private RoutineAdapter adapter;
@@ -101,7 +101,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
 
         rows = bundle.getParcelableArrayList(Constant.BUNDLE_ROUTINE_ROWS);
 
-        email = Util.getSecurePreferencesUserId(context);
+        userId = Util.getSecurePreferencesUserId(context);
 
         View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
         header.findViewById(R.id.divider).setVisibility(View.GONE);
@@ -116,7 +116,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         listView.addHeaderView(header, null, false);
         listView.setOnItemClickListener(routineClickListener);
 
-        fitnessLocationDao = new FitnessLocationDao(fitnessLocationServiceListener, email);
+        fitnessLocationDao = new FitnessLocationDao(fitnessLocationServiceListener, userId);
 
         populateRoutineList();
     }
@@ -176,7 +176,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     {
         showLoading();
 
-        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS, email));
+        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_ALL_DISPLAY_MUSCLE_GROUPS, userId));
     }
 
     /**
@@ -266,7 +266,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
 
         String routine = String.valueOf(row.getRowNumber());
         String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_ROUTINE_EXERCISES,
-                                                                                      email, currentUserLocation, routine);
+                                                                                      userId, currentUserLocation, routine);
 
         new ServiceTask(exerciseServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                          storedProcedureParameters);
@@ -368,43 +368,56 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            ExerciseDao dao = new ExerciseDao(context);
-            ArrayList<Exercise> exercises = new ArrayList<>();
 
-            try
-            {
-                // We are adding a warm-up to the exercise list.
-                exercises.add(dao.getInjuryPreventionExercise(ExerciseDao.ExerciseType.WARM_UP));
-                exercises.addAll(dao.parseJson(response, ""));
-                exercises.add(dao.getInjuryPreventionExercise(ExerciseDao.ExerciseType.STRETCH));
-
-                SelectableListItem row = rows.get(routineSelected);
-
-                Intent intent = new Intent();
-                intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, row.getTitle());
-                intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, exercises);
-
-                setResult(Constant.REQUEST_CODE_START_EXERCISING, intent);
-                finish();
-            }
-            catch (JSONException e)
-            {
-                Log.e(Constant.TAG, e.getMessage());
-
-                showConnectionIssue();
-            }
         }
 
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
 
+                    ExerciseDao dao = new ExerciseDao(context);
+                    ArrayList<Exercise> exercises = new ArrayList<>();
+
+                    try
+                    {
+                        // We are adding a warm-up to the exercise list.
+                        exercises.add(dao.getInjuryPreventionExercise(ExerciseDao.ExerciseType.WARM_UP));
+                        exercises.addAll(dao.parseJson(response, ""));
+                        exercises.add(dao.getInjuryPreventionExercise(ExerciseDao.ExerciseType.STRETCH));
+
+                        SelectableListItem row = rows.get(routineSelected);
+
+                        Intent intent = new Intent();
+                        intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, row.getTitle());
+                        intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, exercises);
+
+                        setResult(Constant.REQUEST_CODE_START_EXERCISING, intent);
+                        finish();
+                    }
+                    catch (JSONException e)
+                    {
+                        Log.e(Constant.TAG, e.getMessage());
+
+                        showConnectionIssue();
+                    }
+
+                    break;
+
+                default:
+
+                    showConnectionIssue();
+
+                    break;
+            }
         }
 
         @Override
         public void onRetrievalFailed(int statusCode)
         {
-            showConnectionIssue();
+
         }
     };
 
@@ -481,6 +494,16 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     @Override
     public void onServiceResponse(int statusCode, String response)
     {
+//        switch (statusCode)
+//        {
+//            case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
+//
+//
+//                break;
+//
+//            default:
+//                break;
+//        }
 
     }
 

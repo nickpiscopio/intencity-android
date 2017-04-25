@@ -93,7 +93,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
 
         rows = bundle.getParcelableArrayList(Constant.BUNDLE_ROUTINE_ROWS);
 
-        email = Util.getSecurePreferencesUserId(context);
+        email = String.valueOf(Util.getSecurePreferencesUserId(context));
 
         View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
 

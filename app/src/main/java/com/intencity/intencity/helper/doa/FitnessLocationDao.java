@@ -20,7 +20,7 @@ public class FitnessLocationDao
 {
     private ServiceListener listener;
 
-    private String email;
+    private int userId;
 
     private boolean hasValidFitnessLocation;
 
@@ -28,12 +28,12 @@ public class FitnessLocationDao
      * The FitnessLocationDao constructor.
      *
      * @param listener      The service listener to notify when fitness locations are returned.
-     * @param email         The user's email to send to the server to get his or her fitness locations.
+     * @param userId        The user's ID to send to the server to get his or her fitness locations.
      */
-    public FitnessLocationDao(ServiceListener listener, String email)
+    public FitnessLocationDao(ServiceListener listener, int userId)
     {
         this.listener = listener;
-        this.email = email;
+        this.userId = userId;
 
         hasValidFitnessLocation = false;
     }
@@ -89,7 +89,7 @@ public class FitnessLocationDao
     public void getFitnessLocations()
     {
         new ServiceTask(listener).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                      Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_FITNESS_LOCATIONS, email));
+                                      Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_FITNESS_LOCATIONS, userId));
     }
 
     /**

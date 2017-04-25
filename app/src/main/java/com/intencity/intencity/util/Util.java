@@ -310,9 +310,9 @@ public class Util
      *
      * @return  The ID from the secure preferences.
      */
-    public static String getSecurePreferencesUserId(Context context)
+    public static int getSecurePreferencesUserId(Context context)
     {
-        return new SecurePreferences(context).getString(Constant.USER_ACCOUNT_ID, "");
+        return new SecurePreferences(context).getInt(Constant.USER_ACCOUNT_ID, 0);
     }
 
     /**

@@ -47,23 +47,27 @@ public class Constant
     public static final String STATUS_CODE = "STATUS_CODE";
     public static final String DATA = "DATA";
 
-    public static final int STATUS_CODE_STORED_PROCEDURE = 200;
-    public static final int STATUS_CODE_SUCCESS_ACCOUNT_CREATION = 201;
-    public static final int STATUS_CODE_SUCCESS_ACCOUNT_UPDATED = 202;
-    public static final int STATUS_CODE_SUCCESS_DATE_LOGIN_UPDATED = 203;
-    public static final int STATUS_CODE_SUCCESS_PASSWORD_CHANGED = 204;
-    public static final int STATUS_CODE_SUCCESS_CREDENTIALS_VALID = 205;
-    public static final int STATUS_CODE_SUCCESS_EMAILED_NEW_PASSWORD = 206;
+    public static final int STATUS_CODE_SUCCESS_STORED_PROCEDURE = 201;
+    public static final int STATUS_CODE_SUCCESS_ACCOUNT_CREATION = 202;
+    public static final int STATUS_CODE_SUCCESS_ACCOUNT_UPDATED = 203;
+    public static final int STATUS_CODE_SUCCESS_DATE_LOGIN_UPDATED = 204;
+    public static final int STATUS_CODE_SUCCESS_PASSWORD_CHANGED = 205;
+    public static final int STATUS_CODE_SUCCESS_CREDENTIALS_VALID = 206;
+    public static final int STATUS_CODE_SUCCESS_EMAILED_NEW_PASSWORD = 207;
+    public static final int STATUS_CODE_SUCCESS_FITNESS_LOCATIONS_UPDATED = 208;
+
     public static final int STATUS_CODE_FAILURE_GENERIC = 500;
-    public static final int STATUS_CODE_FAILURE_EMAIL_ERROR = 501;
-    public static final int STATUS_CODE_FAILURE_ACCOUNT_CREATION = 502;
-    public static final int STATUS_CODE_FAILURE_PASSWORD_INVALID = 503;
-    public static final int STATUS_CODE_FAILURE_PASSWORD_CHANGE = 504;
-    public static final int STATUS_CODE_FAILURE_CREDENTIALS_EMAIL_INVALID = 505;
-    public static final int STATUS_CODE_FAILURE_CREDENTIALS_PASSWORD_INVALID = 506;
-    public static final int STATUS_CODE_FAILURE_ACCOUNT_UPDATE = 507;
-    public static final int STATUS_CODE_FAILURE_DATE_LOGIN_UPDATE = 508;
-    public static final int STATUS_CODE_FAILURE_EMAILED_PASSWORD = 509;
+    public static final int STATUS_CODE_FAILURE_STORED_PROCEDURE = 501;
+    public static final int STATUS_CODE_FAILURE_EMAIL_ERROR = 502;
+    public static final int STATUS_CODE_FAILURE_ACCOUNT_CREATION = 503;
+    public static final int STATUS_CODE_FAILURE_PASSWORD_INVALID = 504;
+    public static final int STATUS_CODE_FAILURE_PASSWORD_CHANGE = 505;
+    public static final int STATUS_CODE_FAILURE_CREDENTIALS_EMAIL_INVALID = 506;
+    public static final int STATUS_CODE_FAILURE_CREDENTIALS_PASSWORD_INVALID = 507;
+    public static final int STATUS_CODE_FAILURE_ACCOUNT_UPDATE = 508;
+    public static final int STATUS_CODE_FAILURE_DATE_LOGIN_UPDATE = 509;
+    public static final int STATUS_CODE_FAILURE_EMAILED_PASSWORD = 5010;
+    public static final int STATUS_CODE_FAILURE_FITNESS_LOCATIONS_UPDATE = 511;
 
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences
@@ -375,15 +379,15 @@ public class Constant
     /**
      * Generates the URL string to update a service list.
      *
-     * @param email         The user's email.
+     * @param userId        The user's ID.
      * @param variables     The list items to update.
      * @param isInserting   A boolean value of whether we are insert into the list or removing from the list.
      *
      * @return  The generated URL string.
      */
-    public static String generateServiceListVariables(String email, ArrayList<String> variables, boolean isInserting)
+    public static String generateServiceListVariables(int userId, ArrayList<String> variables, boolean isInserting)
     {
-        String parameters = PARAMETER_EMAIL + email;
+        String parameters = PARAMETER_USER_ID + userId;
         parameters += isInserting ? generateListVariables(PARAMETER_AMPERSAND + PARAMETER_INSERTS, variables) : generateRemoveListVariables(PARAMETER_AMPERSAND + PARAMETER_REMOVE, variables);
 
         return parameters;
@@ -392,7 +396,7 @@ public class Constant
     /**
      * Generates the URL string to update a user's specified equipment list.
      *
-     * @param email             The user's email.
+     * @param userId            The user's ID.
      * @param displayName       The display name of the fitness location.
      * @param savedLocation     The location in the database of the fitness location.
      *                          This is used so we can query and update the database.
@@ -401,7 +405,7 @@ public class Constant
      *
      * @return  The generated URL string.
      */
-    public static String generateEquipmentListVariables(String email, String displayName, String savedLocation, String location, ArrayList<String> userEquipment)
+    public static String generateEquipmentListVariables(int userId, String displayName, String savedLocation, String location, ArrayList<String> userEquipment)
     {
         String parameterSavedLocation = "saved_location=";
         String parameterLocation = PARAMETER_AMPERSAND + "location=";
@@ -410,7 +414,7 @@ public class Constant
                             parameterLocation + location +
                             PARAMETER_AMPERSAND + PARAMETER_DISPLAY_NAME + displayName +
                             // We are always inserting here because update_fitness_equipment.php always uses and insert.
-                            PARAMETER_AMPERSAND + generateServiceListVariables(email, userEquipment, true);
+                            PARAMETER_AMPERSAND + generateServiceListVariables(userId, userEquipment, true);
 
         return parameters;
     }

@@ -97,7 +97,7 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
     private ArrayList<SelectableListItem> locations;
     private ArrayList<String> locationsToRemove;
 
-    private String email;
+    private int userId;
 
     private SelectableListItemAdapter adapter;
 
@@ -128,7 +128,7 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
 
         layoutAdd = (LinearLayout) findViewById(R.id.layout_add);
 
-        email = Util.getSecurePreferencesUserId(context);
+        userId = Util.getSecurePreferencesUserId(context);
 
         locations = new ArrayList<>();
 
@@ -153,7 +153,7 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
             alreadyRetrievedLocations = extras.getParcelable(Constant.BUNDLE_FITNESS_LOCATIONS);
         }
 
-        fitnessLocationDao = new FitnessLocationDao(this, email);
+        fitnessLocationDao = new FitnessLocationDao(this, userId);
 
         if (actionBar != null)
         {
@@ -259,33 +259,55 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
     @Override
     public void onRetrievalSuccessful(String response)
     {
-        try
-        {
-            SelectableListItem.ListItemType listItemType = selectingFitnessLocation ?
-                    SelectableListItem.ListItemType.TYPE_RADIO_BUTTON : SelectableListItem.ListItemType.TYPE_IMAGE_VIEW;
-
-            setLocations(fitnessLocationDao.parseJson(response, null, listItemType));
-        }
-        catch (JSONException exception)
-        {
-            Log.e(Constant.TAG, "Couldn't parse user locations. " + exception.toString());
-
-            setLocations(null);
-        }
-
-        applyActivityState();
+//        try
+//        {
+//            SelectableListItem.ListItemType listItemType = selectingFitnessLocation ?
+//                    SelectableListItem.ListItemType.TYPE_RADIO_BUTTON : SelectableListItem.ListItemType.TYPE_IMAGE_VIEW;
+//
+//            setLocations(fitnessLocationDao.parseJson(response, null, listItemType));
+//        }
+//        catch (JSONException exception)
+//        {
+//            Log.e(Constant.TAG, "Couldn't parse user locations. " + exception.toString());
+//
+//            setLocations(null);
+//        }
+//
+//        applyActivityState();
     }
 
     @Override
     public void onServiceResponse(int statusCode, String response)
     {
+        switch (statusCode)
+        {
+            case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
+                try
+                {
+                    SelectableListItem.ListItemType listItemType = selectingFitnessLocation ?
+                            SelectableListItem.ListItemType.TYPE_RADIO_BUTTON : SelectableListItem.ListItemType.TYPE_IMAGE_VIEW;
 
+                    setLocations(fitnessLocationDao.parseJson(response, null, listItemType));
+                }
+                catch (JSONException exception)
+                {
+                    Log.e(Constant.TAG, "Couldn't parse user locations. " + exception.toString());
+
+                    setLocations(null);
+                }
+
+                applyActivityState();
+                break;
+            default:
+                showConnectionIssue();
+                break;
+        }
     }
 
     @Override
     public void onRetrievalFailed(int statusCode)
     {
-        showConnectionIssue();
+//        showConnectionIssue();
     }
 
     /**
@@ -296,26 +318,36 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            response = response.replaceAll("\"", "");
-            if (response.equals(Constant.SUCCESS))
-            {
-                getUserFitnessLocations();
-            }
-            else
-            {
-                showConnectionIssue();
-            }
+//            response = response.replaceAll("\"", "");
+//            if (response.equals(Constant.SUCCESS))
+//            {
+//                getUserFitnessLocations();
+//            }
+//            else
+//            {
+//                showConnectionIssue();
+//            }
         }
 
-        @Override public void onServiceResponse(int statusCode, String response)
+        @Override
+        public void onServiceResponse(int statusCode, String response)
         {
-
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_FITNESS_LOCATIONS_UPDATED:
+                    getUserFitnessLocations();
+                    break;
+                case Constant.STATUS_CODE_FAILURE_FITNESS_LOCATIONS_UPDATE:
+                default:
+                    showConnectionIssue();
+                    break;
+            }
         }
 
         @Override
         public void onRetrievalFailed(int statusCode)
         {
-            showConnectionIssue();
+//            showConnectionIssue();
         }
     };
 
@@ -355,7 +387,7 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
 
                 case STATE_REMOVE:
                     // The address is located in the description.
-                    // We only allow 1 address per person, so we are removing on the user's email/location (address).
+                    // We only allow 1 address per person, so we are removing on the user's userId/location (address).
                     String address = location.getDescription();
 
                     // Add or remove muscle groups from the list
@@ -574,8 +606,9 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
             progressBar.setVisibility(View.VISIBLE);
 
             new ServiceTask(saveLocationsServiceListener).execute(Constant.SERVICE_UPDATE_USER_FITNESS_LOCATION,
-                                                                  Constant.generateServiceListVariables(email,
-                                                                                                      locationsToRemove, false));
+                                                                  Constant.generateServiceListVariables(
+                                                                          userId,
+                                                                          locationsToRemove, false));
         }
         else
         {
