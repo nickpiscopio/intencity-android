@@ -55,6 +55,7 @@ public class Constant
     public static final int STATUS_CODE_SUCCESS_CREDENTIALS_VALID = 206;
     public static final int STATUS_CODE_SUCCESS_EMAILED_NEW_PASSWORD = 207;
     public static final int STATUS_CODE_SUCCESS_FITNESS_LOCATIONS_UPDATED = 208;
+    public static final int STATUS_CODE_SUCCESS_FITNESS_EQUIPMENT_UPDATED = 209;
 
     public static final int STATUS_CODE_FAILURE_GENERIC = 500;
     public static final int STATUS_CODE_FAILURE_STORED_PROCEDURE = 501;
@@ -68,6 +69,7 @@ public class Constant
     public static final int STATUS_CODE_FAILURE_DATE_LOGIN_UPDATE = 509;
     public static final int STATUS_CODE_FAILURE_EMAILED_PASSWORD = 5010;
     public static final int STATUS_CODE_FAILURE_FITNESS_LOCATIONS_UPDATE = 511;
+    public static final int STATUS_CODE_FAILURE_FITNESS_EQUIPMENT_UPDATE = 512;
 
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences

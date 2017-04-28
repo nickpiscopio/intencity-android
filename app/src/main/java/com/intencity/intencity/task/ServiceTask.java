@@ -129,12 +129,14 @@ public class ServiceTask extends AsyncTask<String, Void, String>
                 }
                 catch (JSONException ex)
                 {
-                    serviceListener.onServiceResponse(statusCode, null);
+                    // If we fail, it might be because we don't understand the response, so just send the result.
+                    serviceListener.onServiceResponse(statusCode, result);
                 }
             }
             else
             {
-                serviceListener.onServiceResponse(statusCode, null);
+                // If we fail, it might be because we don't understand the response, so just send the result.
+                serviceListener.onServiceResponse(statusCode, result);
             }
         }
     }

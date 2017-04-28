@@ -296,48 +296,48 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            try
-            {
-                equipmentList = new ArrayList<>();
-                userEquipment = new ArrayList<>();
-
-                JSONArray array = new JSONArray(response);
-
-                int length = array.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject object = array.getJSONObject(i);
-
-                    String equipmentName = object.getString(Constant.COLUMN_EQUIPMENT_NAME);
-                    boolean hasEquipment = object.getString(Constant.COLUMN_HAS_EQUIPMENT).equalsIgnoreCase(Constant.TRUE);
-
-                    SelectableListItem listItem = new SelectableListItem(equipmentName);
-                    listItem.setChecked(hasEquipment);
-
-                    // Add all the equipment to the array.
-                    equipmentList.add(listItem);
-
-                    // Add the list item to the user's equipment list if he or she currently has it.
-                    if (hasEquipment)
-                    {
-                        userEquipment.add(equipmentName);
-                    }
-                }
-
-                // We set the checkbox to checked if the user has all the equipment in the equipment list.
-                setCheckboxTick(userEquipment.size() == equipmentList.size());
-
-                populateEquipmentListView();
-            }
-            catch (JSONException exception)
-            {
-                Log.e(Constant.TAG, "Couldn't parse equipment " + exception.toString());
-
-                progressBar.setVisibility(View.GONE);
-
-                displayCommunicationError();
-            }
+//            try
+//            {
+//                equipmentList = new ArrayList<>();
+//                userEquipment = new ArrayList<>();
+//
+//                JSONArray array = new JSONArray(response);
+//
+//                int length = array.length();
+//
+//                for (int i = 0; i < length; i++)
+//                {
+//                    JSONObject object = array.getJSONObject(i);
+//
+//                    String equipmentName = object.getString(Constant.COLUMN_EQUIPMENT_NAME);
+//                    boolean hasEquipment = object.getString(Constant.COLUMN_HAS_EQUIPMENT).equalsIgnoreCase(Constant.TRUE);
+//
+//                    SelectableListItem listItem = new SelectableListItem(equipmentName);
+//                    listItem.setChecked(hasEquipment);
+//
+//                    // Add all the equipment to the array.
+//                    equipmentList.add(listItem);
+//
+//                    // Add the list item to the user's equipment list if he or she currently has it.
+//                    if (hasEquipment)
+//                    {
+//                        userEquipment.add(equipmentName);
+//                    }
+//                }
+//
+//                // We set the checkbox to checked if the user has all the equipment in the equipment list.
+//                setCheckboxTick(userEquipment.size() == equipmentList.size());
+//
+//                populateEquipmentListView();
+//            }
+//            catch (JSONException exception)
+//            {
+//                Log.e(Constant.TAG, "Couldn't parse equipment " + exception.toString());
+//
+//                progressBar.setVisibility(View.GONE);
+//
+//                displayCommunicationError();
+//            }
         }
 
         @Override
@@ -538,10 +538,11 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         {
             switch (statusCode)
             {
-                case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
+                case Constant.STATUS_CODE_SUCCESS_FITNESS_EQUIPMENT_UPDATED:
                     setResult(Constant.REQUEST_CODE_EQUIPMENT_SAVED);
                     finish();
                     break;
+                case Constant.STATUS_CODE_FAILURE_FITNESS_EQUIPMENT_UPDATE:
                 default:
                     displayCommunicationError();
                     break;

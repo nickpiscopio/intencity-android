@@ -383,6 +383,34 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
         @Override
         public void onRetrievalSuccessful(String response)
         {
+//            try
+//            {
+//                JSONObject obj = new JSONObject(response);
+//                String status = obj.getString(ServiceTask.NODE_STATUS);
+//                if (status.equalsIgnoreCase(ServiceTask.RESPONSE_OK))
+//                {
+//                    JSONArray addresses = obj.getJSONArray(NODE_RESULTS);
+//                    // The formatted address we are looking for will always be in the first index,
+//                    // so there is no reason to search through the array.
+//                    String formattedAddress = addresses.getJSONObject(0).getString(NODE_FORMATTED_ADDRESS);
+//
+//                    listener.onGeocodeRetrievalSuccessful(requestCode, formattedAddress);
+//                }
+//                else
+//                {
+//                    onRetrievalFailed(0);
+//                }
+//            }
+//            catch (JSONException e)
+//            {
+//                onRetrievalFailed(0);
+//            }
+        }
+
+        @Override
+        public void onServiceResponse(int statusCode, String response)
+        {
+//            switch (statusCode)
             try
             {
                 JSONObject obj = new JSONObject(response);
@@ -408,15 +436,9 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
         }
 
         @Override
-        public void onServiceResponse(int statusCode, String response)
-        {
-
-        }
-
-        @Override
         public void onRetrievalFailed(int statusCode)
         {
-            listener.onGeocodeRetrievalFailed(requestCode);
+//            listener.onGeocodeRetrievalFailed(requestCode);
         }
     };
 
