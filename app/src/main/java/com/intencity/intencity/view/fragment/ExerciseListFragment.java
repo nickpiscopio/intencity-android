@@ -357,22 +357,40 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            Toast.makeText(context, getString(R.string.routine_saved, savedRoutineName), Toast.LENGTH_SHORT).show();
 
-            loadingListener.onFinishedLoading(Constant.ID_SAVE_EXERCISE_LIST);
         }
 
-        @Override public void onServiceResponse(int statusCode, String response)
+        @Override
+        public void onServiceResponse(int statusCode, String response)
         {
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_ROUTINE_SAVED:
 
+                    Toast.makeText(context, getString(R.string.routine_saved, savedRoutineName), Toast.LENGTH_SHORT).show();
+
+                    loadingListener.onFinishedLoading(Constant.ID_SAVE_EXERCISE_LIST);
+
+                    break;
+
+                case Constant.STATUS_CODE_FAILURE_ROUTINE_EXISTS:
+
+                    new SaveDialog(context, ExerciseListFragment.this, SaveDialog.SaveDialogState.SAME_NAME_ERROR);
+
+                    loadingListener.onFinishedLoading(Constant.ID_SAVE_EXERCISE_LIST);
+                    break;
+
+                case Constant.STATUS_CODE_FAILURE_ROUTINE_SAVE:
+                default:
+                    Util.showMessage(context, context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error));
+                    break;
+            }
         }
 
         @Override
         public void onRetrievalFailed(int statusCode)
         {
-            new SaveDialog(context, ExerciseListFragment.this, SaveDialog.SaveDialogState.SAME_NAME_ERROR);
 
-            loadingListener.onFinishedLoading(Constant.ID_SAVE_EXERCISE_LIST);
         }
     };
 

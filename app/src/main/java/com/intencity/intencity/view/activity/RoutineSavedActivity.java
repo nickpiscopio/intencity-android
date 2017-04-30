@@ -59,7 +59,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
 
     private FloatingActionButton start;
 
-    private String email;
+    private int userId;
 
     private RoutineAdapter adapter;
 
@@ -93,7 +93,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
 
         rows = bundle.getParcelableArrayList(Constant.BUNDLE_ROUTINE_ROWS);
 
-        email = String.valueOf(Util.getSecurePreferencesUserId(context));
+        userId = Util.getSecurePreferencesUserId(context);
 
         View header = getLayoutInflater().inflate(R.layout.list_item_header_title_description, null);
 
@@ -144,7 +144,8 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
     {
         showLoading();
 
-        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_ROUTINE, email));
+        new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE, Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_ROUTINE,
+                                                                                                                    userId));
     }
 
     /**
@@ -254,7 +255,8 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
             SelectableListItem row = rows.get(routineSelected);
 
             String routine = String.valueOf(row.getRowNumber());
-            String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_ROUTINE_EXERCISES, email, routine);
+            String storedProcedureParameters = Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_USER_ROUTINE_EXERCISES,
+                                                                                          userId, routine);
 
             new ServiceTask(routineServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE, storedProcedureParameters);
         }
@@ -306,85 +308,109 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            ExerciseDao dao = new ExerciseDao(context);
-            ArrayList<Exercise> exercises = new ArrayList<>();
 
-            try
-            {
-                // We are adding a warm-up to the exercise list.
-                exercises.add(dao.getInjuryPreventionExercise(ExerciseDao.ExerciseType.WARM_UP));
-                exercises.addAll(dao.parseJson(response, ""));
-                exercises.add(dao.getInjuryPreventionExercise(ExerciseDao.ExerciseType.STRETCH));
-
-                SelectableListItem row = rows.get(routineSelected);
-
-                Intent intent = new Intent();
-                intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, row.getTitle());
-                intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, exercises);
-
-                setResult(Constant.REQUEST_CODE_START_EXERCISING, intent);
-                finish();
-            }
-            catch (JSONException e)
-            {
-                Log.e(Constant.TAG, e.getMessage());
-
-                showConnectionIssue();
-            }
         }
 
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
 
+                    ExerciseDao dao = new ExerciseDao(context);
+                    ArrayList<Exercise> exercises = new ArrayList<>();
+
+                    try
+                    {
+                        // We are adding a warm-up to the exercise list.
+                        exercises.add(dao.getInjuryPreventionExercise(ExerciseDao.ExerciseType.WARM_UP));
+                        exercises.addAll(dao.parseJson(response, ""));
+                        exercises.add(dao.getInjuryPreventionExercise(ExerciseDao.ExerciseType.STRETCH));
+
+                        SelectableListItem row = rows.get(routineSelected);
+
+                        Intent intent = new Intent();
+                        intent.putExtra(Constant.BUNDLE_ROUTINE_NAME, row.getTitle());
+                        intent.putExtra(Constant.BUNDLE_EXERCISE_LIST, exercises);
+
+                        setResult(Constant.REQUEST_CODE_START_EXERCISING, intent);
+                        finish();
+                    }
+                    catch (JSONException e)
+                    {
+                        Log.e(Constant.TAG, e.getMessage());
+
+                        showConnectionIssue();
+                    }
+
+                    break;
+
+                case Constant.STATUS_CODE_FAILURE_STORED_PROCEDURE:
+                default:
+
+                    showConnectionIssue();
+                    break;
+            }
         }
 
         @Override
         public void onRetrievalFailed(int statusCode)
         {
-            showConnectionIssue();
         }
     };
 
     @Override
     public void onRetrievalSuccessful(String response)
     {
-        try
-        {
-            rows.clear();
 
-            if (response.equalsIgnoreCase(Constant.RETURN_NULL))
-            {
-                showDialog(DialogType.NO_ROUTINES);
-            }
-            else
-            {
-                rows.addAll(new UserRoutineDao().parseJson(response));
-            }
-
-            adapter.notifyDataSetChanged();
-
-            hasMoreExercises = true;
-        }
-        catch (JSONException e)
-        {
-            showDialog(DialogType.COMMUNICATION_ERROR);
-        }
-
-        hideLoading();
     }
 
     @Override
     public void onServiceResponse(int statusCode, String response)
     {
+        switch (statusCode)
+        {
+            case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
+
+                try
+                {
+                    rows.clear();
+
+                    if (response.equalsIgnoreCase(Constant.RETURN_NULL))
+                    {
+                        showDialog(DialogType.NO_ROUTINES);
+                    }
+                    else
+                    {
+                        rows.addAll(new UserRoutineDao().parseJson(response));
+                    }
+
+                    adapter.notifyDataSetChanged();
+
+                    hasMoreExercises = true;
+                }
+                catch (JSONException e)
+                {
+                    showDialog(DialogType.COMMUNICATION_ERROR);
+                }
+
+                break;
+
+            case Constant.STATUS_CODE_FAILURE_STORED_PROCEDURE:
+            default:
+                showDialog(DialogType.COMMUNICATION_ERROR);
+
+                break;
+        }
+
+        hideLoading();
 
     }
 
     @Override
     public void onRetrievalFailed(int statusCode)
     {
-        showDialog(DialogType.COMMUNICATION_ERROR);
 
-        hideLoading();
     }
 }

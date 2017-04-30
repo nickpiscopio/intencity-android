@@ -57,6 +57,7 @@ public class Constant
     public static final int STATUS_CODE_SUCCESS_FITNESS_LOCATIONS_UPDATED = 208;
     public static final int STATUS_CODE_SUCCESS_FITNESS_EQUIPMENT_UPDATED = 209;
     public static final int STATUS_CODE_SUCCESS_EXERCISE_PRIORITY_UPDATED = 210;
+    public static final int STATUS_CODE_SUCCESS_ROUTINE_SAVED = 211;
 
     public static final int STATUS_CODE_FAILURE_GENERIC = 500;
     public static final int STATUS_CODE_FAILURE_STORED_PROCEDURE = 501;
@@ -72,6 +73,8 @@ public class Constant
     public static final int STATUS_CODE_FAILURE_FITNESS_LOCATIONS_UPDATE = 511;
     public static final int STATUS_CODE_FAILURE_FITNESS_EQUIPMENT_UPDATE = 512;
     public static final int STATUS_CODE_FAILURE_EXERCISE_PRIORITY_UPDATE = 513;
+    public static final int STATUS_CODE_FAILURE_ROUTINE_SAVE = 514;
+    public static final int STATUS_CODE_FAILURE_ROUTINE_EXISTS = 515;
 
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences
@@ -492,7 +495,7 @@ public class Constant
             // This is so we don't add the warm-up and stretch to the database.
             if(exercise.getDescription() == null)
             {
-                parameters += ((i > START_INDEX) ? PARAMETER_DELIMITER : "") + exercise.getName();
+                parameters += ((i > START_INDEX) ? PARAMETER_DELIMITER : "") + exercise.getId();
             }
         }
 

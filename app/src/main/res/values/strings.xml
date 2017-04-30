@@ -122,7 +122,7 @@
     <string name="routine_saved_title">Save current routine</string>
     <string name="routine_saved_description">Give this routine a name so you can do it again at a later date.</string>
     <string name="routine_saved_title_error">Couldn\'t save routine</string>
-    <string name="routine_saved_description_error">You either entered a routine name you\'ve already used or there was a problem communicating with Intencity\'s server. Please try again.</string>
+    <string name="routine_saved_description_error">You entered a routine name you\'ve already used. Please try again.</string>
     <string name="routine_saved_routine_name_error">A routine name is required. Please try again.</string>
     <string name="save">Save</string>
     <string name="routine_saved">%1$s was saved.</string>
