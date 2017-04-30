@@ -44,8 +44,9 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
 
     private ListView listView;
 
-    private String email;
+    private int userId;
 
+    private ArrayList<Integer> exerciseIds;
     private ArrayList<String> exerciseNames;
     private ArrayList<String> exercisePriorities;
 
@@ -74,10 +75,10 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
         context = getApplicationContext();
 
         SecurePreferences securePreferences = new SecurePreferences(context);
-        email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
+        userId = securePreferences.getInt(Constant.USER_ACCOUNT_ID, 0);
 
-        new ServiceTask(getExclusionService).execute(Constant.SERVICE_STORED_PROCEDURE,
-                Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EXERCISE_PRIORITIES, email));
+        new ServiceTask(getExclusionServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
+                                                             Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GET_EXERCISE_PRIORITIES, userId));
     }
 
     @Override
@@ -94,58 +95,75 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
     }
 
     /**
-     * The ServiceListener for getting the user's equipment.
+     * The ServiceListener for getting the user's exercise priorities.
      */
-    private ServiceListener getExclusionService =  new ServiceListener()
+    private ServiceListener getExclusionServiceListener =  new ServiceListener()
     {
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            try
-            {
-                exerciseNames = new ArrayList<>();
-                exercisePriorities = new ArrayList<>();
 
-                if (!response.equals(Constant.RETURN_NULL))
-                {
-                    JSONArray array = new JSONArray(response);
-
-                    int length = array.length();
-
-                    for (int i = 0; i < length; i++)
-                    {
-                        JSONObject object = array.getJSONObject(i);
-
-                        String exerciseName = object.getString(Constant.COLUMN_EXERCISE_NAME);
-                        String priority = object.getString(Constant.COLUMN_PRIORITY);
-
-                        exerciseNames.add(exerciseName);
-                        exercisePriorities.add(priority);
-                    }
-                }
-
-                populatePriorityListView();
-            }
-            catch (JSONException exception)
-            {
-                Log.e(Constant.TAG, "Couldn't parse priority list " + exception.toString());
-
-                connectionIssue.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
-            }
         }
 
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
 
+                    try
+                    {
+                        exerciseIds = new ArrayList<>();
+                        exerciseNames = new ArrayList<>();
+                        exercisePriorities = new ArrayList<>();
+
+                        if (!response.equals(Constant.RETURN_NULL))
+                        {
+                            JSONArray array = new JSONArray(response);
+
+                            int length = array.length();
+
+                            for (int i = 0; i < length; i++)
+                            {
+                                JSONObject object = array.getJSONObject(i);
+
+                                int exerciseId = object.getInt(Constant.COLUMN_EXERCISE_ID);
+                                String name = object.getString(Constant.COLUMN_EXERCISE_NAME);
+                                String priority = object.getString(Constant.COLUMN_PRIORITY);
+
+                                exerciseIds.add(exerciseId);
+                                exerciseNames.add(name);
+                                exercisePriorities.add(priority);
+                            }
+                        }
+
+                        populatePriorityListView();
+                    }
+                    catch (JSONException exception)
+                    {
+                        Log.e(Constant.TAG, "Couldn't parse priority list " + exception.toString());
+
+                        connectionIssue.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    break;
+
+                case Constant.STATUS_CODE_FAILURE_STORED_PROCEDURE:
+                default:
+
+                    connectionIssue.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+
+                    break;
+            }
         }
 
         @Override
         public void onRetrievalFailed(int statusCode)
         {
-            connectionIssue.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
+
         }
     };
 
@@ -163,24 +181,40 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
-            finish();
+
+
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_EXERCISE_PRIORITY_UPDATED:
+
+                    finish();
+
+                    break;
+
+                case Constant.STATUS_CODE_FAILURE_EXERCISE_PRIORITY_UPDATE:
+                default:
+
+                    CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
+
+                    new CustomDialog(ExercisePriorityActivity.this, dialogListener, dialog, false);
+
+                    progressBar.setVisibility(View.GONE);
+
+                    break;
+            }
         }
 
         @Override
         public void onRetrievalFailed(int statusCode)
         {
-            CustomDialogContent dialog = new CustomDialogContent(context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error), false);
 
-            new CustomDialog(ExercisePriorityActivity.this, dialogListener, dialog, false);
-
-            progressBar.setVisibility(View.GONE);
         }
     };
 
     @Override
     public void onBackPressed()
     {
-        if (exerciseNames != null && exerciseNames.size() > 0)
+        if (exerciseIds != null && exerciseIds.size() > 0)
         {
             updateExercisePriorities();
         }
@@ -222,7 +256,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
 
         new ServiceTask(updateExclusionServiceListener).execute(Constant.SERVICE_UPDATE_EXERCISE_PRIORITY,
                                                                 Constant.generateExercisePriorityListVariables(
-                                                                        email, exerciseNames, exercisePriorities));
+                                                                        userId, exerciseIds, exercisePriorities));
     }
 
     /**

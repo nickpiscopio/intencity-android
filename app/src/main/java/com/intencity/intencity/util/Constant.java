@@ -56,6 +56,7 @@ public class Constant
     public static final int STATUS_CODE_SUCCESS_EMAILED_NEW_PASSWORD = 207;
     public static final int STATUS_CODE_SUCCESS_FITNESS_LOCATIONS_UPDATED = 208;
     public static final int STATUS_CODE_SUCCESS_FITNESS_EQUIPMENT_UPDATED = 209;
+    public static final int STATUS_CODE_SUCCESS_EXERCISE_PRIORITY_UPDATED = 210;
 
     public static final int STATUS_CODE_FAILURE_GENERIC = 500;
     public static final int STATUS_CODE_FAILURE_STORED_PROCEDURE = 501;
@@ -70,6 +71,7 @@ public class Constant
     public static final int STATUS_CODE_FAILURE_EMAILED_PASSWORD = 5010;
     public static final int STATUS_CODE_FAILURE_FITNESS_LOCATIONS_UPDATE = 511;
     public static final int STATUS_CODE_FAILURE_FITNESS_EQUIPMENT_UPDATE = 512;
+    public static final int STATUS_CODE_FAILURE_EXERCISE_PRIORITY_UPDATE = 513;
 
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences
@@ -229,6 +231,7 @@ public class Constant
     public static final String COLUMN_DATE = "Date";
     public static final String COLUMN_TIME = "Time";
     public static final String COLUMN_EXERCISE_TABLE_EXERCISE_NAME = "ExerciseTableExerciseName";
+    public static final String COLUMN_EXERCISE_ID = "ID";
     public static final String COLUMN_EXERCISE_NAME = "ExerciseName";
     public static final String COLUMN_EXERCISE_WEIGHT = "ExerciseWeight";
     public static final String COLUMN_EXERCISE_REPS = "ExerciseReps";
@@ -444,18 +447,18 @@ public class Constant
     /**
      * Generates the URL string to update the user's priority list.
      *
-     * @param email         The user's email.
+     * @param userId        The user's ID.
      * @param exercises     The list exercises to update.
      * @param priorities    The list priorities for the exercises.
      *
      * @return  The generated URL string.
      */
-    public static String generateExercisePriorityListVariables(String email, ArrayList<String> exercises, ArrayList<String> priorities)
+    public static String generateExercisePriorityListVariables(int userId, ArrayList<Integer> exercises, ArrayList<String> priorities)
     {
         String PARAMETER_EXERCISES = "&exercises=";
         String PARAMETER_PRIORITIES = "&priorities=";
 
-        String parameters = PARAMETER_EMAIL + email;
+        String parameters = PARAMETER_USER_ID + userId;
         parameters += generateListVariables(PARAMETER_EXERCISES, exercises);
         parameters += generateListVariables(PARAMETER_PRIORITIES, priorities);
 
@@ -504,7 +507,7 @@ public class Constant
      *
      * @return  The generated URL string.
      */
-    public static String generateListVariables(String variableName, ArrayList<String> variables)
+    public static String generateListVariables(String variableName, ArrayList<?> variables)
     {
         String parameters = "";
 

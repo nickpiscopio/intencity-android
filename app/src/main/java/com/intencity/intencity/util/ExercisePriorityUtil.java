@@ -19,8 +19,8 @@ public class ExercisePriorityUtil
     /**
      * Sets the priority for the exercise.
      *
-     * @param priority  The current priority we are changing.
-     * @param increment         Boolean value of whether or not the exercise should increment or decrement the current priority.
+     * @param priority      The current priority we are changing.
+     * @param increment     Boolean value of whether or not the exercise should increment or decrement the current priority.
      *
      * @return The new exercise priority.
      */
@@ -54,7 +54,7 @@ public class ExercisePriorityUtil
                 lessPriority.setVisibility(View.VISIBLE);
                 lessPriority.setImageResource(R.mipmap.thumb_down_outline);
                 break;
-            case PRIORITY_LIMIT_UPPER -  INCREMENTAL_VALUE:
+            case PRIORITY_LIMIT_UPPER - INCREMENTAL_VALUE:
                 morePriority.setVisibility(View.VISIBLE);
                 morePriority.setImageResource(R.mipmap.thumb_up);
                 lessPriority.setVisibility(View.VISIBLE);
