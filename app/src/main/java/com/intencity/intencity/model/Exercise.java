@@ -15,6 +15,7 @@ public class Exercise implements Parcelable
 {
     private View view;
 
+    private int id;
     private String name;
     private String description;
     private int priority;
@@ -32,6 +33,7 @@ public class Exercise implements Parcelable
 
     private Exercise(Parcel in)
     {
+        id = in.readInt();
         name = in.readString();
         description = in.readString();
 
@@ -67,6 +69,7 @@ public class Exercise implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
+        dest.writeInt(id);
         dest.writeString(name);
         dest.writeString(description);
         dest.writeTypedList(sets);
@@ -85,6 +88,16 @@ public class Exercise implements Parcelable
     public void setView(View view)
     {
         this.view = view;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
     }
 
     public String getName()

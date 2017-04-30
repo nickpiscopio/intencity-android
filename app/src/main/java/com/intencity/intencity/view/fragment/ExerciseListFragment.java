@@ -92,7 +92,8 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
     private boolean workoutFinished;
 
-    private String email;
+    private int userId;
+
     private String routineName;
     private String warmUphExerciseName;
     private String stretchExerciseName;
@@ -160,7 +161,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         recyclerView.setAdapter(adapter);
 
         securePreferences = new SecurePreferences(context);
-        email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
+        userId = securePreferences.getInt(Constant.USER_ACCOUNT_ID, 0);
 
         workoutFinished = false;
 
@@ -406,7 +407,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             editor.putLong(Constant.USER_LAST_EXERCISE_TIME, now);
             editor.apply();
 
-            Util.grantPointsToUser(email, Constant.POINTS_EXERCISE, context.getString(R.string.award_exercise_description));
+            Util.grantPointsToUser(userId, Constant.POINTS_EXERCISE, context.getString(R.string.award_exercise_description));
         }
 
         int position = currentExercises.size() - 1;
@@ -625,8 +626,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
         Exercise exercise = currentExercises.get(position);
 
-        String exerciseName = exercise.getName();
-
         int priority = ExercisePriorityUtil.getExercisePriority(exercise.getPriority(), increment);
         exercise.setPriority(priority);
         ExercisePriorityUtil.setPriorityButtons(priority, morePriority, lessPriority);
@@ -636,7 +635,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         // The worst that will happen is a user will have to click the exercise priority again.
         new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_SET_EXERCISE_PRIORITY,
-                                                                                 email, exerciseName, increment ? "1" : "0"));
+                                                                                 userId, exercise.getId(), increment ? "1" : "0"));
 
         // Remove the exercise if the user decremented it and it is less than 0.
         if (priority == ExercisePriorityUtil.PRIORITY_LIMIT_LOWER && !increment)
@@ -645,7 +644,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         }
 
         // Displays a toast to the user telling them they will see an exercise more or less.
-        Toast.makeText(context, context.getString(increment ? R.string.more_priority_string : R.string.less_priority_string, exerciseName), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, context.getString(increment ? R.string.more_priority_string : R.string.less_priority_string, exercise.getName()), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -657,7 +656,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
             savedRoutineName = routineName;
 
-            String params = Constant.generateRoutineListVariables(email, routineName, currentExercises);
+            String params = Constant.generateRoutineListVariables(userId, routineName, currentExercises);
             new ServiceTask(saveRoutineServiceListener).execute(Constant.SERVICE_SET_ROUTINE, params);
         }
         else
@@ -690,8 +689,10 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
             int setSize = sets.size();
             String statements = "statements=";
-            String updateString = statements + setSize + Constant.PARAMETER_AMPERSAND + Constant.PARAMETER_EMAIL + email;
-            String insertString = statements + setSize + Constant.PARAMETER_AMPERSAND + Constant.PARAMETER_EMAIL + email;
+            String updateString = statements + setSize + Constant.PARAMETER_AMPERSAND + Constant.PARAMETER_EMAIL +
+                                  userId;
+            String insertString = statements + setSize + Constant.PARAMETER_AMPERSAND + Constant.PARAMETER_EMAIL +
+                                  userId;
 
             // The update and insert Strings already starts out with a value in it,
             // so we need this boolean to decide if we are going to conduct these actions.
@@ -718,9 +719,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     if (setsWithRepsGreaterThan10 >= 2)
                     {
                         SecurePreferences securePreferences = new SecurePreferences(context);
-                        String email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
+                        int userId = securePreferences.getInt(Constant.USER_ACCOUNT_ID, 0);
 
-                        Util.grantBadgeToUser(email, badge,
+                        Util.grantBadgeToUser(userId, badge,
                                               new AwardDialogContent(R.mipmap.left_it_on_the_field,
                                                                      context.getString(R.string.award_left_it_on_the_field_description)), false);
 

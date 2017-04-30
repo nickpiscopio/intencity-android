@@ -87,6 +87,7 @@ public class SetExerciseTask extends AsyncTask<Void, Void, Void>
                     values.put(ExerciseTable.COLUMN_ROUTINE_STATE, routineState);
                     values.put(ExerciseTable.COLUMN_INDEX, index);
                     values.put(ExerciseTable.COLUMN_ROUTINE_NAME, routineName);
+                    values.put(ExerciseTable.COLUMN_ID, exercise.getId());
                     values.put(ExerciseTable.COLUMN_NAME, exercise.getName());
                     values.put(ExerciseTable.COLUMN_DESCRIPTION, exercise.getDescription());
                     values.put(ExerciseTable.COLUMN_FROM_INTENCITY, exercise.isIncludedInIntencity());

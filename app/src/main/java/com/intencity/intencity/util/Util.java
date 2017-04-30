@@ -202,15 +202,15 @@ public class Util
     /**
      * Calls the service to grant points to the user.
      *
-     * @param email         The email of the user to grant points.
+     * @param userId        The ID of the user to grant points.
      * @param points        The amount of points that will be granted.
      * @param description   The description of why points are being granted.
      */
-    public static void grantPointsToUser(String email, int points, String description)
+    public static void grantPointsToUser(int userId, int points, String description)
     {
         new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(
-                                              Constant.STORED_PROCEDURE_GRANT_POINTS, email,
+                                              Constant.STORED_PROCEDURE_GRANT_POINTS, userId,
                                               String.valueOf(points)));
 
         // Add an award to the notification handler.
@@ -220,18 +220,18 @@ public class Util
     /**
      * Calls the service to grant a badge to the user.
      *
-     * @param email         The email of the user to grant points.
+     * @param userId        The ID of the user to grant points.
      * @param badgeName     The name of the badge that is being awarded.
      * @param content       The content that will be displayed to the user.
      */
-    private static void grantBadgeToUser(String email, String badgeName, AwardDialogContent content)
+    private static void grantBadgeToUser(int userId, String badgeName, AwardDialogContent content)
     {
         // We won't display the date anywhere, so we probably don't need this in local time.
         long now = new Date().getTime();
 
         new ServiceTask(null).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_GRANT_BADGE,
-                                                                                 email, String.valueOf(now), badgeName));
+                                                                                 userId, String.valueOf(now), badgeName));
         // Add an award to the notification handler.
         NotificationHandler.getInstance(null).addAward(content);
     }
@@ -239,12 +239,12 @@ public class Util
     /**
      * Calls the service to grant a badge to the user.
      *
-     * @param email         The email of the user to grant points.
+     * @param userId        The ID of the user to grant points.
      * @param badgeName     The name of the badge that is being awarded.
      * @param content       The content that will be displayed to the user.
      * @param onlyAllowOne  Boolean value to only allow one instance of a specified badge.
      */
-    public static void grantBadgeToUser(String email, String badgeName, AwardDialogContent content, boolean onlyAllowOne)
+    public static void grantBadgeToUser(int userId, String badgeName, AwardDialogContent content, boolean onlyAllowOne)
     {
         NotificationHandler notificationHandler = NotificationHandler.getInstance(null);
 
@@ -253,12 +253,12 @@ public class Util
         {
             if (notificationHandler.getAward(content) == null)
             {
-                grantBadgeToUser(email, badgeName, content);
+                grantBadgeToUser(userId, badgeName, content);
             }
         }
         else
         {
-            grantBadgeToUser(email, badgeName, content);
+            grantBadgeToUser(userId, badgeName, content);
         }
     }
 

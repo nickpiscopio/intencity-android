@@ -424,17 +424,17 @@ public class Constant
     /**
      * Generates the URL string to add a routine.
      *
-     * @param email         The user's email.
+     * @param userId        The user's ID.
      * @param routineName   The name of the routine.
      * @param exercises     The list exercises to insert.
      *
      * @return  The generated URL string.
      */
-    public static String generateRoutineListVariables(String email, String routineName, ArrayList<Exercise> exercises)
+    public static String generateRoutineListVariables(int userId, String routineName, ArrayList<Exercise> exercises)
     {
         String PARAMETER_ROUTINE_NAME = "&routine=";
 
-        String parameters = PARAMETER_EMAIL + email + PARAMETER_ROUTINE_NAME + routineName;
+        String parameters = PARAMETER_USER_ID + userId + PARAMETER_ROUTINE_NAME + routineName;
         parameters += generateExerciseListVariables("&" + PARAMETER_INSERTS, exercises);
 
         return parameters;

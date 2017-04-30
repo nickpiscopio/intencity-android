@@ -61,7 +61,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
     private ProgressDialog progressDialog;
 
     private SecurePreferences securePreferences;
-    private String email;
+    private int userId;
     private String warmUphExerciseName;
     private String stretchExerciseName;
 
@@ -91,7 +91,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         context = getApplicationContext();
 
         securePreferences = new SecurePreferences(context);
-        email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
+        userId = securePreferences.getInt(Constant.USER_ACCOUNT_ID, 0);
         warmUphExerciseName = getString(R.string.warm_up);
         stretchExerciseName = getString(R.string.stretch);
 
@@ -192,7 +192,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         // Grant the user the "Kept Swimming" badge if he or she didn't skip an exercise.
         if (!securePreferences.getBoolean(Constant.BUNDLE_EXERCISE_SKIPPED, false))
         {
-            Util.grantBadgeToUser(email, Badge.KEPT_SWIMMING,
+            Util.grantBadgeToUser(userId, Badge.KEPT_SWIMMING,
                                   new AwardDialogContent(R.mipmap.kept_swimming,
                                                          context.getString(R.string.award_kept_swimming_description)), true);
         }
@@ -202,8 +202,8 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         notificationHandler = NotificationHandler.getInstance(null);
         if (notificationHandler.getAward(finisherAward) == null)
         {
-            Util.grantPointsToUser(email, Constant.POINTS_COMPLETING_WORKOUT, context.getString(R.string.award_completed_workout_description));
-            Util.grantBadgeToUser(email, Badge.FINISHER, finisherAward, true);
+            Util.grantPointsToUser(userId, Constant.POINTS_COMPLETING_WORKOUT, context.getString(R.string.award_completed_workout_description));
+            Util.grantBadgeToUser(userId, Badge.FINISHER, finisherAward, true);
         }
     }
 
@@ -478,7 +478,7 @@ public class OverviewActivity extends AppCompatActivity implements ShareListener
         {
             // There will be no way we can know if they actually shared or not, so we will
             // Grant points to the user for at least opening up twitter and thinking about tweeting.
-            Util.grantPointsToUser(email, Constant.POINTS_SHARING, context.getString(R.string.award_sharing_description));
+            Util.grantPointsToUser(userId, Constant.POINTS_SHARING, context.getString(R.string.award_sharing_description));
         }
     }
 

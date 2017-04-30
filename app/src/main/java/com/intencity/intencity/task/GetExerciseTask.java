@@ -81,6 +81,7 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
                 routineState = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_ROUTINE_STATE));
                 routineName = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_ROUTINE_NAME));
 
+                int id = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_ID));
                 String name = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_NAME));
                 String description = cursor.getString(cursor.getColumnIndex(ExerciseTable.COLUMN_DESCRIPTION));
                 int priority = cursor.getInt(cursor.getColumnIndex(ExerciseTable.COLUMN_PRIORITY));
@@ -94,6 +95,7 @@ public class GetExerciseTask extends AsyncTask<Void, Void, ArrayList<Exercise>>
                     lastExerciseName = name;
 
                     exercise = new Exercise(new ArrayList<Set>());
+                    exercise.setId(id);
                     exercise.setName(name);
                     exercise.setDescription(description);
                     exercise.setPriority(priority);

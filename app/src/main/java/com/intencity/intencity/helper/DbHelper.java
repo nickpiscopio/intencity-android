@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class DbHelper extends SQLiteOpenHelper
 {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "Intencity.db";
 
     private static final String TEXT_TYPE = " TEXT";
@@ -31,6 +31,7 @@ public class DbHelper extends SQLiteOpenHelper
             ExerciseTable.COLUMN_INDEX + INTEGER_TYPE + COMMA_SEP +
             ExerciseTable.COLUMN_ROUTINE_NAME + TEXT_TYPE + COMMA_SEP +
             ExerciseTable.COLUMN_WEB_ID + INTEGER_TYPE + COMMA_SEP +
+            ExerciseTable.COLUMN_ID + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
             ExerciseTable.COLUMN_NAME + TEXT_TYPE + NOT_NULL + COMMA_SEP +
             ExerciseTable.COLUMN_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
             ExerciseTable.COLUMN_WEIGHT + REAL_TYPE + COMMA_SEP +
