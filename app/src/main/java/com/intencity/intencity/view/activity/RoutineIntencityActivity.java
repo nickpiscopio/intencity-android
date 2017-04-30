@@ -429,45 +429,56 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            ArrayList<SelectableListItem> locations = new ArrayList<>();
 
-            try
-            {
-                locations.addAll(fitnessLocationDao.parseJson(response, currentUserLocation,
-                                                              SelectableListItem.ListItemType.TYPE_RADIO_BUTTON));
-
-                if (fitnessLocationDao.hasValidFitnessLocation())
-                {
-                    startServiceToStartExercising();
-                }
-                else
-                {
-                    // The location wasn't valid, so we need to notify the user.
-                    openFitnessLocation(locations);
-
-                    hideLoading();
-                }
-            }
-            catch (JSONException e)
-            {
-                Log.e(Constant.TAG, "Couldn't parse user locations. " + e.toString());
-
-                openFitnessLocation(null);
-
-                hideLoading();
-            }
         }
 
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
 
+                    ArrayList<SelectableListItem> locations = new ArrayList<>();
+
+                    try
+                    {
+                        locations.addAll(fitnessLocationDao.parseJson(response, currentUserLocation,
+                                                                      SelectableListItem.ListItemType.TYPE_RADIO_BUTTON));
+
+                        if (fitnessLocationDao.hasValidFitnessLocation())
+                        {
+                            startServiceToStartExercising();
+                        }
+                        else
+                        {
+                            // The location wasn't valid, so we need to notify the user.
+                            openFitnessLocation(locations);
+
+                            hideLoading();
+                        }
+                    }
+                    catch (JSONException e)
+                    {
+                        Log.e(Constant.TAG, "Couldn't parse user locations. " + e.toString());
+
+                        openFitnessLocation(null);
+
+                        hideLoading();
+                    }
+
+                    break;
+
+                default:
+                    showConnectionIssue();
+                    break;
+            }
         }
 
         @Override
         public void onRetrievalFailed(int statusCode)
         {
-            showConnectionIssue();
+
         }
     };
 
