@@ -485,43 +485,47 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     @Override
     public void onRetrievalSuccessful(String response)
     {
-        try
-        {
-            rows.clear();
-            rows.addAll(new IntencityRoutineDao().parseJson(context, response));
 
-            adapter.notifyDataSetChanged();
-
-            hasMoreExercises = true;
-
-            hideLoading();
-        }
-        catch (JSONException e)
-        {
-            showConnectionIssueDialog();
-        }
     }
 
     @Override
     public void onServiceResponse(int statusCode, String response)
     {
-//        switch (statusCode)
-//        {
-//            case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
-//
-//
-//                break;
-//
-//            default:
-//                break;
-//        }
+        switch (statusCode)
+        {
+            case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
 
+                try
+                {
+                    rows.clear();
+                    rows.addAll(new IntencityRoutineDao().parseJson(context, response));
+
+                    adapter.notifyDataSetChanged();
+
+                    hasMoreExercises = true;
+
+                    hideLoading();
+                }
+                catch (JSONException e)
+                {
+                    showConnectionIssueDialog();
+                }
+
+                break;
+
+            case Constant.STATUS_CODE_FAILURE_STORED_PROCEDURE:
+            default:
+
+                showConnectionIssueDialog();
+
+                break;
+        }
     }
 
     @Override
     public void onRetrievalFailed(int statusCode)
     {
-        showConnectionIssueDialog();
+
     }
 
     @Override

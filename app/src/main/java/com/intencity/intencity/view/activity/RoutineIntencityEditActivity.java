@@ -153,46 +153,89 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
     @Override
     public void onRetrievalSuccessful(String response)
     {
-        try
-        {
-            routines.clear();
-            routinesToRemove = new ArrayList<>();
-
-            JSONArray array = new JSONArray(response);
-
-            int length = array.length();
-
-            for (int i = 0; i < length; i++)
-            {
-                JSONObject object = array.getJSONObject(i);
-
-                String name = object.getString(Constant.COLUMN_DISPLAY_NAME);
-
-                // Add all the equipment to the array.
-                routines.add(new SelectableListItem(name));
-            }
-
-            adapter.notifyDataSetChanged();
-
-            progressBar.setVisibility(View.GONE);
-        }
-        catch (JSONException exception)
-        {
-            Log.e(Constant.TAG, "Couldn't parse custom Intencity routine list. " + exception.toString());
-
-            progressBar.setVisibility(View.GONE);
-        }
+//        try
+//        {
+//            routines.clear();
+//            routinesToRemove = new ArrayList<>();
+//
+//            JSONArray array = new JSONArray(response);
+//
+//            int length = array.length();
+//
+//            for (int i = 0; i < length; i++)
+//            {
+//                JSONObject object = array.getJSONObject(i);
+//
+//                String name = object.getString(Constant.COLUMN_DISPLAY_NAME);
+//
+//                // Add all the equipment to the array.
+//                routines.add(new SelectableListItem(name));
+//            }
+//
+//            adapter.notifyDataSetChanged();
+//
+//            progressBar.setVisibility(View.GONE);
+//        }
+//        catch (JSONException exception)
+//        {
+//            Log.e(Constant.TAG, "Couldn't parse custom Intencity routine list. " + exception.toString());
+//
+//            progressBar.setVisibility(View.GONE);
+//        }
     }
 
-    @Override public void onServiceResponse(int statusCode, String response)
+    @Override
+    public void onServiceResponse(int statusCode, String response)
     {
+        switch (statusCode)
+        {
+            case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
 
+                try
+                {
+                    routines.clear();
+                    routinesToRemove = new ArrayList<>();
+
+                    JSONArray array = new JSONArray(response);
+
+                    int length = array.length();
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        JSONObject object = array.getJSONObject(i);
+
+                        String name = object.getString(Constant.COLUMN_DISPLAY_NAME);
+
+                        // Add all the equipment to the array.
+                        routines.add(new SelectableListItem(name));
+                    }
+
+                    adapter.notifyDataSetChanged();
+
+                    progressBar.setVisibility(View.GONE);
+                }
+                catch (JSONException exception)
+                {
+                    Log.e(Constant.TAG, "Couldn't parse custom Intencity routine list. " + exception.toString());
+
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                break;
+
+            case Constant.STATUS_CODE_FAILURE_STORED_PROCEDURE:
+            default:
+
+                showConnectionIssue();
+
+                break;
+        }
     }
 
     @Override
     public void onRetrievalFailed(int statusCode)
     {
-        showConnectionIssue();
+//        showConnectionIssue();
     }
 
     /**
@@ -203,19 +246,30 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            setResult(Constant.REQUEST_CODE_ROUTINE_UPDATED);
-            finish();
+
         }
 
-        @Override public void onServiceResponse(int statusCode, String response)
+        @Override
+        public void onServiceResponse(int statusCode, String response)
         {
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_MUSCLE_GROUP_UPDATED:
+                    setResult(Constant.REQUEST_CODE_ROUTINE_UPDATED);
+                    finish();
+                    break;
 
+                case Constant.STATUS_CODE_FAILURE_MUSCLE_GROUP_UPDATED:
+                default:
+                    showConnectionIssue();
+                    break;
+            }
         }
 
         @Override
         public void onRetrievalFailed(int statusCode)
         {
-            showConnectionIssue();
+
         }
     };
 

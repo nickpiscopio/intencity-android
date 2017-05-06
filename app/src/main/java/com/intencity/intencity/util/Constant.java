@@ -58,6 +58,8 @@ public class Constant
     public static final int STATUS_CODE_SUCCESS_FITNESS_EQUIPMENT_UPDATED = 209;
     public static final int STATUS_CODE_SUCCESS_EXERCISE_PRIORITY_UPDATED = 210;
     public static final int STATUS_CODE_SUCCESS_ROUTINE_SAVED = 211;
+    public static final int STATUS_CODE_SUCCESS_MUSCLE_GROUP_UPDATED = 212;
+    public static final int STATUS_CODE_SUCCESS_MUSCLE_GROUP_SET = 213;
 
     public static final int STATUS_CODE_FAILURE_GENERIC = 500;
     public static final int STATUS_CODE_FAILURE_STORED_PROCEDURE = 501;
@@ -75,6 +77,8 @@ public class Constant
     public static final int STATUS_CODE_FAILURE_EXERCISE_PRIORITY_UPDATE = 513;
     public static final int STATUS_CODE_FAILURE_ROUTINE_SAVE = 514;
     public static final int STATUS_CODE_FAILURE_ROUTINE_EXISTS = 515;
+    public static final int STATUS_CODE_FAILURE_MUSCLE_GROUP_UPDATED = 516;
+    public static final int STATUS_CODE_FAILURE_MUSCLE_GROUP_SET = 517;
 
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences
