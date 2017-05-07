@@ -766,20 +766,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
             if (conductUpdate)
             {
                 // Update the exercise on the web.
-                new ServiceTask(new ServiceListener()
-                {
-                    @Override
-                    public void onRetrievalSuccessful(String response){ }
-
-                    @Override
-                    public void onServiceResponse(int statusCode, String response)
-                    {
-
-                    }
-
-                    @Override
-                    public void onRetrievalFailed(int statusCode) { }
-                }).execute(Constant.SERVICE_COMPLEX_UPDATE, updateString);
+                new ServiceTask(null).execute(Constant.SERVICE_COMPLEX_UPDATE, updateString);
             }
 
             if (conductInsert)

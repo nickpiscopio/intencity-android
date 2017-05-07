@@ -99,20 +99,32 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
     @Override
     public void onRetrievalSuccessful(String response)
     {
-        setResult(Constant.REQUEST_CODE_SAVED_ROUTINE_UPDATED);
-        finish();
+
     }
 
     @Override
     public void onServiceResponse(int statusCode, String response)
     {
+        switch (statusCode)
+        {
+            case Constant.STATUS_CODE_SUCCESS_USER_ROUTINE_UPDATED:
 
+                setResult(Constant.REQUEST_CODE_SAVED_ROUTINE_UPDATED);
+                finish();
+
+                break;
+
+            case Constant.STATUS_CODE_FAILURE_USER_ROUTINE_UPDATE:
+            default:
+
+                showConnectionIssue();
+                break;
+        }
     }
 
     @Override
     public void onRetrievalFailed(int statusCode)
     {
-        showConnectionIssue();
     }
 
     /**
