@@ -698,7 +698,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
             Exercise currentExercise = currentExercises.get(position);
             currentExercise.setSets(sets);
+
             String exerciseName = currentExercise.getName();
+
             allExercises.get(position).setSets(sets);
 
             // We notify the data set changed just in case something changed in the stat activity.
@@ -707,9 +709,9 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
 
             int setSize = sets.size();
             String statements = "statements=";
-            String updateString = statements + setSize + Constant.PARAMETER_AMPERSAND + Constant.PARAMETER_EMAIL +
+            String updateString = statements + setSize + Constant.PARAMETER_AMPERSAND + Constant.PARAMETER_USER_ID +
                                   userId;
-            String insertString = statements + setSize + Constant.PARAMETER_AMPERSAND + Constant.PARAMETER_EMAIL +
+            String insertString = statements + setSize + Constant.PARAMETER_AMPERSAND + Constant.PARAMETER_USER_ID +
                                   userId;
 
             // The update and insert Strings already starts out with a value in it,
@@ -757,7 +759,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 else
                 {
                     // Concatenate the insert parameter String.
-                    insertString += generateComplexInsertParameters(insertIndex, exerciseName, set);
+                    insertString += generateComplexInsertParameters(insertIndex, currentExercise.getId(), set);
                     conductInsert = true;
                     insertIndex++;
                 }
@@ -779,29 +781,40 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     @Override
                     public void onRetrievalSuccessful(String response)
                     {
-                        // Remove the first and last character because they are "[" and "]";
-                        String responseArr = response.substring(1, response.length() - 1);
-                        String[] ids =  responseArr.split(Constant.PARAMETER_DELIMITER);
 
-                        for (Set set : sets)
-                        {
-                            if (set.getWebId() > 0)
-                            {
-                                continue;
-                            }
-
-                            // Set the web id to the first id in the list.
-                            set.setWebId(Integer.valueOf(ids[0]));
-
-                            // Create a new array withe the use id removed.
-                            ids = Arrays.copyOfRange(ids, 1, ids.length);
-                        }
                     }
 
                     @Override
                     public void onServiceResponse(int statusCode, String response)
                     {
+                        switch (statusCode)
+                        {
+                            case Constant.STATUS_CODE_SUCCESS_INSERT:
 
+                                // Remove the first and last character because they are "[" and "]";
+                                String responseArr = response.substring(1, response.length() - 1);
+                                String[] ids =  responseArr.split(Constant.PARAMETER_DELIMITER);
+
+                                for (Set set : sets)
+                                {
+                                    if (set.getWebId() > 0)
+                                    {
+                                        continue;
+                                    }
+
+                                    // Set the web id to the first id in the list.
+                                    set.setWebId(Integer.valueOf(ids[0]));
+
+                                    // Create a new array with the use id removed.
+                                    ids = Arrays.copyOfRange(ids, 1, ids.length);
+                                }
+
+                                break;
+
+                            case Constant.STATUS_CODE_FAILURE_INSERT:
+                            default:
+                                break;
+                        }
                     }
 
                     @Override
@@ -881,19 +894,18 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     /**
      * Constructs a snippet of the parameter query sent to the service to insert.
      *
-     * @param index     The index of the sets we are inserting.
-     * @param name      The name of the exercise we are inserting.
-     * @param set       The set we are inserting.
+     * @param index         The index of the sets we are inserting.
+     * @param exerciseId    The ID of the exercise that was completed.
+     * @param set           The set we are inserting.
      *
      * @return  The constructed snippet of the complex insert parameter String.
      */
-    private String generateComplexInsertParameters(int index, String name, Set set)
+    private String generateComplexInsertParameters(int index, int exerciseId, Set set)
     {
         String columns = "columns";
         String inserts = "inserts";
 
-        String curDate = "CURDATE()";
-        String now = "NOW()";
+        long curDate = new Date().getTime();
 
         float weight = set.getWeight();
         String duration = set.getDuration();
@@ -910,15 +922,13 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         return getParameterTitle(Constant.PARAMETER_TABLE, index)
                 + Constant.TABLE_COMPLETED_EXERCISE
                 + getParameterTitle(columns, index) + Constant.COLUMN_DATE + Constant.PARAMETER_DELIMITER
-                                                    + Constant.COLUMN_TIME + Constant.PARAMETER_DELIMITER
-                                                    + Constant.COLUMN_EXERCISE_NAME + Constant.PARAMETER_DELIMITER
+                                                    + Constant.COLUMN_EXERCISE_ID + Constant.PARAMETER_DELIMITER
                                                     + weightParam
                                                     + durationParam
                                                     + Constant.COLUMN_EXERCISE_DIFFICULTY + Constant.PARAMETER_DELIMITER
                                                     + Constant.COLUMN_NOTES
                 + getParameterTitle(inserts, index) + curDate + Constant.PARAMETER_DELIMITER
-                                                    + now + Constant.PARAMETER_DELIMITER
-                                                    + name + Constant.PARAMETER_DELIMITER
+                                                    + exerciseId + Constant.PARAMETER_DELIMITER
                                                     + weightValue
                                                     + durationValue + Constant.PARAMETER_DELIMITER
                                                     + set.getDifficulty() + Constant.PARAMETER_DELIMITER
@@ -926,10 +936,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     }
 
     @Override
-    public void onStartLoading()
-    {
-
-    }
+    public void onStartLoading() { }
 
     @Override
     public void onFinishedLoading(int which)

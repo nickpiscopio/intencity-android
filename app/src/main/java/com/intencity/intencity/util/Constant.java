@@ -61,6 +61,7 @@ public class Constant
     public static final int STATUS_CODE_SUCCESS_MUSCLE_GROUP_UPDATED = 212;
     public static final int STATUS_CODE_SUCCESS_MUSCLE_GROUP_SET = 213;
     public static final int STATUS_CODE_SUCCESS_USER_ROUTINE_UPDATED = 214;
+    public static final int STATUS_CODE_SUCCESS_INSERT = 215;
 
     public static final int STATUS_CODE_FAILURE_GENERIC = 500;
     public static final int STATUS_CODE_FAILURE_STORED_PROCEDURE = 501;
@@ -81,6 +82,7 @@ public class Constant
     public static final int STATUS_CODE_FAILURE_MUSCLE_GROUP_UPDATED = 516;
     public static final int STATUS_CODE_FAILURE_MUSCLE_GROUP_SET = 517;
     public static final int STATUS_CODE_FAILURE_USER_ROUTINE_UPDATE = 518;
+    public static final int STATUS_CODE_FAILURE_INSERT = 519;
 
     public static final String SHARED_PREFERENCES = "com.intencity.intencity.shared.preferences";
     // Stored in SecurePreferences
@@ -240,8 +242,8 @@ public class Constant
     public static final String COLUMN_DATE = "Date";
     public static final String COLUMN_TIME = "Time";
     public static final String COLUMN_EXERCISE_TABLE_EXERCISE_NAME = "ExerciseTableExerciseName";
-    public static final String COLUMN_EXERCISE_ID = "ID";
     public static final String COLUMN_EXERCISE_NAME = "ExerciseName";
+    public static final String COLUMN_EXERCISE_ID = "ExerciseId";
     public static final String COLUMN_EXERCISE_WEIGHT = "ExerciseWeight";
     public static final String COLUMN_EXERCISE_REPS = "ExerciseReps";
     public static final String COLUMN_EXERCISE_DURATION = "ExerciseDuration";

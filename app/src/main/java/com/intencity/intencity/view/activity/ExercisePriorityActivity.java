@@ -128,7 +128,7 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
                             {
                                 JSONObject object = array.getJSONObject(i);
 
-                                int exerciseId = object.getInt(Constant.COLUMN_EXERCISE_ID);
+                                int exerciseId = object.getInt(Constant.COLUMN_ID);
                                 String name = object.getString(Constant.COLUMN_EXERCISE_NAME);
                                 String priority = object.getString(Constant.COLUMN_PRIORITY);
 
