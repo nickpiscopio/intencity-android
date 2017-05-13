@@ -21,7 +21,7 @@ import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.model.User;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
-import com.intencity.intencity.util.SecurePreferences;
+import com.intencity.intencity.util.Util;
 import com.intencity.intencity.view.activity.ProfileActivity;
 import com.intencity.intencity.view.activity.SearchActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -52,7 +52,7 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
 
     private TextView followingMessage;
 
-    private String email;
+    private int userId;
 
     private ArrayList<User> users;
 
@@ -81,8 +81,7 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
 
         followingMessage = (TextView) footer.findViewById(R.id.following_message);
 
-        SecurePreferences securePreferences = new SecurePreferences(context);
-        email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
+        userId = Util.getSecurePreferencesUserId(context);
 
         users = new ArrayList<>();
 
@@ -139,25 +138,34 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
     @Override
     public void onRetrievalSuccessful(String response)
     {
-        swipeContainer.setRefreshing(false);
 
-        users = new UserDao().parseJson(response);
-
-        populateRankingList();
     }
 
     @Override
     public void onServiceResponse(int statusCode, String response)
     {
+        switch (statusCode)
+        {
+            case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
+                swipeContainer.setRefreshing(false);
 
+                users = new UserDao().parseJson(response);
+
+                populateRankingList();
+                break;
+            case Constant.STATUS_CODE_FAILURE_STORED_PROCEDURE:
+            default:
+                swipeContainer.setRefreshing(false);
+
+                populateRankingList();
+                break;
+        }
     }
 
     @Override
     public void onRetrievalFailed(int statusCode)
     {
-        swipeContainer.setRefreshing(false);
 
-        populateRankingList();
     }
 
     /**
@@ -233,7 +241,7 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
     {
         new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(
-                                              Constant.STORED_PROCEDURE_GET_FOLLOWING, email));
+                                              Constant.STORED_PROCEDURE_GET_FOLLOWING, userId));
     }
 
     /**
