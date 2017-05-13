@@ -147,17 +147,22 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
         switch (statusCode)
         {
             case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
+
                 swipeContainer.setRefreshing(false);
 
                 users = new UserDao().parseJson(response);
 
                 populateRankingList();
+
                 break;
+
             case Constant.STATUS_CODE_FAILURE_STORED_PROCEDURE:
             default:
+
                 swipeContainer.setRefreshing(false);
 
                 populateRankingList();
+
                 break;
         }
     }

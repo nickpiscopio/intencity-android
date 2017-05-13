@@ -229,53 +229,67 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     };
 
     /**
-     * Service listener for searching for a user.
+     * Service listener for searching.
      */
     ServiceListener searchListener = new ServiceListener()
     {
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            searchView.clearFocus();
 
-            progressBar.setVisibility(View.GONE);
-
-            if (searchExercises)
-            {
-                parseExercises(response);
-            }
-            else
-            {
-                users = new UserDao().parseJson(response);
-                arrayAdapter  = new LeaderboardAdapter(context, R.layout.list_item_ranking, users, true);
-                listView.setAdapter(arrayAdapter);
-            }
-
-            if (arrayAdapter != null)
-            {
-                divider.setVisibility(View.GONE);
-            }
         }
 
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
 
+                    searchView.clearFocus();
+
+                    progressBar.setVisibility(View.GONE);
+
+                    if (searchExercises)
+                    {
+                        parseExercises(response);
+                    }
+                    else
+                    {
+                        users = new UserDao().parseJson(response);
+                        arrayAdapter  = new LeaderboardAdapter(context, R.layout.list_item_ranking, users, true);
+                        listView.setAdapter(arrayAdapter);
+                    }
+
+                    if (arrayAdapter != null)
+                    {
+                        divider.setVisibility(View.GONE);
+                    }
+
+                    break;
+
+                case Constant.STATUS_CODE_FAILURE_STORED_PROCEDURE:
+                default:
+
+                    if (searchExercises)
+                    {
+                        parseExercises("");
+
+                        showConnectionIssue();
+                    }
+                    else
+                    {
+                        showConnectionIssue();
+                    }
+
+                    break;
+            }
         }
 
         @Override
         public void onRetrievalFailed(int statusCode)
         {
-            if (searchExercises)
-            {
-                parseExercises("");
 
-                showConnectionIssue();
-            }
-            else
-            {
-                showConnectionIssue();
-            }
         }
     };
 

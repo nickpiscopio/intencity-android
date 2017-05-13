@@ -274,36 +274,47 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            try
-            {
-                ArrayList<ProfileRow> awardSection = new ArrayList<>();
-                awardSection.add(new ProfileRow(true, context.getString(R.string.awards_title), ""));
 
-                JSONArray array = new JSONArray(response);
-
-                int length = array.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject object = array.getJSONObject(i);
-
-                    String badgeName = object.getString(Constant.COLUMN_BADGE_NAME);
-                    String amount = object.getString(Constant.COLUMN_TOTAL_BADGES);
-
-                    awardSection.add(new ProfileRow(false, badgeName, amount));
-                }
-
-                profileSections.addAll(0, awardSection);
-            }
-            catch (Exception e) { }
-
-            updateListView();
         }
 
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
 
+                    try
+                    {
+                        ArrayList<ProfileRow> awardSection = new ArrayList<>();
+                        awardSection.add(new ProfileRow(true, context.getString(R.string.awards_title), ""));
+
+                        JSONArray array = new JSONArray(response);
+
+                        int length = array.length();
+
+                        for (int i = 0; i < length; i++)
+                        {
+                            JSONObject object = array.getJSONObject(i);
+
+                            String badgeName = object.getString(Constant.COLUMN_BADGE_NAME);
+                            String amount = object.getString(Constant.COLUMN_TOTAL_BADGES);
+
+                            awardSection.add(new ProfileRow(false, badgeName, amount));
+                        }
+
+                        profileSections.addAll(0, awardSection);
+                    }
+                    catch (Exception e) { }
+
+                    updateListView();
+
+                    break;
+
+                case Constant.STATUS_CODE_FAILURE_STORED_PROCEDURE:
+                default:
+                    break;
+            }
         }
 
         @Override
@@ -315,34 +326,45 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
         @Override
         public void onRetrievalSuccessful(String response)
         {
-            try
-            {
-                ArrayList<ProfileRow> lastWeekRoutines = new ArrayList<>();
-                lastWeekRoutines.add(new ProfileRow(true, context.getString(R.string.profile_routines_title), ""));
 
-                JSONArray array = new JSONArray(response);
-
-                int length = array.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject object = array.getJSONObject(i);
-
-                    String title = object.getString(Constant.COLUMN_DISPLAY_NAME);
-                    lastWeekRoutines.add(new ProfileRow(false, title, ""));
-                }
-
-                profileSections.addAll(lastWeekRoutines);
-            }
-            catch (Exception e) { }
-
-            updateListView();
         }
 
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
+            switch (statusCode)
+            {
+                case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
 
+                    try
+                    {
+                        ArrayList<ProfileRow> lastWeekRoutines = new ArrayList<>();
+                        lastWeekRoutines.add(new ProfileRow(true, context.getString(R.string.profile_routines_title), ""));
+
+                        JSONArray array = new JSONArray(response);
+
+                        int length = array.length();
+
+                        for (int i = 0; i < length; i++)
+                        {
+                            JSONObject object = array.getJSONObject(i);
+
+                            String title = object.getString(Constant.COLUMN_DISPLAY_NAME);
+                            lastWeekRoutines.add(new ProfileRow(false, title, ""));
+                        }
+
+                        profileSections.addAll(lastWeekRoutines);
+                    }
+                    catch (Exception e) { }
+
+                    updateListView();
+
+                    break;
+
+                case Constant.STATUS_CODE_FAILURE_STORED_PROCEDURE:
+                default:
+                    break;
+            }
         }
 
         @Override
