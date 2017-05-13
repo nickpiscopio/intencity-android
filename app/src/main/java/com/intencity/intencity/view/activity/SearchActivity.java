@@ -59,6 +59,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     private Context context;
 
+    private int userId;
+
     private boolean searchExercises;
 
     private ArrayList<User> users;
@@ -88,6 +90,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         listView.setEmptyView(findViewById(R.id.empty_list));
 
         context = getApplicationContext();
+
+        userId = Util.getSecurePreferencesUserId(context);
 
         Bundle bundle = getIntent().getExtras();
         searchExercises = bundle.getBoolean(Constant.BUNDLE_SEARCH_EXERCISES);
@@ -153,9 +157,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     {
         searchString = query;
 
-        SecurePreferences securePreferences = new SecurePreferences(context);
-        String email = securePreferences.getString(Constant.USER_ACCOUNT_ID, "");
-
         // Get all the users from the database with the search query minus the spaces.
         query = searchExercises ? query : query.replaceAll(Constant.REGEX_SPACE, "");
 
@@ -164,9 +165,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         // Get the stored procedure depending upon what we are searching.
         String urlParameters = searchExercises ?
                 Constant.generateStoredProcedureParameters(
-                        Constant.STORED_PROCEDURE_SEARCH_EXERCISES, email, query) :
+                        Constant.STORED_PROCEDURE_SEARCH_EXERCISES, userId, query) :
                 Constant.generateStoredProcedureParameters(
-                        Constant.STORED_PROCEDURE_SEARCH_USERS, email, query);
+                        Constant.STORED_PROCEDURE_SEARCH_USERS, userId, query);
 
         new ServiceTask(searchListener).execute(Constant.SERVICE_STORED_PROCEDURE, urlParameters);
 
