@@ -381,64 +381,37 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
     private ServiceListener googleGeoCodeAddressListener = new ServiceListener()
     {
         @Override
-        public void onRetrievalSuccessful(String response)
-        {
-//            try
-//            {
-//                JSONObject obj = new JSONObject(response);
-//                String status = obj.getString(ServiceTask.NODE_STATUS);
-//                if (status.equalsIgnoreCase(ServiceTask.RESPONSE_OK))
-//                {
-//                    JSONArray addresses = obj.getJSONArray(NODE_RESULTS);
-//                    // The formatted address we are looking for will always be in the first index,
-//                    // so there is no reason to search through the array.
-//                    String formattedAddress = addresses.getJSONObject(0).getString(NODE_FORMATTED_ADDRESS);
-//
-//                    listener.onGeocodeRetrievalSuccessful(requestCode, formattedAddress);
-//                }
-//                else
-//                {
-//                    onRetrievalFailed(0);
-//                }
-//            }
-//            catch (JSONException e)
-//            {
-//                onRetrievalFailed(0);
-//            }
-        }
-
-        @Override
         public void onServiceResponse(int statusCode, String response)
         {
-//            switch (statusCode)
-            try
+            if (statusCode != Constant.STATUS_CODE_FAILURE_GENERIC)
             {
-                JSONObject obj = new JSONObject(response);
-                String status = obj.getString(ServiceTask.NODE_STATUS);
-                if (status.equalsIgnoreCase(ServiceTask.RESPONSE_OK))
+                try
                 {
-                    JSONArray addresses = obj.getJSONArray(NODE_RESULTS);
-                    // The formatted address we are looking for will always be in the first index,
-                    // so there is no reason to search through the array.
-                    String formattedAddress = addresses.getJSONObject(0).getString(NODE_FORMATTED_ADDRESS);
+                    JSONObject obj = new JSONObject(response);
+                    String status = obj.getString(ServiceTask.NODE_STATUS);
+                    if (status.equalsIgnoreCase(ServiceTask.RESPONSE_OK))
+                    {
+                        JSONArray addresses = obj.getJSONArray(NODE_RESULTS);
+                        // The formatted address we are looking for will always be in the first index,
+                        // so there is no reason to search through the array.
+                        String formattedAddress = addresses.getJSONObject(0).getString(NODE_FORMATTED_ADDRESS);
 
-                    listener.onGeocodeRetrievalSuccessful(requestCode, formattedAddress);
+                        listener.onGeocodeRetrievalSuccessful(requestCode, formattedAddress);
+                    }
+                    else
+                    {
+                        listener.onGeocodeRetrievalFailed(requestCode);
+                    }
                 }
-                else
+                catch (JSONException e)
                 {
-                    onRetrievalFailed(0);
+                    listener.onGeocodeRetrievalFailed(requestCode);
                 }
             }
-            catch (JSONException e)
+            else
             {
-                onRetrievalFailed(0);
+                listener.onGeocodeRetrievalFailed(requestCode);
             }
-        }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-//            listener.onGeocodeRetrievalFailed(requestCode);
         }
     };
 
@@ -472,7 +445,7 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
         }
         else
         {
-            googleGeoCodeAddressListener.onRetrievalFailed(0);
+            googleGeoCodeAddressListener.onServiceResponse(Constant.STATUS_CODE_FAILURE_GENERIC, null);
         }
     }
 

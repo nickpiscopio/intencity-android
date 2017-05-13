@@ -147,12 +147,6 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
     };
 
     @Override
-    public void onRetrievalSuccessful(String response)
-    {
-
-    }
-
-    @Override
     public void onServiceResponse(int statusCode, String response)
     {
         switch (statusCode)
@@ -177,23 +171,6 @@ public class ChangePasswordActivity extends AppCompatActivity implements Service
         }
 
         loadingProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
-//        switch (statusCode)
-//        {
-//            case Constant.STATUS_CODE_FAILURE_PASSWORD_INVALID:
-//                showMessage(R.string.invalid_password);
-//                break;
-//            default:
-//
-//                showMessage(R.string.intencity_communication_error);
-//                break;
-//        }
-//
-//        loadingProgressBar.setVisibility(View.GONE);
     }
 
     /**

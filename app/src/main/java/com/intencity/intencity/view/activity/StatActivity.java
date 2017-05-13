@@ -42,7 +42,9 @@ public class StatActivity extends AppCompatActivity implements DialogListener
     private final int REPS = 0;
     private final int TIME = 1;
 
-    private int durationType;
+    private Context context;
+
+
 
     private EditText notes;
     private ListView setsListView;
@@ -52,9 +54,10 @@ public class StatActivity extends AppCompatActivity implements DialogListener
     private ArrayList<Set> sets;
 
     private Exercise exercise;
-    private int position;
 
-    private Context context;
+    private int durationType;
+    private int position;
+    private int exerciseId;
 
     private String exerciseName;
 
@@ -84,6 +87,7 @@ public class StatActivity extends AppCompatActivity implements DialogListener
 
         if(exercise != null)
         {
+            exerciseId = exercise.getId();
             exerciseName = exercise.getName();
             sets = exercise.getSets();
 
@@ -135,7 +139,7 @@ public class StatActivity extends AppCompatActivity implements DialogListener
                 return true;
             case R.id.info:
                 Intent intent = new Intent(context, Direction.class);
-                intent.putExtra(Constant.BUNDLE_EXERCISE_NAME, exerciseName);
+                intent.putExtra(Constant.BUNDLE_EXERCISE, exercise);
                 startActivity(intent);
                 return true;
             default:

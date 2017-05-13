@@ -235,12 +235,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     ServiceListener searchListener = new ServiceListener()
     {
         @Override
-        public void onRetrievalSuccessful(String response)
-        {
-
-        }
-
-        @Override
         public void onServiceResponse(int statusCode, String response)
         {
             switch (statusCode)
@@ -285,12 +279,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
                     break;
             }
-        }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-
         }
     };
 

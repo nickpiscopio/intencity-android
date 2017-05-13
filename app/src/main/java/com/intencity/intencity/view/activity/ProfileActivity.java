@@ -272,12 +272,6 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
     private ServiceListener badgeRetrievalListener = new ServiceListener()
     {
         @Override
-        public void onRetrievalSuccessful(String response)
-        {
-
-        }
-
-        @Override
         public void onServiceResponse(int statusCode, String response)
         {
             switch (statusCode)
@@ -316,19 +310,10 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
                     break;
             }
         }
-
-        @Override
-        public void onRetrievalFailed(int statusCode) { }
     };
 
     private ServiceListener last7DayRoutineServiceListener = new ServiceListener()
     {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-
-        }
-
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
@@ -366,9 +351,6 @@ public class ProfileActivity extends AppCompatActivity implements DialogListener
                     break;
             }
         }
-
-        @Override
-        public void onRetrievalFailed(int statusCode) { }
     };
 
     @Override

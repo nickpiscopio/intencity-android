@@ -109,49 +109,50 @@ public class ExerciseSearchActivity extends AppCompatActivity implements Service
     }
 
     @Override
-    public void onRetrievalSuccessful(String response)
-    {
-        try
-        {
-            ArrayList<String> exercises = new ArrayList<>();
-
-            JSONArray array = new JSONArray(response);
-
-            int length = array.length();
-
-            for (int i = 0; i < length; i++)
-            {
-                JSONObject object = array.getJSONObject(i);
-
-                String exerciseName = object.getString(Constant.COLUMN_EXERCISE_NAME);
-                exercises.add(exerciseName);
-            }
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.list_item_standard, R.id.text_view, exercises);
-            listView.setAdapter(adapter);
-
-            divider.setVisibility(View.VISIBLE);
-        }
-        catch (JSONException e)
-        {
-            connectionIssue.setVisibility(View.VISIBLE);
-
-            Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
-        }
-
-        progressBar.setVisibility(View.GONE);
-    }
-
-    @Override
     public void onServiceResponse(int statusCode, String response)
     {
+        switch (statusCode)
+        {
+            case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
 
-    }
+                try
+                {
+                    ArrayList<String> exercises = new ArrayList<>();
 
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
-        connectionIssue.setVisibility(View.VISIBLE);
+                    JSONArray array = new JSONArray(response);
+
+                    int length = array.length();
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        JSONObject object = array.getJSONObject(i);
+
+                        String exerciseName = object.getString(Constant.COLUMN_EXERCISE_NAME);
+                        exercises.add(exerciseName);
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.list_item_standard, R.id.text_view, exercises);
+                    listView.setAdapter(adapter);
+
+                    divider.setVisibility(View.VISIBLE);
+                }
+                catch (JSONException e)
+                {
+                    connectionIssue.setVisibility(View.VISIBLE);
+
+                    Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
+                }
+
+                break;
+
+            case Constant.STATUS_CODE_FAILURE_STORED_PROCEDURE:
+            default:
+
+                connectionIssue.setVisibility(View.VISIBLE);
+
+                break;
+        }
+
         progressBar.setVisibility(View.GONE);
     }
 
@@ -166,7 +167,7 @@ public class ExerciseSearchActivity extends AppCompatActivity implements Service
             TextView textView = (TextView) view.findViewById(R.id.text_view);
 
             Intent intent = new Intent(context, Direction.class);
-            intent.putExtra(Constant.BUNDLE_EXERCISE_NAME, textView.getText().toString());
+            intent.putExtra(Constant.BUNDLE_EXERCISE, textView.getText().toString());
             startActivity(intent);
         }
     };

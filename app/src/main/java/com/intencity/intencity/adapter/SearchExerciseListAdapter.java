@@ -83,7 +83,7 @@ public class SearchExerciseListAdapter extends ArrayAdapter<Exercise>
                 public void onClick(View v)
                 {
                     Intent intent = new Intent(context, Direction.class);
-                    intent.putExtra(Constant.BUNDLE_EXERCISE_NAME, exerciseName);
+                    intent.putExtra(Constant.BUNDLE_EXERCISE, exercise);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }

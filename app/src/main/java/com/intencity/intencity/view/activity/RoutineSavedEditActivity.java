@@ -97,12 +97,6 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
     }
 
     @Override
-    public void onRetrievalSuccessful(String response)
-    {
-
-    }
-
-    @Override
     public void onServiceResponse(int statusCode, String response)
     {
         switch (statusCode)
@@ -120,11 +114,6 @@ public class RoutineSavedEditActivity extends AppCompatActivity implements Servi
                 showConnectionIssue();
                 break;
         }
-    }
-
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
     }
 
     /**

@@ -151,40 +151,6 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
     };
 
     @Override
-    public void onRetrievalSuccessful(String response)
-    {
-//        try
-//        {
-//            routines.clear();
-//            routinesToRemove = new ArrayList<>();
-//
-//            JSONArray array = new JSONArray(response);
-//
-//            int length = array.length();
-//
-//            for (int i = 0; i < length; i++)
-//            {
-//                JSONObject object = array.getJSONObject(i);
-//
-//                String name = object.getString(Constant.COLUMN_DISPLAY_NAME);
-//
-//                // Add all the equipment to the array.
-//                routines.add(new SelectableListItem(name));
-//            }
-//
-//            adapter.notifyDataSetChanged();
-//
-//            progressBar.setVisibility(View.GONE);
-//        }
-//        catch (JSONException exception)
-//        {
-//            Log.e(Constant.TAG, "Couldn't parse custom Intencity routine list. " + exception.toString());
-//
-//            progressBar.setVisibility(View.GONE);
-//        }
-    }
-
-    @Override
     public void onServiceResponse(int statusCode, String response)
     {
         switch (statusCode)
@@ -232,23 +198,11 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
         }
     }
 
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
-//        showConnectionIssue();
-    }
-
     /**
      * The service listener for saving a routine.
      */
     private ServiceListener saveRoutinesServiceListener = new ServiceListener()
     {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-
-        }
-
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
@@ -264,12 +218,6 @@ public class RoutineIntencityEditActivity extends AppCompatActivity implements S
                     showConnectionIssue();
                     break;
             }
-        }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-
         }
     };
 

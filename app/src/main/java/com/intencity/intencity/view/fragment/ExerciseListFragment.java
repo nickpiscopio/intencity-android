@@ -355,12 +355,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
     private ServiceListener saveRoutineServiceListener = new ServiceListener()
     {
         @Override
-        public void onRetrievalSuccessful(String response)
-        {
-
-        }
-
-        @Override
         public void onServiceResponse(int statusCode, String response)
         {
             switch (statusCode)
@@ -385,12 +379,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                     Util.showMessage(context, context.getString(R.string.generic_error), context.getString(R.string.intencity_communication_error));
                     break;
             }
-        }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-
         }
     };
 
@@ -600,7 +588,7 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
         else
         {
             Intent intent = new Intent(context, Direction.class);
-            intent.putExtra(Constant.BUNDLE_EXERCISE_NAME, currentExercises.get(position).getName());
+            intent.putExtra(Constant.BUNDLE_EXERCISE, currentExercises.get(position));
             startActivity(intent);
         }
     }
@@ -779,12 +767,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                 new ServiceTask(new ServiceListener()
                 {
                     @Override
-                    public void onRetrievalSuccessful(String response)
-                    {
-
-                    }
-
-                    @Override
                     public void onServiceResponse(int statusCode, String response)
                     {
                         switch (statusCode)
@@ -816,9 +798,6 @@ public class ExerciseListFragment extends android.support.v4.app.Fragment implem
                                 break;
                         }
                     }
-
-                    @Override
-                    public void onRetrievalFailed(int statusCode) { }
                 }).execute(Constant.SERVICE_COMPLEX_INSERT, insertString);
             }
         }

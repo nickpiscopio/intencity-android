@@ -306,12 +306,6 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
     public ServiceListener routineServiceListener = new ServiceListener()
     {
         @Override
-        public void onRetrievalSuccessful(String response)
-        {
-
-        }
-
-        @Override
         public void onServiceResponse(int statusCode, String response)
         {
             switch (statusCode)
@@ -353,18 +347,7 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
                     break;
             }
         }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-        }
     };
-
-    @Override
-    public void onRetrievalSuccessful(String response)
-    {
-
-    }
 
     @Override
     public void onServiceResponse(int statusCode, String response)
@@ -405,12 +388,6 @@ public class RoutineSavedActivity extends AppCompatActivity implements ServiceLi
         }
 
         hideLoading();
-
-    }
-
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
 
     }
 }

@@ -100,12 +100,6 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
     private ServiceListener getExclusionServiceListener =  new ServiceListener()
     {
         @Override
-        public void onRetrievalSuccessful(String response)
-        {
-
-        }
-
-        @Override
         public void onServiceResponse(int statusCode, String response)
         {
             switch (statusCode)
@@ -159,12 +153,6 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
                     break;
             }
         }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-
-        }
     };
 
     /**
@@ -173,16 +161,8 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
     private ServiceListener updateExclusionServiceListener =  new ServiceListener()
     {
         @Override
-        public void onRetrievalSuccessful(String response)
-        {
-            finish();
-        }
-
-        @Override
         public void onServiceResponse(int statusCode, String response)
         {
-
-
             switch (statusCode)
             {
                 case Constant.STATUS_CODE_SUCCESS_EXERCISE_PRIORITY_UPDATED:
@@ -202,12 +182,6 @@ public class ExercisePriorityActivity extends AppCompatActivity implements Exerc
 
                     break;
             }
-        }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-
         }
     };
 

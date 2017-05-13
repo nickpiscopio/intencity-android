@@ -19,6 +19,7 @@ import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.DirectionListAdapter;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.ServiceListener;
+import com.intencity.intencity.model.Exercise;
 import com.intencity.intencity.notification.CustomDialog;
 import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
@@ -62,16 +63,15 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
 
         Bundle bundle = getIntent().getExtras();
 
-        String exerciseName = bundle.getString(Constant.BUNDLE_EXERCISE_NAME, "");
-
-        if(!exerciseName.equals(""))
+        Exercise exercise = bundle.getParcelable(Constant.BUNDLE_EXERCISE);
+        if(exercise != null)
         {
-            searchForDirections(exerciseName);
+            searchForDirections(exercise.getId());
 
             if (actionBar != null)
             {
                 actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setTitle(exerciseName);
+                actionBar.setTitle(exercise.getName());
             }
         }
         else
@@ -97,12 +97,12 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
     /**
      * Searches the database for the directions to an exercise.
      */
-    private void searchForDirections(String exerciseName)
+    private void searchForDirections(int exerciseId)
     {
         new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
                                       Constant.generateStoredProcedureParameters(
                                               Constant.STORED_PROCEDURE_GET_EXERCISE_DIRECTION,
-                                              exerciseName));
+                                              exerciseId));
     }
 
     /**
@@ -131,7 +131,6 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
             noVideoLayout.setVisibility(View.VISIBLE);
         }
 
-
         ListView directionsListView = (ListView) findViewById(R.id.list_view_directions);
 
         // Populates the directions list.
@@ -155,55 +154,57 @@ public class Direction extends AppCompatActivity implements ServiceListener, You
     }
 
     @Override
-    public void onRetrievalSuccessful(String response)
-    {
-        try
-        {
-            ArrayList<String> directions = new ArrayList<>();
-            String submittedBy = "";
-            String videoUrl = "";
-
-            JSONArray array = new JSONArray(response);
-
-            int length = array.length();
-
-            for (int i = 0; i < length; i++)
-            {
-                JSONObject object = array.getJSONObject(i);
-
-                if (i == 0)
-                {
-                    submittedBy = object.getString(Constant.COLUMN_SUBMITTED_BY);
-                    videoUrl = object.getString(Constant.COLUMN_VIDEO_URL);
-                }
-
-                // Start at the third character so we can remove the number from the string.
-                // This also means we can never have more than 9 steps in the directions.
-                // We add the number later so it can be formatted properly.
-                String step = object.getString(Constant.COLUMN_DIRECTION).substring(3);
-                directions.add(step);
-            }
-
-            populate(directions, submittedBy, videoUrl);
-        }
-        catch (JSONException e)
-        {
-            showMessage(context.getString(R.string.intencity_communication_error));
-
-            Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
-        }
-    }
-
-    @Override
     public void onServiceResponse(int statusCode, String response)
     {
+        switch (statusCode)
+        {
+            case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
 
-    }
+                try
+                {
+                    ArrayList<String> directions = new ArrayList<>();
+                    String submittedBy = "";
+                    String videoUrl = "";
 
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
-        showMessage(context.getString(R.string.intencity_communication_error));
+                    JSONArray array = new JSONArray(response);
+
+                    int length = array.length();
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        JSONObject object = array.getJSONObject(i);
+
+                        if (i == 0)
+                        {
+                            submittedBy = object.getString(Constant.COLUMN_SUBMITTED_BY);
+                            videoUrl = object.getString(Constant.COLUMN_VIDEO_URL);
+                        }
+
+                        // Start at the third character so we can remove the number from the string.
+                        // This also means we can never have more than 9 steps in the directions.
+                        // We add the number later so it can be formatted properly.
+                        String step = object.getString(Constant.COLUMN_DIRECTION).substring(3);
+                        directions.add(step);
+                    }
+
+                    populate(directions, submittedBy, videoUrl);
+                }
+                catch (JSONException e)
+                {
+                    showMessage(context.getString(R.string.intencity_communication_error));
+
+                    Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
+                }
+
+                break;
+
+            case Constant.STATUS_CODE_FAILURE_STORED_PROCEDURE:
+            default:
+
+                showMessage(context.getString(R.string.intencity_communication_error));
+
+                break;
+        }
     }
 
     @Override

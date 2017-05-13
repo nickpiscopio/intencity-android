@@ -230,27 +230,6 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
      */
     private ServiceListener getLocationServiceListener = new ServiceListener()
     {
-        @Override public void onRetrievalSuccessful(String response)
-        {
-//            if (response.equals(Constant.RETURN_NULL))
-//            {
-//                // We failed to retrieve equipment from a specified location.
-//                // This means the location wasn't used before.
-//                // This is what we want, so we are updating the equipment.
-//                updateEquipment();
-//            }
-//            else
-//            {
-//                // We already have a fitness location saved.
-//                // Notify the user.
-//                CustomDialogContent dialog = new CustomDialogContent(getString(R.string.duplicate_location_title), getString(R.string.duplicate_location_description), true);
-//                dialog.setPositiveButtonStringRes(R.string.overwrite);
-//                dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_negative_button);
-//
-//                new CustomDialog(EquipmentActivity.this, overwriteFitnessLocationDialogListener, dialog, true);
-//            }
-        }
-
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
@@ -274,17 +253,13 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
                         new CustomDialog(EquipmentActivity.this, overwriteFitnessLocationDialogListener, dialog, true);
                     }
+
                     break;
+
                 default:
                     displayCommunicationError();
                     break;
             }
-        }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-//            displayCommunicationError();
         }
     };
 
@@ -293,53 +268,6 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
      */
     private ServiceListener getEquipmentServiceListener = new ServiceListener()
     {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-//            try
-//            {
-//                equipmentList = new ArrayList<>();
-//                userEquipment = new ArrayList<>();
-//
-//                JSONArray array = new JSONArray(response);
-//
-//                int length = array.length();
-//
-//                for (int i = 0; i < length; i++)
-//                {
-//                    JSONObject object = array.getJSONObject(i);
-//
-//                    String equipmentName = object.getString(Constant.COLUMN_EQUIPMENT_NAME);
-//                    boolean hasEquipment = object.getString(Constant.COLUMN_HAS_EQUIPMENT).equalsIgnoreCase(Constant.TRUE);
-//
-//                    SelectableListItem listItem = new SelectableListItem(equipmentName);
-//                    listItem.setChecked(hasEquipment);
-//
-//                    // Add all the equipment to the array.
-//                    equipmentList.add(listItem);
-//
-//                    // Add the list item to the user's equipment list if he or she currently has it.
-//                    if (hasEquipment)
-//                    {
-//                        userEquipment.add(equipmentName);
-//                    }
-//                }
-//
-//                // We set the checkbox to checked if the user has all the equipment in the equipment list.
-//                setCheckboxTick(userEquipment.size() == equipmentList.size());
-//
-//                populateEquipmentListView();
-//            }
-//            catch (JSONException exception)
-//            {
-//                Log.e(Constant.TAG, "Couldn't parse equipment " + exception.toString());
-//
-//                progressBar.setVisibility(View.GONE);
-//
-//                displayCommunicationError();
-//            }
-        }
-
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
@@ -395,14 +323,6 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
                     displayCommunicationError();
                     break;
             }
-        }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-//            progressBar.setVisibility(View.GONE);
-//
-//            displayCommunicationError();
         }
     };
 
@@ -528,12 +448,6 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
     private ServiceListener updateEquipmentServiceListener = new ServiceListener()
     {
         @Override
-        public void onRetrievalSuccessful(String response)
-        {
-
-        }
-
-        @Override
         public void onServiceResponse(int statusCode, String response)
         {
             switch (statusCode)
@@ -547,12 +461,6 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
                     displayCommunicationError();
                     break;
             }
-        }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-//            displayCommunicationError();
         }
     };
 

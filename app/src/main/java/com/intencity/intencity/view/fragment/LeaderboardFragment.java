@@ -136,12 +136,6 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
     };
 
     @Override
-    public void onRetrievalSuccessful(String response)
-    {
-
-    }
-
-    @Override
     public void onServiceResponse(int statusCode, String response)
     {
         switch (statusCode)
@@ -165,12 +159,6 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment impleme
 
                 break;
         }
-    }
-
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
-
     }
 
     /**

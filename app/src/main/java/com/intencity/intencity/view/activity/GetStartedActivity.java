@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -23,9 +22,6 @@ import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.util.Constant;
 import com.intencity.intencity.util.Util;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Date;
 
 /**
@@ -35,7 +31,7 @@ import java.util.Date;
  *
  * Created by Nick Piscopio on 8/13/16.
  */
-public class GetStartedActivity extends AppCompatActivity implements ServiceListener
+public class GetStartedActivity extends AppCompatActivity
 {
     private ProgressBar loadingProgressBar;
 
@@ -115,44 +111,6 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
-    }
-
-    @Override
-    public void onRetrievalSuccessful(String response)
-    {
-        try
-        {
-            JSONObject json = new JSONObject(response);
-
-            int userId = Integer.parseInt(json.getString(Constant.COLUMN_ID));
-            String accountType = json.getString(Constant.COLUMN_ACCOUNT_TYPE);
-
-            Util.loadIntencity(GetStartedActivity.this, userId, accountType, 0);
-        }
-        catch (JSONException e)
-        {
-            loadingProgressBar.setVisibility(View.GONE);
-            loginForm.setVisibility(View.VISIBLE);
-
-            showMessage(context.getString(R.string.login_error_title),
-                        context.getString(R.string.login_error_message));
-            Log.e(Constant.TAG, "Error parsing login data " + e.toString());
-        }
-    }
-
-    @Override public void onServiceResponse(int statusCode, String response)
-    {
-
-    }
-
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
-        loadingProgressBar.setVisibility(View.GONE);
-        loginForm.setVisibility(View.VISIBLE);
-
-        showMessage(context.getString(R.string.login_error_title),
-                    context.getString(R.string.login_error_message));
     }
 
     /**
@@ -242,13 +200,8 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
         loadingProgressBar.setVisibility(View.VISIBLE);
         loginForm.setVisibility(View.GONE);
 
-        new ServiceTask(new ServiceListener() {
-            @Override
-            public void onRetrievalSuccessful(String response)
-            {
-
-            }
-
+        new ServiceTask(new ServiceListener()
+        {
             @Override
             public void onServiceResponse(int statusCode, String response)
             {
@@ -266,12 +219,6 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
                         showFailureMessage();
                         break;
                 }
-            }
-
-            @Override
-            public void onRetrievalFailed(int statusCode)
-            {
-
             }
         }).execute(Constant.SERVICE_CREATE_ACCOUNT,
                    Constant.getAccountParameters(firstName, lastName, email, password,

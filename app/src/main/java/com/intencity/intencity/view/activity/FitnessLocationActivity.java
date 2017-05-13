@@ -257,26 +257,6 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
     }
 
     @Override
-    public void onRetrievalSuccessful(String response)
-    {
-//        try
-//        {
-//            SelectableListItem.ListItemType listItemType = selectingFitnessLocation ?
-//                    SelectableListItem.ListItemType.TYPE_RADIO_BUTTON : SelectableListItem.ListItemType.TYPE_IMAGE_VIEW;
-//
-//            setLocations(fitnessLocationDao.parseJson(response, null, listItemType));
-//        }
-//        catch (JSONException exception)
-//        {
-//            Log.e(Constant.TAG, "Couldn't parse user locations. " + exception.toString());
-//
-//            setLocations(null);
-//        }
-//
-//        applyActivityState();
-    }
-
-    @Override
     public void onServiceResponse(int statusCode, String response)
     {
         switch (statusCode)
@@ -304,31 +284,11 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
         }
     }
 
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
-//        showConnectionIssue();
-    }
-
     /**
      * The service listener for saving a routine.
      */
     private ServiceListener saveLocationsServiceListener = new ServiceListener()
     {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-//            response = response.replaceAll("\"", "");
-//            if (response.equals(Constant.SUCCESS))
-//            {
-//                getUserFitnessLocations();
-//            }
-//            else
-//            {
-//                showConnectionIssue();
-//            }
-        }
-
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
@@ -342,12 +302,6 @@ public class FitnessLocationActivity extends AppCompatActivity implements Servic
                     showConnectionIssue();
                     break;
             }
-        }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-//            showConnectionIssue();
         }
     };
 

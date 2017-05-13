@@ -166,12 +166,6 @@ public class DeleteAccountActivity extends AppCompatActivity implements ServiceL
     }
 
     @Override
-    public void onRetrievalSuccessful(String response)
-    {
-
-    }
-
-    @Override
     public void onServiceResponse(int statusCode, String response)
     {
         switch (statusCode)
@@ -180,12 +174,13 @@ public class DeleteAccountActivity extends AppCompatActivity implements ServiceL
 
                 // The credentials are valid so call the service to delete the account.
                 new ServiceTask(this).execute(Constant.SERVICE_STORED_PROCEDURE,
-                                              Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_REMOVE_ACCOUNT, String.valueOf(userId)));
+                                              Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_REMOVE_ACCOUNT,
+                                                                                         String.valueOf(userId)));
 
                 break;
 
             case Constant.STATUS_CODE_SUCCESS_STORED_PROCEDURE:
-            // We log out here because we couldn't find the user's account, so we don't need to delete anything.
+                // We log out here because we couldn't find the user's account, so we don't need to delete anything.
             case Constant.STATUS_CODE_FAILURE_CREDENTIALS_EMAIL_INVALID:
 
                 logOut();
@@ -210,11 +205,5 @@ public class DeleteAccountActivity extends AppCompatActivity implements ServiceL
 
                 break;
         }
-    }
-
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
-
     }
 }

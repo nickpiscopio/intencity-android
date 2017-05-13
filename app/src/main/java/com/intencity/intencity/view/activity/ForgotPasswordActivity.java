@@ -103,12 +103,6 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
     }
 
     @Override
-    public void onRetrievalSuccessful(String response)
-    {
-
-    }
-
-    @Override
     public void onServiceResponse(int statusCode, String response)
     {
         switch (statusCode)
@@ -130,10 +124,5 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
 
         loadingProgressBar.setVisibility(View.GONE);
         form.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
     }
 }

@@ -274,12 +274,6 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
     }
 
     @Override
-    public void onRetrievalSuccessful(String response)
-    {
-
-    }
-
-    @Override
     public void onServiceResponse(int statusCode, String response)
     {
         switch (statusCode)
@@ -317,26 +311,5 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
 
                 break;
         }
-    }
-
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
-//        switch (statusCode)
-//        {
-//            case Constant.STATUS_CODE_FAILURE_EMAIL_ERROR:
-//
-//                showErrorMessage(R.string.email_exists);
-//
-//                break;
-//
-//            case Constant.STATUS_CODE_FAILURE_ACCOUNT_CREATION:
-//            default:
-//
-//                showErrorMessage(R.string.intencity_communication_error);
-//
-//                break;
-//        }
-
     }
 }

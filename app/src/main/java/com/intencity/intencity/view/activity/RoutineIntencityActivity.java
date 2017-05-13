@@ -366,12 +366,6 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
     public ServiceListener exerciseServiceListener = new ServiceListener()
     {
         @Override
-        public void onRetrievalSuccessful(String response)
-        {
-
-        }
-
-        @Override
         public void onServiceResponse(int statusCode, String response)
         {
             switch (statusCode)
@@ -413,12 +407,6 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
                     break;
             }
         }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-
-        }
     };
 
     /**
@@ -426,12 +414,6 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
      */
     public ServiceListener fitnessLocationServiceListener = new ServiceListener()
     {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-
-        }
-
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
@@ -474,19 +456,7 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
                     break;
             }
         }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-
-        }
     };
-
-    @Override
-    public void onRetrievalSuccessful(String response)
-    {
-
-    }
 
     @Override
     public void onServiceResponse(int statusCode, String response)
@@ -520,12 +490,6 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
 
                 break;
         }
-    }
-
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
-
     }
 
     @Override

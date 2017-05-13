@@ -198,29 +198,6 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
     }
 
     @Override
-    public void onRetrievalSuccessful(String response)
-    {
-//        try
-//        {
-//            JSONObject json = new JSONObject(response);
-//
-//            int userId = Integer.parseInt(json.getString(Constant.COLUMN_ID));
-//            String accountType = json.getString(Constant.COLUMN_ACCOUNT_TYPE);
-//
-//            Util.loadIntencity(LoginActivity.this, userId, accountType, 0);
-//        }
-//        catch (JSONException e)
-//        {
-//            loadingProgressBar.setVisibility(View.GONE);
-//            loginForm.setVisibility(View.VISIBLE);
-//
-//            showMessage(context.getString(R.string.login_error_title),
-//                        context.getString(R.string.login_error_message));
-//            Log.e(Constant.TAG, "Error parsing login data " + e.toString());
-//        }
-    }
-
-    @Override
     public void onServiceResponse(int statusCode, String response)
     {
         switch (statusCode)
@@ -253,16 +230,6 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
 
                 break;
         }
-    }
-
-    @Override
-    public void onRetrievalFailed(int statusCode)
-    {
-//        loadingProgressBar.setVisibility(View.GONE);
-//        loginForm.setVisibility(View.VISIBLE);
-//
-//        showMessage(context.getString(R.string.login_error_title),
-//                         context.getString(R.string.login_error_message));
     }
 
     /**

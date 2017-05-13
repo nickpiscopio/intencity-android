@@ -127,7 +127,6 @@ public class Constant
     public static final String BUNDLE_EXERCISE = "com.intencity.intencity.bundle.exercise";
     public static final String BUNDLE_EXERCISE_SETS = "com.intencity.intencity.bundle.exercise.sets";
     public static final String BUNDLE_EXERCISE_LIST_INDEX = "com.intencity.intencity.bundle.exercise.list.index";
-    public static final String BUNDLE_EXERCISE_NAME = "com.intencity.intencity.bundle.exercise.name";
     public static final String BUNDLE_ID = "com.intencity.intencity.bundle.id";
     public static final String BUNDLE_EXERCISE_TYPE = "com.intencity.intencity.exercise.type";
     public static final String BUNDLE_EXERCISE_SKIPPED = "com.intencity.intencity.exercise.skipped";

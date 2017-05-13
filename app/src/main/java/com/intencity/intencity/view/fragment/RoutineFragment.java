@@ -137,12 +137,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
     private ServiceListener intencityRoutineServiceListener = new ServiceListener()
     {
         @Override
-        public void onRetrievalSuccessful(String response)
-        {
-
-        }
-
-        @Override
         public void onServiceResponse(int statusCode, String response)
         {
             switch (statusCode)
@@ -169,12 +163,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
                     break;
             }
         }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-            listener.onFinishedLoading((int) Constant.CODE_FAILED);
-        }
     };
 
     /**
@@ -182,26 +170,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
      */
     private ServiceListener savedRoutineServiceListener = new ServiceListener()
     {
-        @Override
-        public void onRetrievalSuccessful(String response)
-        {
-//            try
-//            {
-//                if (!response.equalsIgnoreCase(Constant.RETURN_NULL))
-//                {
-//                    insertSection(RoutineType.SAVED_ROUTINE, new RoutineSection(RoutineType.SAVED_ROUTINE, getString(R.string.title_saved_routines), new UserRoutineDao().parseJson(response)), true);
-//                }
-//
-//                listener.onFinishedLoading(Constant.CODE_NULL);
-//            }
-//            catch (JSONException e)
-//            {
-//                Log.e(Constant.TAG, "Error parsing muscle group data " + e.toString());
-//
-//                listener.onFinishedLoading((int) Constant.CODE_FAILED);
-//            }
-        }
-
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
@@ -231,12 +199,6 @@ public class RoutineFragment extends android.support.v4.app.Fragment implements 
                     listener.onFinishedLoading((int) Constant.CODE_FAILED);
                     break;
             }
-        }
-
-        @Override
-        public void onRetrievalFailed(int statusCode)
-        {
-//            listener.onFinishedLoading((int) Constant.CODE_FAILED);
         }
     };
 
