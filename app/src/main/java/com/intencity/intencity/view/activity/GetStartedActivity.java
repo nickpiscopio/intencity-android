@@ -194,7 +194,8 @@ public class GetStartedActivity extends AppCompatActivity
 
         String firstName = "Anonymous";
         String lastName = "User";
-        final String email = lastName + createdDate + "@intencity.fit";
+        String email = lastName + createdDate + "@intencity.fit";
+        final String encodedEmail = Util.hashValue(email);
         String password = String.valueOf(createdDate);
 
         loadingProgressBar.setVisibility(View.VISIBLE);
@@ -221,7 +222,7 @@ public class GetStartedActivity extends AppCompatActivity
                 }
             }
         }).execute(Constant.SERVICE_CREATE_ACCOUNT,
-                   Constant.getAccountParameters(firstName, lastName, email, password,
+                   Constant.getAccountParameters(firstName, lastName, encodedEmail, password,
                                                  Constant.ACCOUNT_TYPE_MOBILE_TRIAL));
     }
 

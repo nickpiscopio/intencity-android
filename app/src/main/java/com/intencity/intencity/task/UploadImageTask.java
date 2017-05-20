@@ -123,7 +123,7 @@ public class UploadImageTask extends AsyncTask<Void, Void, String>
     /**
      * Encodes the data that is sent to the server.
      *
-     * @param data  The data to encode.
+     * @param data  The data to hashValue.
      *
      * @return  The String of encoded data.
      */

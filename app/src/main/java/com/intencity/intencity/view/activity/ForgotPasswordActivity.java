@@ -76,6 +76,8 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Service
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 form.setVisibility(View.GONE);
 
+                // We don't hash this email on purpose.
+                // we do this because we need to send the email to the user if that email exists.
                 String emailString = Util.replacePlus(email.getText().toString());
 
                 new ServiceTask(ForgotPasswordActivity.this).execute(

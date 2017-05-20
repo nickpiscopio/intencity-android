@@ -123,7 +123,7 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
         }
     }
 
-    View.OnClickListener signInListener = new View.OnClickListener()
+    private View.OnClickListener signInListener = new View.OnClickListener()
     {
         @Override
         public void onClick(View v)
@@ -138,12 +138,14 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
             }
             else
             {
-                checkCredentials(userEmail, userPassword);
+
+                String encodedEmail = Util.hashValue(userEmail);
+                checkCredentials(encodedEmail, userPassword);
             }
         }
     };
 
-    View.OnClickListener forgotPasswordListener = new View.OnClickListener()
+    private View.OnClickListener forgotPasswordListener = new View.OnClickListener()
     {
         @Override
         public void onClick(View v)
@@ -152,7 +154,7 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
         }
     };
 
-    View.OnClickListener createAccountListener = new View.OnClickListener()
+    private View.OnClickListener createAccountListener = new View.OnClickListener()
     {
         @Override
         public void onClick(View v)
@@ -183,7 +185,7 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
 
         new ServiceTask(this).execute(Constant.SERVICE_VALIDATE_USER_CREDENTIALS,
                                       Constant.getValidateUserCredentialsServiceParameters(
-                                              Util.replacePlus(email), Util.replaceApostrophe(password)));
+                                              email, Util.replaceApostrophe(password)));
     }
 
     /**

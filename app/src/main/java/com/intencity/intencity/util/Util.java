@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.intencity.intencity.R;
@@ -18,6 +19,9 @@ import com.intencity.intencity.notification.CustomDialogContent;
 import com.intencity.intencity.task.ServiceTask;
 import com.intencity.intencity.view.activity.MainActivity;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -327,5 +331,29 @@ public class Util
         DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
         float px = dp * (metrics.densityDpi / 160f);
         return Math.round(px);
+    }
+
+    /**
+     * Creates a hash of a string value.
+     *
+     * @param value     The value to hash.
+     *
+     * @return  The String representation of the hashed value.
+     */
+    public static String hashValue(String value)
+    {
+        byte[] hash = new byte[0];
+
+        try
+        {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            hash = digest.digest(value.getBytes(StandardCharsets.UTF_8));
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
+            Log.e("Util", "[IN]-NO METHOD TO HASH: ", ex);
+        }
+
+        return String.format("%064x", new java.math.BigInteger(1, hash));
     }
 }

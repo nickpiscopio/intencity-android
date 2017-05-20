@@ -201,6 +201,8 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
                 loadingLayout.setVisibility(View.VISIBLE);
                 formLayout.setVisibility(View.GONE);
 
+                String encodedEmail = Util.hashValue(email);
+
                 if (createAccountFromTrial)
                 {
                     int userId = Util.getSecurePreferencesUserId(context);
@@ -208,7 +210,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
                     new ServiceTask(CreateAccountActivity.this).execute(
                             Constant.SERVICE_UPDATE_ACCOUNT,
                             Constant.getUpdateAccountParameters(userId, Util.replaceApostrophe(firstName), Util.replaceApostrophe(
-                                    lastName), Util.replacePlus(email), Util.replaceApostrophe(password)));
+                                    lastName), encodedEmail, Util.replaceApostrophe(password)));
                 }
                 else
                 {
@@ -216,7 +218,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ServiceL
                     new ServiceTask(CreateAccountActivity.this).execute(
                             Constant.SERVICE_CREATE_ACCOUNT,
                             Constant.getAccountParameters(Util.replaceApostrophe(firstName), Util.replaceApostrophe(
-                                    lastName), Util.replacePlus(email), Util.replaceApostrophe(password), Constant.ACCOUNT_TYPE_NORMAL));
+                                    lastName), encodedEmail, Util.replaceApostrophe(password), Constant.ACCOUNT_TYPE_NORMAL));
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.intencity.intencity.task;
 
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 
 import com.intencity.intencity.listener.ServiceListener;
@@ -23,6 +24,9 @@ import java.net.URL;
  */
 public class ServiceTask extends AsyncTask<String, Void, String>
 {
+    // This is the threshold for how long communication should last between the app and the server.
+    private final int THRESHOLD_TIMEOUT_MILLIS = 15000;
+
     // This is the failure response from Intencity's services.
     public static final String RESPONSE_FAILURE = "RESPONSE_FAILURE";
 
@@ -37,7 +41,9 @@ public class ServiceTask extends AsyncTask<String, Void, String>
 
     private ServiceListener serviceListener;
 
-    private boolean success = true;
+    private boolean success = false;
+
+    private Handler handler;
 
     /**
      * This is a constructor for the ServiceTask.
@@ -47,11 +53,15 @@ public class ServiceTask extends AsyncTask<String, Void, String>
     public ServiceTask(ServiceListener serviceListener)
     {
         this.serviceListener = serviceListener;
+
+        handler = new Handler();
     }
 
     @Override
     protected String doInBackground(String... params)
     {
+        startTimer();
+
         HttpURLConnection connection;
         OutputStreamWriter request;
 
@@ -97,12 +107,12 @@ public class ServiceTask extends AsyncTask<String, Void, String>
 
             isr.close();
             reader.close();
+
+            success = !isCancelled();
         }
         catch(IOException e)
         {
-            Log.e(Constant.TAG, "Error retrieving data: " + e.toString());
-
-            success = false;
+            Log.e(Constant.TAG, "[IN]-ERROR RETRIEVING DATA: " + e.toString());
         }
 
         return response.toString();
@@ -111,6 +121,8 @@ public class ServiceTask extends AsyncTask<String, Void, String>
     @Override
     protected void onPostExecute(String result)
     {
+        stopTimer();
+
         if (serviceListener != null)
         {
             int statusCode = Constant.STATUS_CODE_FAILURE_GENERIC;
@@ -139,5 +151,41 @@ public class ServiceTask extends AsyncTask<String, Void, String>
                 serviceListener.onServiceResponse(statusCode, result);
             }
         }
+    }
+
+    @Override
+    protected void onCancelled()
+    {
+        super.onCancelled();
+
+        onPostExecute("");
+    }
+
+    /**
+     * This is the runnable for the timeout timer.
+     */
+    private Runnable timeoutRunnable = new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            ServiceTask.this.cancel(true);
+        }
+    };
+
+    /**
+     * Starts the timeout timer.
+     */
+    private void startTimer()
+    {
+        handler.postDelayed(timeoutRunnable, THRESHOLD_TIMEOUT_MILLIS);
+    }
+
+    /**
+     * Stops the timeout timer.
+     */
+    private void stopTimer()
+    {
+        handler.removeCallbacks(timeoutRunnable);
     }
 }
