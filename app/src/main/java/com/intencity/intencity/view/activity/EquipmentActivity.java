@@ -645,6 +645,8 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
                 textViewLocation.setText(location);
 
+                String displayName = textViewDisplayName.getText().toString();
+
                 // If the location and saved location equal, that means we are editing a fitness equipment.
                 if (location.equals(savedLocation))
                 {
@@ -656,7 +658,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
                     // because the user might not know he or she already has equipment at the designated location
                     new ServiceTask(getLocationServiceListener).execute(Constant.SERVICE_STORED_PROCEDURE,
                                                                         Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_CHECK_IF_FITNESS_LOCATION_EXISTS,
-                                                                                                                   userId, location));
+                                                                                                                   userId, displayName, location));
                 }
 
                 break;

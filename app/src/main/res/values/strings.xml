@@ -22,12 +22,14 @@
     <string name="terms_create_account">By creating an account, you agree to the @Terms of Use@ and @Privacy Policy@.</string>
     <string name="have_an_account">Already have an account?</string>
     <string name="sign_in">Sign In</string>
+    <string name="sign_in_with_google">Sign In With Google</string>
     <string name="title_forgot_password">Forgot Password</string>
     <string name="reset_password_message">Enter your email, and we\'ll send you a new password.</string>
     <string name="forgot_password_email_sent_title">Password reset</string>
     <string name="forgot_password_email_sent">Please check your email for your new password.</string>
     <string name="reset">RESET PASSWORD</string>
     <string name="forgot_password">Forgot password?</string>
+    <string name="skip">Skip</string>
     <string name="separator">&#183;</string>
     <string name="create_account">Create an account</string>
     <string name="convert_account">Convert Trial Account to Full Account</string>
@@ -253,7 +255,7 @@
     <string name="network_not_enabled_description">Wireless network is needed for certain features in Intencity.</string>
     <string name="edit_equipment_location_permission_needed_title">Location permission needed</string>
     <string name="edit_equipment_location_permission_needed_description">Intencity uses this information to use the correct equipment without intervention.</string>
-    <string name="edit_equipment_location_permission_needed">Location permission is needed to save your fitness locations.</string>
+    <string name="edit_equipment_location_permission_needed">Location permission is needed for better fitness location functionality.</string>
     <string name="directions_set_permissions">Select \'Permissions\' and enable \'Location.\'</string>
     <string name="button_preferences">SET PERMISSION</string>
     <string name="location_issue">An issue occurred finding your device\'s location. Please try again later.</string>

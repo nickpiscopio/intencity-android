@@ -74,6 +74,8 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
 
     private GeocodeListener listener;
 
+    private ToastDialog toastDialog;
+
     /**
      * The GoogleGeocode constructor.
      *
@@ -249,38 +251,39 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
         if (locationMode < Settings.Secure.LOCATION_MODE_HIGH_ACCURACY)
         {
             int titleRes = R.string.gps_network_not_enabled_title;
-            int messageRes = R.string.gps_network_not_high_description;
             int positiveButtonRes = R.string.gps_network_positive_button;
-            int negativeButtonRes = R.string.gps_network_negative_button;
 
-            CustomDialogContent dialog = new CustomDialogContent(context.getString(titleRes), context.getString(messageRes), true);
+            CustomDialogContent dialog = new CustomDialogContent(context.getString(titleRes));
             dialog.setPositiveButtonStringRes(positiveButtonRes);
-            dialog.setNegativeButtonStringRes(negativeButtonRes);
 
-            new CustomDialog(activity, new DialogListener()
+            if (toastDialog == null)
             {
-                @Override
-                public void onButtonPressed(int which)
+                toastDialog = new ToastDialog(activity, dialog, new DialogListener()
                 {
-                    switch (which)
+                    @Override
+                    public void onButtonPressed(int which)
                     {
-                        case Constant.POSITIVE_BUTTON:
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
-                            break;
-                        case Constant.NEGATIVE_BUTTON:
-                        default:
-                            listener.onLocationServiceNotEnabled(REQUEST_CODE_CANCELED);
-                            break;
+                        switch (which)
+                        {
+                            case Constant.POSITIVE_BUTTON:
+                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                context.startActivity(intent);
+                                break;
+                            case Constant.NEGATIVE_BUTTON:
+                            default:
+                                listener.onLocationServiceNotEnabled(REQUEST_CODE_CANCELED);
+                                break;
+                        }
                     }
-                }
-            }, dialog, false);
+                });
+            }
 
             listener.onLocationServiceNotEnabled(LOCATION_NOT_AVAILABLE);
         }
 
-        return locationMode == Settings.Secure.LOCATION_MODE_HIGH_ACCURACY;
+//        return locationMode == Settings.Secure.LOCATION_MODE_HIGH_ACCURACY;
+        return true;
     }
 
     /**
@@ -383,32 +386,25 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
         @Override
         public void onServiceResponse(int statusCode, String response)
         {
-            if (statusCode != Constant.STATUS_CODE_FAILURE_GENERIC)
+            try
             {
-                try
+                JSONObject obj = new JSONObject(response);
+                String status = obj.getString(ServiceTask.NODE_STATUS);
+                if (status.equalsIgnoreCase(ServiceTask.RESPONSE_OK))
                 {
-                    JSONObject obj = new JSONObject(response);
-                    String status = obj.getString(ServiceTask.NODE_STATUS);
-                    if (status.equalsIgnoreCase(ServiceTask.RESPONSE_OK))
-                    {
-                        JSONArray addresses = obj.getJSONArray(NODE_RESULTS);
-                        // The formatted address we are looking for will always be in the first index,
-                        // so there is no reason to search through the array.
-                        String formattedAddress = addresses.getJSONObject(0).getString(NODE_FORMATTED_ADDRESS);
+                    JSONArray addresses = obj.getJSONArray(NODE_RESULTS);
+                    // The formatted address we are looking for will always be in the first index,
+                    // so there is no reason to search through the array.
+                    String formattedAddress = addresses.getJSONObject(0).getString(NODE_FORMATTED_ADDRESS);
 
-                        listener.onGeocodeRetrievalSuccessful(requestCode, formattedAddress);
-                    }
-                    else
-                    {
-                        listener.onGeocodeRetrievalFailed(requestCode);
-                    }
+                    listener.onGeocodeRetrievalSuccessful(requestCode, formattedAddress);
                 }
-                catch (JSONException e)
+                else
                 {
                     listener.onGeocodeRetrievalFailed(requestCode);
                 }
             }
-            else
+            catch (JSONException e)
             {
                 listener.onGeocodeRetrievalFailed(requestCode);
             }

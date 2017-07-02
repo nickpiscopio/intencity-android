@@ -2,7 +2,9 @@ package com.intencity.intencity.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
@@ -31,8 +41,10 @@ import java.util.Date;
  *
  * Created by Nick Piscopio on 8/13/16.
  */
-public class GetStartedActivity extends AppCompatActivity
+public class GetStartedActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
 {
+    private final int RC_SIGN_IN = 10;
+
     private ProgressBar loadingProgressBar;
 
     private LinearLayout loginForm;
@@ -40,6 +52,8 @@ public class GetStartedActivity extends AppCompatActivity
     private TextView terms;
 
     private Context context;
+
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -61,10 +75,12 @@ public class GetStartedActivity extends AppCompatActivity
         terms = (TextView) findViewById(R.id.terms);
 
         Button getStarted = (Button) findViewById(R.id.btn_get_started);
+        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         TextView login = (TextView) findViewById(R.id.btn_login);
         TextView createAccount = (TextView) findViewById(R.id.btn_create_account);
 
         getStarted.setOnClickListener(getStartedClickListener);
+        signInButton.setOnClickListener(signInWithGoogleClickListener);
         login.setOnClickListener(loginClickListener);
         createAccount.setOnClickListener(createAccountListener);
 
@@ -98,6 +114,19 @@ public class GetStartedActivity extends AppCompatActivity
             terms.setText(builder, TextView.BufferType.SPANNABLE);
             terms.setOnClickListener(termsClickListener);
         }
+
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        // Build a GoogleApiClient with access to the Google Sign-In API and the
+        // options specified by gso.
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(GetStartedActivity.this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
     }
 
     @Override
@@ -113,6 +142,40 @@ public class GetStartedActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN)
+        {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+    }
+
+    private void handleSignInResult(GoogleSignInResult result)
+    {
+        Status code = result.getStatus();
+        if (result.isSuccess())
+        {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+            String personName = acct.getDisplayName();
+            String personGivenName = acct.getGivenName();
+            String personFamilyName = acct.getFamilyName();
+            String personEmail = acct.getEmail();
+            String personId = acct.getId();
+            Uri personPhoto = acct.getPhotoUrl();
+            // sign in.
+        }
+        else
+        {
+            showFailureMessage();
+        }
+    }
+
     /**
      * The click listener for the get started button.
      *
@@ -124,6 +187,19 @@ public class GetStartedActivity extends AppCompatActivity
         public void onClick(View v)
         {
             createTrialAccount();
+        }
+    };
+
+    /**
+     * The click listener for signing in with google.
+     */
+    View.OnClickListener signInWithGoogleClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(signInIntent, RC_SIGN_IN);
         }
     };
 
@@ -165,13 +241,16 @@ public class GetStartedActivity extends AppCompatActivity
 
     /**
      * Displays the login error to the user.
+     *
+     * @param title     The title of the message to display.
+     * @param message   The message to display to the user.
      */
     private void showMessage(String title, String message)
     {
         loadingProgressBar.setVisibility(View.GONE);
         loginForm.setVisibility(View.VISIBLE);
 
-        Util.showMessage(context, title, message);
+        Util.showMessage(GetStartedActivity.this, title, message);
     }
 
     /**
@@ -197,9 +276,6 @@ public class GetStartedActivity extends AppCompatActivity
         String email = lastName + createdDate + "@intencity.fit";
         final String encodedEmail = Util.hashValue(email);
         String password = String.valueOf(createdDate);
-
-        loadingProgressBar.setVisibility(View.VISIBLE);
-        loginForm.setVisibility(View.GONE);
 
         new ServiceTask(new ServiceListener()
         {
@@ -234,5 +310,11 @@ public class GetStartedActivity extends AppCompatActivity
         showMessage(context.getString(R.string.login_error_title),
                     context.getString(
                             R.string.intencity_communication_error));
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+    {
+        showFailureMessage();
     }
 }

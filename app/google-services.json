@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "828598325475",
+    "project_id": "intencity-1173"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828598325475:android:5a6ae1cb6a0975b0",
+        "android_client_info": {
+          "package_name": "com.intencity.intencity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "828598325475-7fssh7t9putthlqcg21sld06tr6e04b6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.intencity.intencity",
+            "certificate_hash": "8e9bbf49f7c6452391d65ad83787441b20ab10b2"
+          }
+        },
+        {
+          "client_id": "828598325475-9jg2ktpakuom1qoi88g0qcof65q4r5f7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLArdp8hUhBv_dK3_5PLpBOpmxdSq0bLk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

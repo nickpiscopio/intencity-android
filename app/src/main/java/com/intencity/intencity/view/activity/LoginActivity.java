@@ -3,7 +3,9 @@ package com.intencity.intencity.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.intencity.intencity.R;
 import com.intencity.intencity.listener.ServiceListener;
 import com.intencity.intencity.task.ServiceTask;
@@ -28,13 +37,17 @@ import com.intencity.intencity.util.Util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 /**
  * The Login Fragment for Intencity.
  *
  * Created by Nick Piscopio on 12/9/15.
  */
-public class LoginActivity extends AppCompatActivity implements ServiceListener
+public class LoginActivity extends AppCompatActivity implements ServiceListener, GoogleApiClient.OnConnectionFailedListener
 {
+    private final int RC_SIGN_IN = 10;
+
     private EditText email;
     private EditText password;
 
@@ -45,6 +58,8 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
     private TextView terms;
 
     private Context context;
+
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -62,14 +77,18 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
         terms = (TextView) findViewById(R.id.terms);
 
         Button signIn = (Button) findViewById(R.id.btn_sign_in);
-        TextView forgotPassword = (TextView) findViewById(R.id.forgot_password);
-        TextView createAccount = (TextView) findViewById(R.id.btn_create_account);
+        Button signInWithGoogle = (Button) findViewById(R.id.btn_sign_in_with_google);
+        TextView forgotPassword = (TextView) findViewById(R.id.text_edit_forgot_password);
+        TextView createAccount = (TextView) findViewById(R.id.text_edit_create_account);
+        TextView skip = (TextView) findViewById(R.id.text_edit_skip);
 
         password.setTypeface(Typeface.DEFAULT);
 
         signIn.setOnClickListener(signInListener);
+        signInWithGoogle.setOnClickListener(signInWithGoogleClickListener);
         forgotPassword.setOnClickListener(forgotPasswordListener);
         createAccount.setOnClickListener(createAccountListener);
+        skip.setOnClickListener(skipClickListener);
 
         context = getApplicationContext();
 
@@ -108,6 +127,19 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
         {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        // Build a GoogleApiClient with access to the Google Sign-In API and the
+        // options specified by gso.
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
     }
 
     @Override
@@ -122,6 +154,56 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
                 return super.onOptionsItemSelected(menuItem);
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN)
+        {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+    }
+
+    private void handleSignInResult(GoogleSignInResult result)
+    {
+        Status code = result.getStatus();
+        if (result.isSuccess())
+        {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+            String personName = acct.getDisplayName();
+            String personGivenName = acct.getGivenName();
+            String personFamilyName = acct.getFamilyName();
+            String personEmail = acct.getEmail();
+            String personId = acct.getId();
+            Uri personPhoto = acct.getPhotoUrl();
+            // sign in.
+        }
+        else
+        {
+            showFailureMessage();
+
+            stopLoading();
+        }
+    }
+
+    /**
+     * The click listener for the get started button.
+     *
+     * This creates an account for the user without asking them for their information.
+     */
+    View.OnClickListener skipClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            createTrialAccount();
+        }
+    };
 
     private View.OnClickListener signInListener = new View.OnClickListener()
     {
@@ -142,6 +224,21 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
                 String encodedEmail = Util.hashValue(userEmail);
                 checkCredentials(encodedEmail, userPassword);
             }
+        }
+    };
+
+    /**
+     * The click listener for signing in with google.
+     */
+    View.OnClickListener signInWithGoogleClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            startLoading();
+
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(signInIntent, RC_SIGN_IN);
         }
     };
 
@@ -175,13 +272,24 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
         }
     };
 
+    private void startLoading()
+    {
+        loadingProgressBar.setVisibility(View.VISIBLE);
+        loginForm.setVisibility(View.GONE);
+    }
+
+    private void stopLoading()
+    {
+        loadingProgressBar.setVisibility(View.GONE);
+        loginForm.setVisibility(View.VISIBLE);
+    }
+
     /**
      * Starts the service to check if the credentials the user typed in are in the web database.
      */
     private void checkCredentials(String email, String password)
     {
-        loadingProgressBar.setVisibility(View.VISIBLE);
-        loginForm.setVisibility(View.GONE);
+        startLoading();
 
         new ServiceTask(this).execute(Constant.SERVICE_VALIDATE_USER_CREDENTIALS,
                                       Constant.getValidateUserCredentialsServiceParameters(
@@ -193,8 +301,7 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
      */
     private void showMessage(String title, String message)
     {
-        loadingProgressBar.setVisibility(View.GONE);
-        loginForm.setVisibility(View.VISIBLE);
+        stopLoading();
 
         Util.showMessage(LoginActivity.this, title, message);
     }
@@ -242,8 +349,7 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
         showMessage(context.getString(R.string.login_error_title),
                     context.getString(R.string.login_error_message));
 
-        loadingProgressBar.setVisibility(View.GONE);
-        loginForm.setVisibility(View.VISIBLE);
+        stopLoading();
     }
 
     /**
@@ -255,5 +361,61 @@ public class LoginActivity extends AppCompatActivity implements ServiceListener
         intent.putExtra(TermsActivity.IS_TERMS, true);
         intent.putExtra(TermsActivity.SHOW_PRIVACY_POLICY, true);
         startActivity(intent);
+    }
+
+    /**
+     * Creates a trial account for the user.
+     */
+    private void createTrialAccount()
+    {
+        startLoading();
+
+        final long createdDate = new Date().getTime();
+
+        String firstName = "Anonymous";
+        String lastName = "User";
+        String email = lastName + createdDate + "@intencity.fit";
+        final String encodedEmail = Util.hashValue(email);
+        String password = String.valueOf(createdDate);
+
+        new ServiceTask(new ServiceListener()
+        {
+            @Override
+            public void onServiceResponse(int statusCode, String response)
+            {
+                switch (statusCode)
+                {
+                    case Constant.STATUS_CODE_SUCCESS_ACCOUNT_CREATION:
+                        int userId = Integer.parseInt(response);
+
+                        Util.loadIntencity(LoginActivity.this, userId, Constant.ACCOUNT_TYPE_MOBILE_TRIAL, createdDate);
+                        break;
+
+                    case Constant.STATUS_CODE_FAILURE_ACCOUNT_CREATION:
+                    default:
+
+                        showFailureMessage();
+                        break;
+                }
+            }
+        }).execute(Constant.SERVICE_CREATE_ACCOUNT,
+                   Constant.getAccountParameters(firstName, lastName, encodedEmail, password,
+                                                 Constant.ACCOUNT_TYPE_MOBILE_TRIAL));
+    }
+
+    /**
+     * Displays a dialog to the user telling them the account couldn't be created.
+     */
+    private void showFailureMessage()
+    {
+        showMessage(context.getString(R.string.login_error_title),
+                    context.getString(
+                            R.string.intencity_communication_error));
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+    {
+        showFailureMessage();
     }
 }

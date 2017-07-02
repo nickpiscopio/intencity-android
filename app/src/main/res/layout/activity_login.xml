@@ -83,7 +83,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/forgot_password"
+                    android:id="@+id/text_edit_forgot_password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/forgot_password"
@@ -100,7 +100,7 @@
                     android:textStyle="bold"/>
 
                 <TextView
-                    android:id="@+id/btn_create_account"
+                    android:id="@+id/text_edit_create_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/create_account"
@@ -137,6 +137,28 @@
                 android:layout_marginBottom="@dimen/layout_margin"
                 android:layout_marginLeft="@dimen/layout_margin"
                 android:layout_marginRight="@dimen/layout_margin"/>
+
+            <Button
+                android:id="@+id/btn_sign_in_with_google"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_in_with_google"
+                android:background="@drawable/button_full_google"
+                android:textColor="@color/text_color_google"
+                android:padding="@dimen/element_margin"
+                android:layout_marginBottom="@dimen/layout_margin"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"/>
+
+            <TextView
+                android:id="@+id/text_edit_skip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/skip"
+                android:background="@drawable/button_card"
+                android:padding="@dimen/card_button_padding"
+                android:textSize="@dimen/card_title2_size"
+                android:textColor="@color/primary"/>
 
         </LinearLayout>
 

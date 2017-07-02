@@ -9,6 +9,10 @@
     <color name="accent">#45b29d</color>
     <color name="accent_dark">#3b9a88</color>
 
+    <color name="background_google">#ffffff</color>
+    <color name="background_google_dark">#f1f1f1</color>
+    <color name="text_color_google">#4885ed</color>
+
     <color name="active">#6CF291</color>
 
     <color name="secondary_light">#647082</color>
