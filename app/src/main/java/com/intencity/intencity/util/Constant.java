@@ -141,31 +141,32 @@ public class Constant
     public static final String BUNDLE_FITNESS_LOCATION_SELECT = "com.intencity.intencity.bundle.fitness.location.select";
 
     // Service Endpoint
-    private static final String ENDPOINT = "http://www.intencity.fit/";
+    private static final String IP = "10.0.2.2";
+    private static final String PORT = "8080";
+
+    private static final String ENDPOINT = "http://" + IP + ":" + PORT +"/";
     private static final String BUILD_TYPE = ((BuildType.type == Build.Type.DEBUG) ? "dev/" : "");
     public static final String UPLOAD_FOLDER = ENDPOINT + BUILD_TYPE + "uploads/";
-    private static final String SERVICE_FOLDER = ENDPOINT + BUILD_TYPE + "services/";
-    private static final String SERVICE_FOLDER_MOBILE = SERVICE_FOLDER + "mobile/";
     public static final String USER_PROFILE_PIC_NAME = "/user-profile.jpg";
 
     // Services
-    public static final String SERVICE_VALIDATE_USER_CREDENTIALS = SERVICE_FOLDER_MOBILE + "user_credentials.php";
-    public static final String SERVICE_CREATE_ACCOUNT = SERVICE_FOLDER_MOBILE + "account.php";
-    public static final String SERVICE_UPDATE_USER_LOGIN_DATE = SERVICE_FOLDER_MOBILE + "update_user_login_date.php";
-    public static final String SERVICE_STORED_PROCEDURE = SERVICE_FOLDER_MOBILE + "stored_procedure.php";
-    public static final String SERVICE_COMPLEX_INSERT = SERVICE_FOLDER_MOBILE + "complex_insert.php";
-    public static final String SERVICE_COMPLEX_UPDATE = SERVICE_FOLDER_MOBILE + "complex_update.php";
-    public static final String SERVICE_UPDATE_USER_FITNESS_LOCATION = SERVICE_FOLDER_MOBILE + "update_user_fitness_location.php";
-    public static final String SERVICE_UPDATE_EQUIPMENT = SERVICE_FOLDER_MOBILE + "update_fitness_equipment.php";
-    public static final String SERVICE_SET_ROUTINE = SERVICE_FOLDER_MOBILE + "set_routine.php";
-    public static final String SERVICE_SET_USER_MUSCLE_GROUP_ROUTINE = SERVICE_FOLDER_MOBILE + "set_user_muscle_group_routine.php";
-    public static final String SERVICE_UPDATE_USER_MUSCLE_GROUP_ROUTINE = SERVICE_FOLDER_MOBILE + "update_user_muscle_group_routine.php";
-    public static final String SERVICE_UPDATE_USER_ROUTINE = SERVICE_FOLDER_MOBILE + "update_user_routine.php";
-    public static final String SERVICE_UPDATE_EXERCISE_PRIORITY = SERVICE_FOLDER_MOBILE + "update_priority.php";
-    public static final String SERVICE_UPLOAD_PROFILE_PIC = SERVICE_FOLDER_MOBILE + "upload_image.php";
-    public static final String SERVICE_CHANGE_PASSWORD = SERVICE_FOLDER_MOBILE + "change_password.php";
-    public static final String SERVICE_UPDATE_ACCOUNT = SERVICE_FOLDER_MOBILE + "update_account.php";
-    public static final String SERVICE_FORGOT_PASSWORD = SERVICE_FOLDER + "forgot_password.php";
+    public static final String SERVICE_VALIDATE_USER_CREDENTIALS = ENDPOINT + "user_credentials.php";
+    public static final String SERVICE_CREATE_ACCOUNT = ENDPOINT + "account/create";
+    public static final String SERVICE_UPDATE_USER_LOGIN_DATE = ENDPOINT + "update_user_login_date.php";
+    public static final String SERVICE_STORED_PROCEDURE = ENDPOINT + "stored_procedure.php";
+    public static final String SERVICE_COMPLEX_INSERT = ENDPOINT + "complex_insert.php";
+    public static final String SERVICE_COMPLEX_UPDATE = ENDPOINT + "complex_update.php";
+    public static final String SERVICE_UPDATE_USER_FITNESS_LOCATION = ENDPOINT + "update_user_fitness_location.php";
+    public static final String SERVICE_UPDATE_EQUIPMENT = ENDPOINT + "update_fitness_equipment.php";
+    public static final String SERVICE_SET_ROUTINE = ENDPOINT + "set_routine.php";
+    public static final String SERVICE_SET_USER_MUSCLE_GROUP_ROUTINE = ENDPOINT + "set_user_muscle_group_routine.php";
+    public static final String SERVICE_UPDATE_USER_MUSCLE_GROUP_ROUTINE = ENDPOINT + "update_user_muscle_group_routine.php";
+    public static final String SERVICE_UPDATE_USER_ROUTINE = ENDPOINT + "update_user_routine.php";
+    public static final String SERVICE_UPDATE_EXERCISE_PRIORITY = ENDPOINT + "update_priority.php";
+    public static final String SERVICE_UPLOAD_PROFILE_PIC = ENDPOINT + "upload_image.php";
+    public static final String SERVICE_CHANGE_PASSWORD = ENDPOINT + "change_password.php";
+    public static final String SERVICE_UPDATE_ACCOUNT = ENDPOINT + "update_account.php";
+    public static final String SERVICE_FORGOT_PASSWORD = ENDPOINT + "forgot_password.php";
 
     // Parameters
     public static final String PARAMETER_AMPERSAND = "&";
