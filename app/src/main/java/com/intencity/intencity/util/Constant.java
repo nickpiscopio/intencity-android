@@ -108,7 +108,7 @@ public class Constant
     public static final String BUNDLE_FITNESS_LOCATION_SELECT = "com.intencity.intencity.bundle.fitness.location.select";
 
     // Service Endpoint
-    private static final String ENDPOINT = "http://www.intencityapp.com/";
+    private static final String ENDPOINT = "http://www.intencity.fit/";
     private static final String BUILD_TYPE = ((BuildType.type == Build.Type.DEBUG) ? "dev/" : "");
     public static final String UPLOAD_FOLDER = ENDPOINT + BUILD_TYPE + "uploads/";
     private static final String SERVICE_FOLDER = ENDPOINT + BUILD_TYPE + "services/";
