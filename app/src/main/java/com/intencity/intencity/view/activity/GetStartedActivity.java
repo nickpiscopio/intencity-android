@@ -208,7 +208,7 @@ public class GetStartedActivity extends AppCompatActivity implements ServiceList
         loadingProgressBar.setVisibility(View.GONE);
         loginForm.setVisibility(View.VISIBLE);
 
-        Util.showMessage(context, title, message);
+        Util.showMessage(GetStartedActivity.this, title, message);
     }
 
     /**
