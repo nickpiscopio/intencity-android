@@ -24,4 +24,6 @@
 
     <color name="list_view_shadow">#BDBDBD</color>
 
+    <color name="ic_launcher_background">#F6F6FF</color>
+
 </resources>
