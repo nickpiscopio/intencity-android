@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.SelectableListItemAdapter;
+import com.intencity.intencity.handler.UserLocationPermissionHandler;
 import com.intencity.intencity.helper.GoogleGeocode;
 import com.intencity.intencity.listener.DialogFitnessLocationListener;
 import com.intencity.intencity.listener.DialogListener;
@@ -83,6 +84,8 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
 
     private boolean selectAll = false;
 
+    private UserLocationPermissionHandler userLocationPermissionHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -108,11 +111,13 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         context = getApplicationContext();
 
         email = Util.getSecurePreferencesEmail(context);
-        defaultLocationString = getString(R.string.fitness_location_default);
+        defaultLocationString = getString(R.string.fitness_location_not_set);
 
         cardFitnessLocation.setOnClickListener(fitnessLocationClickListener);
 
         googleGeocode = new GoogleGeocode(EquipmentActivity.this, this);
+
+        userLocationPermissionHandler = UserLocationPermissionHandler.getInstance();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null)
@@ -194,9 +199,28 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         {
             progressBar.setVisibility(View.VISIBLE);
 
-            // We check if the location is valid here.
-            // The GeocodeListener will return what gets executed next.
-            googleGeocode.checkLocationValidity(REQUEST_CODE_LOCATION_VALIDITY, textViewLocationString);
+            if (userLocationPermissionHandler.didUserSelectToNotSetLocation())
+            {
+                String location = textViewLocation.getText().toString();
+                // If the location and saved location equal, that means we are editing a fitness equipment.
+                if (location.equals(savedLocation))
+                {
+                    updateEquipment();
+                }
+                else
+                {
+                    // If the location and saved location don't equal, then we should check if the location already exists
+                    // because the user might not know he or she already has equipment at the designated location
+                    new ServiceTask(getLocationServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+                                                                        Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_CHECK_IF_FITNESS_LOCATION_EXISTS, email, location));
+                }
+            }
+            else
+            {
+                // We check if the location is valid here.
+                // The GeocodeListener will return what gets executed next.
+                googleGeocode.checkLocationValidity(REQUEST_CODE_LOCATION_VALIDITY, textViewLocationString);
+            }
         }
         else
         {
@@ -374,9 +398,20 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
                     googleGeocode.checkLocationPermission(REQUEST_CODE_FITNESS_DIALOG);
                     break;
 
-                // Just go back because we don't want to save anything.
                 case Constant.NEGATIVE_BUTTON:
-                    EquipmentActivity.super.onBackPressed();
+                    String location = textViewLocation.getText().toString();
+                    // If the location and saved location equal, that means we are editing a fitness equipment.
+                    if (location.equals(savedLocation))
+                    {
+                        updateEquipment();
+                    }
+                    else
+                    {
+                        // If the location and saved location don't equal, then we should check if the location already exists
+                        // because the user might not know he or she already has equipment at the designated location
+                        new ServiceTask(getLocationServiceListener).execute(Constant.SERVICE_EXECUTE_STORED_PROCEDURE,
+                                                                            Constant.generateStoredProcedureParameters(Constant.STORED_PROCEDURE_CHECK_IF_FITNESS_LOCATION_EXISTS, email, location));
+                    }
                     break;
 
                 default:
@@ -431,7 +466,14 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         @Override
         public void onClick(View view)
         {
-            googleGeocode.checkLocationPermission(REQUEST_CODE_FITNESS_DIALOG);
+            if (!userLocationPermissionHandler.didUserSelectToNotSetLocation())
+            {
+                googleGeocode.checkLocationPermission(REQUEST_CODE_FITNESS_DIALOG);
+            }
+            else
+            {
+                new FitnessLocationDialog(EquipmentActivity.this, textViewDisplayName.getText().toString(), textViewLocation.getText().toString(), null, null, dialogListener);
+            }
         }
     };
 
@@ -472,6 +514,11 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
      */
     private void setLocation(String location)
     {
+        if (userLocationPermissionHandler.didUserSelectToNotSetLocation() && location.equals(""))
+        {
+            location = context.getString(R.string.fitness_location_not_set);
+        }
+
         if (!location.equals(""))
         {
             textViewLocation.setText(location);
@@ -669,7 +716,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
                 String message = getString(R.string.invalid_fitness_location_description);
                 CustomDialogContent dialog = new CustomDialogContent(title, message, true);
                 dialog.setPositiveButtonStringRes(R.string.invalid_fitness_location_positive_button);
-                dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_negative_button);
+                dialog.setNegativeButtonStringRes(R.string.invalid_fitness_location_save_anyway);
 
                 new CustomDialog(EquipmentActivity.this, invalidFitnessLocationDialogListener, dialog, true);
 
@@ -694,7 +741,7 @@ public class EquipmentActivity extends AppCompatActivity implements GeocodeListe
         switch (requestCode)
         {
             case GoogleGeocode.REQUEST_CODE_CANCELED:
-                EquipmentActivity.super.onBackPressed();
+                userLocationPermissionHandler.setUserSelectionToNotSetLocation(true);
             case GoogleGeocode.LOCATION_NOT_AVAILABLE:
             case GoogleGeocode.REQUEST_CODE_PERMISSION_NEEDED:
             default:

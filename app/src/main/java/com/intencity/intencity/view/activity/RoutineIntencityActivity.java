@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.intencity.intencity.R;
 import com.intencity.intencity.adapter.RoutineAdapter;
+import com.intencity.intencity.handler.UserLocationPermissionHandler;
 import com.intencity.intencity.helper.GoogleGeocode;
 import com.intencity.intencity.helper.doa.ExerciseDao;
 import com.intencity.intencity.helper.doa.FitnessLocationDao;
@@ -77,6 +78,8 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
 
     private FitnessLocationDao fitnessLocationDao;
 
+    private UserLocationPermissionHandler userLocationPermissionHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -117,6 +120,8 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         listView.setOnItemClickListener(routineClickListener);
 
         fitnessLocationDao = new FitnessLocationDao(fitnessLocationServiceListener, email);
+
+        userLocationPermissionHandler = UserLocationPermissionHandler.getInstance();
 
         populateRoutineList();
     }
@@ -537,6 +542,8 @@ public class RoutineIntencityActivity extends AppCompatActivity implements Servi
         switch (requestCode)
         {
             case GoogleGeocode.REQUEST_CODE_CANCELED:
+
+                userLocationPermissionHandler.setUserSelectionToNotSetLocation(true);
 
                 // The user decided he or she didn't want to set location services.
                 // Just open the fitness location for the user to select one manually.

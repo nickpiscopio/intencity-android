@@ -54,11 +54,14 @@ public class FitnessLocationDialog
 
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS).build();
 
-        PlaceArrayAdapter adapter = new PlaceArrayAdapter(context, android.R.layout.simple_list_item_1, getCurrentBounds(deviceLocation), typeFilter);
-        adapter.setGoogleApiClient(apiClient);
-        editTextLocation.setAdapter(adapter);
+        if (deviceLocation != null)
+        {
+            PlaceArrayAdapter adapter = new PlaceArrayAdapter(context, android.R.layout.simple_list_item_1, getCurrentBounds(deviceLocation), typeFilter);
+            adapter.setGoogleApiClient(apiClient);
+            editTextLocation.setAdapter(adapter);
+        }
 
-        if (location.equals(context.getString(R.string.fitness_location_default)))
+        if (location.equals(context.getString(R.string.fitness_location_not_set)))
         {
             location = "";
         }

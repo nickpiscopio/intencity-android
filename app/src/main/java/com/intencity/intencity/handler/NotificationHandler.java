@@ -6,13 +6,13 @@ import com.intencity.intencity.listener.NotificationListener;
 import java.util.ArrayList;
 
 /**
- * Handles the fragments for Intencity.
+ * Handles the notifications for Intencity.
  *
  * Created by Nick Piscopio on 12/13/15.
  */
 public class NotificationHandler
 {
-    public static NotificationHandler fragmentHandler = null;
+    public static NotificationHandler notificationHandler = null;
 
     private NotificationListener listener;
 
@@ -25,12 +25,12 @@ public class NotificationHandler
      */
     public static NotificationHandler getInstance(NotificationListener listener)
     {
-        if (fragmentHandler == null)
+        if (notificationHandler == null)
         {
-            fragmentHandler = new NotificationHandler(listener);
+            notificationHandler = new NotificationHandler(listener);
         }
 
-        return fragmentHandler;
+        return notificationHandler;
     }
 
     /**
@@ -47,7 +47,7 @@ public class NotificationHandler
 
     public void resetInstance()
     {
-        fragmentHandler = null;
+        notificationHandler = null;
     }
 
     public void instantiateAwards()

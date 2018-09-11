@@ -21,6 +21,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.intencity.intencity.R;
+import com.intencity.intencity.handler.UserLocationPermissionHandler;
 import com.intencity.intencity.listener.DialogListener;
 import com.intencity.intencity.listener.GeocodeListener;
 import com.intencity.intencity.listener.ServiceListener;
@@ -33,6 +34,8 @@ import com.intencity.intencity.util.Constant;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static android.provider.Settings.Secure.LOCATION_MODE_OFF;
 
 /**
  * This class handles the Google Geocode API.
@@ -74,6 +77,8 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
 
     private GeocodeListener listener;
 
+    private UserLocationPermissionHandler userLocationPermissionHandler;
+
     /**
      * The GoogleGeocode constructor.
      *
@@ -85,6 +90,8 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
         this.activity = activity;
         this.context = this.activity.getApplicationContext();
         this.listener = listener;
+
+        userLocationPermissionHandler = UserLocationPermissionHandler.getInstance();
     }
 
     /**
@@ -230,7 +237,7 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
      */
     private boolean isLocationAccuracySufficient()
     {
-        int locationMode = Settings.Secure.LOCATION_MODE_OFF;
+        int locationMode = LOCATION_MODE_OFF;
 
         try
         {
@@ -246,38 +253,50 @@ public class GoogleGeocode implements GoogleApiClient.ConnectionCallbacks, Googl
             Log.d(TAG, "High accuracy isn't set: " + ex.getMessage());
         }
 
-        if (locationMode < Settings.Secure.LOCATION_MODE_HIGH_ACCURACY)
+        if (locationMode == LOCATION_MODE_OFF)
         {
-            int titleRes = R.string.gps_network_not_enabled_title;
-            int messageRes = R.string.gps_network_not_high_description;
-            int positiveButtonRes = R.string.gps_network_positive_button;
-            int negativeButtonRes = R.string.gps_network_negative_button;
+            userLocationPermissionHandler.setUserSelectionToNotSetLocation(false);
+        }
 
-            CustomDialogContent dialog = new CustomDialogContent(context.getString(titleRes), context.getString(messageRes), true);
-            dialog.setPositiveButtonStringRes(positiveButtonRes);
-            dialog.setNegativeButtonStringRes(negativeButtonRes);
-
-            new CustomDialog(activity, new DialogListener()
+        if (!userLocationPermissionHandler.didUserSelectToNotSetLocation())
+        {
+            if (locationMode < Settings.Secure.LOCATION_MODE_HIGH_ACCURACY)
             {
-                @Override
-                public void onButtonPressed(int which)
-                {
-                    switch (which)
-                    {
-                        case Constant.POSITIVE_BUTTON:
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
-                            break;
-                        case Constant.NEGATIVE_BUTTON:
-                        default:
-                            listener.onLocationServiceNotEnabled(REQUEST_CODE_CANCELED);
-                            break;
-                    }
-                }
-            }, dialog, false);
+                int titleRes = R.string.gps_network_not_enabled_title;
+                int messageRes = R.string.gps_network_not_high_description;
+                int positiveButtonRes = R.string.gps_network_positive_button;
+                int negativeButtonRes = R.string.gps_network_negative_button;
 
-            listener.onLocationServiceNotEnabled(LOCATION_NOT_AVAILABLE);
+                CustomDialogContent dialog = new CustomDialogContent(context.getString(titleRes), context.getString(messageRes), true);
+                dialog.setPositiveButtonStringRes(positiveButtonRes);
+                dialog.setNegativeButtonStringRes(negativeButtonRes);
+
+                new CustomDialog(activity, new DialogListener()
+                {
+                    @Override
+                    public void onButtonPressed(int which)
+                    {
+                        switch (which)
+                        {
+                            case Constant.POSITIVE_BUTTON:
+                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                context.startActivity(intent);
+                                break;
+                            case Constant.NEGATIVE_BUTTON:
+                            default:
+                                listener.onLocationServiceNotEnabled(REQUEST_CODE_CANCELED);
+                                break;
+                        }
+                    }
+                }, dialog, false);
+
+                listener.onLocationServiceNotEnabled(LOCATION_NOT_AVAILABLE);
+            }
+        }
+        else
+        {
+            listener.onLocationServiceNotEnabled(REQUEST_CODE_CANCELED);
         }
 
         return locationMode == Settings.Secure.LOCATION_MODE_HIGH_ACCURACY;
